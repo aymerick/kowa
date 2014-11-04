@@ -1,4 +1,4 @@
 kowa
 ====
 
-Asso Ninja static site generation
+Association website generation
