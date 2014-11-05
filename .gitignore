@@ -1,2 +1,5 @@
 /test_site/public/
+/themes/*/bower_components/
+/themes/*/node_modules/
+/themes/*/.sass-cache
 .DS_Store

@@ -1,0 +1,22 @@
+{
+  "name": "willy",
+  "version": "0.0.0",
+  "homepage": "https://github.com/aymerick/kowa",
+  "authors": [
+    "Aymerick <aymerick@jehanne.org>"
+  ],
+  "description": "willy theme",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.0",
+    "fontawesome": "~4.2.0"
+  }
+}
