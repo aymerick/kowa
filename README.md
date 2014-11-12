@@ -7,14 +7,14 @@ kowa
     $ ./kowa
 
 
-## Website generation
+## Hugo website generation
 
 ### Build and dev theme
 
-    $ cd themes/willy
+    $ cd hugo/themes/willy
     $ grunt
 
 ### Test site
 
-    $ cd test_site
+    $ cd hugo/test_site
     $ hugo server -w
