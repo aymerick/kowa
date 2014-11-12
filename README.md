@@ -1,10 +1,17 @@
 kowa
 ====
 
-## Admin API
+## Development
+
+Start server:
 
     $ go build
     $ ./kowa
+
+Start client:
+
+    $ cd client
+    $ ember server --proxy http://127.0.0.1:35830
 
 
 ## Hugo website generation
