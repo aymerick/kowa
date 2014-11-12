@@ -1,5 +1,6 @@
-/test_site/public/
-/themes/*/bower_components/
-/themes/*/node_modules/
-/themes/*/.sass-cache
+/hugo/test_site/public/
+/hugo/themes/*/bower_components/
+/hugo/themes/*/node_modules/
+/hugo/themes/*/.sass-cache
 .DS_Store
+kowa
