@@ -5,6 +5,7 @@
 module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-copy"
   grunt.loadNpmTasks "grunt-contrib-sass"
+  grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-exec"
 
   grunt.initConfig
@@ -55,15 +56,25 @@ module.exports = (grunt) ->
           dest: "static/fonts/"
         }]
 
-    exec:
-      jekyll:
-        cmd: "jekyll build --trace"
+    watch:
+      source:
+        files: [
+          "sass/**/*"
+        ]
+        tasks: [
+          "sass"
+        ]
 
   grunt.registerTask "build", [
     "sass"
     "copy"
   ]
 
-  grunt.registerTask "default", [
+  grunt.registerTask "dev", [
     "build"
+    "watch"
+  ]
+
+  grunt.registerTask "default", [
+    "dev"
   ]

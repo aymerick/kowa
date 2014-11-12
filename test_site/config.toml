@@ -1,4 +1,13 @@
 baseurl = ""
 languageCode = "en-us"
-title = "Test site"
 theme = "willy"
+title = "My association"
+description = "Thanks to my association, people are happier"
+
+foo = "bar"
+
+[[menu.main]]
+    name = "Actions"
+    pre = "<i class='fa fa-cubes'></i>"
+    url = "/actions/"
+    weight = -180

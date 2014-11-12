@@ -1,0 +1,104 @@
+/**
+ * Home
+ */
+
+#home {
+  section {
+    padding-top: 20px;
+    padding-bottom: 30px;
+
+    @media (min-width: $screen-sm-min) {
+      font-size: 18px;
+    }
+
+    &:nth-child(2n + 1) {
+      background-color: $color-light-background;
+    }
+  }
+
+  h2 {
+    font-size: 25px;
+    @media (min-width: $screen-md-min) {
+      font-size: 30px;
+    }
+  }
+
+  .resume {
+    padding-top: 40px;
+
+    .photo {
+      @media (min-width: $screen-md-min) {
+        @include rotate(-5deg);
+        margin-top: 15px;
+      }
+      @media (min-width: $screen-lg-min) {
+        margin-top: -10px;
+      }
+    }
+
+    .intro {
+      padding: 10px 10px 0px 10px;
+      text-align: justify;
+
+      @media (min-width: $screen-sm-min) {
+        font-size: 18px;
+      }
+
+      // TODO: FIXME
+      .adhesion {
+        margin-top: 20px;
+        margin-bottom: 0px;
+        text-align: center;
+      }
+    }
+  }
+
+  .actions {
+    padding-bottom: 10px;
+    text-align: justify;
+
+    i.fa {
+      margin-right: 15px;
+    }
+
+    .more {
+      // text-align: center;
+      margin-top: 20px;
+    }
+
+    .action {
+      margin-bottom: 20px;
+    }
+  }
+
+  // TODO: FIXME
+  .ouverture {
+    background-color: $color-light-background;
+
+    h2 {
+      color: $color-purple-darkest;
+      margin-bottom: 20px;
+    }
+
+    img.media-object {
+      margin-top: 5px;
+    }
+
+    i.research {
+      width: 48px;
+      margin-left: 22px;
+    }
+  }
+
+  // TODO: FIXME
+  .rejoindre {
+    .desc {
+      text-align: justify;
+    }
+
+    .adhesion {
+      margin-top: 30px;
+      text-align: center;
+    }
+  }
+}

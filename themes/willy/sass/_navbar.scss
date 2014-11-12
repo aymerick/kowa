@@ -1,0 +1,42 @@
+/**
+ * Navbar
+ */
+
+/* navbar: bootstrap overwrites */
+.navbar {
+  margin-bottom: 0px;
+}
+
+.navbar>.container {
+  .navbar-header {
+    position: relative;
+
+    .logo {
+      position: absolute;
+      left: 0px;
+      top: 3px;
+    }
+
+    .navbar-brand {
+      margin-left: 60px;
+      color: $color-purple-darkest;
+    }
+  }
+}
+
+.navbar-default {
+  .navbar-nav>li>a {
+    font-size: 16px;
+    color: #444;
+
+    @media (min-width: $screen-md-min) {
+      font-size: 18px;
+    }
+  }
+
+  .navbar-nav>.active>a,
+  .navbar-nav>.active>a:hover,
+  .navbar-nav>.active>a:focus {
+    // font-weight: bold;
+  }
+}

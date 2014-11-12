@@ -1,0 +1,38 @@
+/**
+ * Contact
+ */
+
+#contact {
+  .content {
+    padding-top: 30px;
+    padding-bottom: 20px;
+  }
+
+  .vcard {
+    @media (min-width: $screen-sm-min) {
+      font-size: 16px;
+    }
+  }
+
+  // TODO: FIXME
+  .bulletin-adhesion {
+    margin-top: 30px;
+  }
+
+  // TODO: FIXME
+  .coordonnees {
+    i.fa {
+      margin-right: 10px;
+    }
+  }
+
+  .social {
+    @media (min-width: $screen-sm-min) {
+      font-size: 24px;
+    }
+
+    i.fa {
+      margin-right: 10px;
+    }
+  }
+}
