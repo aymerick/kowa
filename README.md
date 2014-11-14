@@ -29,3 +29,7 @@ Test:
 
     $ cd hugo/test_site
     $ hugo server -w
+
+## Sublime Text
+
+Search Where: -*/bower_components/*,-*/node_modules/*,-*/client/dist/*,-*/client/tmp/*,-*.min.js,-*.min.css,-*.css.map,-*.svg,-*hugo/test_site/public/*
