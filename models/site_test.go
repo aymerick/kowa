@@ -60,12 +60,44 @@ func (suite *SiteTestSuite) TestSite() {
 	t := suite.T()
 
 	// Insert user
-	user := User{Id: bson.NewObjectId(), FirstName: "Jean-Claude", LastName: "Trucmush", CreatedAt: time.Now()}
+	user := User{
+		Id:        bson.NewObjectId(),
+		FirstName: "Jean-Claude",
+		LastName:  "Trucmush",
+		CreatedAt: time.Now(),
+	}
 	err = UsersCol().Insert(&user)
 	assert.Nil(t, err)
 
 	// Insert site
-	site := Site{UserId: user.Id, CreatedAt: time.Now()}
+	site := Site{
+		Id:          bson.NewObjectId(),
+		UserId:      user.Id,
+		CreatedAt:   time.Now(),
+		Name:        "My site",
+		Tagline:     "So powerfull !",
+		Description: "You will be astonished by what my site is about",
+	}
 	err = SitesCol().Insert(&site)
 	assert.Nil(t, err)
+
+	// Count sites
+	var c int
+	c, err = SitesCol().Count()
+	assert.Nil(t, err)
+
+	assert.Equal(t, c, 1)
+
+	// Fetch site
+	var fetchedSite Site
+	err = SitesCol().FindId(site.Id).One(&fetchedSite)
+	assert.Nil(t, err)
+
+	assert.Equal(t, fetchedSite.UserId, user.Id)
+	assert.Equal(t, fetchedSite.Name, "My site")
+	assert.Equal(t, fetchedSite.Tagline, "So powerfull !")
+	assert.Equal(t, fetchedSite.Description, "You will be astonished by what my site is about")
+
+	assert.NotNil(t, fetchedSite.Id)
+	assert.NotNil(t, fetchedSite.CreatedAt)
 }
