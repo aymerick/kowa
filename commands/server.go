@@ -18,7 +18,7 @@ var serverCmd = &cobra.Command{
 	Use:   "server",
 	Short: "Server for admin API",
 	Long:  `Kowa will starts an HTTP server to handle API requests from the web client.`,
-	Run:   serverRun,
+	Run:   runServer,
 }
 
 func initServerConf() {
@@ -26,8 +26,8 @@ func initServerConf() {
 	viper.BindPFlag("port", serverCmd.Flags().Lookup("port"))
 }
 
-func serverRun(cmd *cobra.Command, args []string) {
-	go Server()
+func runServer(cmd *cobra.Command, args []string) {
+	go server()
 
 	// wait for interuption
 	sigChan := make(chan os.Signal, 1)
@@ -35,7 +35,7 @@ func serverRun(cmd *cobra.Command, args []string) {
 	<-sigChan
 }
 
-func Server() {
+func server() {
 	port := viper.GetString("port")
 
 	r := gin.Default()
