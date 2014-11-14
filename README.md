@@ -6,7 +6,7 @@ kowa
 Start server:
 
     $ go build
-    $ ./kowa
+    $ ./kowa server
 
 Start client:
 

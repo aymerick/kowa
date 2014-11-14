@@ -2,6 +2,8 @@ package commands
 
 import (
 	"fmt"
+	"os"
+	"os/signal"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
@@ -25,7 +27,12 @@ func initServerConf() {
 }
 
 func serverRun(cmd *cobra.Command, args []string) {
-	Server()
+	go Server()
+
+	// wait for interuption
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, os.Interrupt)
+	<-sigChan
 }
 
 func Server() {
