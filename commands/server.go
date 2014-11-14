@@ -8,7 +8,9 @@ import (
 	"github.com/spf13/viper"
 )
 
-const pLimit = 15
+const (
+	DEFAULT_PORT = 35830
+)
 
 var serverCmd = &cobra.Command{
 	Use:   "server",
@@ -17,8 +19,8 @@ var serverCmd = &cobra.Command{
 	Run:   serverRun,
 }
 
-func init() {
-	serverCmd.Flags().Int("port", 35830, "Port to run Kowa server on")
+func initServerConf() {
+	serverCmd.Flags().Int("port", DEFAULT_PORT, "Port to run Kowa server on")
 	viper.BindPFlag("port", serverCmd.Flags().Lookup("port"))
 }
 

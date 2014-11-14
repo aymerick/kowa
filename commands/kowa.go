@@ -9,9 +9,14 @@ import (
 	"github.com/spf13/viper"
 )
 
+const (
+	DEFAULT_MONGODB_URI    = "mongodb://localhost:27017/"
+	DEFAULT_MONGODB_DBNAME = "kowa"
+)
+
 var CfgFile string
 
-var RootCmd = &cobra.Command{
+var rootCmd = &cobra.Command{
 	Use:   "kowa",
 	Short: "Kowa generates a website for your association",
 	Long:  `Koaw is a website generator that targets associations. It powers the asso.ninja web service.`,
@@ -27,16 +32,19 @@ func rootRun(cmd *cobra.Command, args []string) {
 	<-sigChan
 }
 
-func init() {
-	cobra.OnInitialize(initConfig)
+func initKowaConf() {
+	cobra.OnInitialize(setupConfig)
 
-	RootCmd.PersistentFlags().StringVar(&CfgFile, "config", "", "config file (default is $HOME/kowa/config.toml)")
+	rootCmd.PersistentFlags().StringVar(&CfgFile, "config", "", "config file (default is $HOME/kowa/config.toml)")
 
-	RootCmd.PersistentFlags().String("mongodb_uri", "mongodb://localhost:27017/", "Uri to connect to mongoDB")
-	viper.BindPFlag("mongodb_uri", RootCmd.PersistentFlags().Lookup("mongodb_uri"))
+	rootCmd.PersistentFlags().String("mongodb_uri", DEFAULT_MONGODB_URI, "Uri to connect to mongoDB")
+	viper.BindPFlag("mongodb_uri", rootCmd.PersistentFlags().Lookup("mongodb_uri"))
+
+	rootCmd.PersistentFlags().String("mongodb_dbname", DEFAULT_MONGODB_DBNAME, "MongoDB database name")
+	viper.BindPFlag("mongodb_dbname", rootCmd.PersistentFlags().Lookup("mongodb_dbname"))
 }
 
-func initConfig() {
+func setupConfig() {
 	if CfgFile != "" {
 		viper.SetConfigFile(CfgFile)
 	}
@@ -47,13 +55,32 @@ func initConfig() {
 }
 
 func addCommands() {
-	RootCmd.AddCommand(serverCmd)
+	rootCmd.AddCommand(serverCmd)
+}
+
+//
+// Main API
+//
+
+func ResetConf() {
+	rootCmd.ResetFlags()
+	rootCmd.ResetCommands()
+
+	serverCmd.ResetFlags()
+	serverCmd.ResetCommands()
+
+	viper.Reset()
+}
+
+func InitConf() {
+	initKowaConf()
+	initServerConf()
 }
 
 func Execute() {
 	addCommands()
 
-	if err := RootCmd.Execute(); err != nil {
+	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}

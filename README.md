@@ -13,6 +13,10 @@ Start client:
     $ cd client
     $ ember server --proxy http://127.0.0.1:35830
 
+Test:
+
+    $ go test ./... -v
+
 
 ## Hugo website generation
 
