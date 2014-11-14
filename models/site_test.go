@@ -5,8 +5,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/aymerick/kowa/commands"
-
 	"gopkg.in/mgo.v2/bson"
 
 	"github.com/stretchr/testify/assert"
@@ -19,10 +17,8 @@ type SiteTestSuite struct {
 
 // called before all tests
 func (suite *SiteTestSuite) SetupSuite() {
-	// Setup conf
-	commands.ResetConf()
-	commands.InitConf()
-	// viper.Debug()
+	// Init database session
+	SetDBSession(MongoDBSessionForURI(TEST_MONGODB_URI))
 
 	// Change database
 	SetDBName(fmt.Sprintf("%s_test", DBName()))

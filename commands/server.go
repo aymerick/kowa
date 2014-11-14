@@ -1,11 +1,10 @@
 package commands
 
 import (
-	"fmt"
 	"os"
 	"os/signal"
 
-	"github.com/gin-gonic/gin"
+	"github.com/aymerick/kowa/server"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -27,23 +26,10 @@ func initServerConf() {
 }
 
 func runServer(cmd *cobra.Command, args []string) {
-	go server()
+	go server.Run()
 
 	// wait for interuption
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt)
 	<-sigChan
-}
-
-func server() {
-	port := viper.GetString("port")
-
-	r := gin.Default()
-
-	r.GET("/ping", func(c *gin.Context) {
-		c.String(200, "pong")
-	})
-
-	fmt.Println("Running on port:", port)
-	r.Run(":" + port)
 }

@@ -17,6 +17,19 @@ func init() {
 	// @todo EnsureIndexes()
 }
 
+func MongoDBSessionForURI(uri string) *mgo.Session {
+	// create session
+	session, err := mgo.Dial(uri)
+	if session == nil || err != nil {
+		log.Fatalf("Can't connect to mongo, go error %v\n", err)
+	}
+
+	session.SetSafe(&mgo.Safe{})
+	session.SetMode(mgo.Monotonic, true)
+
+	return session
+}
+
 func SetDBSession(session *mgo.Session) {
 	dbSession = session
 }
@@ -33,16 +46,7 @@ func DBSession() *mgo.Session {
 			}
 		}
 
-		// create session
-		session, err := mgo.Dial(uri)
-		if session == nil || err != nil {
-			log.Fatalf("Can't connect to mongo, go error %v\n", err)
-		}
-
-		session.SetSafe(&mgo.Safe{})
-		session.SetMode(mgo.Monotonic, true)
-
-		SetDBSession(session)
+		SetDBSession(MongoDBSessionForURI(uri))
 	}
 
 	return dbSession

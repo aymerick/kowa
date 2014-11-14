@@ -25,3 +25,11 @@ type UsersList []User
 func UsersCol() *mgo.Collection {
 	return DB().C(USERS_COL_NAME)
 }
+
+func AllUsers() *UsersList {
+	var result UsersList
+
+	UsersCol().Find(nil).All(&result)
+
+	return &result
+}

@@ -1,11 +1,9 @@
 package models
 
 import (
-	"fmt"
+	"encoding/json"
 	"testing"
 	"time"
-
-	"github.com/aymerick/kowa/commands"
 
 	"gopkg.in/mgo.v2/bson"
 
@@ -19,13 +17,11 @@ type UserTestSuite struct {
 
 // called before all tests
 func (suite *UserTestSuite) SetupSuite() {
-	// Setup conf
-	commands.ResetConf()
-	commands.InitConf()
-	// viper.Debug()
+	// Init database session
+	SetDBSession(MongoDBSessionForURI(TEST_MONGODB_URI))
 
 	// Change database
-	SetDBName(fmt.Sprintf("%s_test", DBName()))
+	SetDBName(TEST_DBNAME)
 }
 
 // called before each test
@@ -90,4 +86,32 @@ func (suite *UserTestSuite) TestUsers() {
 	// fmt.Printf("%s\n", str)
 
 	assert.Equal(t, len(allUsers), 2)
+}
+
+func (suite *UserTestSuite) TestJSON() {
+	var err error
+	var result []byte
+
+	t := suite.T()
+
+	// User
+	user := &User{FirstName: "Jean-Claude", LastName: "Trucmush", CreatedAt: time.Now()}
+
+	result, err = json.Marshal(user)
+	assert.Nil(t, err)
+	assert.NotEmpty(t, result)
+
+	// fmt.Printf("%s\n", result)
+
+	// UsersList
+	users := UsersList{
+		User{FirstName: "Jean-Claude", LastName: "Trucmush", CreatedAt: time.Now()},
+		User{FirstName: "Marie", LastName: "Koushtoala", CreatedAt: time.Now()},
+	}
+
+	result, err = json.Marshal(users)
+	assert.Nil(t, err)
+	assert.NotEmpty(t, result)
+
+	// fmt.Printf("%s\n", result)
 }

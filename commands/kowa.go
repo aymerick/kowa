@@ -60,17 +60,6 @@ func InitConf() {
 	initServerConf()
 }
 
-// Mainly used for testing purpose
-func ResetConf() {
-	rootCmd.ResetFlags()
-	rootCmd.ResetCommands()
-
-	serverCmd.ResetFlags()
-	serverCmd.ResetCommands()
-
-	viper.Reset()
-}
-
 // Execute command
 func Execute() {
 	addCommands()
