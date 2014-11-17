@@ -48,6 +48,7 @@ func setupConfig() {
 // Add commands to root command
 func addCommands() {
 	rootCmd.AddCommand(serverCmd)
+	rootCmd.AddCommand(bootstrapCmd)
 }
 
 //

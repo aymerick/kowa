@@ -23,4 +23,5 @@ func setupRoutes(r *gin.Engine) {
 	})
 
 	r.GET("/users", listUsers)
+	r.GET("/sites", listSites)
 }

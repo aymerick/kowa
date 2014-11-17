@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -21,7 +20,7 @@ func (suite *SiteTestSuite) SetupSuite() {
 	SetDBSession(MongoDBSessionForURI(TEST_MONGODB_URI))
 
 	// Change database
-	SetDBName(fmt.Sprintf("%s_test", DBName()))
+	SetDBName(TEST_DBNAME)
 }
 
 // called before each test

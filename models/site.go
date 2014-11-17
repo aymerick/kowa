@@ -47,3 +47,11 @@ type SitesList []Site
 func SitesCol() *mgo.Collection {
 	return DB().C(SITES_COL_NAME)
 }
+
+func AllSites() *SitesList {
+	var result SitesList
+
+	SitesCol().Find(nil).All(&result)
+
+	return &result
+}
