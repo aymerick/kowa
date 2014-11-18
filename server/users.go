@@ -1,12 +1,12 @@
 package server
 
 import (
-	"github.com/aymerick/kowa/models"
+	"net/http"
 
-	"github.com/gin-gonic/gin"
+	"github.com/aymerick/kowa/models"
 )
 
-// endpoint: list all users
-func listUsers(c *gin.Context) {
-	c.JSON(200, gin.H{"users": models.AllUsers()})
+// GET /users
+func listUsers(w http.ResponseWriter, req *http.Request) {
+	renderResp.JSON(w, http.StatusOK, renderMap{"users": models.AllUsers()})
 }

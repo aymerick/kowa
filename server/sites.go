@@ -1,12 +1,12 @@
 package server
 
 import (
-	"github.com/aymerick/kowa/models"
+	"net/http"
 
-	"github.com/gin-gonic/gin"
+	"github.com/aymerick/kowa/models"
 )
 
-// endpoint: list all sites
-func listSites(c *gin.Context) {
-	c.JSON(200, gin.H{"sites": models.AllSites()})
+// GET /sites
+func listSites(w http.ResponseWriter, req *http.Request) {
+	renderResp.JSON(w, http.StatusOK, renderMap{"sites": models.AllSites()})
 }
