@@ -1,7 +1,9 @@
-import Ember from 'ember';
+import AuthenticatedRoute from 'kowa/routes/authenticated';
 
-export default Ember.Route.extend({
+var SitesRoute = AuthenticatedRoute.extend({
   model: function() {
     return this.store.findAll('site');
   }
 });
+
+export default SitesRoute;
