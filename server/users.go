@@ -7,6 +7,6 @@ import (
 )
 
 // GET /users
-func listUsers(w http.ResponseWriter, req *http.Request) {
+func handleUsers(w http.ResponseWriter, req *http.Request) {
 	renderResp.JSON(w, http.StatusOK, renderMap{"users": models.AllUsers()})
 }

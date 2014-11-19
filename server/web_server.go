@@ -3,37 +3,55 @@ package server
 import (
 	"fmt"
 
+	"github.com/RangelReale/osin"
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 	"github.com/spf13/viper"
 	"github.com/unrolled/render"
 )
 
-// helper
-type renderMap map[string]interface{}
+// global oauth2 server
+var oauthServer *osin.Server
 
 // global renderer
-var renderResp = render.New(render.Options{})
+var renderResp *render.Render
+
+// sugar helper
+type renderMap map[string]interface{}
 
 func Run() {
 	port := viper.GetString("port")
 
-	// setup server and middlewares
-	n := negroni.Classic()
-	setupMiddlewares(n)
+	// setup osin oauth2 server
+	osinConfig := osin.NewServerConfig()
+	osinConfig.AllowedAuthorizeTypes = osin.AllowedAuthorizeType{osin.TOKEN}
+	osinConfig.AllowedAccessTypes = osin.AllowedAccessType{osin.PASSWORD, osin.REFRESH_TOKEN}
 
-	// setup router
+	oauthStorage := NewOAuthStorage()
+	oauthServer = osin.NewServer(osinConfig, oauthStorage)
+
+	// setup renderer
+	renderResp = render.New(render.Options{})
+
+	// setup routes
+	n := negroni.Classic()
+
+	setupCORSMiddleware(n)
+
 	router := mux.NewRouter()
-	setupRoutes(router)
+	router.HandleFunc("/users", handleUsers).Methods("GET")
+	router.HandleFunc("/sites", handleSites).Methods("GET")
+
+	oauthRouter := mux.NewRouter()
+	oauthRouter.HandleFunc("/oauth/token", handleOauthToken).Methods("POST")
+
+	router.Handle("/oauth/token", negroni.New(
+		negroni.HandlerFunc(injectOauthSecretMiddleware),
+		negroni.Wrap(oauthRouter),
+	))
 
 	n.UseHandler(router)
 
 	fmt.Println("Running on port:", port)
 	n.Run(":" + port)
-}
-
-func setupRoutes(router *mux.Router) {
-	router.HandleFunc("/users", listUsers).Methods("GET")
-	router.HandleFunc("/sites", listSites).Methods("GET")
-	router.HandleFunc("/token", oauthGetToken).Methods("POST")
 }
