@@ -1,6 +1,8 @@
 // mixin used for routes that need to set a css className on the body tag
 // source: https://github.com/TryGhost/Ghost/blob/master/core/client/mixins/style-body.js
 
+import Ember from 'ember';
+
 var styleBody = Ember.Mixin.create({
     activate: function () {
         this._super();
