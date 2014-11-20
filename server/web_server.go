@@ -26,6 +26,7 @@ func Run() {
 	osinConfig := osin.NewServerConfig()
 	osinConfig.AllowedAuthorizeTypes = osin.AllowedAuthorizeType{osin.TOKEN}
 	osinConfig.AllowedAccessTypes = osin.AllowedAccessType{osin.PASSWORD, osin.REFRESH_TOKEN}
+	osinConfig.ErrorStatusCode = 401
 
 	oauthStorage := NewOAuthStorage()
 	oauthServer = osin.NewServer(osinConfig, oauthStorage)
