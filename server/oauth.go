@@ -17,7 +17,7 @@ func handleOauthToken(w http.ResponseWriter, req *http.Request) {
 		switch ar.Type {
 		case osin.PASSWORD:
 			// @todo Finish that !
-			if ar.Username == "test" && ar.Password == "test" {
+			if ar.Username == "test@test.com" && ar.Password == "test" {
 				ar.Authorized = true
 			}
 		case osin.REFRESH_TOKEN:

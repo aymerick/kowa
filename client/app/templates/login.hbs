@@ -1,7 +1,18 @@
-<form {{action 'authenticate' on='submit'}}>
-  <label for="identification">Login</label>
-  {{input id='identification' placeholder='Enter Login' value=identification}}
-  <label for="password">Password</label>
-  {{input id='password' placeholder='Enter Password' type='password' value=password}}
-  <button type="submit">Login</button>
-</form>
+<div class="container login-box">
+
+  <div class="login-logo">
+    <img src="/images/ninja_150x150.png" alt="Kowa Logo" class="img-responsive" />
+  </div>
+  <form class="login-form" role="form" {{action 'authenticate' on='submit'}}>
+    <div class="form-group">
+      <label for="login-email">Email address</label>
+      {{input id='login-email' class='form-control' placeholder='Enter email' type='email' required='required' autofocus='autofocus' value=identification}}
+    </div>
+    <div class="form-group">
+      <label for="login-password">Password</label>
+      {{input id='login-password' class='form-control' placeholder='Enter Password' type='password' required='required' value=password}}
+    </div>
+    <button type="submit" class="btn btn-lg btn-primary btn-block">Login</button>
+  </form>
+
+</div>

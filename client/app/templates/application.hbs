@@ -1,13 +1,9 @@
 {{#unless hideNav}}
     {{partial "navbar"}}
+
+    {{#if session.isAuthenticated}}
+      <a {{ action 'invalidateSession' }}>Logout</a>
+    {{/if}}
 {{/unless}}
-
-<h2 id='title'>Welcome to Kowa</h2>
-
-{{#if session.isAuthenticated}}
-  <a {{ action 'invalidateSession' }}>Logout</a>
-{{/if}}
-
-<hr />
 
 {{outlet}}

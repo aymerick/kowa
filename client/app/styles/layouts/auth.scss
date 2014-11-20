@@ -1,0 +1,18 @@
+$login-box-width: 330px;
+$login-box-padding: 15px;
+
+$logo-head-width: 124px;
+$logo-margin: ($login-box-width - (2 * $login-box-padding) - $logo-head-width) / 2;
+
+.login-box {
+    max-width: 330px;
+    padding: 15px;
+
+    img {
+        margin-left: $logo-margin;
+    }
+}
+
+.login-logo {
+    margin: 0 auto;
+}
