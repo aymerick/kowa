@@ -1,18 +1,24 @@
-$login-box-width: 330px;
+//
+// Auth pages
+//
+
+$login-box-width: 400px;
 $login-box-padding: 15px;
 
 $logo-head-width: 124px;
 $logo-margin: ($login-box-width - (2 * $login-box-padding) - $logo-head-width) / 2;
 
 .login-box {
-    max-width: 330px;
+    max-width: $login-box-width;
     padding: 15px;
 
     img {
         margin-left: $logo-margin;
+        margin-bottom: 25px;
     }
-}
 
-.login-logo {
-    margin: 0 auto;
+
+    @media (min-width: $medium-min-width) {
+        margin-top: 85px;
+    }
 }
