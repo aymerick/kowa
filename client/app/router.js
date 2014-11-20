@@ -33,6 +33,8 @@ Router.map(function() {
       });
     });
   });
+
+  this.route('error404', {path: '/*path'});
 });
 
 export default Router;
