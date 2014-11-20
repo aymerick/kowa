@@ -22,7 +22,7 @@ var app = new EmberApp({
 // Bootstrap
 app.import('bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js');
 // app.import('bower_components/bootstrap-sass-official/assets/fonts/bootstrap/glyphicons-halflings-regular.woff', {
-//   destDir: 'fonts/bootstrap/'
+//   destDir: 'fonts'
 // });
 
 // Font awesome
