@@ -29,8 +29,8 @@ module.exports = function(environment) {
 
   // SimpleAuth
   ENV['simple-auth-oauth2'] = {
-    serverTokenEndpoint: '/oauth/token',
-    // @todo serverTokenRevocationEndpoint: Ghost.apiRoot + '/oauth/revoke',
+    serverTokenEndpoint: '/api/oauth/token',
+    // @todo serverTokenRevocationEndpoint: '/api/oauth/revoke',
     refreshAccessTokens: true
   }
 

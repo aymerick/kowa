@@ -40,18 +40,20 @@ func Run() {
 	setupCORSMiddleware(n)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/users", handleUsers).Methods("GET")
-	router.HandleFunc("/sites", handleSites).Methods("GET")
+	apiRouter := router.PathPrefix("/api").Subrouter()
+	apiRouter.HandleFunc("/users", handleUsers).Methods("GET")
+	apiRouter.HandleFunc("/sites", handleSites).Methods("GET")
 
 	oauthRouter := mux.NewRouter()
-	oauthRouter.HandleFunc("/oauth/token", handleOauthToken).Methods("POST")
+	// @todo Wtf ? It seems akwards
+	oauthRouter.HandleFunc("/api/oauth/token", handleOauthToken).Methods("POST")
 
-	router.Handle("/oauth/token", negroni.New(
+	apiRouter.Handle("/oauth/token", negroni.New(
 		negroni.HandlerFunc(injectOauthSecretMiddleware),
 		negroni.Wrap(oauthRouter),
 	))
 
-	n.UseHandler(router)
+	n.UseHandler(apiRouter)
 
 	fmt.Println("Running on port:", port)
 	n.Run(":" + port)
