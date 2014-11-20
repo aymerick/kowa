@@ -19,8 +19,19 @@ module.exports = function(environment) {
     }
   };
 
+  // SimpleAuth
   ENV['simple-auth'] = {
+    routeAfterAuthentication: 'sites',
+    routeIfAlreadyAuthenticated: 'sites',
+    localStorageKey: 'kowa:session',
     authorizer: 'simple-auth-authorizer:oauth2-bearer'
+  }
+
+  // SimpleAuth
+  ENV['simple-auth-oauth2'] = {
+    serverTokenEndpoint: '/oauth/token',
+    // @todo serverTokenRevocationEndpoint: Ghost.apiRoot + '/oauth/revoke',
+    refreshAccessTokens: true
   }
 
   if (environment === 'development') {
@@ -30,13 +41,8 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     ENV.APP.LOG_VIEW_LOOKUPS = true;
 
-    ENV['simple-auth'] = {
-      crossOriginWhitelist: ['http://localhost:35830']
-    }
-
-    ENV['simple-auth-oauth2'] = {
-      serverTokenEndpoint: 'http://localhost:35830/oauth/token'
-    }
+    // SimpleAuth
+    ENV['simple-auth']['crossOriginWhitelist'] = ['http://localhost:35830']
   }
 
   if (environment === 'test') {
