@@ -8,10 +8,10 @@ import (
 )
 
 const (
-	NEWS_COL_NAME = "news"
+	POSTS_COL_NAME = "posts"
 )
 
-type News struct {
+type Post struct {
 	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"created_at"`
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updated_at"`
@@ -23,9 +23,9 @@ type News struct {
 	// @todo Photo
 }
 
-type NewsList []News
+type PostsList []Post
 
-// News collection
-func NewsCol() *mgo.Collection {
-	return DB().C(NEWS_COL_NAME)
+// Posts collection
+func PostsCol() *mgo.Collection {
+	return DB().C(POSTS_COL_NAME)
 }

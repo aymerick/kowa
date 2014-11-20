@@ -13,7 +13,7 @@ const (
 
 type SitePageSettings struct {
 	Id      bson.ObjectId `bson:"_id,omitempty" json:"id"`
-	Kind    string        `bson:"kind"    json:"kind"` // 'contact' || 'actions' || 'news' || 'events' || 'staff'
+	Kind    string        `bson:"kind"    json:"kind"` // 'contact' || 'actions' || 'posts' || 'events' || 'staff'
 	Title   string        `bson:"title"   json:"title"`
 	Tagline string        `bson:"tagline" json:"tagline"`
 	// @todo Photo
