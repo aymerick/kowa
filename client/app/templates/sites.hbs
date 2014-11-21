@@ -1,4 +1,6 @@
-Sites:
+<hr />
+
+Sites for {{session.currentUser.fullName}}
 {{#each}}
     <li>{{#link-to 'site' this}}{{{name}}}{{/link-to}}</li>
 {{/each}}

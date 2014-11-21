@@ -19,30 +19,12 @@ module.exports = function(environment) {
     }
   };
 
-  // SimpleAuth
-  ENV['simple-auth'] = {
-    routeAfterAuthentication: 'sites',
-    routeIfAlreadyAuthenticated: 'sites',
-    localStorageKey: 'kowa:session',
-    authorizer: 'simple-auth-authorizer:oauth2-bearer'
-  }
-
-  // SimpleAuth
-  ENV['simple-auth-oauth2'] = {
-    serverTokenEndpoint: '/api/oauth/token',
-    // @todo serverTokenRevocationEndpoint: '/api/oauth/revoke',
-    refreshAccessTokens: true
-  }
-
   if (environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;
     ENV.APP.LOG_ACTIVE_GENERATION = true;
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     ENV.APP.LOG_VIEW_LOOKUPS = true;
-
-    // SimpleAuth
-    ENV['simple-auth']['crossOriginWhitelist'] = ['http://localhost:35830']
   }
 
   if (environment === 'test') {

@@ -42,7 +42,7 @@ func Run() {
 	router := mux.NewRouter()
 	apiRouter := router.PathPrefix("/api").Subrouter()
 	apiRouter.HandleFunc("/users/{user_id}", handleGetUser).Methods("GET")
-	apiRouter.HandleFunc("/sites", handleGetSites).Methods("GET")
+	apiRouter.HandleFunc("/users/{user_id}/sites", handleGetUserSites).Methods("GET")
 
 	oauthRouter := mux.NewRouter()
 	// @todo Wtf ? It seems akwards

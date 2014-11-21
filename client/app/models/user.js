@@ -6,7 +6,7 @@ var User = DS.Model.extend({
   firstName: DS.attr(),
   lastName: DS.attr(),
 
-  sites: DS.hasMany('site'),
+  sites: DS.hasMany('site', { async: true }),
 
   fullName: function() {
     return this.get('firstName') + ' ' + this.get('lastName');

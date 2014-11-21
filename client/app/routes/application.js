@@ -3,7 +3,7 @@ import SimpleAuthApplicationRouteMixin from 'simple-auth/mixins/application-rout
 
 var ApplicationRoute = Ember.Route.extend(SimpleAuthApplicationRouteMixin, {
   actions: {
-    sessionAuthenticationFailed: function (error) {
+    sessionAuthenticationFailed: function(error) {
       // this.controllerFor('application').set('loginErrorMessage', error.message);
 
       // if (error.errors) {
