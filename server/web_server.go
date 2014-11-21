@@ -47,8 +47,16 @@ func Run() {
 	oauthRouter := mux.NewRouter()
 	// @todo Wtf ? It seems akwards
 	oauthRouter.HandleFunc("/api/oauth/token", handleOauthToken).Methods("POST")
+	oauthRouter.HandleFunc("/api/oauth/revoke", handleOauthRevoke).Methods("POST")
 
+	// @todo Wtf ? It seems akwards
 	apiRouter.Handle("/oauth/token", negroni.New(
+		negroni.HandlerFunc(injectOauthSecretMiddleware),
+		negroni.Wrap(oauthRouter),
+	))
+
+	// @todo Wtf ? It seems akwards
+	apiRouter.Handle("/oauth/revoke", negroni.New(
 		negroni.HandlerFunc(injectOauthSecretMiddleware),
 		negroni.Wrap(oauthRouter),
 	))

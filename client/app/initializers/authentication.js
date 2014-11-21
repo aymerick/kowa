@@ -24,7 +24,7 @@ var AuthenticationInitializer = {
 
     ENV['simple-auth-oauth2'] = {
       serverTokenEndpoint: '/api/oauth/token',
-      // @todo serverTokenRevocationEndpoint: '/api/oauth/revoke',
+      serverTokenRevocationEndpoint: '/api/oauth/revoke',
       refreshAccessTokens: true
     };
   }

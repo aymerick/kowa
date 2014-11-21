@@ -14,7 +14,7 @@ type OAuthStorage struct {
 const (
 	DBNAME             = "kowa_oauth"
 	CLIENTS_COL        = "clients"
-	AUTHORIZATIONS_COL = "authorizations"
+	AUTHORIZATIONS_COL = "authorizations" // NOT USED
 	ACCESSES_COL       = "accesses"
 )
 
@@ -30,7 +30,7 @@ func NewOAuthStorage() *OAuthStorage {
 
 	index := mgo.Index{
 		Key:        []string{REFRESHTOKEN},
-		Unique:     false, // refreshtoken is sometimes empty
+		Unique:     false,
 		DropDups:   false,
 		Background: true,
 		Sparse:     true,
@@ -95,17 +95,20 @@ func (this *OAuthStorage) GetClient(id string) (osin.Client, error) {
 	return client, err
 }
 
+// NOT USED
 func (this *OAuthStorage) SaveAuthorize(data *osin.AuthorizeData) error {
 	_, err := this.authorizationsCol().UpsertId(data.Code, data)
 	return err
 }
 
+// NOT USED
 func (this *OAuthStorage) LoadAuthorize(code string) (*osin.AuthorizeData, error) {
 	authData := &osin.AuthorizeData{}
 	err := this.authorizationsCol().FindId(code).One(authData)
 	return authData, err
 }
 
+// NOT USED
 func (this *OAuthStorage) RemoveAuthorize(code string) error {
 	return this.authorizationsCol().RemoveId(code)
 }
