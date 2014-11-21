@@ -21,18 +21,18 @@ type SitePageSettings struct {
 
 type Site struct {
 	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
-	CreatedAt time.Time     `bson:"created_at"    json:"created_at"`
-	UserId    bson.ObjectId `bson:"user_id"       json:"user_id"`
+	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
+	UserId    bson.ObjectId `bson:"user_id"       json:"user"`
 
 	Name        string `bson:"name"        json:"name"`
 	Tagline     string `bson:"tagline"     json:"tagline"`
 	Description string `bson:"description" json:"description"`
-	MoreDesc    string `bson:"more_desc"   json:"more_desc"`
-	JoinText    string `bson:"join_text"   json:"join_text"`
+	MoreDesc    string `bson:"more_desc"   json:"moreDesc"`
+	JoinText    string `bson:"join_text"   json:"joinText"`
 	// @todo Logo
 	// @todo Photo
 
-	PageSettings []SitePageSettings `bson:"page_settings" json:"page_settings"`
+	PageSettings []SitePageSettings `bson:"page_settings" json:"pageSettings"`
 
 	// @todo Address
 	// @todo Email

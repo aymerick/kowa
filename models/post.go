@@ -13,11 +13,11 @@ const (
 
 type Post struct {
 	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
-	CreatedAt time.Time     `bson:"created_at"    json:"created_at"`
-	UpdatedAt time.Time     `bson:"updated_at"    json:"updated_at"`
-	SiteId    bson.ObjectId `bson:"site_id"       json:"site_id"`
+	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
+	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
+	SiteId    bson.ObjectId `bson:"site_id"       json:"site"`
 
-	PublishedAt time.Time `bson:"published_at" json:"published_at"`
+	PublishedAt time.Time `bson:"published_at" json:"publishedAt"`
 	Title       string    `bson:"title"        json:"title"`
 	Body        string    `bson:"body"         json:"body"`
 	// @todo Photo

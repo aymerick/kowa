@@ -7,6 +7,6 @@ import (
 )
 
 // GET /sites
-func handleSites(w http.ResponseWriter, req *http.Request) {
+func handleGetSites(w http.ResponseWriter, req *http.Request) {
 	renderResp.JSON(w, http.StatusOK, renderMap{"sites": models.AllSites()})
 }

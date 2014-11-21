@@ -13,10 +13,10 @@ const (
 
 type User struct {
 	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
-	CreatedAt time.Time     `bson:"created_at"    json:"created_at"`
+	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
 
-	FirstName string `bson:"first_name" json:"first_name"`
-	LastName  string `bson:"last_name"  json:"last_name"`
+	FirstName string `bson:"first_name" json:"firstName"`
+	LastName  string `bson:"last_name"  json:"lastName"`
 }
 
 type UsersList []User
@@ -26,10 +26,11 @@ func UsersCol() *mgo.Collection {
 	return DB().C(USERS_COL_NAME)
 }
 
-func AllUsers() *UsersList {
-	var result UsersList
+func FindUser(userId string) *User {
+	var result User
 
-	UsersCol().Find(nil).All(&result)
+	// @todo Handle err
+	UsersCol().FindId(bson.ObjectIdHex(userId)).One(&result)
 
 	return &result
 }
