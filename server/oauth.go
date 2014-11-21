@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/RangelReale/osin"
@@ -13,11 +12,11 @@ func handleOauthToken(w http.ResponseWriter, req *http.Request) {
 	defer resp.Close()
 
 	if ar := oauthServer.HandleAccessRequest(resp, req); ar != nil {
-		fmt.Println("ar: %v", ar)
 		switch ar.Type {
 		case osin.PASSWORD:
 			// @todo Finish that !
 			if ar.Username == "test@test.com" && ar.Password == "test" {
+				ar.UserData = "test@test.com"
 				ar.Authorized = true
 			}
 		case osin.REFRESH_TOKEN:
