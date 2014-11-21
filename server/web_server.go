@@ -24,6 +24,7 @@ func Run() {
 
 	// setup osin oauth2 server
 	osinConfig := osin.NewServerConfig()
+	osinConfig.AccessExpiration = 3600 // One hour
 	osinConfig.AllowedAuthorizeTypes = osin.AllowedAuthorizeType{osin.TOKEN}
 	osinConfig.AllowedAccessTypes = osin.AllowedAccessType{osin.PASSWORD, osin.REFRESH_TOKEN}
 	osinConfig.ErrorStatusCode = 401

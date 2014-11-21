@@ -1,6 +1,8 @@
 package server
 
 import (
+	"time"
+
 	"github.com/RangelReale/osin"
 	"github.com/aymerick/kowa/models"
 	"gopkg.in/mgo.v2"
@@ -9,6 +11,16 @@ import (
 
 type OAuthStorage struct {
 	session *mgo.Session
+}
+
+type AccessDoc struct {
+	ClientId     string    // Client id
+	AccessToken  string    // Access token
+	RefreshToken string    // Refresh Token. Can be blank
+	ExpiresIn    int32     // Token expiration in seconds
+	Scope        string    // Requested scope
+	CreatedAt    time.Time // Date created
+	UserData     interface{}
 }
 
 const (
@@ -26,7 +38,7 @@ const (
 )
 
 func NewOAuthStorage() *OAuthStorage {
-	storage := &OAuthStorage{session: models.DBSession()}
+	storage := &OAuthStorage{session: models.DBSession().Clone()}
 
 	index := mgo.Index{
 		Key:        []string{REFRESHTOKEN},
@@ -114,14 +126,51 @@ func (this *OAuthStorage) RemoveAuthorize(code string) error {
 }
 
 func (this *OAuthStorage) SaveAccess(data *osin.AccessData) error {
-	_, err := this.accessesCol().UpsertId(data.AccessToken, data)
+	doc := &AccessDoc{
+		ClientId:     data.Client.GetId(),
+		AccessToken:  data.AccessToken,
+		RefreshToken: data.RefreshToken,
+		ExpiresIn:    data.ExpiresIn,
+		Scope:        data.Scope,
+		CreatedAt:    data.CreatedAt,
+		UserData:     data.UserData,
+	}
+	_, err := this.accessesCol().UpsertId(data.AccessToken, doc)
 	return err
 }
 
+func (this *OAuthStorage) docToAccessData(doc *AccessDoc) (*osin.AccessData, error) {
+	var result *osin.AccessData
+	var err error
+
+	var client osin.Client
+	client, err = this.GetClient(doc.ClientId)
+	if err == nil {
+		result = &osin.AccessData{
+			Client:       client,
+			AccessToken:  doc.AccessToken,
+			RefreshToken: doc.RefreshToken,
+			ExpiresIn:    doc.ExpiresIn,
+			Scope:        doc.Scope,
+			CreatedAt:    doc.CreatedAt,
+			UserData:     doc.UserData,
+		}
+	}
+
+	return result, err
+}
+
 func (this *OAuthStorage) LoadAccess(token string) (*osin.AccessData, error) {
-	accData := &osin.AccessData{}
-	err := this.accessesCol().FindId(token).One(accData)
-	return accData, err
+	var result *osin.AccessData
+	var err error
+
+	doc := &AccessDoc{}
+	err = this.accessesCol().FindId(token).One(doc)
+	if err == nil {
+		result, err = this.docToAccessData(doc)
+	}
+
+	return result, err
 }
 
 func (this *OAuthStorage) RemoveAccess(token string) error {
@@ -129,9 +178,16 @@ func (this *OAuthStorage) RemoveAccess(token string) error {
 }
 
 func (this *OAuthStorage) LoadRefresh(token string) (*osin.AccessData, error) {
-	accData := &osin.AccessData{}
-	err := this.accessesCol().Find(bson.M{REFRESHTOKEN: token}).One(accData)
-	return accData, err
+	var result *osin.AccessData
+	var err error
+
+	doc := &AccessDoc{}
+	err = this.accessesCol().Find(bson.M{REFRESHTOKEN: token}).One(doc)
+	if err == nil {
+		result, err = this.docToAccessData(doc)
+	}
+
+	return result, err
 }
 
 func (this *OAuthStorage) RemoveRefresh(token string) error {

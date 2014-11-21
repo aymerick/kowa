@@ -15,6 +15,10 @@ var (
 
 func init() {
 	// @todo EnsureIndexes()
+
+	// logout := log.New(os.Stdout, "MGO: ", log.Lshortfile)
+	// mgo.SetLogger(logout)
+	// mgo.SetDebug(true)
 }
 
 func MongoDBSessionForURI(uri string) *mgo.Session {
