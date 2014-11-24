@@ -8,10 +8,10 @@ import (
 
 // POST /oauth/token
 func (app *Application) handleOauthToken(rw http.ResponseWriter, req *http.Request) {
-	resp := oauthServer.NewResponse()
+	resp := app.oauthServer.NewResponse()
 	defer resp.Close()
 
-	if ar := oauthServer.HandleAccessRequest(resp, req); ar != nil {
+	if ar := app.oauthServer.HandleAccessRequest(resp, req); ar != nil {
 		switch ar.Type {
 		case osin.PASSWORD:
 			// @todo Finish that !
@@ -22,7 +22,7 @@ func (app *Application) handleOauthToken(rw http.ResponseWriter, req *http.Reque
 		case osin.REFRESH_TOKEN:
 			ar.Authorized = true
 		}
-		oauthServer.FinishAccessRequest(resp, req, ar)
+		app.oauthServer.FinishAccessRequest(resp, req, ar)
 	}
 
 	osin.OutputJSON(resp, rw, req)
@@ -30,7 +30,7 @@ func (app *Application) handleOauthToken(rw http.ResponseWriter, req *http.Reque
 
 // POST /oauth/revoke
 func (app *Application) handleOauthRevoke(rw http.ResponseWriter, req *http.Request) {
-	resp := oauthServer.NewResponse()
+	resp := app.oauthServer.NewResponse()
 	defer resp.Close()
 
 	err := req.ParseForm()
