@@ -2,11 +2,14 @@ package server
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/RangelReale/osin"
-	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
+	"github.com/justinas/alice"
 	"github.com/spf13/viper"
+
+	"github.com/aymerick/kowa/server/middlewares"
 )
 
 // global oauth2 server
@@ -28,29 +31,24 @@ func Run() {
 	oauthStorage := NewOAuthStorage()
 	oauthServer = osin.NewServer(osinConfig, oauthStorage)
 
-	// setup controllers
+	// setup app
 	app := NewApplication()
 
-	// setup routes
-	n := negroni.Classic()
-
-	setupCORSMiddleware(n)
+	commonMiddlewares := alice.New(middlewares.Logging, middlewares.Recovery, middlewares.Cors())
 
 	router := mux.NewRouter()
 	apiRouter := router.PathPrefix("/api").Subrouter()
 
-	// UsersController
+	// users
 	userRouter := apiRouter.PathPrefix("/users/{user_id}").Subrouter()
-	userRouter.Methods("GET").Path("/sites").HandlerFunc(app.handleGetUserSites)
-	userRouter.Methods("GET").HandlerFunc(app.handleGetUser)
+	userRouter.Methods("GET").Path("/sites").Handler(commonMiddlewares.ThenFunc(app.handleGetUserSites))
+	userRouter.Methods("GET").Handler(commonMiddlewares.ThenFunc(app.handleGetUser))
 
-	// OauthController
+	// oauth
 	oauthRouter := apiRouter.PathPrefix("/oauth").Subrouter()
-	oauthRouter.Methods("POST").Path("/token").HandlerFunc(app.handleOauthToken)
-	oauthRouter.Methods("POST").Path("/revoke").HandlerFunc(app.handleOauthRevoke)
-
-	n.UseHandler(router)
+	oauthRouter.Methods("POST").Path("/token").Handler(commonMiddlewares.ThenFunc(app.handleOauthToken))
+	oauthRouter.Methods("POST").Path("/revoke").Handler(commonMiddlewares.ThenFunc(app.handleOauthRevoke))
 
 	fmt.Println("Running on port:", port)
-	n.Run(":" + port)
+	http.ListenAndServe(":"+port, router)
 }
