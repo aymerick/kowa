@@ -13,21 +13,20 @@ import (
 
 type UserTestSuite struct {
 	suite.Suite
+	db *DBSession
 }
 
 // called before all tests
 func (suite *UserTestSuite) SetupSuite() {
-	// Init database session
-	SetDBSession(MongoDBSessionForURI(TEST_MONGODB_URI))
-
-	// Change database
-	SetDBName(TEST_DBNAME)
+	// setup db
+	suite.db = NewTestDBSession()
+	suite.db.SetDBName(TEST_DBNAME)
 }
 
 // called before each test
 func (suite *UserTestSuite) SetupTest() {
 	// Reset database
-	DB().DropDatabase()
+	suite.db.DB().DropDatabase()
 }
 
 // called after each test
@@ -56,21 +55,21 @@ func (suite *UserTestSuite) TestUsers() {
 	t := suite.T()
 
 	// Insert users
-	err = UsersCol().Insert(&User{FirstName: "Jean-Claude", LastName: "Trucmush", CreatedAt: time.Now()},
+	err = suite.db.UsersCol().Insert(&User{FirstName: "Jean-Claude", LastName: "Trucmush", CreatedAt: time.Now()},
 		&User{FirstName: "Marie", LastName: "Koushtoala", CreatedAt: time.Now()})
 
 	assert.Nil(t, err)
 
 	// Count users
 	var c int
-	c, err = UsersCol().Count()
+	c, err = suite.db.UsersCol().Count()
 	assert.Nil(t, err)
 
 	assert.Equal(t, c, 2)
 
 	// Fetch one user
 	var userJC User
-	err = UsersCol().Find(bson.M{"first_name": "Jean-Claude"}).One(&userJC)
+	err = suite.db.UsersCol().Find(bson.M{"first_name": "Jean-Claude"}).One(&userJC)
 	assert.Nil(t, err)
 
 	assert.Equal(t, userJC.FirstName, "Jean-Claude")
@@ -80,7 +79,7 @@ func (suite *UserTestSuite) TestUsers() {
 
 	// Fetch several users
 	var allUsers UsersList
-	UsersCol().Find(nil).All(&allUsers)
+	suite.db.UsersCol().Find(nil).All(&allUsers)
 
 	// str, _ := json.MarshalIndent(allUsers, "", " ")
 	// fmt.Printf("%s\n", str)

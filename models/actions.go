@@ -24,7 +24,11 @@ type Action struct {
 
 type ActionsList []Action
 
+//
+// DBSession
+//
+
 // Actions collection
-func ActionsCol() *mgo.Collection {
-	return DB().C(ACTIONS_COL_NAME)
+func (session *DBSession) ActionsCol() *mgo.Collection {
+	return session.DB().C(ACTIONS_COL_NAME)
 }

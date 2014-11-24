@@ -12,21 +12,20 @@ import (
 
 type SiteTestSuite struct {
 	suite.Suite
+	db *DBSession
 }
 
 // called before all tests
 func (suite *SiteTestSuite) SetupSuite() {
-	// Init database session
-	SetDBSession(MongoDBSessionForURI(TEST_MONGODB_URI))
-
-	// Change database
-	SetDBName(TEST_DBNAME)
+	// setup db
+	suite.db = NewTestDBSession()
+	suite.db.SetDBName(TEST_DBNAME)
 }
 
 // called before each test
 func (suite *SiteTestSuite) SetupTest() {
 	// Reset database
-	DB().DropDatabase()
+	suite.db.DB().DropDatabase()
 }
 
 // called after each test
@@ -61,7 +60,7 @@ func (suite *SiteTestSuite) TestSite() {
 		LastName:  "Trucmush",
 		CreatedAt: time.Now(),
 	}
-	err = UsersCol().Insert(&user)
+	err = suite.db.UsersCol().Insert(&user)
 	assert.Nil(t, err)
 
 	// Insert site
@@ -73,19 +72,19 @@ func (suite *SiteTestSuite) TestSite() {
 		Tagline:     "So powerfull !",
 		Description: "You will be astonished by what my site is about",
 	}
-	err = SitesCol().Insert(&site)
+	err = suite.db.SitesCol().Insert(&site)
 	assert.Nil(t, err)
 
 	// Count sites
 	var c int
-	c, err = SitesCol().Count()
+	c, err = suite.db.SitesCol().Count()
 	assert.Nil(t, err)
 
 	assert.Equal(t, c, 1)
 
 	// Fetch site
 	var fetchedSite Site
-	err = SitesCol().FindId(site.Id).One(&fetchedSite)
+	err = suite.db.SitesCol().FindId(site.Id).One(&fetchedSite)
 	assert.Nil(t, err)
 
 	assert.Equal(t, fetchedSite.UserId, user.Id)

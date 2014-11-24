@@ -26,7 +26,11 @@ type Event struct {
 
 type EventsList []Event
 
+//
+// DBSession
+//
+
 // Events collection
-func EventsCol() *mgo.Collection {
-	return DB().C(EVENTS_COL_NAME)
+func (session *DBSession) EventsCol() *mgo.Collection {
+	return session.DB().C(EVENTS_COL_NAME)
 }

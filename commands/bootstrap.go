@@ -19,6 +19,8 @@ var bootstrapCmd = &cobra.Command{
 func bootstrap(cmd *cobra.Command, args []string) {
 	// @todo Check that we are NOT in production
 
+	db := models.NewDBSession()
+
 	// Insert users
 	userJeanClaude := models.User{
 		Id:        bson.NewObjectId(),
@@ -26,7 +28,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 		LastName:  "Trucmush",
 		CreatedAt: time.Now(),
 	}
-	models.UsersCol().Insert(&userJeanClaude)
+	db.UsersCol().Insert(&userJeanClaude)
 
 	userHenry := models.User{
 		Id:        bson.NewObjectId(),
@@ -34,7 +36,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 		LastName:  "Kanan",
 		CreatedAt: time.Now(),
 	}
-	models.UsersCol().Insert(&userHenry)
+	db.UsersCol().Insert(&userHenry)
 
 	// Insert sites
 	var site models.Site
@@ -47,7 +49,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 		Tagline:     "So powerfull !",
 		Description: "You will be astonished by what my site is about",
 	}
-	models.SitesCol().Insert(&site)
+	db.SitesCol().Insert(&site)
 
 	site = models.Site{
 		Id:          bson.NewObjectId(),
@@ -57,7 +59,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 		Tagline:     "Very interesting",
 		Description: "Our projects are so importants, please help us",
 	}
-	models.SitesCol().Insert(&site)
+	db.SitesCol().Insert(&site)
 
 	site = models.Site{
 		Id:          bson.NewObjectId(),
@@ -67,7 +69,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 		Tagline:     "La petanque comme vous ne l'avez jamais vu",
 		Description: "C'est vraiment le sport du futur. Messieurs, preparez vos boules !",
 	}
-	models.SitesCol().Insert(&site)
+	db.SitesCol().Insert(&site)
 
 	// Insert oauth client
 	oauthStorage := server.NewOAuthStorage()

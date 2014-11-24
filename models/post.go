@@ -25,7 +25,11 @@ type Post struct {
 
 type PostsList []Post
 
+//
+// DBSession
+//
+
 // Posts collection
-func PostsCol() *mgo.Collection {
-	return DB().C(POSTS_COL_NAME)
+func (session *DBSession) PostsCol() *mgo.Collection {
+	return session.DB().C(POSTS_COL_NAME)
 }

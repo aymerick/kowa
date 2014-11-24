@@ -25,7 +25,11 @@ type StaffMember struct {
 
 type StaffMembersList []StaffMember
 
+//
+// DBSession
+//
+
 // StaffMember collection
-func StaffMembersCol() *mgo.Collection {
-	return DB().C(STAFF_MEMBERS_COL_NAME)
+func (session *DBSession) StaffMembersCol() *mgo.Collection {
+	return session.DB().C(STAFF_MEMBERS_COL_NAME)
 }

@@ -24,7 +24,7 @@ type AccessDoc struct {
 }
 
 const (
-	DBNAME             = "kowa_oauth"
+	OAUTH_DBNAME       = "kowa_oauth"
 	CLIENTS_COL        = "clients"
 	AUTHORIZATIONS_COL = "authorizations" // NOT USED
 	ACCESSES_COL       = "accesses"
@@ -37,7 +37,9 @@ const (
 )
 
 func NewOAuthStorage() *OAuthStorage {
-	storage := &OAuthStorage{session: models.DBSession().Clone()}
+	storage := &OAuthStorage{
+		session: models.NewMongoDBSession(),
+	}
 
 	index := mgo.Index{
 		Key:        []string{REFRESHTOKEN},
@@ -47,7 +49,7 @@ func NewOAuthStorage() *OAuthStorage {
 		Sparse:     true,
 	}
 
-	accesses := storage.session.DB(DBNAME).C(ACCESSES_COL)
+	accesses := storage.session.DB(OAUTH_DBNAME).C(ACCESSES_COL)
 	err := accesses.EnsureIndex(index)
 	if err != nil {
 		panic(err)
@@ -57,7 +59,7 @@ func NewOAuthStorage() *OAuthStorage {
 }
 
 func (this *OAuthStorage) DB() *mgo.Database {
-	return this.session.DB(DBNAME)
+	return this.session.DB(OAUTH_DBNAME)
 }
 
 func (this *OAuthStorage) clientsCol() *mgo.Collection {

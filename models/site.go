@@ -43,7 +43,11 @@ type Site struct {
 
 type SitesList []Site
 
+//
+// DBSession
+//
+
 // Sites collection
-func SitesCol() *mgo.Collection {
-	return DB().C(SITES_COL_NAME)
+func (session *DBSession) SitesCol() *mgo.Collection {
+	return session.DB().C(SITES_COL_NAME)
 }

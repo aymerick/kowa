@@ -25,7 +25,11 @@ type Page struct {
 
 type PagesList []Page
 
+//
+// DBSession
+//
+
 // Pages collection
-func PagesCol() *mgo.Collection {
-	return DB().C(PAGES_COL_NAME)
+func (session *DBSession) PagesCol() *mgo.Collection {
+	return session.DB().C(PAGES_COL_NAME)
 }

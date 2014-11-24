@@ -14,6 +14,8 @@ const (
 )
 
 type User struct {
+	dbSession *DBSession `bson:"-" json:"-"`
+
 	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
 
@@ -28,20 +30,30 @@ type UserJson struct {
 
 type UsersList []User
 
+//
+// DBSession
+//
+
 // Handler for Users collection
-func UsersCol() *mgo.Collection {
-	return DB().C(USERS_COL_NAME)
+func (session *DBSession) UsersCol() *mgo.Collection {
+	return session.DB().C(USERS_COL_NAME)
 }
 
 // Find user by id
-func FindUser(userId string) *User {
+func (session *DBSession) FindUser(userId string) *User {
 	var result User
 
 	// @todo Handle err
-	UsersCol().FindId(bson.ObjectIdHex(userId)).One(&result)
+	session.UsersCol().FindId(bson.ObjectIdHex(userId)).One(&result)
+
+	result.dbSession = session
 
 	return &result
 }
+
+//
+// User
+//
 
 // Implements json.MarshalJSON
 func (this *User) MarshalJSON() ([]byte, error) {
@@ -56,11 +68,14 @@ func (this *User) MarshalJSON() ([]byte, error) {
 	return json.Marshal(userJson)
 }
 
-// Find all sites belonging to user
+// Fetch from database: all sites belonging to user
 func (this *User) FindSites() *SitesList {
 	var result SitesList
 
-	SitesCol().Find(bson.M{"user_id": this.Id}).All(&result)
+	// @todo Handle err
+	this.dbSession.SitesCol().Find(bson.M{"user_id": this.Id}).All(&result)
+
+	// @todo Inject dbSession in all result sites
 
 	return &result
 }

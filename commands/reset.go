@@ -16,8 +16,10 @@ var resetCmd = &cobra.Command{
 func reset(cmd *cobra.Command, args []string) {
 	// @todo Check that we are NOT in production
 
+	db := models.NewDBSession()
+
 	// reset models database
-	models.DB().DropDatabase()
+	db.DB().DropDatabase()
 
 	// reset oauth database
 	server.NewOAuthStorage().DB().DropDatabase()
