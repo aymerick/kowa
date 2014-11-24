@@ -13,9 +13,6 @@ import (
 // global oauth2 server
 var oauthServer *osin.Server
 
-// global renderer
-var renderResp *render.Render
-
 // sugar helper
 type renderMap map[string]interface{}
 
@@ -31,9 +28,6 @@ func Run() {
 
 	oauthStorage := NewOAuthStorage()
 	oauthServer = osin.NewServer(osinConfig, oauthStorage)
-
-	// setup renderer
-	renderResp = render.New(render.Options{})
 
 	// setup controllers
 	app := &ApplicationController{render: render.New(render.Options{})}
