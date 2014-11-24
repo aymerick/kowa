@@ -35,6 +35,11 @@ func Run() {
 	// setup renderer
 	renderResp = render.New(render.Options{})
 
+	// setup controllers
+	app := &ApplicationController{render: render.New(render.Options{})}
+	users := &UsersController{app}
+	oauth := &OauthController{app}
+
 	// setup routes
 	n := negroni.Classic()
 
@@ -43,15 +48,15 @@ func Run() {
 	router := mux.NewRouter()
 	apiRouter := router.PathPrefix("/api").Subrouter()
 
-	// /api/users/{user_id}
+	// UsersController
 	userRouter := apiRouter.PathPrefix("/users/{user_id}").Subrouter()
-	userRouter.Methods("GET").Path("/sites").HandlerFunc(handleGetUserSites)
-	userRouter.Methods("GET").HandlerFunc(handleGetUser)
+	userRouter.Methods("GET").Path("/sites").Handler(users.Action(users.handleGetUserSites))
+	userRouter.Methods("GET").Handler(users.Action(users.handleGetUser))
 
-	// /api/oauth
+	// OauthController
 	oauthRouter := apiRouter.PathPrefix("/oauth").Subrouter()
-	oauthRouter.Methods("POST").Path("/token").HandlerFunc(handleOauthToken)
-	oauthRouter.Methods("POST").Path("/revoke").HandlerFunc(handleOauthRevoke)
+	oauthRouter.Methods("POST").Path("/token").Handler(oauth.Action(oauth.handleOauthToken))
+	oauthRouter.Methods("POST").Path("/revoke").Handler(oauth.Action(oauth.handleOauthRevoke))
 
 	n.UseHandler(router)
 

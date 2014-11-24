@@ -6,8 +6,12 @@ import (
 	"github.com/RangelReale/osin"
 )
 
+type OauthController struct {
+	*ApplicationController
+}
+
 // POST /oauth/token
-func handleOauthToken(w http.ResponseWriter, req *http.Request) {
+func (this *OauthController) handleOauthToken(rw http.ResponseWriter, req *http.Request) error {
 	resp := oauthServer.NewResponse()
 	defer resp.Close()
 
@@ -25,11 +29,13 @@ func handleOauthToken(w http.ResponseWriter, req *http.Request) {
 		oauthServer.FinishAccessRequest(resp, req, ar)
 	}
 
-	osin.OutputJSON(resp, w, req)
+	osin.OutputJSON(resp, rw, req)
+
+	return nil
 }
 
 // POST /oauth/revoke
-func handleOauthRevoke(w http.ResponseWriter, req *http.Request) {
+func (this *OauthController) handleOauthRevoke(rw http.ResponseWriter, req *http.Request) error {
 	resp := oauthServer.NewResponse()
 	defer resp.Close()
 
@@ -50,5 +56,7 @@ func handleOauthRevoke(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	osin.OutputJSON(resp, w, req)
+	osin.OutputJSON(resp, rw, req)
+
+	return nil
 }
