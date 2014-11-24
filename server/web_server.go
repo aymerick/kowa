@@ -6,8 +6,6 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/justinas/alice"
-
-	"github.com/aymerick/kowa/server/middlewares"
 )
 
 // sugar helper
@@ -18,8 +16,8 @@ func Run() {
 	app := NewApplication()
 
 	// setup middlewares
-	baseChain := alice.New(middlewares.Logging, middlewares.Recovery, middlewares.Cors())
-	authChain := baseChain.Append(middlewares.SetCurrentUser)
+	baseChain := alice.New(app.loggingMiddleware, app.recoveryMiddleware, app.corsMiddleware())
+	authChain := baseChain.Append(app.setCurrentUserMiddleware)
 
 	// setup routes
 	router := mux.NewRouter()
