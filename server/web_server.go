@@ -42,27 +42,18 @@ func Run() {
 
 	router := mux.NewRouter()
 	apiRouter := router.PathPrefix("/api").Subrouter()
-	apiRouter.HandleFunc("/users/{user_id}", handleGetUser).Methods("GET")
-	apiRouter.HandleFunc("/users/{user_id}/sites", handleGetUserSites).Methods("GET")
 
-	oauthRouter := mux.NewRouter()
-	// @todo Wtf ? It seems akwards
-	oauthRouter.HandleFunc("/api/oauth/token", handleOauthToken).Methods("POST")
-	oauthRouter.HandleFunc("/api/oauth/revoke", handleOauthRevoke).Methods("POST")
+	// /api/users/{user_id}
+	userRouter := apiRouter.PathPrefix("/users/{user_id}").Subrouter()
+	userRouter.Methods("GET").Path("/sites").HandlerFunc(handleGetUserSites)
+	userRouter.Methods("GET").HandlerFunc(handleGetUser)
 
-	// @todo Wtf ? It seems akwards
-	apiRouter.Handle("/oauth/token", negroni.New(
-		negroni.HandlerFunc(injectOauthSecretMiddleware),
-		negroni.Wrap(oauthRouter),
-	))
+	// /api/oauth
+	oauthRouter := apiRouter.PathPrefix("/oauth").Subrouter()
+	oauthRouter.Methods("POST").Path("/token").HandlerFunc(handleOauthToken)
+	oauthRouter.Methods("POST").Path("/revoke").HandlerFunc(handleOauthRevoke)
 
-	// @todo Wtf ? It seems akwards
-	apiRouter.Handle("/oauth/revoke", negroni.New(
-		negroni.HandlerFunc(injectOauthSecretMiddleware),
-		negroni.Wrap(oauthRouter),
-	))
-
-	n.UseHandler(apiRouter)
+	n.UseHandler(router)
 
 	fmt.Println("Running on port:", port)
 	n.Run(":" + port)

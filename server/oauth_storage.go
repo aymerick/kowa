@@ -31,10 +31,9 @@ const (
 )
 
 const (
-	REFRESHTOKEN      = "refreshtoken"
-	CLIENT_ID         = "kowa"
-	CLIENT_SECRET     = "none"
-	CLIENT_AUTH_VALUE = "a293YTpub25l" // This the base64 value of <CLIENT_ID>:<CLIENT_SECRET>
+	REFRESHTOKEN  = "refreshtoken"
+	CLIENT_ID     = "kowa"
+	CLIENT_SECRET = "none"
 )
 
 func NewOAuthStorage() *OAuthStorage {
@@ -82,7 +81,7 @@ func (this *OAuthStorage) SetupDefaultClient() (osin.Client, error) {
 	client := &osin.DefaultClient{
 		Id:          CLIENT_ID,
 		Secret:      CLIENT_SECRET,
-		RedirectUri: "http://localhost:35830/appauth", // @todo Check that
+		RedirectUri: "http://localhost:35830/", // @todo Check that
 	}
 	err := this.SetClient("kowa", client)
 
