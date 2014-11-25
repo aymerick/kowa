@@ -30,9 +30,19 @@ func (app *Application) handleGetUserSites(rw http.ResponseWriter, req *http.Req
 	vars := mux.Vars(req)
 	userId := vars["user_id"]
 
-	if user := app.dbSession.FindUser(userId); user != nil {
-		// @todo Check if user is currentUser
+	// check current user
+	currentUser := context.Get(req, "currentUser").(*models.User)
+	if currentUser == nil {
+		unauthorized(rw)
+		return
+	}
 
+	if currentUser.Id != userId {
+		unauthorized(rw)
+		return
+	}
+
+	if user := app.dbSession.FindUser(userId); user != nil {
 		app.render.JSON(rw, http.StatusOK, renderMap{"sites": user.FindSites()})
 	} else {
 		http.NotFound(rw, req)

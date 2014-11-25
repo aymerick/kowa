@@ -37,3 +37,7 @@ func Run() {
 	fmt.Println("Running on port:", app.port)
 	http.ListenAndServe(":"+app.port, router)
 }
+
+func unauthorized(rw http.ResponseWriter) {
+	http.Error(rw, "Not Authorized", http.StatusUnauthorized)
+}

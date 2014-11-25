@@ -59,14 +59,14 @@ func (app *Application) ensureAuthMiddleware(next http.Handler) http.Handler {
 		// ex: Authorization: Bearer Zjg5ZmEwNDYtNGI3NS00MTk4LWFhYzgtZmVlNGRkZDQ3YzAx
 		authValue := r.Header.Get("Authorization")
 		if len(authValue) < 7 || authValue[:7] != "Bearer " {
-			http.Error(rw, "Not Authorized", http.StatusUnauthorized)
+			unauthorized(rw)
 			return
 		}
 
 		var accessData *osin.AccessData
 		accessData, err = app.oauthServer.Storage.LoadAccess(authValue[7:])
 		if err != nil {
-			http.Error(rw, "Not Authorized", http.StatusUnauthorized)
+			unauthorized(rw)
 			return
 		}
 
@@ -74,7 +74,7 @@ func (app *Application) ensureAuthMiddleware(next http.Handler) http.Handler {
 
 		userId, ok := accessData.UserData.(string)
 		if !ok || userId == "" {
-			http.Error(rw, "Not Authorized", http.StatusUnauthorized)
+			unauthorized(rw)
 			return
 		}
 
@@ -82,7 +82,7 @@ func (app *Application) ensureAuthMiddleware(next http.Handler) http.Handler {
 			log.Printf("Current user is: %s [%s]\n", currentUser.Fullname(), userId)
 			context.Set(r, "currentUser", currentUser)
 		} else {
-			http.Error(rw, "Not Authorized", http.StatusUnauthorized)
+			unauthorized(rw)
 			return
 		}
 

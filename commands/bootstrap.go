@@ -30,7 +30,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 
 	// Insert users
 	userJeanClaude := models.User{
-		Id:        "trucmush",
+		Id:        "test",
 		CreatedAt: time.Now(),
 		Email:     "trucmush@wanadoo.fr",
 		FirstName: "Jean-Claude",
