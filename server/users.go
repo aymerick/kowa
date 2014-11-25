@@ -3,6 +3,8 @@ package server
 import (
 	"net/http"
 
+	"github.com/aymerick/kowa/models"
+	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 )
 
@@ -12,14 +14,15 @@ func (app *Application) handleGetUser(rw http.ResponseWriter, req *http.Request)
 	userId := vars["user_id"]
 
 	if userId == "me" {
-		// @todo Handle 'me' user
-		userId = "5472f8ffc25c193af3000001"
+		currentUser := context.Get(req, "currentUser").(*models.User)
+		userId = currentUser.Id
 	}
 
-	// @todo Handle user not found
-	user := app.dbSession.FindUser(userId)
-
-	app.render.JSON(rw, http.StatusOK, renderMap{"user": user})
+	if user := app.dbSession.FindUser(userId); user != nil {
+		app.render.JSON(rw, http.StatusOK, renderMap{"user": user})
+	} else {
+		http.NotFound(rw, req)
+	}
 }
 
 // GET /api/users/{user_id}/sites
@@ -27,10 +30,11 @@ func (app *Application) handleGetUserSites(rw http.ResponseWriter, req *http.Req
 	vars := mux.Vars(req)
 	userId := vars["user_id"]
 
-	// @todo Handle NotFound
-	user := app.dbSession.FindUser(userId)
+	if user := app.dbSession.FindUser(userId); user != nil {
+		// @todo Check if user is currentUser
 
-	// @todo Check if user is currentUser
-
-	app.render.JSON(rw, http.StatusOK, renderMap{"sites": user.FindSites()})
+		app.render.JSON(rw, http.StatusOK, renderMap{"sites": user.FindSites()})
+	} else {
+		http.NotFound(rw, req)
+	}
 }

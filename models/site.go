@@ -22,7 +22,7 @@ type SitePageSettings struct {
 type Site struct {
 	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
-	UserId    bson.ObjectId `bson:"user_id"       json:"user"`
+	UserId    string        `bson:"user_id"       json:"user"`
 
 	Name        string `bson:"name"        json:"name"`
 	Tagline     string `bson:"tagline"     json:"tagline"`
@@ -51,3 +51,22 @@ type SitesList []Site
 func (session *DBSession) SitesCol() *mgo.Collection {
 	return session.DB().C(SITES_COL_NAME)
 }
+
+// Ensure indexes on Users collection
+func (session *DBSession) EnsureSitesIndexes() {
+	index := mgo.Index{
+		Key:        []string{"user_id"},
+		Background: true,
+	}
+
+	err := session.SitesCol().EnsureIndex(index)
+	if err != nil {
+		panic(err)
+	}
+}
+
+//
+// Site
+//
+
+// @todo !!!

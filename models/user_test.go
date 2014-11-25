@@ -55,8 +55,21 @@ func (suite *UserTestSuite) TestUsers() {
 	t := suite.T()
 
 	// Insert users
-	err = suite.db.UsersCol().Insert(&User{FirstName: "Jean-Claude", LastName: "Trucmush", CreatedAt: time.Now()},
-		&User{FirstName: "Marie", LastName: "Koushtoala", CreatedAt: time.Now()})
+	err = suite.db.UsersCol().Insert(
+		&User{
+			Id:        "trucmush",
+			Email:     "trucmush@wanadoo.fr",
+			FirstName: "Jean-Claude",
+			LastName:  "Trucmush",
+			CreatedAt: time.Now(),
+		},
+		&User{
+			Id:        "makoush",
+			Email:     "makoush@gmail.com",
+			FirstName: "Marie",
+			LastName:  "Koushtoala",
+			CreatedAt: time.Now(),
+		})
 
 	assert.Nil(t, err)
 

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/justinas/alice"
 )
@@ -16,8 +17,8 @@ func Run() {
 	app := NewApplication()
 
 	// setup middlewares
-	baseChain := alice.New(app.loggingMiddleware, app.recoveryMiddleware, app.corsMiddleware())
-	authChain := baseChain.Append(app.setCurrentUserMiddleware)
+	baseChain := alice.New(context.ClearHandler, app.loggingMiddleware, app.recoveryMiddleware, app.corsMiddleware())
+	authChain := baseChain.Append(app.ensureAuthMiddleware)
 
 	// setup routes
 	router := mux.NewRouter()

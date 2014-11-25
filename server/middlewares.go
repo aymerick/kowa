@@ -6,6 +6,8 @@ import (
 	"runtime/debug"
 	"time"
 
+	"github.com/RangelReale/osin"
+	"github.com/gorilla/context"
 	"github.com/rs/cors"
 )
 
@@ -50,8 +52,10 @@ func (app *Application) corsMiddleware() func(next http.Handler) http.Handler {
 	return result.Handler
 }
 
-func (app *Application) setCurrentUserMiddleware(next http.Handler) http.Handler {
+func (app *Application) ensureAuthMiddleware(next http.Handler) http.Handler {
 	fn := func(rw http.ResponseWriter, r *http.Request) {
+		var err error
+
 		// ex: Authorization: Bearer Zjg5ZmEwNDYtNGI3NS00MTk4LWFhYzgtZmVlNGRkZDQ3YzAx
 		authValue := r.Header.Get("Authorization")
 		if len(authValue) < 7 || authValue[:7] != "Bearer " {
@@ -59,11 +63,28 @@ func (app *Application) setCurrentUserMiddleware(next http.Handler) http.Handler
 			return
 		}
 
-		// authToken := authValue[7:]
+		var accessData *osin.AccessData
+		accessData, err = app.oauthServer.Storage.LoadAccess(authValue[7:])
+		if err != nil {
+			http.Error(rw, "Not Authorized", http.StatusUnauthorized)
+			return
+		}
 
-		// LoadAccess()
+		// @todo Check accessData.CreatedAt
 
-		// log.Printf("Current user is: %s\n", currentUser)
+		userId, ok := accessData.UserData.(string)
+		if !ok || userId == "" {
+			http.Error(rw, "Not Authorized", http.StatusUnauthorized)
+			return
+		}
+
+		if currentUser := app.dbSession.FindUser(userId); currentUser != nil {
+			log.Printf("Current user is: %s [%s]\n", currentUser.Fullname(), userId)
+			context.Set(r, "currentUser", currentUser)
+		} else {
+			http.Error(rw, "Not Authorized", http.StatusUnauthorized)
+			return
+		}
 
 		next.ServeHTTP(rw, r)
 	}

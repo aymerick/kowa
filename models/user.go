@@ -16,11 +16,13 @@ const (
 type User struct {
 	dbSession *DBSession `bson:"-" json:"-"`
 
-	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
-	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
+	Id        string    `bson:"_id,omitempty" json:"id"`
+	CreatedAt time.Time `bson:"created_at"    json:"createdAt"`
 
+	Email     string `bson:"email"      json:"email"`
 	FirstName string `bson:"first_name" json:"firstName"`
 	LastName  string `bson:"last_name"  json:"lastName"`
+	Password  string `bson:"password"   json:"-"`
 }
 
 type UserJson struct {
@@ -39,12 +41,40 @@ func (session *DBSession) UsersCol() *mgo.Collection {
 	return session.DB().C(USERS_COL_NAME)
 }
 
+// Ensure indexes on Users collection
+func (session *DBSession) EnsureUsersIndexes() {
+	// Find by email
+	index := mgo.Index{
+		Key:        []string{"email"},
+		Background: true,
+	}
+
+	err := session.UsersCol().EnsureIndex(index)
+	if err != nil {
+		panic(err)
+	}
+}
+
 // Find user by id
 func (session *DBSession) FindUser(userId string) *User {
 	var result User
 
-	// @todo Handle err
-	session.UsersCol().FindId(bson.ObjectIdHex(userId)).One(&result)
+	if err := session.UsersCol().FindId(userId).One(&result); err != nil {
+		return nil
+	}
+
+	result.dbSession = session
+
+	return &result
+}
+
+// Find user by email
+func (session *DBSession) FindUserByEmail(email string) *User {
+	var result User
+
+	if err := session.UsersCol().Find(bson.M{"email": email}).One(&result); err != nil {
+		return nil
+	}
 
 	result.dbSession = session
 
@@ -55,10 +85,14 @@ func (session *DBSession) FindUser(userId string) *User {
 // User
 //
 
+func (this *User) Fullname() string {
+	return fmt.Sprintf("%s %s", this.FirstName, this.LastName)
+}
+
 // Implements json.MarshalJSON
 func (this *User) MarshalJSON() ([]byte, error) {
 	// inject 'links' needed by Ember Data
-	links := map[string]interface{}{"sites": fmt.Sprintf("/api/users/%s/sites", this.Id.Hex())}
+	links := map[string]interface{}{"sites": fmt.Sprintf("/api/users/%s/sites", this.Id)}
 
 	userJson := UserJson{
 		User:  *this,

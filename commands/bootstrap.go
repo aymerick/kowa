@@ -3,6 +3,8 @@ package commands
 import (
 	"time"
 
+	"code.google.com/p/go.crypto/bcrypt"
+
 	"github.com/aymerick/kowa/models"
 	"github.com/aymerick/kowa/server"
 	"github.com/spf13/cobra"
@@ -21,20 +23,29 @@ func bootstrap(cmd *cobra.Command, args []string) {
 
 	db := models.NewDBSession()
 
+	password, err := bcrypt.GenerateFromPassword([]byte("test"), bcrypt.DefaultCost)
+	if err != nil {
+		panic("Arg")
+	}
+
 	// Insert users
 	userJeanClaude := models.User{
-		Id:        bson.NewObjectId(),
+		Id:        "trucmush",
+		CreatedAt: time.Now(),
+		Email:     "trucmush@wanadoo.fr",
 		FirstName: "Jean-Claude",
 		LastName:  "Trucmush",
-		CreatedAt: time.Now(),
+		Password:  string(password),
 	}
 	db.UsersCol().Insert(&userJeanClaude)
 
 	userHenry := models.User{
-		Id:        bson.NewObjectId(),
+		Id:        "hkanan",
+		CreatedAt: time.Now(),
+		Email:     "henrykanan@yahoo.com",
 		FirstName: "Henry",
 		LastName:  "Kanan",
-		CreatedAt: time.Now(),
+		Password:  string(password),
 	}
 	db.UsersCol().Insert(&userHenry)
 

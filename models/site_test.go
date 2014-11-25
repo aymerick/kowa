@@ -55,7 +55,8 @@ func (suite *SiteTestSuite) TestSite() {
 
 	// Insert user
 	user := User{
-		Id:        bson.NewObjectId(),
+		Id:        "trucmush",
+		Email:     "trucmush@wanadoo.fr",
 		FirstName: "Jean-Claude",
 		LastName:  "Trucmush",
 		CreatedAt: time.Now(),

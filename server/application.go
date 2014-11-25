@@ -2,9 +2,10 @@ package server
 
 import (
 	"github.com/RangelReale/osin"
-	"github.com/aymerick/kowa/models"
 	"github.com/spf13/viper"
 	"github.com/unrolled/render"
+
+	"github.com/aymerick/kowa/models"
 )
 
 type Application struct {
@@ -15,6 +16,9 @@ type Application struct {
 }
 
 func NewApplication() *Application {
+	dbSession := models.NewDBSession()
+	dbSession.EnsureIndexes()
+
 	// setup osin oauth2 server
 	osinConfig := osin.NewServerConfig()
 	osinConfig.AccessExpiration = 3600 // One hour
@@ -27,7 +31,7 @@ func NewApplication() *Application {
 	return &Application{
 		port:        viper.GetString("port"),
 		render:      render.New(render.Options{}),
-		dbSession:   models.NewDBSession(),
+		dbSession:   dbSession,
 		oauthServer: oauthServer,
 	}
 }

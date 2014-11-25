@@ -3,7 +3,10 @@ package server
 import (
 	"net/http"
 
+	"code.google.com/p/go.crypto/bcrypt"
 	"github.com/RangelReale/osin"
+
+	"github.com/aymerick/kowa/models"
 )
 
 // POST /oauth/token
@@ -14,10 +17,19 @@ func (app *Application) handleOauthToken(rw http.ResponseWriter, req *http.Reque
 	if ar := app.oauthServer.HandleAccessRequest(resp, req); ar != nil {
 		switch ar.Type {
 		case osin.PASSWORD:
-			// @todo Finish that !
-			if ar.Username == "test@test.com" && ar.Password == "test" {
-				ar.UserData = "test@test.com"
-				ar.Authorized = true
+			var user *models.User
+
+			user = app.dbSession.FindUser(ar.Username)
+			if user == nil {
+				user = app.dbSession.FindUserByEmail(ar.Username)
+			}
+
+			if user != nil {
+				err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(ar.Password))
+				if err == nil {
+					ar.UserData = user.Id
+					ar.Authorized = true
+				}
 			}
 		case osin.REFRESH_TOKEN:
 			ar.Authorized = true

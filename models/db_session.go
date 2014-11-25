@@ -14,8 +14,6 @@ type DBSession struct {
 }
 
 func init() {
-	// @todo EnsureIndexes()
-
 	// DEBUG:
 	// logout := log.New(os.Stdout, "MGO: ", log.Lshortfile)
 	// mgo.SetLogger(logout)
@@ -56,6 +54,16 @@ func MongoDBSessionForURI(uri string) *mgo.Session {
 	result.SetMode(mgo.Monotonic, true)
 
 	return result
+}
+
+//
+// DBSession
+//
+
+// ensure indexes on all collections
+func (this *DBSession) EnsureIndexes() {
+	this.EnsureUsersIndexes()
+	this.EnsureSitesIndexes()
 }
 
 // returns a database handler

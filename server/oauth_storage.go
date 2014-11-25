@@ -4,9 +4,10 @@ import (
 	"time"
 
 	"github.com/RangelReale/osin"
-	"github.com/aymerick/kowa/models"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+
+	"github.com/aymerick/kowa/models"
 )
 
 type OAuthStorage struct {
