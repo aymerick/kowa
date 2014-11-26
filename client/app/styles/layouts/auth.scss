@@ -9,16 +9,16 @@ $logo-head-width: 124px;
 $logo-margin: ($login-box-width - (2 * $login-box-padding) - $logo-head-width) / 2;
 
 .login-box {
-    max-width: $login-box-width;
-    padding: 15px;
+  max-width: $login-box-width;
+  padding: 15px;
 
-    img {
-        margin-left: $logo-margin;
-        margin-bottom: 25px;
-    }
+  img {
+    margin-left: $logo-margin;
+    margin-bottom: 25px;
+  }
 
 
-    @media (min-width: $medium-min-width) {
-        margin-top: 85px;
-    }
+  @media (min-width: $medium-min-width) {
+    margin-top: 85px;
+  }
 }
