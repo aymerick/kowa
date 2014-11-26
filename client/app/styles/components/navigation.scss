@@ -7,6 +7,11 @@
     text-transform: uppercase;
   }
 
+  a {
+    transition: color 0.1s, background 0.1s;
+  }
+
+  // ember sets the active class on the <a> element whereas bootstrap expects it on the <li> element of the navbar
   li > a.active {
     color: $navbar-inverse-link-active-color;
     background-color: $navbar-inverse-link-active-bg;
@@ -27,6 +32,8 @@
   .rl-dropdown-toggle {
     height: $navbar-height;
     padding: 0 12px;
+
+    transition: color 0.3s, background 0.3s;
 
     // apply same values as ".navbar-inverse .navbar-nav > li > a"
     color: $navbar-inverse-link-color;
