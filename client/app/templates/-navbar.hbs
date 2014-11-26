@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-static-top" role="navigation">
+<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
@@ -23,10 +23,11 @@
             {{session.currentUser.fullName}} <span class="caret"></span>
           {{/rl-dropdown-toggle}}
 
-          {{#rl-dropdown tagName="ul" class="dropdown-menu" closeOnChildClick="a:link"}}
-            <li><a href="#">Link 1</a></li>
-            <li><a href="#">Link 2</a></li>
-            <li><a {{action 'invalidateSession'}}>Logout</a></li>
+          {{#rl-dropdown tagName="ul" class="dropdown-menu dropdown-menu-right" closeOnChildClick="a:link"}}
+            <li><a href="#"><i class="fa fa-user"></i><span class="choice-title">Your profile</span></a></li>
+            <li><a href="#"><i class="fa fa-life-ring"></i><span class="choice-title">Help</span></a></li>
+            <li role="presentation" class="divider"></li>
+            <li><a {{action 'invalidateSession'}}><i class="fa fa-sign-out"></i><span class="choice-title">Logout</span></a></li>
           {{/rl-dropdown}}
         {{/rl-dropdown-container}}
       {{/if}}
