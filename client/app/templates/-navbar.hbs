@@ -11,15 +11,15 @@
 
     <div class="collapse navbar-collapse" id="navbar-collapse-1">
       <ul class="nav navbar-nav pull-left">
-        <li>{{#link-to 'posts'}}News{{/link-to}}</li>
-        <li>{{#link-to 'events'}}Events{{/link-to}}</li>
-        <li>{{#link-to 'pages'}}Pages{{/link-to}}</li>
-        <li>{{#link-to 'settings'}}Settings{{/link-to}}</li>
+        <li class="ko-navbar-item">{{#link-to 'posts'}}News{{/link-to}}</li>
+        <li class="ko-navbar-item">{{#link-to 'events'}}Events{{/link-to}}</li>
+        <li class="ko-navbar-item">{{#link-to 'pages'}}Pages{{/link-to}}</li>
+        <li class="ko-navbar-item">{{#link-to 'settings'}}Settings{{/link-to}}</li>
       </ul>
 
       {{#if session.isAuthenticated}}
         {{#rl-dropdown-container class="dropdown user-menu pull-right"}}
-          {{#rl-dropdown-toggle tagName="div"}}
+          {{#rl-dropdown-toggle tagName="div" class="ko-navbar-item"}}
             {{session.currentUser.fullName}} <span class="caret"></span>
           {{/rl-dropdown-toggle}}
 

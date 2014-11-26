@@ -2,6 +2,17 @@
 // Navbar
 //
 
+.navbar {
+  .ko-navbar-item {
+    text-transform: uppercase;
+  }
+
+  li > a.active {
+    color: $navbar-inverse-link-active-color;
+    background-color: $navbar-inverse-link-active-bg;
+  }
+}
+
 .user-menu {
   line-height: $navbar-height;
   cursor: pointer;
