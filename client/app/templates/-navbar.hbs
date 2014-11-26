@@ -18,7 +18,7 @@
       </ul>
 
       {{#if session.isAuthenticated}}
-        <p class="navbar-text pull-right">{{session.currentUser.fullName}} - <a {{ action 'invalidateSession' }}>Logout</a></p>
+        <p class="navbar-text pull-right">{{session.currentUser.fullName}} - <a {{action 'invalidateSession'}}>Logout</a></p>
       {{/if}}
     </div>
   </div>
