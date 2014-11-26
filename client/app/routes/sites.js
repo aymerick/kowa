@@ -7,7 +7,7 @@ var SitesRoute = AuthenticatedRoute.extend({
     });
   },
 
-  afterModel: function(sites, transition) {
+  afterModel: function(sites /* , transition */) {
     this.transitionTo('site', sites.get('firstObject'));
   }
 });

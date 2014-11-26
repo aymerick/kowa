@@ -18,7 +18,17 @@
       </ul>
 
       {{#if session.isAuthenticated}}
-        <p class="navbar-text pull-right">{{session.currentUser.fullName}} - <a {{action 'invalidateSession'}}>Logout</a></p>
+        {{#rl-dropdown-container class="dropdown user-menu pull-right"}}
+          {{#rl-dropdown-toggle tagName="div"}}
+            {{session.currentUser.fullName}} <span class="caret"></span>
+          {{/rl-dropdown-toggle}}
+
+          {{#rl-dropdown tagName="ul" class="dropdown-menu" closeOnChildClick="a:link"}}
+            <li><a href="#">Link 1</a></li>
+            <li><a href="#">Link 2</a></li>
+            <li><a {{action 'invalidateSession'}}>Logout</a></li>
+          {{/rl-dropdown}}
+        {{/rl-dropdown-container}}
       {{/if}}
     </div>
   </div>

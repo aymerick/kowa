@@ -1,0 +1,13 @@
+//
+// Navbar
+//
+
+.user-menu {
+  line-height: $nav-header-height;
+  cursor: pointer;
+
+  .rl-dropdown-toggle {
+    padding: 0 12px;
+    height: $nav-header-height;
+  }
+}
