@@ -1,9 +1,5 @@
 {{#unless hideNav}}
     {{partial "navbar"}}
-
-    {{#if session.isAuthenticated}}
-      <a {{ action 'invalidateSession' }}>Logout</a>
-    {{/if}}
 {{/unless}}
 
 {{outlet}}

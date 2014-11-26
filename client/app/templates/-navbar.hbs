@@ -7,16 +7,19 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-
-      {{#link-to 'sites' class='navbar-brand'}}Kowa{{/link-to}}
     </div>
 
     <div class="collapse navbar-collapse" id="navbar-collapse-1">
-      <ul class="nav navbar-nav pull-right">
-        <li>Foo</li>
-        <li>Bar</li>
-        <li>Baz</li>
+      <ul class="nav navbar-nav pull-left">
+        <li>{{#link-to 'posts'}}News{{/link-to}}</li>
+        <li>{{#link-to 'events'}}Events{{/link-to}}</li>
+        <li>{{#link-to 'pages'}}Pages{{/link-to}}</li>
+        <li>{{#link-to 'settings'}}Settings{{/link-to}}</li>
       </ul>
+
+      {{#if session.isAuthenticated}}
+        <p class="navbar-text pull-right">{{session.currentUser.fullName}} - <a {{ action 'invalidateSession' }}>Logout</a></p>
+      {{/if}}
     </div>
   </div>
 </nav>
