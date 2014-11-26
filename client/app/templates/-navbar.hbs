@@ -20,7 +20,7 @@
       {{#if session.isAuthenticated}}
         {{#rl-dropdown-container class="dropdown user-menu pull-right"}}
           {{#rl-dropdown-toggle tagName="div" class="ko-navbar-item"}}
-            {{session.currentUser.fullName}} <span class="caret"></span>
+            <img src="/images/avatar.jpg" class="ko-avatar" alt="Avatar" /> {{session.currentUser.fullName}} <span class="caret"></span>
           {{/rl-dropdown-toggle}}
 
           {{#rl-dropdown tagName="ul" class="dropdown-menu dropdown-menu-right" closeOnChildClick="a:link"}}

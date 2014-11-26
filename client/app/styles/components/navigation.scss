@@ -17,6 +17,13 @@
   line-height: $navbar-height;
   cursor: pointer;
 
+  img.ko-avatar {
+    margin-right: 15px;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+  }
+
   .rl-dropdown-toggle {
     height: $navbar-height;
     padding: 0 12px;
