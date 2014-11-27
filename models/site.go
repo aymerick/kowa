@@ -20,6 +20,8 @@ type SitePageSettings struct {
 }
 
 type Site struct {
+	dbSession *DBSession `bson:"-" json:"-"`
+
 	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
 	UserId    string        `bson:"user_id"       json:"user"`
@@ -63,6 +65,19 @@ func (session *DBSession) EnsureSitesIndexes() {
 	if err != nil {
 		panic(err)
 	}
+}
+
+// Find site by id
+func (session *DBSession) FindSite(siteId bson.ObjectId) *Site {
+	var result Site
+
+	if err := session.SitesCol().FindId(siteId).One(&result); err != nil {
+		return nil
+	}
+
+	result.dbSession = session
+
+	return &result
 }
 
 //

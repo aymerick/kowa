@@ -7,24 +7,32 @@ import (
 	"time"
 
 	"github.com/RangelReale/osin"
+	"github.com/aymerick/kowa/models"
 	"github.com/gorilla/context"
+	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 )
 
+// middleware: logs requests
 func (app *Application) loggingMiddleware(next http.Handler) http.Handler {
-	fn := func(rw http.ResponseWriter, r *http.Request) {
+	fn := func(rw http.ResponseWriter, req *http.Request) {
+		log.Printf("[middleware]: loggingMiddleware\n")
+
 		startAt := time.Now()
-		next.ServeHTTP(rw, r)
+		next.ServeHTTP(rw, req)
 		endAt := time.Now()
 
-		log.Printf("[%s] %q %v\n", r.Method, r.URL.String(), endAt.Sub(startAt))
+		log.Printf("[%s] %q %v\n", req.Method, req.URL.String(), endAt.Sub(startAt))
 	}
 
 	return http.HandlerFunc(fn)
 }
 
+// middleware: recovers panic
 func (app *Application) recoveryMiddleware(next http.Handler) http.Handler {
-	fn := func(rw http.ResponseWriter, r *http.Request) {
+	fn := func(rw http.ResponseWriter, req *http.Request) {
+		log.Printf("[middleware]: recoveryMiddleware\n")
+
 		defer func() {
 			if err := recover(); err != nil {
 				rw.WriteHeader(http.StatusInternalServerError)
@@ -34,12 +42,13 @@ func (app *Application) recoveryMiddleware(next http.Handler) http.Handler {
 			}
 		}()
 
-		next.ServeHTTP(rw, r)
+		next.ServeHTTP(rw, req)
 	}
 
 	return http.HandlerFunc(fn)
 }
 
+// middleware: injects CORS headers
 func (app *Application) corsMiddleware() func(next http.Handler) http.Handler {
 	result := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
@@ -52,12 +61,15 @@ func (app *Application) corsMiddleware() func(next http.Handler) http.Handler {
 	return result.Handler
 }
 
+// middleware: ensures user is authenticated and injects 'currentUser' in context
 func (app *Application) ensureAuthMiddleware(next http.Handler) http.Handler {
-	fn := func(rw http.ResponseWriter, r *http.Request) {
+	fn := func(rw http.ResponseWriter, req *http.Request) {
+		log.Printf("[middleware]: ensureAuthMiddleware\n")
+
 		var err error
 
 		// ex: Authorization: Bearer Zjg5ZmEwNDYtNGI3NS00MTk4LWFhYzgtZmVlNGRkZDQ3YzAx
-		authValue := r.Header.Get("Authorization")
+		authValue := req.Header.Get("Authorization")
 		if len(authValue) < 7 || authValue[:7] != "Bearer " {
 			unauthorized(rw)
 			return
@@ -80,13 +92,40 @@ func (app *Application) ensureAuthMiddleware(next http.Handler) http.Handler {
 
 		if currentUser := app.dbSession.FindUser(userId); currentUser != nil {
 			log.Printf("Current user is: %s [%s]\n", currentUser.Fullname(), userId)
-			context.Set(r, "currentUser", currentUser)
+			context.Set(req, "currentUser", currentUser)
 		} else {
 			unauthorized(rw)
 			return
 		}
 
-		next.ServeHTTP(rw, r)
+		next.ServeHTTP(rw, req)
+	}
+
+	return http.HandlerFunc(fn)
+}
+
+// middleware: ensures that currently authenticated user is allowed to access a /users/{user_id}/* requests
+func (app *Application) ensureUserAccessMiddleware(next http.Handler) http.Handler {
+	fn := func(rw http.ResponseWriter, req *http.Request) {
+		log.Printf("[middleware]: ensureUserAccessMiddleware\n")
+
+		// check current user
+		currentUser := context.Get(req, "currentUser").(*models.User)
+		if currentUser == nil {
+			unauthorized(rw)
+			return
+		}
+
+		vars := mux.Vars(req)
+		userId := vars["user_id"]
+
+		// check that current user only access his stuff
+		if userId != currentUser.Id {
+			unauthorized(rw)
+			return
+		}
+
+		next.ServeHTTP(rw, req)
 	}
 
 	return http.HandlerFunc(fn)
