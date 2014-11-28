@@ -18,8 +18,6 @@ func Run() {
 
 	// setup middlewares
 	baseChain := alice.New(context.ClearHandler, app.loggingMiddleware, app.recoveryMiddleware, app.corsMiddleware())
-	authChain := baseChain.Append(app.ensureAuthMiddleware)
-	curUserChain := authChain.Append(app.ensureUserAccessMiddleware)
 
 	// setup API routes
 	router := mux.NewRouter()
@@ -30,18 +28,25 @@ func Run() {
 	oauthRouter.Methods("POST").Path("/token").Handler(baseChain.ThenFunc(app.handleOauthToken))
 	oauthRouter.Methods("POST").Path("/revoke").Handler(baseChain.ThenFunc(app.handleOauthRevoke))
 
+	authChain := baseChain.Append(app.ensureAuthMiddleware)
+
 	// /api/me
 	apiRouter.Methods("GET").Path("/me").Handler(authChain.ThenFunc(app.handleGetMe))
 
-	// /api/users
-	userRouter := apiRouter.PathPrefix("/users/{user_id}").Subrouter()
-	userRouter.Methods("GET").Path("/sites/{site_id}/posts").Handler(curUserChain.ThenFunc(app.handleGetSitePosts))
-	userRouter.Methods("GET").Path("/sites/{site_id}/events").Handler(curUserChain.ThenFunc(app.handleGetSiteEvents))
-	userRouter.Methods("GET").Path("/sites/{site_id}/pages").Handler(curUserChain.ThenFunc(app.handleGetSitePages))
-	userRouter.Methods("GET").Path("/sites/{site_id}/actions").Handler(curUserChain.ThenFunc(app.handleGetSiteActions))
-	userRouter.Methods("GET").Path("/sites/{site_id}").Handler(curUserChain.ThenFunc(app.handleGetSite))
-	userRouter.Methods("GET").Path("/sites").Handler(curUserChain.ThenFunc(app.handleGetUserSites))
-	userRouter.Methods("GET").Handler(curUserChain.ThenFunc(app.handleGetUser))
+	curUserChain := authChain.Append(app.ensureUserAccessMiddleware)
+
+	// /api/users/{user_id}
+	apiRouter.Methods("GET").Path("/users/{user_id}/sites").Handler(curUserChain.ThenFunc(app.handleGetUserSites))
+	apiRouter.Methods("GET").Path("/users/{user_id}").Handler(curUserChain.ThenFunc(app.handleGetUser))
+
+	curSiteOwnerChain := authChain.Append(app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
+
+	// /api/sites/{site_id}
+	apiRouter.Methods("GET").Path("/sites/{site_id}/posts").Handler(curSiteOwnerChain.ThenFunc(app.handleGetSitePosts))
+	apiRouter.Methods("GET").Path("/sites/{site_id}/events").Handler(curSiteOwnerChain.ThenFunc(app.handleGetSiteEvents))
+	apiRouter.Methods("GET").Path("/sites/{site_id}/pages").Handler(curSiteOwnerChain.ThenFunc(app.handleGetSitePages))
+	apiRouter.Methods("GET").Path("/sites/{site_id}/actions").Handler(curSiteOwnerChain.ThenFunc(app.handleGetSiteActions))
+	apiRouter.Methods("GET").Path("/sites/{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetSite))
 
 	fmt.Println("Running on port:", app.port)
 	http.ListenAndServe(":"+app.port, router)

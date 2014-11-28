@@ -27,7 +27,7 @@ type User struct {
 
 type UserJson struct {
 	User
-	Links map[string]interface{} `json:"links"` // needed by Ember Data
+	Links map[string]interface{} `json:"links"`
 }
 
 type UsersList []User

@@ -10,6 +10,12 @@ var Site = DS.Model.extend({
   joinText: DS.attr(),
 
   user: DS.belongsTo('user', { async: true }),
+
+  posts: DS.hasMany('post', { async: true }),
+  // events: DS.hasMany('event', { async: true }),
+  // pages: DS.hasMany('page', { async: true }),
+  // actions: DS.hasMany('action', { async: true }),
+
   pageSettings: DS.hasMany('sitePageSetting')
 });
 

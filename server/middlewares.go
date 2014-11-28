@@ -11,6 +11,7 @@ import (
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // middleware: logs requests
@@ -104,6 +105,28 @@ func (app *Application) ensureAuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(fn)
 }
 
+// middleware: ensures site exists and injects 'currentSite' in context
+func (app *Application) ensureSiteMiddleware(next http.Handler) http.Handler {
+	fn := func(rw http.ResponseWriter, req *http.Request) {
+		log.Printf("[middleware]: ensureSiteMiddleware\n")
+
+		vars := mux.Vars(req)
+		siteId := vars["site_id"]
+
+		if currentSite := app.dbSession.FindSite(bson.ObjectIdHex(siteId)); currentSite != nil {
+			log.Printf("Current site is: %s [%s]\n", currentSite.Name, siteId)
+			context.Set(req, "currentSite", currentSite)
+		} else {
+			http.NotFound(rw, req)
+			return
+		}
+
+		next.ServeHTTP(rw, req)
+	}
+
+	return http.HandlerFunc(fn)
+}
+
 // middleware: ensures that currently authenticated user is allowed to access a /users/{user_id}/* requests
 func (app *Application) ensureUserAccessMiddleware(next http.Handler) http.Handler {
 	fn := func(rw http.ResponseWriter, req *http.Request) {
@@ -121,6 +144,34 @@ func (app *Application) ensureUserAccessMiddleware(next http.Handler) http.Handl
 
 		// check that current user only access his stuff
 		if userId != currentUser.Id {
+			unauthorized(rw)
+			return
+		}
+
+		next.ServeHTTP(rw, req)
+	}
+
+	return http.HandlerFunc(fn)
+}
+
+// middleware: ensures that currently authenticated user is allowed to access a /sites/{site_id}/* requests
+func (app *Application) ensureSiteOwnerAccessMiddleware(next http.Handler) http.Handler {
+	fn := func(rw http.ResponseWriter, req *http.Request) {
+		log.Printf("[middleware]: ensureSiteOwnerAccessMiddleware\n")
+
+		// check current user
+		currentUser := context.Get(req, "currentUser").(*models.User)
+		if currentUser == nil {
+			panic("Should be auth")
+		}
+
+		// check current site
+		currentSite := context.Get(req, "currentSite").(*models.Site)
+		if currentSite == nil {
+			panic("Should have site")
+		}
+
+		if currentSite.UserId != currentUser.Id {
 			unauthorized(rw)
 			return
 		}

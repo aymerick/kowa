@@ -1,6 +1,8 @@
 package models
 
 import (
+	"encoding/json"
+	"fmt"
 	"time"
 
 	"gopkg.in/mgo.v2"
@@ -43,6 +45,11 @@ type Site struct {
 	// @todo GooglePlus
 }
 
+type SiteJson struct {
+	Site
+	Links map[string]interface{} `json:"links"`
+}
+
 type SitesList []Site
 
 //
@@ -83,6 +90,24 @@ func (session *DBSession) FindSite(siteId bson.ObjectId) *Site {
 //
 // Site
 //
+
+// Implements json.MarshalJSON
+func (this *Site) MarshalJSON() ([]byte, error) {
+	// inject 'links' needed by Ember Data
+	links := map[string]interface{}{
+		"posts":   fmt.Sprintf("/api/sites/%s/posts", this.Id.Hex()),
+		"events":  fmt.Sprintf("/api/sites/%s/events", this.Id.Hex()),
+		"pages":   fmt.Sprintf("/api/sites/%s/pages", this.Id.Hex()),
+		"actions": fmt.Sprintf("/api/sites/%s/actions", this.Id.Hex()),
+	}
+
+	siteJson := SiteJson{
+		Site:  *this,
+		Links: links,
+	}
+
+	return json.Marshal(siteJson)
+}
 
 // Fetch from database: all posts belonging to site
 func (this *Site) FindPosts() *PostsList {
