@@ -109,11 +109,24 @@ func (this *Site) MarshalJSON() ([]byte, error) {
 	return json.Marshal(siteJson)
 }
 
+func (this *Site) baseQuery() *mgo.Query {
+	return this.dbSession.PostsCol().Find(bson.M{"site_id": this.Id})
+}
+
+func (this *Site) PostsNb() int {
+	result, err := this.baseQuery().Count()
+	if err != nil {
+		panic(err)
+	}
+
+	return result
+}
+
 // Fetch from database: all posts belonging to site
 func (this *Site) FindPosts(skip int, limit int) *PostsList {
 	var result PostsList
 
-	query := this.dbSession.PostsCol().Find(bson.M{"site_id": this.Id}).Sort("created_at")
+	query := this.baseQuery().Sort("created_at")
 
 	if skip > 0 {
 		query = query.Skip(skip)

@@ -14,13 +14,15 @@ func (app *Application) handleGetPosts(rw http.ResponseWriter, req *http.Request
 
 	site := context.Get(req, "currentSite").(*models.Site)
 	if site != nil {
-		skip, limit, err := paginationParams(req)
-		if err != nil {
+		pagination := NewPagination()
+		if err := pagination.fillFromRequest(req); err != nil {
 			http.Error(rw, "Invalid pagination parameters", http.StatusBadRequest)
 			return
 		}
 
-		app.render.JSON(rw, http.StatusOK, renderMap{"posts": site.FindPosts(skip, limit)})
+		pagination.Total = site.PostsNb()
+
+		app.render.JSON(rw, http.StatusOK, renderMap{"posts": site.FindPosts(pagination.Skip, pagination.PerPage), "meta": pagination})
 	} else {
 		http.NotFound(rw, req)
 	}
