@@ -21,6 +21,10 @@ var bootstrapCmd = &cobra.Command{
 func bootstrap(cmd *cobra.Command, args []string) {
 	// @todo Check that we are NOT in production
 
+	// Insert oauth client
+	oauthStorage := server.NewOAuthStorage()
+	oauthStorage.SetupDefaultClient()
+
 	db := models.NewDBSession()
 
 	password, err := bcrypt.GenerateFromPassword([]byte("test"), bcrypt.DefaultCost)
@@ -50,9 +54,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 	db.UsersCol().Insert(&userHenry)
 
 	// Insert sites
-	var site models.Site
-
-	site = models.Site{
+	siteJC1 := models.Site{
 		Id:          bson.NewObjectId(),
 		UserId:      userJeanClaude.Id,
 		CreatedAt:   time.Now(),
@@ -60,9 +62,9 @@ func bootstrap(cmd *cobra.Command, args []string) {
 		Tagline:     "So powerfull !",
 		Description: "You will be astonished by what my site is about",
 	}
-	db.SitesCol().Insert(&site)
+	db.SitesCol().Insert(&siteJC1)
 
-	site = models.Site{
+	siteJC2 := models.Site{
 		Id:          bson.NewObjectId(),
 		UserId:      userJeanClaude.Id,
 		CreatedAt:   time.Now(),
@@ -70,9 +72,9 @@ func bootstrap(cmd *cobra.Command, args []string) {
 		Tagline:     "Very interesting",
 		Description: "Our projects are so importants, please help us",
 	}
-	db.SitesCol().Insert(&site)
+	db.SitesCol().Insert(&siteJC2)
 
-	site = models.Site{
+	siteH := models.Site{
 		Id:          bson.NewObjectId(),
 		UserId:      userHenry.Id,
 		CreatedAt:   time.Now(),
@@ -80,9 +82,58 @@ func bootstrap(cmd *cobra.Command, args []string) {
 		Tagline:     "La petanque comme vous ne l'avez jamais vu",
 		Description: "C'est vraiment le sport du futur. Messieurs, preparez vos boules !",
 	}
-	db.SitesCol().Insert(&site)
+	db.SitesCol().Insert(&siteH)
 
-	// Insert oauth client
-	oauthStorage := server.NewOAuthStorage()
-	oauthStorage.SetupDefaultClient()
+	// Insert posts
+	var post models.Post
+
+	post = models.Post{
+		Id:          bson.NewObjectId(),
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
+		SiteId:      siteJC1.Id,
+		PublishedAt: time.Now(),
+		Title:       "My first post",
+		Body:        "Let's talk and me myself and I. Blablablablabla",
+	}
+	db.PostsCol().Insert(&post)
+
+	post = models.Post{
+		Id:          bson.NewObjectId(),
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
+		SiteId:      siteJC1.Id,
+		PublishedAt: time.Now(),
+		Title:       "My second post",
+		Body:        "I haven't finished, let's talk about me again.",
+	}
+	db.PostsCol().Insert(&post)
+
+	post = models.Post{
+		Id:          bson.NewObjectId(),
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
+		SiteId:      siteJC2.Id,
+		PublishedAt: time.Now(),
+		Title:       "This is a lonely",
+		Body:        "It appears on my second website.",
+	}
+	db.PostsCol().Insert(&post)
+
+	post = models.Post{
+		Id:          bson.NewObjectId(),
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
+		SiteId:      siteH.Id,
+		PublishedAt: time.Now(),
+		Title:       "Hi, I am Henry",
+		Body:        "Je me présente, je m'appelle Henry. Je voudrais bien réussir ma vie, être aimé. Être beau, gagner de l'argent. Puis surtout être intelligent. Mais pour tout ça il faudrait que je bosse à plein temps",
+	}
+	db.PostsCol().Insert(&post)
+
+	// Insert events
+
+	// Insert pages
+
+	// Insert actions
 }

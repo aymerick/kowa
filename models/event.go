@@ -34,3 +34,22 @@ type EventsList []Event
 func (session *DBSession) EventsCol() *mgo.Collection {
 	return session.DB().C(EVENTS_COL_NAME)
 }
+
+// Ensure indexes on Events collection
+func (session *DBSession) EnsureEventsIndexes() {
+	index := mgo.Index{
+		Key:        []string{"site_id"},
+		Background: true,
+	}
+
+	err := session.EventsCol().EnsureIndex(index)
+	if err != nil {
+		panic(err)
+	}
+}
+
+//
+// Event
+//
+
+// @todo

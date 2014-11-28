@@ -33,3 +33,22 @@ type PagesList []Page
 func (session *DBSession) PagesCol() *mgo.Collection {
 	return session.DB().C(PAGES_COL_NAME)
 }
+
+// Ensure indexes on Pages collection
+func (session *DBSession) EnsurePagesIndexes() {
+	index := mgo.Index{
+		Key:        []string{"site_id"},
+		Background: true,
+	}
+
+	err := session.PagesCol().EnsureIndex(index)
+	if err != nil {
+		panic(err)
+	}
+}
+
+//
+// Page
+//
+
+// @todo

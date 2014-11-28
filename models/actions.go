@@ -32,3 +32,22 @@ type ActionsList []Action
 func (session *DBSession) ActionsCol() *mgo.Collection {
 	return session.DB().C(ACTIONS_COL_NAME)
 }
+
+// Ensure indexes on Actions collection
+func (session *DBSession) EnsureActionsIndexes() {
+	index := mgo.Index{
+		Key:        []string{"site_id"},
+		Background: true,
+	}
+
+	err := session.ActionsCol().EnsureIndex(index)
+	if err != nil {
+		panic(err)
+	}
+}
+
+//
+// Action
+//
+
+// @todo

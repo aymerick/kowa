@@ -84,4 +84,50 @@ func (session *DBSession) FindSite(siteId bson.ObjectId) *Site {
 // Site
 //
 
-// @todo !!!
+// Fetch from database: all posts belonging to site
+func (this *Site) FindPosts() *PostsList {
+	var result PostsList
+
+	// @todo Handle err
+	this.dbSession.PostsCol().Find(bson.M{"site_id": this.Id}).All(&result)
+
+	// @todo Inject dbSession in all result items
+
+	return &result
+}
+
+// Fetch from database: all events belonging to site
+func (this *Site) FindEvents() *EventsList {
+	var result EventsList
+
+	// @todo Handle err
+	this.dbSession.EventsCol().Find(bson.M{"site_id": this.Id}).All(&result)
+
+	// @todo Inject dbSession in all result items
+
+	return &result
+}
+
+// Fetch from database: all pages belonging to site
+func (this *Site) FindPages() *PagesList {
+	var result PagesList
+
+	// @todo Handle err
+	this.dbSession.PagesCol().Find(bson.M{"site_id": this.Id}).All(&result)
+
+	// @todo Inject dbSession in all result items
+
+	return &result
+}
+
+// Fetch from database: all actions belonging to site
+func (this *Site) FindActions() *ActionsList {
+	var result ActionsList
+
+	// @todo Handle err
+	this.dbSession.ActionsCol().Find(bson.M{"site_id": this.Id}).All(&result)
+
+	// @todo Inject dbSession in all result items
+
+	return &result
+}

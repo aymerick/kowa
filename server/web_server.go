@@ -38,6 +38,7 @@ func Run() {
 	userRouter.Methods("GET").Path("/sites/{site_id}/posts").Handler(curUserChain.ThenFunc(app.handleGetSitePosts))
 	userRouter.Methods("GET").Path("/sites/{site_id}/events").Handler(curUserChain.ThenFunc(app.handleGetSiteEvents))
 	userRouter.Methods("GET").Path("/sites/{site_id}/pages").Handler(curUserChain.ThenFunc(app.handleGetSitePages))
+	userRouter.Methods("GET").Path("/sites/{site_id}/actions").Handler(curUserChain.ThenFunc(app.handleGetSiteActions))
 	userRouter.Methods("GET").Path("/sites/{site_id}").Handler(curUserChain.ThenFunc(app.handleGetSite))
 	userRouter.Methods("GET").Path("/sites").Handler(curUserChain.ThenFunc(app.handleGetUserSites))
 	userRouter.Methods("GET").Handler(curUserChain.ThenFunc(app.handleGetUser))

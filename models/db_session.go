@@ -64,6 +64,10 @@ func MongoDBSessionForURI(uri string) *mgo.Session {
 func (this *DBSession) EnsureIndexes() {
 	this.EnsureUsersIndexes()
 	this.EnsureSitesIndexes()
+	this.EnsurePostsIndexes()
+	this.EnsureEventsIndexes()
+	this.EnsurePagesIndexes()
+	this.EnsureActionsIndexes()
 }
 
 // returns a database handler
