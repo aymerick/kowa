@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"fmt"
 	"time"
 
 	"code.google.com/p/go.crypto/bcrypt"
@@ -87,27 +88,18 @@ func bootstrap(cmd *cobra.Command, args []string) {
 	// Insert posts
 	var post models.Post
 
-	post = models.Post{
-		Id:          bson.NewObjectId(),
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
-		SiteId:      siteJC1.Id,
-		PublishedAt: time.Now(),
-		Title:       "My first post",
-		Body:        "Let's talk and me myself and I. Blablablablabla",
+	for i := 0; i < 30; i++ {
+		post = models.Post{
+			Id:          bson.NewObjectId(),
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
+			SiteId:      siteJC1.Id,
+			PublishedAt: time.Now(),
+			Title:       fmt.Sprintf("Post %d", i),
+			Body:        fmt.Sprintf("This is my post numner %d. Blablablablabla", i),
+		}
+		db.PostsCol().Insert(&post)
 	}
-	db.PostsCol().Insert(&post)
-
-	post = models.Post{
-		Id:          bson.NewObjectId(),
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
-		SiteId:      siteJC1.Id,
-		PublishedAt: time.Now(),
-		Title:       "My second post",
-		Body:        "I haven't finished, let's talk about me again.",
-	}
-	db.PostsCol().Insert(&post)
 
 	post = models.Post{
 		Id:          bson.NewObjectId(),
