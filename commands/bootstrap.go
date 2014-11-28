@@ -96,7 +96,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 			SiteId:      siteJC1.Id,
 			PublishedAt: time.Now(),
 			Title:       fmt.Sprintf("Post %d", i),
-			Body:        fmt.Sprintf("This is my post numner %d. Blablablablabla", i),
+			Body:        fmt.Sprintf("This is my post number %d. Blablablablabla", i),
 		}
 		db.PostsCol().Insert(&post)
 	}
