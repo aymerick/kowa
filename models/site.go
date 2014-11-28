@@ -110,11 +110,22 @@ func (this *Site) MarshalJSON() ([]byte, error) {
 }
 
 // Fetch from database: all posts belonging to site
-func (this *Site) FindPosts() *PostsList {
+func (this *Site) FindPosts(skip int, limit int) *PostsList {
 	var result PostsList
 
-	// @todo Handle err
-	this.dbSession.PostsCol().Find(bson.M{"site_id": this.Id}).All(&result)
+	query := this.dbSession.PostsCol().Find(bson.M{"site_id": this.Id}).Sort("created_at")
+
+	if skip > 0 {
+		query = query.Skip(skip)
+	}
+
+	if limit > 0 {
+		query = query.Limit(limit)
+	}
+
+	if err := query.All(&result); err != nil {
+		panic(err)
+	}
 
 	// @todo Inject dbSession in all result items
 
@@ -125,8 +136,9 @@ func (this *Site) FindPosts() *PostsList {
 func (this *Site) FindEvents() *EventsList {
 	var result EventsList
 
-	// @todo Handle err
-	this.dbSession.EventsCol().Find(bson.M{"site_id": this.Id}).All(&result)
+	if err := this.dbSession.EventsCol().Find(bson.M{"site_id": this.Id}).All(&result); err != nil {
+		panic(err)
+	}
 
 	// @todo Inject dbSession in all result items
 
@@ -137,8 +149,9 @@ func (this *Site) FindEvents() *EventsList {
 func (this *Site) FindPages() *PagesList {
 	var result PagesList
 
-	// @todo Handle err
-	this.dbSession.PagesCol().Find(bson.M{"site_id": this.Id}).All(&result)
+	if err := this.dbSession.PagesCol().Find(bson.M{"site_id": this.Id}).All(&result); err != nil {
+		panic(err)
+	}
 
 	// @todo Inject dbSession in all result items
 
@@ -149,8 +162,9 @@ func (this *Site) FindPages() *PagesList {
 func (this *Site) FindActions() *ActionsList {
 	var result ActionsList
 
-	// @todo Handle err
-	this.dbSession.ActionsCol().Find(bson.M{"site_id": this.Id}).All(&result)
+	if err := this.dbSession.ActionsCol().Find(bson.M{"site_id": this.Id}).All(&result); err != nil {
+		panic(err)
+	}
 
 	// @todo Inject dbSession in all result items
 
