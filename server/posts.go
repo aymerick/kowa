@@ -27,3 +27,15 @@ func (app *Application) handleGetPosts(rw http.ResponseWriter, req *http.Request
 		http.NotFound(rw, req)
 	}
 }
+
+// GET /posts/{post_id}
+func (app *Application) handleGetPost(rw http.ResponseWriter, req *http.Request) {
+	log.Printf("[handler]: handleGetPost\n")
+
+	post := context.Get(req, "currentPost").(*models.Post)
+	if post != nil {
+		app.render.JSON(rw, http.StatusOK, renderMap{"post": post})
+	} else {
+		http.NotFound(rw, req)
+	}
+}

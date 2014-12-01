@@ -40,6 +40,7 @@ func Run() {
 	apiRouter.Methods("GET").Path("/users/{user_id}").Handler(curUserChain.ThenFunc(app.handleGetUser))
 
 	curSiteOwnerChain := authChain.Append(app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
+	curPostOwnerChain := authChain.Append(app.ensurePostMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
 
 	// /api/sites/{site_id}
 	apiRouter.Methods("GET").Path("/sites/{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetSite))
@@ -50,6 +51,7 @@ func Run() {
 
 	// /api/posts?site={site_id}
 	apiRouter.Methods("GET").Path("/posts").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetPosts))
+	apiRouter.Methods("GET").Path("/posts/{post_id}").Handler(curPostOwnerChain.ThenFunc(app.handleGetPost))
 
 	// /api/events?site={site_id}
 	apiRouter.Methods("GET").Path("/events").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetEvents))

@@ -49,8 +49,24 @@ func (session *DBSession) EnsurePostsIndexes() {
 	}
 }
 
+// Find site by id
+func (session *DBSession) FindPost(postId bson.ObjectId) *Post {
+	var result Post
+
+	if err := session.PostsCol().FindId(postId).One(&result); err != nil {
+		return nil
+	}
+
+	result.dbSession = session
+
+	return &result
+}
+
 //
 // Post
 //
 
-// @todo
+// Fetch from database: site that post belongs to
+func (this *Post) FindSite() *Site {
+	return this.dbSession.FindSite(this.SiteId)
+}

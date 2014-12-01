@@ -105,28 +105,6 @@ func (app *Application) ensureAuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(fn)
 }
 
-// middleware: ensures site exists and injects 'currentSite' in context
-func (app *Application) ensureSiteMiddleware(next http.Handler) http.Handler {
-	fn := func(rw http.ResponseWriter, req *http.Request) {
-		log.Printf("[middleware]: ensureSiteMiddleware\n")
-
-		vars := mux.Vars(req)
-		siteId := vars["site_id"]
-
-		if currentSite := app.dbSession.FindSite(bson.ObjectIdHex(siteId)); currentSite != nil {
-			log.Printf("Current site is: %s [%s]\n", currentSite.Name, siteId)
-			context.Set(req, "currentSite", currentSite)
-		} else {
-			http.NotFound(rw, req)
-			return
-		}
-
-		next.ServeHTTP(rw, req)
-	}
-
-	return http.HandlerFunc(fn)
-}
-
 // middleware: ensures that currently authenticated user is allowed to access a /users/{user_id}/* requests
 func (app *Application) ensureUserAccessMiddleware(next http.Handler) http.Handler {
 	fn := func(rw http.ResponseWriter, req *http.Request) {
@@ -145,6 +123,39 @@ func (app *Application) ensureUserAccessMiddleware(next http.Handler) http.Handl
 		// check that current user only access his stuff
 		if userId != currentUser.Id {
 			unauthorized(rw)
+			return
+		}
+
+		next.ServeHTTP(rw, req)
+	}
+
+	return http.HandlerFunc(fn)
+}
+
+// middleware: ensures site exists and injects 'currentSite' in context
+func (app *Application) ensureSiteMiddleware(next http.Handler) http.Handler {
+	fn := func(rw http.ResponseWriter, req *http.Request) {
+		log.Printf("[middleware]: ensureSiteMiddleware\n")
+
+		vars := mux.Vars(req)
+
+		var currentSite *models.Site
+
+		siteId := vars["site_id"]
+		if siteId != "" {
+			currentSite = app.dbSession.FindSite(bson.ObjectIdHex(siteId))
+		} else {
+			currentPost := context.Get(req, "currentPost").(*models.Post)
+			if currentPost != nil {
+				currentSite = currentPost.FindSite()
+			}
+		}
+
+		if currentSite != nil {
+			log.Printf("Current site is: %s [%s]\n", currentSite.Name, siteId)
+			context.Set(req, "currentSite", currentSite)
+		} else {
+			http.NotFound(rw, req)
 			return
 		}
 
@@ -173,6 +184,30 @@ func (app *Application) ensureSiteOwnerAccessMiddleware(next http.Handler) http.
 
 		if currentSite.UserId != currentUser.Id {
 			unauthorized(rw)
+			return
+		}
+
+		next.ServeHTTP(rw, req)
+	}
+
+	return http.HandlerFunc(fn)
+}
+
+// middleware: ensures post exists and injects 'currentPost' in context
+func (app *Application) ensurePostMiddleware(next http.Handler) http.Handler {
+	fn := func(rw http.ResponseWriter, req *http.Request) {
+		log.Printf("[middleware]: ensurePostMiddleware\n")
+
+		vars := mux.Vars(req)
+		postId := vars["post_id"]
+		if postId == "" {
+			panic("Should have post_id")
+		}
+
+		if currentPost := app.dbSession.FindPost(bson.ObjectIdHex(postId)); currentPost != nil {
+			context.Set(req, "currentPost", currentPost)
+		} else {
+			http.NotFound(rw, req)
 			return
 		}
 
