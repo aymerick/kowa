@@ -88,7 +88,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 	// Insert posts
 	var post models.Post
 
-	for i := 0; i < 30; i++ {
+	for i := 1; i <= 30; i++ {
 		post = models.Post{
 			Id:          bson.NewObjectId(),
 			CreatedAt:   time.Now(),
