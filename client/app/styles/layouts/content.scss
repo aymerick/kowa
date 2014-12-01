@@ -1,0 +1,55 @@
+//
+// Content pages
+//
+
+.content-view-container {
+    position: absolute;
+    top: $navbar-height;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    background: #fff;
+}
+
+.content-list {
+    position: absolute;
+    width: 33%;
+    bottom: 0;
+    top: 0;
+    left: 0;
+
+    padding: 15px;
+
+    border-right: #edece4 1px solid;
+    background: #fff;
+
+    .content-list-content {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        overflow: auto;
+
+        padding-top: 20px;
+    }
+}
+
+.content-preview {
+    position: absolute;
+    width: 67%;
+    bottom: 0;
+    top: 0;
+    right: 0;
+
+    overflow: auto;
+
+    padding: 15px;
+
+    background: #fff;
+}

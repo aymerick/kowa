@@ -1,6 +1,12 @@
-<h2>Posts</h2>
-<ul>
-{{#each post in model}}
-    <li>{{post.title}}</li>
-{{/each}}
-</ul>
+<section class="content-list">
+    {{#view "paginated-scroll-box" tagName="section" classNames="content-list-content"}}
+        <ol class="posts-list">
+            {{#each post in model}}
+                <li>{{post.title}}</li>
+            {{/each}}
+        </ol>
+    {{/view}}
+</section>
+<section class="content-preview">
+    {{outlet}}
+</section>
