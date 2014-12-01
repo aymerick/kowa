@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import AuthenticatedRoute from 'kowa/routes/authenticated';
 
 var PostRoute = AuthenticatedRoute.extend({

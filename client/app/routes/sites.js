@@ -7,7 +7,7 @@ var SitesRoute = AuthenticatedRoute.extend({
     });
   },
 
-  afterModel: function(sites, transition, queryParams) {
+  afterModel: function(sites, transition) {
     // catch when accessing "/" endpoint
     if (!transition.params.site) {
       // redirects to first site

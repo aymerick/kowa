@@ -16,7 +16,7 @@ var PaginationControllerMixin = Ember.Mixin.create({
     this.set('nextPage', metadata.nextPage);
   },
 
-  reportLoadError: function (response) {
+  reportLoadError: function (/* response */) {
     // @todo !!!
   },
 
