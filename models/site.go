@@ -126,7 +126,7 @@ func (this *Site) PostsNb() int {
 func (this *Site) FindPosts(skip int, limit int) *PostsList {
 	var result PostsList
 
-	query := this.baseQuery().Sort("created_at")
+	query := this.baseQuery().Sort("-created_at")
 
 	if skip > 0 {
 		query = query.Skip(skip)

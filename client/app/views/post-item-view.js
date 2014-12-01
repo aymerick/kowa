@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import ItemView from 'kowa/views/item-view';
 
 var PostItemView = ItemView.extend({

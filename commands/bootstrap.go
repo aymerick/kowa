@@ -26,7 +26,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 	rand.Seed(8941)
 
 	now := time.Now()
-	lastWeek := now.Add(-24 * 7 * time.Hour)
+	lastMonth := now.Add(-31 * 24 * time.Hour)
 
 	// Insert oauth client
 	oauthStorage := server.NewOAuthStorage()
@@ -42,7 +42,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 	// Insert users
 	userJeanClaude := models.User{
 		Id:        "test",
-		CreatedAt: lastWeek,
+		CreatedAt: lastMonth,
 		Email:     "trucmush@wanadoo.fr",
 		FirstName: "Jean-Claude",
 		LastName:  "Trucmush",
@@ -52,7 +52,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 
 	userHenry := models.User{
 		Id:        "hkanan",
-		CreatedAt: lastWeek,
+		CreatedAt: lastMonth,
 		Email:     "henrykanan@yahoo.com",
 		FirstName: "Henry",
 		LastName:  "Kanan",
@@ -64,7 +64,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 	siteJC1 := models.Site{
 		Id:          bson.NewObjectId(),
 		UserId:      userJeanClaude.Id,
-		CreatedAt:   lastWeek,
+		CreatedAt:   lastMonth,
 		Name:        "My site",
 		Tagline:     "So powerfull !",
 		Description: "You will be astonished by what my site is about",
@@ -74,7 +74,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 	siteJC2 := models.Site{
 		Id:          bson.NewObjectId(),
 		UserId:      userJeanClaude.Id,
-		CreatedAt:   lastWeek,
+		CreatedAt:   lastMonth,
 		Name:        "My second site",
 		Tagline:     "Very interesting",
 		Description: "Our projects are so importants, please help us",
@@ -84,7 +84,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 	siteH := models.Site{
 		Id:          bson.NewObjectId(),
 		UserId:      userHenry.Id,
-		CreatedAt:   lastWeek,
+		CreatedAt:   lastMonth,
 		Name:        "Ultimate petanque",
 		Tagline:     "La petanque comme vous ne l'avez jamais vu",
 		Description: "C'est vraiment le sport du futur. Messieurs, preparez vos boules !",
@@ -95,14 +95,14 @@ func bootstrap(cmd *cobra.Command, args []string) {
 	var post models.Post
 
 	for i := 1; i <= 30; i++ {
-		nbDur := time.Duration(i)
+		nbDays := time.Duration(i)
 
 		post = models.Post{
 			Id:          bson.NewObjectId(),
-			CreatedAt:   lastWeek.Add(time.Hour * nbDur),
-			UpdatedAt:   lastWeek.Add(time.Hour*nbDur + 30),
+			CreatedAt:   lastMonth.Add(time.Hour * 24 * nbDays),
+			UpdatedAt:   lastMonth.Add(time.Hour*24*nbDays + 30),
 			SiteId:      siteJC1.Id,
-			PublishedAt: lastWeek.Add(time.Hour*nbDur + 30),
+			PublishedAt: lastMonth.Add(time.Hour*24*nbDays + 30),
 			Title:       fmt.Sprintf("Post %d", i),
 			Body:        fmt.Sprintf(MD_FIXTURES[rand.Intn(len(MD_FIXTURES))]),
 		}
@@ -111,10 +111,10 @@ func bootstrap(cmd *cobra.Command, args []string) {
 
 	post = models.Post{
 		Id:          bson.NewObjectId(),
-		CreatedAt:   lastWeek.Add(time.Hour),
-		UpdatedAt:   lastWeek.Add(time.Hour + 30),
+		CreatedAt:   lastMonth.Add(time.Hour),
+		UpdatedAt:   lastMonth.Add(time.Hour + 30),
 		SiteId:      siteJC2.Id,
-		PublishedAt: lastWeek.Add(time.Hour + 30),
+		PublishedAt: lastMonth.Add(time.Hour + 30),
 		Title:       "This is a lonely",
 		Body:        "It appears on my second website.",
 	}
@@ -122,10 +122,10 @@ func bootstrap(cmd *cobra.Command, args []string) {
 
 	post = models.Post{
 		Id:          bson.NewObjectId(),
-		CreatedAt:   lastWeek.Add(48 * time.Hour),
-		UpdatedAt:   lastWeek.Add(48*time.Hour + 30),
+		CreatedAt:   lastMonth.Add(48 * time.Hour),
+		UpdatedAt:   lastMonth.Add(48*time.Hour + 30),
 		SiteId:      siteH.Id,
-		PublishedAt: lastWeek.Add(48*time.Hour + 30),
+		PublishedAt: lastMonth.Add(48*time.Hour + 30),
 		Title:       "Hi, I am Henry",
 		Body:        "Je me présente, je m'appelle Henry. Je voudrais bien réussir ma vie, être aimé. Être beau, gagner de l'argent. Puis surtout être intelligent. Mais pour tout ça il faudrait que je bosse à plein temps",
 	}
