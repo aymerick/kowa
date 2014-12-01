@@ -40,7 +40,7 @@ func (this *Pagination) fillFromRequest(req *http.Request) error {
 	params := req.URL.Query()
 
 	page := params.Get("page")
-	perPage := params.Get("per_page")
+	perPage := params.Get("perPage")
 
 	if page != "" {
 		this.Page, err = strconv.Atoi(page)
@@ -100,12 +100,16 @@ func (this *Pagination) MarshalJSON() ([]byte, error) {
 			hash["pages"] = this.TotalPages
 		}
 
-		if this.NextPage != -1 {
-			hash["next"] = this.NextPage
+		if this.NextPage == -1 {
+			hash["nextPage"] = nil
+		} else {
+			hash["nextPage"] = this.NextPage
 		}
 
-		if this.PrevPage != -1 {
-			hash["prev"] = this.PrevPage
+		if this.PrevPage == -1 {
+			hash["prevPage"] = nil
+		} else {
+			hash["prevPage"] = this.PrevPage
 		}
 
 	}
