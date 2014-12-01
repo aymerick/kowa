@@ -11,8 +11,8 @@ Router.map(function() {
   this.route('forgotten');
 
   this.resource('sites', {path: '/'}, function() {
-    this.resource('site', { path: '/sites/:site_id' }, function() {
-      this.resource('posts', {path: '/'}, function () {
+    this.resource('site', { path: ':site_id' }, function() {
+      this.resource('posts', function () {
         this.route('post', {path: ':post_id'});
       });
 

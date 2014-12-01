@@ -8,11 +8,12 @@ var SitesRoute = AuthenticatedRoute.extend({
   },
 
   afterModel: function(sites, transition) {
-    // catch when accessing "/" endpoint
+    // redirects / to /:site_id
     if (!transition.params.site) {
-      // redirects to first site
-      // @todo Handle case when user have no site yet !
-      this.transitionTo('site', sites.get('firstObject'));
+      var firstSite = sites.get('firstObject');
+      if (firstSite) {
+        this.transitionTo('site', firstSite);
+      }
     }
   }
 });

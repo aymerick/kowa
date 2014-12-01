@@ -19,6 +19,16 @@ var PostsRoute = AuthenticatedRoute.extend({
     });
   },
 
+  afterModel: function (posts, transition) {
+    // redirects /:site_id/posts to to /:site_id/posts/:post_id
+    if (transition.targetName == "posts.index") {
+      var firstPost = posts.get('firstObject');
+      if (firstPost) {
+        this.transitionTo('posts.post', firstPost);
+      }
+    }
+  },
+
   setupController: function (controller, model) {
     this._super(controller, model);
 
