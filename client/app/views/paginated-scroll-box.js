@@ -1,48 +1,24 @@
 import Ember from 'ember';
 
 var PaginatedScrollBox = Ember.View.extend({
-    // setScrollClassName: function (options) {
-    //     var el = this.$().closest('.content-list');
-
-    //     var offset = 10;
-    //     var className = 'scrolling';
-
-    //     if (this.scrollTop() > offset) {
-    //         el.addClass(className);
-    //     } else {
-    //         el.removeClass(className);
-    //     }
-    // },
-
-    // attachScrollClassHandler: function () {
-    //     var el = this.$();
-
-    //     el.on('scroll', Ember.run.bind(this, this.setScrollClassName));
-    // }.on('didInsertElement'),
-
-    // detachScrollClassHandler: function () {
-    //     this.$().off('scroll');
-    // }.on('willDestroyElement'),
-
     attachCheckScroll: function () {
-        var el = this.$();
-
-        el.on('scroll', Ember.run.bind(this, this.checkScroll));
+        var elt = this.$();
+        elt.on('scroll', Ember.run.bind(this, this.checkScroll));
     }.on('didInsertElement'),
 
     detachCheckScroll: function () {
-        var el = this.$();
-        el.off('scroll');
+        var elt = this.$();
+        elt.off('scroll');
     }.on('willDestroyElement'),
 
     checkScroll: function (event) {
-        var element = event.target,
-            triggerPoint = 100,
-            controller = this.get('controller'),
-            isLoading = controller.get('isLoading');
+        var elt          = event.target;
+        var controller   = this.get('controller');
+        var isLoading    = controller.get('isLoading');
+        var triggerPoint = 100;
 
         // If we haven't passed our threshold or we are already fetching content, exit
-        if (isLoading || (element.scrollTop + element.clientHeight + triggerPoint <= element.scrollHeight)) {
+        if (isLoading || (elt.scrollTop + elt.clientHeight + triggerPoint <= elt.scrollHeight)) {
             return;
         }
 

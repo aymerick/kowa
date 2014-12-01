@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import AuthenticatedRoute from 'kowa/routes/authenticated';
 
-var initialPaginationParams = { 'page': 1, 'perPage': 10 };
+var initialPaginationParams = { 'page': 1, 'perPage': 15 };
 
 var PostsRoute = AuthenticatedRoute.extend({
   paginationParams: null,

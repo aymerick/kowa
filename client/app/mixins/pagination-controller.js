@@ -7,6 +7,7 @@ var PaginationControllerMixin = Ember.Mixin.create({
   nextPage: null,
   isLoading: false,
 
+  // setup pagination
   setupPagination(modelType, paginationParams) {
     this.set('modelType', modelType);
     this.set('paginationParams', paginationParams);

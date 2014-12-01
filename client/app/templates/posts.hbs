@@ -1,8 +1,13 @@
 <section class="content-list">
     {{#view "paginated-scroll-box" tagName="section" classNames="content-list-content"}}
         <ol class="posts-list">
-            {{#each post in model}}
-                <li>{{post.title}}</li>
+            {{#each itemController="posts/post" itemView="post-item-view" itemTagName="li"}}
+                {{#link-to "posts.post" this class="permalink" title="Edit this post"}}
+                    <h3 class="entry-title">{{title}}</h3>
+                    <section class="entry-meta">
+                        TODO
+                    </section>
+                {{/link-to}}
             {{/each}}
         </ol>
     {{/view}}
