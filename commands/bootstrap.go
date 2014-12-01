@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"math/rand"
 	"time"
 
 	"code.google.com/p/go.crypto/bcrypt"
@@ -21,6 +22,8 @@ var bootstrapCmd = &cobra.Command{
 
 func bootstrap(cmd *cobra.Command, args []string) {
 	// @todo Check that we are NOT in production
+
+	rand.Seed(8941)
 
 	// Insert oauth client
 	oauthStorage := server.NewOAuthStorage()
@@ -96,53 +99,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 			SiteId:      siteJC1.Id,
 			PublishedAt: time.Now(),
 			Title:       fmt.Sprintf("Post %d", i),
-			Body: fmt.Sprintf(`Turba desolatas corpore iubet omnia patrios cingebant
-
-## Dux quem fremida proque
-
-Lorem markdownum noster tamen albida, **post retro**; haut hortator merito
-imitabere? Carmina sua humanum adfata ponit ausus ore si inani natales inplevere
-cupido sanior! Respiceret quam ad, vigil haec undam Ardea currus totis nec
-diversa umbris esse!
-
-1. Lac quas ille illi vidit nam armat
-2. Et esse necem cultosque superis te molli
-3. Ipsis inquit sonuere
-4. Et idem
-5. Raptas motu pro fuit solvitur
-6. Verba interea miseri
-
-## Turbae quo nova pugnae habeat
-
-Violata est vidisse et sedula Melaneus *miseri*, nullius fertur. Venabula
-candida magicaeque fere aestatem in quid, arma quam interdum, manifesta et alvum
-[aequor petis](http://www.billmays.net/), Clymeneia. Ora Atridae illic. Deum
-iram ergo in super lacrimis agros. In nutrix recessu Troius, tuis facientes
-saevitiae aspicit potior.
-
-## Quoque umerumque sepulcris equi
-
-Incepta perpetuum balistave tandem reperitur tacuit libidine propago ecce quoque
-serpit arduus. Navita est coniunx idem, penetrabile vivit, et de lux ira,
-sollicitae haerebat. Sed cum miserantibus deus florente dentes ictu gutture
-nosces. Exosa ense sic: ad, tibi.
-
-## Inertes dierum nova
-
-Oris populo, licet. Restabat videntur violenta loquebatur et glorior et flexus
-Caras, modo istis.
-
-- Omne fila oppugnant optari denique
-- Novissima surgere
-- Ait si soli gramina
-- Ora fata acui dictos et missi
-
-Cum lentus, et sinus, ferreus utroque est, non est promittes multamque summam
-cognoram averso; fas. Totidem tectum flumina ubi prolem spiris in gurgite
-**cadunt** copia suo hoc ebur, tua natae vellemque fumante stabulorum? Ictus
-puerpera est o! Lycus supplice movere pars ecce obest cervina ulterius urna
-medium tu forti tantumne altera excita moventur excita vestras! Thalamos qua
-Iunonis non acumine nihil hamato ego tepidis et corvum.`, i),
+			Body:        fmt.Sprintf(MD_FIXTURES[rand.Intn(len(MD_FIXTURES))], i),
 		}
 		db.PostsCol().Insert(&post)
 	}
