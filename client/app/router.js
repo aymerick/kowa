@@ -6,14 +6,16 @@ var Router = Ember.Router.extend({
 });
 
 Router.map(function() {
+  // auth
   this.route('login');
   this.route('logout');
   this.route('forgotten');
 
   this.resource('sites', {path: '/'}, function() {
+    // site
     this.resource('site', {path: ':site_id'}, function() {
+      // content
       this.resource('posts', function () {
-        this.route('new', {path: 'new'});
         this.route('post', {path: ':post_id'});
       });
 
@@ -25,6 +27,20 @@ Router.map(function() {
         this.route('page', {path: ':page_id'});
       });
 
+
+      // content editor
+      this.resource('editor', function() {
+        this.route('post', {path: '/post'});
+        this.route('post.edit', {path: '/post/:post_id'});
+
+        this.route('event', {path: '/event'});
+        this.route('event.edit', {path: '/event/:event_id'});
+
+        this.route('page', {path: '/page'});
+        this.route('page.edit', {path: '/page/:page_id'});
+      });
+
+      // settings
       this.resource('settings', function () {
         this.route('general');
 
@@ -35,6 +51,7 @@ Router.map(function() {
     });
   });
 
+  // error
   this.route('error404', {path: '/*path'});
 });
 
