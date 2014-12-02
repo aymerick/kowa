@@ -62,7 +62,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 
 	// Insert sites
 	siteJC1 := models.Site{
-		Id:          bson.NewObjectId(),
+		Id:          "site_1",
 		UserId:      userJeanClaude.Id,
 		CreatedAt:   lastMonth,
 		Name:        "My site",
@@ -72,7 +72,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 	db.SitesCol().Insert(&siteJC1)
 
 	siteJC2 := models.Site{
-		Id:          bson.NewObjectId(),
+		Id:          "site_2",
 		UserId:      userJeanClaude.Id,
 		CreatedAt:   lastMonth,
 		Name:        "My second site",
@@ -82,7 +82,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 	db.SitesCol().Insert(&siteJC2)
 
 	siteH := models.Site{
-		Id:          bson.NewObjectId(),
+		Id:          "ultimate",
 		UserId:      userHenry.Id,
 		CreatedAt:   lastMonth,
 		Name:        "Ultimate petanque",

@@ -4,8 +4,6 @@ import (
 	"log"
 	"net/http"
 
-	"gopkg.in/mgo.v2/bson"
-
 	"github.com/gorilla/mux"
 )
 
@@ -16,7 +14,7 @@ func (app *Application) handleGetSite(rw http.ResponseWriter, req *http.Request)
 	vars := mux.Vars(req)
 	siteId := vars["site_id"]
 
-	if site := app.dbSession.FindSite(bson.ObjectIdHex(siteId)); site != nil {
+	if site := app.dbSession.FindSite(siteId); site != nil {
 		app.render.JSON(rw, http.StatusOK, renderMap{"site": site})
 	} else {
 		http.NotFound(rw, req)

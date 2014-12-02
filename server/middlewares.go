@@ -143,7 +143,7 @@ func (app *Application) ensureSiteMiddleware(next http.Handler) http.Handler {
 
 		siteId := vars["site_id"]
 		if siteId != "" {
-			currentSite = app.dbSession.FindSite(bson.ObjectIdHex(siteId))
+			currentSite = app.dbSession.FindSite(siteId)
 		} else {
 			currentPost := context.Get(req, "currentPost").(*models.Post)
 			if currentPost != nil {

@@ -17,7 +17,7 @@ type Post struct {
 	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
-	SiteId    bson.ObjectId `bson:"site_id"       json:"site"`
+	SiteId    string        `bson:"site_id"       json:"site"`
 
 	PublishedAt time.Time `bson:"published_at" json:"publishedAt"`
 	Title       string    `bson:"title"        json:"title"`

@@ -14,19 +14,19 @@ const (
 )
 
 type SitePageSettings struct {
-	Id      bson.ObjectId `bson:"_id,omitempty" json:"id"`
-	Kind    string        `bson:"kind"    json:"kind"` // 'contact' || 'actions' || 'posts' || 'events' || 'staff'
-	Title   string        `bson:"title"   json:"title"`
-	Tagline string        `bson:"tagline" json:"tagline"`
+	Id      string `bson:"_id,omitempty" json:"id"`
+	Kind    string `bson:"kind"    json:"kind"` // 'contact' || 'actions' || 'posts' || 'events' || 'staff'
+	Title   string `bson:"title"   json:"title"`
+	Tagline string `bson:"tagline" json:"tagline"`
 	// @todo Photo
 }
 
 type Site struct {
 	dbSession *DBSession `bson:"-" json:"-"`
 
-	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
-	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
-	UserId    string        `bson:"user_id"       json:"user"`
+	Id        string    `bson:"_id,omitempty" json:"id"`
+	CreatedAt time.Time `bson:"created_at"    json:"createdAt"`
+	UserId    string    `bson:"user_id"       json:"user"`
 
 	Name        string `bson:"name"        json:"name"`
 	Tagline     string `bson:"tagline"     json:"tagline"`
@@ -75,7 +75,7 @@ func (session *DBSession) EnsureSitesIndexes() {
 }
 
 // Find site by id
-func (session *DBSession) FindSite(siteId bson.ObjectId) *Site {
+func (session *DBSession) FindSite(siteId string) *Site {
 	var result Site
 
 	if err := session.SitesCol().FindId(siteId).One(&result); err != nil {
@@ -95,10 +95,10 @@ func (session *DBSession) FindSite(siteId bson.ObjectId) *Site {
 func (this *Site) MarshalJSON() ([]byte, error) {
 	// inject 'links' needed by Ember Data
 	links := map[string]interface{}{
-		"posts":   fmt.Sprintf("/api/sites/%s/posts", this.Id.Hex()),
-		"events":  fmt.Sprintf("/api/sites/%s/events", this.Id.Hex()),
-		"pages":   fmt.Sprintf("/api/sites/%s/pages", this.Id.Hex()),
-		"actions": fmt.Sprintf("/api/sites/%s/actions", this.Id.Hex()),
+		"posts":   fmt.Sprintf("/api/sites/%s/posts", this.Id),
+		"events":  fmt.Sprintf("/api/sites/%s/events", this.Id),
+		"pages":   fmt.Sprintf("/api/sites/%s/pages", this.Id),
+		"actions": fmt.Sprintf("/api/sites/%s/actions", this.Id),
 	}
 
 	siteJson := SiteJson{

@@ -4,8 +4,6 @@ import (
 	"testing"
 	"time"
 
-	"gopkg.in/mgo.v2/bson"
-
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
@@ -66,7 +64,7 @@ func (suite *SiteTestSuite) TestSite() {
 
 	// Insert site
 	site := Site{
-		Id:          bson.NewObjectId(),
+		Id:          "site_1",
 		UserId:      user.Id,
 		CreatedAt:   time.Now(),
 		Name:        "My site",
