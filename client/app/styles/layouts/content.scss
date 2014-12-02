@@ -121,4 +121,29 @@
     padding: 15px;
 
     background: #fff;
+
+    .content-preview-header {
+        .content-date {
+            float: left;
+            margin-top: 7px;
+            margin-left: 3px;
+        }
+
+        .content-edit {
+            float: right;
+            position: relative;
+            top: 3px;
+
+            .fa {
+                margin-right: 5px;
+            }
+        }
+    }
+
+    .content-preview-content {
+        padding-top: 5%;
+        padding-bottom: 5%;
+        max-width: 700px;
+        margin: 0 auto;
+    }
 }
