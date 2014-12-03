@@ -67,6 +67,6 @@ func (session *DBSession) FindPost(postId bson.ObjectId) *Post {
 //
 
 // Fetch from database: site that post belongs to
-func (this *Post) FindSite() *Site {
-	return this.dbSession.FindSite(this.SiteId)
+func (post *Post) FindSite() *Site {
+	return post.dbSession.FindSite(post.SiteId)
 }

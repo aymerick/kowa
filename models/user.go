@@ -85,17 +85,17 @@ func (session *DBSession) FindUserByEmail(email string) *User {
 // User
 //
 
-func (this *User) Fullname() string {
-	return fmt.Sprintf("%s %s", this.FirstName, this.LastName)
+func (user *User) Fullname() string {
+	return fmt.Sprintf("%s %s", user.FirstName, user.LastName)
 }
 
 // Implements json.MarshalJSON
-func (this *User) MarshalJSON() ([]byte, error) {
+func (user *User) MarshalJSON() ([]byte, error) {
 	// inject 'links' needed by Ember Data
-	links := map[string]interface{}{"sites": fmt.Sprintf("/api/users/%s/sites", this.Id)}
+	links := map[string]interface{}{"sites": fmt.Sprintf("/api/users/%s/sites", user.Id)}
 
 	userJson := UserJson{
-		User:  *this,
+		User:  *user,
 		Links: links,
 	}
 
@@ -103,11 +103,11 @@ func (this *User) MarshalJSON() ([]byte, error) {
 }
 
 // Fetch from database: all sites belonging to user
-func (this *User) FindSites() *SitesList {
+func (user *User) FindSites() *SitesList {
 	var result SitesList
 
 	// @todo Handle err
-	this.dbSession.SitesCol().Find(bson.M{"user_id": this.Id}).All(&result)
+	user.dbSession.SitesCol().Find(bson.M{"user_id": user.Id}).All(&result)
 
 	// @todo Inject dbSession in all result sites
 

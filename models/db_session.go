@@ -61,30 +61,30 @@ func MongoDBSessionForURI(uri string) *mgo.Session {
 //
 
 // ensure indexes on all collections
-func (this *DBSession) EnsureIndexes() {
-	this.EnsureUsersIndexes()
-	this.EnsureSitesIndexes()
-	this.EnsurePostsIndexes()
-	this.EnsureEventsIndexes()
-	this.EnsurePagesIndexes()
-	this.EnsureActionsIndexes()
+func (session *DBSession) EnsureIndexes() {
+	session.EnsureUsersIndexes()
+	session.EnsureSitesIndexes()
+	session.EnsurePostsIndexes()
+	session.EnsureEventsIndexes()
+	session.EnsurePagesIndexes()
+	session.EnsureActionsIndexes()
 }
 
 // returns a database handler
-func (this *DBSession) DB() *mgo.Database {
-	return this.mongoSession.DB(this.DBName())
+func (session *DBSession) DB() *mgo.Database {
+	return session.mongoSession.DB(session.DBName())
 }
 
 // set database name
-func (this *DBSession) SetDBName(name string) {
-	this.dbName = name
+func (session *DBSession) SetDBName(name string) {
+	session.dbName = name
 }
 
 // get database name
-func (this *DBSession) DBName() string {
-	if this.dbName == "" {
-		this.dbName = viper.GetString("mongodb_dbname")
+func (session *DBSession) DBName() string {
+	if session.dbName == "" {
+		session.dbName = viper.GetString("mongodb_dbname")
 	}
 
-	return this.dbName
+	return session.dbName
 }

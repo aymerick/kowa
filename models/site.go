@@ -92,29 +92,29 @@ func (session *DBSession) FindSite(siteId string) *Site {
 //
 
 // Implements json.MarshalJSON
-func (this *Site) MarshalJSON() ([]byte, error) {
+func (post *Site) MarshalJSON() ([]byte, error) {
 	// inject 'links' needed by Ember Data
 	links := map[string]interface{}{
-		"posts":   fmt.Sprintf("/api/sites/%s/posts", this.Id),
-		"events":  fmt.Sprintf("/api/sites/%s/events", this.Id),
-		"pages":   fmt.Sprintf("/api/sites/%s/pages", this.Id),
-		"actions": fmt.Sprintf("/api/sites/%s/actions", this.Id),
+		"posts":   fmt.Sprintf("/api/sites/%s/posts", post.Id),
+		"events":  fmt.Sprintf("/api/sites/%s/events", post.Id),
+		"pages":   fmt.Sprintf("/api/sites/%s/pages", post.Id),
+		"actions": fmt.Sprintf("/api/sites/%s/actions", post.Id),
 	}
 
 	siteJson := SiteJson{
-		Site:  *this,
+		Site:  *post,
 		Links: links,
 	}
 
 	return json.Marshal(siteJson)
 }
 
-func (this *Site) baseQuery() *mgo.Query {
-	return this.dbSession.PostsCol().Find(bson.M{"site_id": this.Id})
+func (post *Site) baseQuery() *mgo.Query {
+	return post.dbSession.PostsCol().Find(bson.M{"site_id": post.Id})
 }
 
-func (this *Site) PostsNb() int {
-	result, err := this.baseQuery().Count()
+func (post *Site) PostsNb() int {
+	result, err := post.baseQuery().Count()
 	if err != nil {
 		panic(err)
 	}
@@ -123,10 +123,10 @@ func (this *Site) PostsNb() int {
 }
 
 // Fetch from database: all posts belonging to site
-func (this *Site) FindPosts(skip int, limit int) *PostsList {
+func (post *Site) FindPosts(skip int, limit int) *PostsList {
 	var result PostsList
 
-	query := this.baseQuery().Sort("-created_at")
+	query := post.baseQuery().Sort("-created_at")
 
 	if skip > 0 {
 		query = query.Skip(skip)
@@ -146,10 +146,10 @@ func (this *Site) FindPosts(skip int, limit int) *PostsList {
 }
 
 // Fetch from database: all events belonging to site
-func (this *Site) FindEvents() *EventsList {
+func (post *Site) FindEvents() *EventsList {
 	var result EventsList
 
-	if err := this.dbSession.EventsCol().Find(bson.M{"site_id": this.Id}).All(&result); err != nil {
+	if err := post.dbSession.EventsCol().Find(bson.M{"site_id": post.Id}).All(&result); err != nil {
 		panic(err)
 	}
 
@@ -159,10 +159,10 @@ func (this *Site) FindEvents() *EventsList {
 }
 
 // Fetch from database: all pages belonging to site
-func (this *Site) FindPages() *PagesList {
+func (post *Site) FindPages() *PagesList {
 	var result PagesList
 
-	if err := this.dbSession.PagesCol().Find(bson.M{"site_id": this.Id}).All(&result); err != nil {
+	if err := post.dbSession.PagesCol().Find(bson.M{"site_id": post.Id}).All(&result); err != nil {
 		panic(err)
 	}
 
@@ -172,10 +172,10 @@ func (this *Site) FindPages() *PagesList {
 }
 
 // Fetch from database: all actions belonging to site
-func (this *Site) FindActions() *ActionsList {
+func (post *Site) FindActions() *ActionsList {
 	var result ActionsList
 
-	if err := this.dbSession.ActionsCol().Find(bson.M{"site_id": this.Id}).All(&result); err != nil {
+	if err := post.dbSession.ActionsCol().Find(bson.M{"site_id": post.Id}).All(&result); err != nil {
 		panic(err)
 	}
 

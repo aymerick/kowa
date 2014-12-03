@@ -34,7 +34,7 @@ func NewPagination() *Pagination {
 	}
 }
 
-func (this *Pagination) fillFromRequest(req *http.Request) error {
+func (pager *Pagination) fillFromRequest(req *http.Request) error {
 	var err error
 
 	params := req.URL.Query()
@@ -43,19 +43,19 @@ func (this *Pagination) fillFromRequest(req *http.Request) error {
 	perPage := params.Get("perPage")
 
 	if page != "" {
-		this.Page, err = strconv.Atoi(page)
+		pager.Page, err = strconv.Atoi(page)
 		if err == nil {
 			if perPage == "" {
-				this.PerPage = DEFAULT_PER_PAGE
+				pager.PerPage = DEFAULT_PER_PAGE
 			} else {
-				this.PerPage, err = strconv.Atoi(perPage)
+				pager.PerPage, err = strconv.Atoi(perPage)
 			}
 
 			if err == nil {
-				if (this.Page < 1) || (this.PerPage < 1) {
+				if (pager.Page < 1) || (pager.PerPage < 1) {
 					err = errors.New("Invalid pagination parameters")
 				} else {
-					this.Skip = (this.Page - 1) * this.PerPage
+					pager.Skip = (pager.Page - 1) * pager.PerPage
 				}
 			}
 		}
@@ -64,52 +64,52 @@ func (this *Pagination) fillFromRequest(req *http.Request) error {
 	return err
 }
 
-func (this *Pagination) computePages() {
-	if (this.Page != -1) && (this.PerPage != -1) && (this.Total != -1) {
-		this.TotalPages = this.Total / this.PerPage
-		if math.Mod(float64(this.Total), float64(this.PerPage)) != 0 {
-			this.TotalPages += 1
+func (pager *Pagination) computePages() {
+	if (pager.Page != -1) && (pager.PerPage != -1) && (pager.Total != -1) {
+		pager.TotalPages = pager.Total / pager.PerPage
+		if math.Mod(float64(pager.Total), float64(pager.PerPage)) != 0 {
+			pager.TotalPages += 1
 		}
 
-		if this.Page < this.TotalPages {
-			this.NextPage = this.Page + 1
+		if pager.Page < pager.TotalPages {
+			pager.NextPage = pager.Page + 1
 		}
 
-		if this.Page > 1 {
-			this.PrevPage = this.Page - 1
+		if pager.Page > 1 {
+			pager.PrevPage = pager.Page - 1
 		}
 	}
 }
 
 // Implements json.MarshalJSON
-func (this *Pagination) MarshalJSON() ([]byte, error) {
+func (pager *Pagination) MarshalJSON() ([]byte, error) {
 	hash := map[string]interface{}{}
 
-	if this.Page != -1 {
-		hash["page"] = this.Page
-		hash["perPage"] = this.PerPage
-		hash["skip"] = this.Skip
+	if pager.Page != -1 {
+		hash["page"] = pager.Page
+		hash["perPage"] = pager.PerPage
+		hash["skip"] = pager.Skip
 
-		if this.Total != -1 {
-			hash["total"] = this.Total
+		if pager.Total != -1 {
+			hash["total"] = pager.Total
 		}
 
-		this.computePages()
+		pager.computePages()
 
-		if this.TotalPages != -1 {
-			hash["pages"] = this.TotalPages
+		if pager.TotalPages != -1 {
+			hash["pages"] = pager.TotalPages
 		}
 
-		if this.NextPage == -1 {
+		if pager.NextPage == -1 {
 			hash["nextPage"] = nil
 		} else {
-			hash["nextPage"] = this.NextPage
+			hash["nextPage"] = pager.NextPage
 		}
 
-		if this.PrevPage == -1 {
+		if pager.PrevPage == -1 {
 			hash["prevPage"] = nil
 		} else {
-			hash["prevPage"] = this.PrevPage
+			hash["prevPage"] = pager.PrevPage
 		}
 
 	}
