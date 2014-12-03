@@ -1,10 +1,6 @@
-import ItemView from 'kowa/views/item-view';
+import ActiveItemView from 'kowa/views/active-item';
 
-var PostItemView = ItemView.extend({
-    // doubleClick: function () {
-    //     this.get('controller').send('openEditor');
-    // },
-
+var PostItemView = ActiveItemView.extend({
     click: function () {
         this.get('controller').send('showPostContent');
     }

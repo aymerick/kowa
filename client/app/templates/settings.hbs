@@ -1,12 +1,12 @@
 <nav class="settings-nav">
     <ul>
-        {{#view "item-view" tagName="li"}}
+        {{#view "active-item" tagName="li"}}
             {{#link-to "settings.general"}}<i class="fa fa-cog"></i> General{{/link-to}}
         {{/view}}
-        {{#view "item-view" tagName="li"}}
+        {{#view "active-item" tagName="li"}}
             {{#link-to "settings.actions"}}<i class="fa fa-thumbs-o-up"></i> Actions{{/link-to}}
         {{/view}}
-        {{#view "item-view" tagName="li"}}
+        {{#view "active-item" tagName="li"}}
             {{#link-to "settings.members"}}<i class="fa fa-users"></i> Members{{/link-to}}
         {{/view}}
     </ul>

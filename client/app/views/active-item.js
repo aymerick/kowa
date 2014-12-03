@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-var ItemView = Ember.View.extend({
+var ActiveItemView = Ember.View.extend({
     classNameBindings: ['active'],
 
     // set the 'active' class when our first child, that is a link, have the 'active' class set by the {{link-to}} ember magic
@@ -9,4 +9,4 @@ var ItemView = Ember.View.extend({
     })
 });
 
-export default ItemView;
+export default ActiveItemView;
