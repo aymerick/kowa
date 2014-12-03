@@ -1,0 +1,60 @@
+.settings-nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 25%;
+
+    background: #fff;
+    box-shadow: #edece4 1px 0 0;
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        position: relative;
+        border-top: #fff 1px solid;
+
+        a {
+            display: block;
+            padding: 15px 30px;
+
+            color: #aaa9a2;
+            transition: background 0.2s, color 0.2s;
+
+            &:hover,
+            &:focus {
+                color: #242628;
+                background: #edece4;
+                text-decoration: none;
+            }
+        }
+
+        &.active {
+            position: relative;
+            z-index: 300;
+            border-top: #edece4 1px solid;
+            box-shadow: #fff 1px 0 0, #edece4 0 1px 0;
+            transition: all 0.15s ease-out 0s;
+
+            a {
+                color: #242628;
+                font-weight: bold;
+                background: #fff;
+
+                &:focus {
+                    background: #edece4;
+                }
+            }
+        }
+
+        // icon
+        .fa {
+            width: 15px;
+            margin-right: 10px;
+        }
+    }
+}

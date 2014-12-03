@@ -1,8 +1,6 @@
-import Ember from 'ember';
+import MainBaseView from 'kowa/views/main-base';
 
-var PostsView = Ember.View.extend({
-    classNames: ['content-view-container'],
-    tagName: 'section'
+var PostsView = MainBaseView.extend({
 });
 
 export default PostsView;

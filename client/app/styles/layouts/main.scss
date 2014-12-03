@@ -1,0 +1,12 @@
+.main-base {
+    position: absolute;
+    top: $navbar-height;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    background: #fff;
+}

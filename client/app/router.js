@@ -47,6 +47,10 @@ Router.map(function() {
         this.resource('settings.actions', {path: '/actions'}, function () {
             this.route('action', {path: ':action_id'});
         });
+
+        this.resource('settings.members', {path: '/members'}, function () {
+            this.route('member', {path: ':member_id'});
+        });
       });
     });
   });
