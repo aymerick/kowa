@@ -8,10 +8,10 @@ import (
 )
 
 const (
-	STAFF_MEMBERS_COL_NAME = "staff_members"
+	MEMBERS_COL_NAME = "members"
 )
 
-type StaffMember struct {
+type Member struct {
 	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
@@ -23,13 +23,13 @@ type StaffMember struct {
 	// @todo Photo
 }
 
-type StaffMembersList []StaffMember
+type MembersList []Member
 
 //
 // DBSession
 //
 
-// StaffMember collection
-func (session *DBSession) StaffMembersCol() *mgo.Collection {
-	return session.DB().C(STAFF_MEMBERS_COL_NAME)
+// Member collection
+func (session *DBSession) MembersCol() *mgo.Collection {
+	return session.DB().C(MEMBERS_COL_NAME)
 }
