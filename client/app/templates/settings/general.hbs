@@ -1,0 +1,26 @@
+<header class="settings-view-header">
+    <h2>General</h2>
+    <button type="button" class="btn btn-primary settings-save" {{action "save"}}>Save</button>
+</header>
+
+<form id="settings-general" role="form">
+    <div class="form-group">
+        <label for="site-name">Site Name</label>
+        {{input id="site-name" name="general[name]" type="text" class="form-control" value=name}}
+        <p>The name of your site</p>
+    </div>
+
+    <div class="form-group">
+        <label for="site-tagline">Site Tagline</label>
+        {{input id="site-tagline" name="general[tagline]" type="text" class="form-control" value=tagline}}
+        <p>The tagline of your site</p>
+    </div>
+
+    <div class="form-group description-container">
+        <label for="site-description">Site Description</label>
+        {{textarea id="site-description" name="general[description]" class="form-control" value=description}}
+        <p>
+            Describe what your site is about
+        </p>
+    </div>
+</form>

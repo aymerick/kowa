@@ -44,6 +44,7 @@ func Run() {
 
 	// /api/sites/{site_id}
 	apiRouter.Methods("GET").Path("/sites/{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetSite))
+	apiRouter.Methods("PUT").Path("/sites/{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleUpdateSite))
 	apiRouter.Methods("GET").Path("/sites/{site_id}/posts").Handler(curSiteOwnerChain.ThenFunc(app.handleGetPosts))
 	apiRouter.Methods("GET").Path("/sites/{site_id}/events").Handler(curSiteOwnerChain.ThenFunc(app.handleGetEvents))
 	apiRouter.Methods("GET").Path("/sites/{site_id}/pages").Handler(curSiteOwnerChain.ThenFunc(app.handleGetPages))
