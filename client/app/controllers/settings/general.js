@@ -6,7 +6,6 @@ var SettingsGeneralController = Ember.ObjectController.extend({
             var self = this;
 
             return this.get('model').save().then(function (model) {
-                alert('saved');
                 // @todo self.notifications.showSuccess('Settings successfully saved.');
 
                 return model;

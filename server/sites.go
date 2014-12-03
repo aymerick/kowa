@@ -1,12 +1,17 @@
 package server
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
 	"github.com/aymerick/kowa/models"
 	"github.com/gorilla/context"
 )
+
+type siteJson struct {
+	Site models.Site `json:"site"`
+}
 
 // GET /api/sites/{site_id}
 func (app *Application) handleGetSite(rw http.ResponseWriter, req *http.Request) {
@@ -26,8 +31,20 @@ func (app *Application) handleUpdateSite(rw http.ResponseWriter, req *http.Reque
 
 	currentSite := context.Get(req, "currentSite").(*models.Site)
 	if currentSite != nil {
-		// @todo update site !
-		panic("not implemented")
+		var err error
+		var respJson siteJson
+
+		err = json.NewDecoder(req.Body).Decode(&respJson)
+		if err != nil {
+			http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
+			return
+		}
+
+		err = currentSite.Update(&respJson.Site)
+		if err != nil {
+			http.Error(rw, "Failed to update site", http.StatusInternalServerError)
+			return
+		}
 
 		app.render.JSON(rw, http.StatusOK, renderMap{"site": currentSite})
 	} else {

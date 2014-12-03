@@ -109,12 +109,12 @@ func (site *Site) MarshalJSON() ([]byte, error) {
 	return json.Marshal(siteJson)
 }
 
-func (site *Site) baseQuery() *mgo.Query {
+func (site *Site) postsBaseQuery() *mgo.Query {
 	return site.dbSession.PostsCol().Find(bson.M{"site_id": site.Id})
 }
 
 func (site *Site) PostsNb() int {
-	result, err := site.baseQuery().Count()
+	result, err := site.postsBaseQuery().Count()
 	if err != nil {
 		panic(err)
 	}
@@ -126,7 +126,7 @@ func (site *Site) PostsNb() int {
 func (site *Site) FindPosts(skip int, limit int) *PostsList {
 	var result PostsList
 
-	query := site.baseQuery().Sort("-created_at")
+	query := site.postsBaseQuery().Sort("-created_at")
 
 	if skip > 0 {
 		query = query.Skip(skip)
@@ -182,4 +182,30 @@ func (site *Site) FindActions() *ActionsList {
 	// @todo Inject dbSession in all result items
 
 	return &result
+}
+
+// Update site in database
+func (site *Site) Update(newSite *Site) error {
+	fields := bson.M{}
+
+	if site.Name != newSite.Name {
+		site.Name = newSite.Name
+		fields["name"] = site.Name
+	}
+
+	if site.Tagline != newSite.Tagline {
+		site.Tagline = newSite.Tagline
+		fields["tagline"] = site.Tagline
+	}
+
+	if site.Description != newSite.Description {
+		site.Description = newSite.Description
+		fields["description"] = site.Description
+	}
+
+	if len(fields) > 0 {
+		return site.dbSession.SitesCol().UpdateId(site.Id, bson.M{"$set": fields})
+	} else {
+		return nil
+	}
 }
