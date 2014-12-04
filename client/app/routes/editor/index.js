@@ -1,7 +1,6 @@
-import Ember from 'ember';
 import AuthenticatedRoute from 'kowa/routes/authenticated';
 
-var EditorIndexRoute = Ember.Route.extend({
+var EditorIndexRoute = AuthenticatedRoute.extend({
   beforeModel: function () {
     this.transitionTo('editor.post');
   }
