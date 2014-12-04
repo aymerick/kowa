@@ -3,13 +3,13 @@ import Ember from 'ember';
 var SettingsGeneralController = Ember.ObjectController.extend({
     actions: {
         save: function () {
-            var self = this;
+            // var self = this;
 
             return this.get('model').save().then(function (model) {
                 // @todo self.notifications.showSuccess('Settings successfully saved.');
 
                 return model;
-            }).catch(function (errors) {
+            }).catch(function (/* errors */) {
                 alert('save FAILED !');
                 // @todo self.notifications.showErrors(errors);
             });
