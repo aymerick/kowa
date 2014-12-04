@@ -7,20 +7,40 @@
     <div class="form-group">
         <label for="site-name">Site Name</label>
         {{input id="site-name" name="general[name]" type="text" class="form-control" value=name}}
-        <p>The name of your site</p>
+        <p>
+            The name of your site
+        </p>
     </div>
 
     <div class="form-group">
         <label for="site-tagline">Site Tagline</label>
         {{input id="site-tagline" name="general[tagline]" type="text" class="form-control" value=tagline}}
-        <p>The tagline of your site</p>
+        <p>
+            The tagline of your site
+        </p>
     </div>
 
-    <div class="form-group description-container">
+    <div class="form-group">
         <label for="site-description">Site Description</label>
         {{textarea id="site-description" name="general[description]" class="form-control" value=description}}
         <p>
             Describe what your site is about
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="site-more-desc">Site Additional Description</label>
+        {{textarea id="site-more-desc" name="general[moreDesc]" class="form-control" value=moreDesc}}
+        <p>
+            An additional description to display at bottom of homepage
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="site-join-text">Site Join Text</label>
+        {{textarea id="site-join-text" name="general[joinText]" class="form-control" value=joinText}}
+        <p>
+            Explain to visitors why then should become a member of your site
         </p>
     </div>
 </form>

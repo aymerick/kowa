@@ -203,6 +203,16 @@ func (site *Site) Update(newSite *Site) error {
 		fields["description"] = site.Description
 	}
 
+	if site.MoreDesc != newSite.MoreDesc {
+		site.MoreDesc = newSite.MoreDesc
+		fields["more_desc"] = site.MoreDesc
+	}
+
+	if site.JoinText != newSite.JoinText {
+		site.JoinText = newSite.JoinText
+		fields["join_text"] = site.JoinText
+	}
+
 	if len(fields) > 0 {
 		return site.dbSession.SitesCol().UpdateId(site.Id, bson.M{"$set": fields})
 	} else {
