@@ -33,8 +33,8 @@ type Site struct {
 	Description string `bson:"description" json:"description"`
 	MoreDesc    string `bson:"more_desc"   json:"moreDesc"`
 	JoinText    string `bson:"join_text"   json:"joinText"`
-	// @todo Logo
-	// @todo Photo
+	Logo        string `bson:"logo"        json:"logo"`
+	Cover       string `bson:"cover"       json:"cover"`
 
 	PageSettings []SitePageSettings `bson:"page_settings" json:"pageSettings"`
 
@@ -211,6 +211,16 @@ func (site *Site) Update(newSite *Site) error {
 	if site.JoinText != newSite.JoinText {
 		site.JoinText = newSite.JoinText
 		fields["join_text"] = site.JoinText
+	}
+
+	if site.Logo != newSite.Logo {
+		site.Logo = newSite.Logo
+		fields["logo"] = site.Logo
+	}
+
+	if site.Cover != newSite.Cover {
+		site.Cover = newSite.Cover
+		fields["cover"] = site.Cover
 	}
 
 	if len(fields) > 0 {

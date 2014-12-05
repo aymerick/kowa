@@ -43,4 +43,28 @@
             Explain to visitors why then should become a member of your site
         </p>
     </div>
+
+    <div class="form-group">
+        <label for="site-logo">Site Logo</label>
+        {{#if logo}}
+            <button type="button" {{action "openModal" "upload" this "logo"}}><img id="site-logo" {{bind-attr src=logo}} alt="logo"></button>
+        {{else}}
+            <button type="button" class="btn btn-success" {{action "openModal" "upload" this "logo"}}>Upload Image</button>
+        {{/if}}
+        <p>
+            Display a logo for your site
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="site-cover">Site Cover</label>
+        {{#if cover}}
+            <button type="button" {{action "openModal" "upload" this "cover"}}><img id="site-cover" {{bind-attr src=cover}} alt="cover"></button>
+        {{else}}
+            <button type="button" class="btn btn-success" {{action "openModal" "upload" this "cover"}}>Upload Image</button>
+        {{/if}}
+        <p>
+            Display a cover image on your site
+        </p>
+    </div>
 </form>

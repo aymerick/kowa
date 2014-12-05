@@ -8,6 +8,8 @@ var Site = DS.Model.extend({
   description: DS.attr(),
   moreDesc: DS.attr(),
   joinText: DS.attr(),
+  logo: DS.attr(),
+  cover: DS.attr(),
 
   user: DS.belongsTo('user', { async: true }),
 
