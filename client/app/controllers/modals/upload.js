@@ -8,7 +8,7 @@ var UploadModal = Ember.ObjectController.extend({
       this.get('model').save().then(function (model) {
           self.get('flashes').success('Saved.');
           return model;
-      }).catch(function (err) {
+      }).catch(function () {
           self.get('flashes').danger('Failed.');
       });
     }
