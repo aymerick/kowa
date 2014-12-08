@@ -49,7 +49,7 @@
         {{#if logo}}
             <button type="button" {{action "openModal" "upload" this "logo"}}><img id="site-logo" {{bind-attr src=logo}} alt="logo"></button>
         {{else}}
-            <button type="button" class="btn btn-success" {{action "openModal" "upload" this "logo"}}>Upload Image</button>
+            <button type="button" class="btn btn-success" {{action "openModal" "upload" this "logo"}}>Choose Image</button>
         {{/if}}
         <p>
             Display a logo for your site
@@ -61,7 +61,7 @@
         {{#if cover}}
             <button type="button" {{action "openModal" "upload" this "cover"}}><img id="site-cover" {{bind-attr src=cover}} alt="cover"></button>
         {{else}}
-            <button type="button" class="btn btn-success" {{action "openModal" "upload" this "cover"}}>Upload Image</button>
+            <button type="button" class="btn btn-success" {{action "openModal" "upload" this "cover"}}>Choose Image</button>
         {{/if}}
         <p>
             Display a cover image on your site
