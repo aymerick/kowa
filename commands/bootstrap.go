@@ -2,7 +2,11 @@ package commands
 
 import (
 	"fmt"
+	"io/ioutil"
 	"math/rand"
+	"os"
+	"path"
+	"strings"
 	"time"
 
 	"code.google.com/p/go.crypto/bcrypt"
@@ -11,6 +15,10 @@ import (
 	"github.com/aymerick/kowa/server"
 	"github.com/spf13/cobra"
 	"gopkg.in/mgo.v2/bson"
+)
+
+const (
+	IMAGE_FIXTURES_DIR = "/fixtures"
 )
 
 var bootstrapCmd = &cobra.Command{
@@ -91,6 +99,8 @@ func bootstrap(cmd *cobra.Command, args []string) {
 	}
 	db.SitesCol().Insert(&siteH)
 
+	sites := []models.Site{siteJC1, siteJC2, siteH}
+
 	// Insert posts
 	var post models.Post
 
@@ -131,9 +141,47 @@ func bootstrap(cmd *cobra.Command, args []string) {
 	}
 	db.PostsCol().Insert(&post)
 
-	// Insert events
+	// @todo Insert events
 
-	// Insert pages
+	// @todo Insert pages
 
-	// Insert actions
+	// @todo Insert actions
+
+	// Insert images
+	currentDir, errWd := os.Getwd()
+	if errWd != nil {
+		panic(errWd)
+	}
+
+	files, errDir := ioutil.ReadDir(path.Join(currentDir, "/client/public", IMAGE_FIXTURES_DIR))
+	if errDir != nil {
+		panic(errDir)
+	}
+
+	for _, file := range files {
+		if !file.IsDir() {
+			fileName := path.Base(file.Name())
+			fileExt := path.Ext(file.Name())
+			fileBase := fileName[:len(fileName)-len(fileExt)]
+
+			if !strings.HasSuffix(fileBase, models.THUMB_SUFFIX) {
+				switch fileExt {
+				case ".png", ".jpg", ".gif", ".PNG", ".JPG", ".GIF":
+					img := models.Image{
+						Id:        bson.NewObjectId(),
+						CreatedAt: lastMonth.Add(time.Hour),
+						UpdatedAt: lastMonth.Add(time.Hour + 30),
+						SiteId:    sites[rand.Intn(len(sites))].Id,
+						Path:      path.Join(IMAGE_FIXTURES_DIR, file.Name()),
+					}
+					db.ImagesCol().Insert(&img)
+
+					errThumb := img.GenerateThumb(path.Join(currentDir, "/client/public"))
+					if errThumb != nil {
+						panic(errThumb)
+					}
+				}
+			}
+		}
+	}
 }
