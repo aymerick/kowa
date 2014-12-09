@@ -27,7 +27,6 @@ Router.map(function() {
         this.route('page', {path: ':page_id'});
       });
 
-
       // content editor
       this.resource('editor', function() {
         this.route('post', {path: '/post'});
