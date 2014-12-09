@@ -9,6 +9,7 @@ import (
 )
 
 // GET /posts?site={site_id}
+// GET /sites/{site_id}/posts
 func (app *Application) handleGetPosts(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("[handler]: handleGetPosts\n")
 
