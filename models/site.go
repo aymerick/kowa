@@ -99,6 +99,7 @@ func (site *Site) MarshalJSON() ([]byte, error) {
 		"events":  fmt.Sprintf("/api/sites/%s/events", site.Id),
 		"pages":   fmt.Sprintf("/api/sites/%s/pages", site.Id),
 		"actions": fmt.Sprintf("/api/sites/%s/actions", site.Id),
+		"images":  fmt.Sprintf("/api/sites/%s/images", site.Id),
 	}
 
 	siteJson := SiteJson{
@@ -176,6 +177,19 @@ func (site *Site) FindActions() *ActionsList {
 	var result ActionsList
 
 	if err := site.dbSession.ActionsCol().Find(bson.M{"site_id": site.Id}).All(&result); err != nil {
+		panic(err)
+	}
+
+	// @todo Inject dbSession in all result items
+
+	return &result
+}
+
+// Fetch from database: all images belonging to site
+func (site *Site) FindImages() *ImagesList {
+	var result ImagesList
+
+	if err := site.dbSession.ImagesCol().Find(bson.M{"site_id": site.Id}).All(&result); err != nil {
 		panic(err)
 	}
 

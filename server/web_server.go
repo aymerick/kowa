@@ -49,6 +49,7 @@ func Run() {
 	apiRouter.Methods("GET").Path("/sites/{site_id}/events").Handler(curSiteOwnerChain.ThenFunc(app.handleGetEvents))
 	apiRouter.Methods("GET").Path("/sites/{site_id}/pages").Handler(curSiteOwnerChain.ThenFunc(app.handleGetPages))
 	apiRouter.Methods("GET").Path("/sites/{site_id}/actions").Handler(curSiteOwnerChain.ThenFunc(app.handleGetActions))
+	apiRouter.Methods("GET").Path("/sites/{site_id}/images").Handler(curSiteOwnerChain.ThenFunc(app.handleGetImages))
 
 	// /api/posts?site={site_id}
 	apiRouter.Methods("GET").Path("/posts").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetPosts))
@@ -62,6 +63,9 @@ func Run() {
 
 	// /api/actions?site={site_id}
 	apiRouter.Methods("GET").Path("/actions").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetActions))
+
+	// /api/images?site={site_id}
+	apiRouter.Methods("GET").Path("/images").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetImages))
 
 	fmt.Println("Running on port:", app.port)
 	http.ListenAndServe(":"+app.port, router)
