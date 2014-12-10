@@ -39,8 +39,10 @@ func Run() {
 	apiRouter.Methods("GET").Path("/users/{user_id}/sites").Handler(curUserChain.ThenFunc(app.handleGetUserSites))
 	apiRouter.Methods("GET").Path("/users/{user_id}").Handler(curUserChain.ThenFunc(app.handleGetUser))
 
+	// midllewares
 	curSiteOwnerChain := authChain.Append(app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
 	curPostOwnerChain := authChain.Append(app.ensurePostMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
+	curImageOwnerChain := authChain.Append(app.ensureImageMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
 
 	// /api/sites/{site_id}
 	apiRouter.Methods("GET").Path("/sites/{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetSite))
@@ -66,6 +68,8 @@ func Run() {
 
 	// /api/images?site={site_id}
 	apiRouter.Methods("GET").Path("/images").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetImages))
+	apiRouter.Methods("GET").Path("/images/{image_id}").Handler(curImageOwnerChain.ThenFunc(app.handleGetImage))
+	apiRouter.Methods("DELETE").Path("/images/{image_id}").Handler(curImageOwnerChain.ThenFunc(app.handleDeleteImage))
 
 	fmt.Println("Running on port:", app.port)
 	http.ListenAndServe(":"+app.port, router)

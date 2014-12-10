@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-var SettingsImageController = Ember.ObjectController.extend({
+var ImageController = Ember.ObjectController.extend({
 });
 
-export default SettingsImageController;
+export default ImageController;

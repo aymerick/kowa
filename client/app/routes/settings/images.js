@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import AuthenticatedRoute from 'kowa/routes/authenticated';
 
-var initialPaginationParams = { 'page': 1, 'perPage': 15 };
+var initialPaginationParams = { 'page': 1, 'perPage': 20 };
 
 var ImagesRoute = AuthenticatedRoute.extend({
   paginationParams: null,

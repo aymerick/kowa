@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/aymerick/kowa/models"
-	"github.com/gorilla/context"
 )
 
 type siteJson struct {
@@ -17,7 +16,7 @@ type siteJson struct {
 func (app *Application) handleGetSite(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("[handler]: handleGetSite\n")
 
-	currentSite := context.Get(req, "currentSite").(*models.Site)
+	currentSite := app.getCurrentSite(req)
 	if currentSite != nil {
 		app.render.JSON(rw, http.StatusOK, renderMap{"site": currentSite})
 	} else {
@@ -29,7 +28,7 @@ func (app *Application) handleGetSite(rw http.ResponseWriter, req *http.Request)
 func (app *Application) handleUpdateSite(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("[handler]: handleUpdateSite\n")
 
-	currentSite := context.Get(req, "currentSite").(*models.Site)
+	currentSite := app.getCurrentSite(req)
 	if currentSite != nil {
 		var err error
 		var respJson siteJson

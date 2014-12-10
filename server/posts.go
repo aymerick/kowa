@@ -3,9 +3,6 @@ package server
 import (
 	"log"
 	"net/http"
-
-	"github.com/aymerick/kowa/models"
-	"github.com/gorilla/context"
 )
 
 // GET /posts?site={site_id}
@@ -13,7 +10,7 @@ import (
 func (app *Application) handleGetPosts(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("[handler]: handleGetPosts\n")
 
-	site := context.Get(req, "currentSite").(*models.Site)
+	site := app.getCurrentSite(req)
 	if site != nil {
 		pagination := NewPagination()
 		if err := pagination.fillFromRequest(req); err != nil {
@@ -33,7 +30,7 @@ func (app *Application) handleGetPosts(rw http.ResponseWriter, req *http.Request
 func (app *Application) handleGetPost(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("[handler]: handleGetPost\n")
 
-	post := context.Get(req, "currentPost").(*models.Post)
+	post := app.getCurrentPost(req)
 	if post != nil {
 		app.render.JSON(rw, http.StatusOK, renderMap{"post": post})
 	} else {

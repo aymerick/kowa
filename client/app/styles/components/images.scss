@@ -1,0 +1,16 @@
+.images-grid {
+    list-style: none;
+
+    padding: 0;
+    margin: 50px auto;
+
+    li {
+        float: left;
+        margin: 0 10px 20px 0;
+
+        img {
+            display: block;
+            margin: 0 auto;
+        }
+    }
+}

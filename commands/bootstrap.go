@@ -158,7 +158,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 		panic(errDir)
 	}
 
-	for _, imgFile := range imgFiles {
+	for i, imgFile := range imgFiles {
 		if !imgFile.IsDir() {
 			fileName := path.Base(imgFile.Name())
 			fileExt := path.Ext(imgFile.Name())
@@ -167,17 +167,19 @@ func bootstrap(cmd *cobra.Command, args []string) {
 			if !strings.HasSuffix(fileBase, models.THUMB_SUFFIX) && !strings.HasSuffix(fileBase, models.MEDIUM_SUFFIX) {
 				switch fileExt {
 				case ".png", ".jpg", ".gif", ".PNG", ".JPG", ".GIF":
-					for i, site := range sites {
+					for j, site := range sites {
+						nbHours := time.Duration(i)
+
 						img := models.Image{
 							Id:        bson.NewObjectId(),
-							CreatedAt: lastMonth.Add(time.Hour),
-							UpdatedAt: lastMonth.Add(time.Hour + 30),
+							CreatedAt: lastMonth.Add(time.Hour * nbHours),
+							UpdatedAt: lastMonth.Add(time.Hour * nbHours),
 							SiteId:    site.Id,
 							Path:      path.Join(IMAGE_FIXTURES_DIR, imgFile.Name()),
 						}
 						db.ImagesCol().Insert(&img)
 
-						if i == 0 {
+						if j == 0 {
 							errThumb := img.GenerateDerivatives()
 							if errThumb != nil {
 								panic(errThumb)

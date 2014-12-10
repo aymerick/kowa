@@ -4,8 +4,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/aymerick/kowa/models"
-	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 )
 
@@ -13,7 +11,7 @@ import (
 func (app *Application) handleGetMe(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("[handler]: handleGetMe\n")
 
-	currentUser := context.Get(req, "currentUser").(*models.User)
+	currentUser := app.getCurrentUser(req)
 	userId := currentUser.Id
 
 	if user := app.dbSession.FindUser(userId); user != nil {
@@ -45,7 +43,7 @@ func (app *Application) handleGetUserSites(rw http.ResponseWriter, req *http.Req
 	userId := vars["user_id"]
 
 	// check current user
-	currentUser := context.Get(req, "currentUser").(*models.User)
+	currentUser := app.getCurrentUser(req)
 	if currentUser == nil {
 		unauthorized(rw)
 		return

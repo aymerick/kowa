@@ -3,7 +3,8 @@ import PaginationControllerMixin from 'kowa/mixins/pagination-controller';
 
 var ImagesController = Ember.ArrayController.extend(PaginationControllerMixin, {
     sortProperties: ['createdAt'],
-    sortAscending: false
+    sortAscending: false,
+    itemController: 'settings/image'
 });
 
 export default ImagesController;

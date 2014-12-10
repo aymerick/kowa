@@ -111,7 +111,7 @@ func (app *Application) ensureUserAccessMiddleware(next http.Handler) http.Handl
 		log.Printf("[middleware]: ensureUserAccessMiddleware\n")
 
 		// check current user
-		currentUser := context.Get(req, "currentUser").(*models.User)
+		currentUser := app.getCurrentUser(req)
 		if currentUser == nil {
 			unauthorized(rw)
 			return
@@ -141,13 +141,21 @@ func (app *Application) ensureSiteMiddleware(next http.Handler) http.Handler {
 
 		var currentSite *models.Site
 
+		// site id
 		siteId := vars["site_id"]
 		if siteId != "" {
 			currentSite = app.dbSession.FindSite(siteId)
 		} else {
-			currentPost := context.Get(req, "currentPost").(*models.Post)
+			// post
+			currentPost := app.getCurrentPost(req)
 			if currentPost != nil {
 				currentSite = currentPost.FindSite()
+			} else {
+				// image
+				currentImage := app.getCurrentImage(req)
+				if currentImage != nil {
+					currentSite = currentImage.FindSite()
+				}
 			}
 		}
 
@@ -171,13 +179,13 @@ func (app *Application) ensureSiteOwnerAccessMiddleware(next http.Handler) http.
 		log.Printf("[middleware]: ensureSiteOwnerAccessMiddleware\n")
 
 		// check current user
-		currentUser := context.Get(req, "currentUser").(*models.User)
+		currentUser := app.getCurrentUser(req)
 		if currentUser == nil {
 			panic("Should be auth")
 		}
 
 		// check current site
-		currentSite := context.Get(req, "currentSite").(*models.Site)
+		currentSite := app.getCurrentSite(req)
 		if currentSite == nil {
 			panic("Should have site")
 		}
@@ -206,6 +214,30 @@ func (app *Application) ensurePostMiddleware(next http.Handler) http.Handler {
 
 		if currentPost := app.dbSession.FindPost(bson.ObjectIdHex(postId)); currentPost != nil {
 			context.Set(req, "currentPost", currentPost)
+		} else {
+			http.NotFound(rw, req)
+			return
+		}
+
+		next.ServeHTTP(rw, req)
+	}
+
+	return http.HandlerFunc(fn)
+}
+
+// middleware: ensures image exists and injects 'currentImage' in context
+func (app *Application) ensureImageMiddleware(next http.Handler) http.Handler {
+	fn := func(rw http.ResponseWriter, req *http.Request) {
+		log.Printf("[middleware]: ensureImageMiddleware\n")
+
+		vars := mux.Vars(req)
+		imageId := vars["image_id"]
+		if imageId == "" {
+			panic("Should have image_id")
+		}
+
+		if currentImage := app.dbSession.FindImage(bson.ObjectIdHex(imageId)); currentImage != nil {
+			context.Set(req, "currentImage", currentImage)
 		} else {
 			http.NotFound(rw, req)
 			return

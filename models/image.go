@@ -116,6 +116,19 @@ func (session *DBSession) EnsureImagesIndexes() {
 	}
 }
 
+// Find image by id
+func (session *DBSession) FindImage(imageId bson.ObjectId) *Image {
+	var result Image
+
+	if err := session.ImagesCol().FindId(imageId).One(&result); err != nil {
+		return nil
+	}
+
+	result.dbSession = session
+
+	return &result
+}
+
 //
 // Image
 //
@@ -133,10 +146,40 @@ func (img *Image) MarshalJSON() ([]byte, error) {
 	return json.Marshal(imageJson)
 }
 
+func (img *Image) Delete() error {
+	var err error
+
+	// delete from database
+	if err = img.dbSession.ImagesCol().RemoveId(img.Id); err != nil {
+		return err
+	}
+
+	// delete files
+	for _, derivative := range Derivatives {
+		derivativePath := img.derivativeFilePath(derivative)
+
+		if err := os.Remove(derivativePath); err != nil {
+			log.Printf("Failed to delete image: %s", derivativePath)
+		}
+	}
+
+	originalPath := img.originalFilePath()
+	if err = os.Remove(originalPath); err != nil {
+		log.Printf("Failed to delete image: %s", originalPath)
+	}
+
+	return nil
+}
+
+// Fetch from database: site that image belongs to
+func (img *Image) FindSite() *Site {
+	return img.dbSession.FindSite(img.SiteId)
+}
+
 // Returns memoized image original image
 func (img *Image) Original() *image.Image {
 	if img.original == nil {
-		originalPath := path.Join(appPublicDir, img.Path)
+		originalPath := img.originalFilePath()
 
 		// open original
 		openedImage, err := imaging.Open(originalPath)
@@ -148,6 +191,10 @@ func (img *Image) Original() *image.Image {
 	}
 
 	return img.original
+}
+
+func (img *Image) originalFilePath() string {
+	return path.Join(appPublicDir, img.Path)
 }
 
 // Returns image URL
@@ -165,7 +212,7 @@ func genThumbnail(source *image.Image) *image.NRGBA {
 }
 
 func genMedium(source *image.Image) *image.NRGBA {
-	return imaging.Fit(*source, 200, 200, imaging.Lanczos)
+	return imaging.Thumbnail(*source, 300, 225, imaging.Lanczos)
 }
 
 func (img *Image) derivativePath(derivative *Derivative) string {
@@ -177,13 +224,15 @@ func (img *Image) derivativeURL(derivative *Derivative) string {
 	return img.derivativePath(derivative)
 }
 
-func (img *Image) generateDerivative(derivative *Derivative) error {
-	var err error
+func (img *Image) derivativeFilePath(derivative *Derivative) string {
+	return path.Join(appPublicDir, img.derivativePath(derivative))
+}
 
-	derivativePath := path.Join(appPublicDir, img.derivativePath(derivative))
+func (img *Image) generateDerivative(derivative *Derivative) error {
+	derivativePath := img.derivativeFilePath(derivative)
 
 	// check if derivative already exists
-	if _, err = os.Stat(derivativePath); !os.IsNotExist(err) {
+	if _, err := os.Stat(derivativePath); !os.IsNotExist(err) {
 		return nil
 	}
 

@@ -49,7 +49,7 @@ func (session *DBSession) EnsurePostsIndexes() {
 	}
 }
 
-// Find site by id
+// Find post by id
 func (session *DBSession) FindPost(postId bson.ObjectId) *Post {
 	var result Post
 
