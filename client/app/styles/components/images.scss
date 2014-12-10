@@ -14,3 +14,44 @@
         }
     }
 }
+
+.images-grid-item {
+    position: relative;
+
+    .caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 50px;
+
+        display: block;
+
+        background-color: #000;
+        color: #fff;
+        transition: opacity 0.1s;
+        opacity: 0;
+
+        p {
+            position: absolute;
+            left: 10px;
+            top: 0px;
+
+            width: 200px;
+            line-height: 50px;
+            height: 50px;
+
+            overflow: hidden;
+        }
+
+        .delete-button {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+    }
+}
+
+.images-grid-item:hover .caption {
+    opacity: 0.80;
+}
