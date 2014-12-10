@@ -5,6 +5,7 @@ var ImageModel = DS.Model.extend({
   updatedAt: DS.attr('date'),
   url: DS.attr(),
   thumbUrl: DS.attr(),
+  mediumUrl: DS.attr(),
 
   site: DS.belongsTo('site', { async: true })
 });

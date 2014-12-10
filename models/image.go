@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"image"
 	"log"
@@ -12,11 +13,18 @@ import (
 	"github.com/disintegration/imaging"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+
+	"github.com/aymerick/kowa/utils"
 )
 
 const (
 	IMAGES_COL_NAME = "images"
-	THUMB_SUFFIX    = "_t"
+
+	// derivatives
+	THUMB_KIND    = "thumb"
+	THUMB_SUFFIX  = "_t"
+	MEDIUM_KIND   = "medium"
+	MEDIUM_SUFFIX = "_m"
 )
 
 type Image struct {
@@ -27,14 +35,63 @@ type Image struct {
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
 	SiteId    string        `bson:"site_id"       json:"site"`
 	Path      string        `bson:"path"          json:"-"`
+
+	original *image.Image
 }
 
 type ImagesList []Image
 
 type ImageJson struct {
 	Image
-	URL      string `json:"url"`
-	ThumbURL string `json:"thumbUrl"`
+	URL       string `json:"url"`
+	ThumbURL  string `json:"thumbUrl"`
+	MediumURL string `json:"mediumUrl"`
+}
+
+type DerivativeGenFunc func(source *image.Image) *image.NRGBA
+
+type Derivative struct {
+	kind    string
+	suffix  string
+	genFunc DerivativeGenFunc
+}
+
+// @todo FIXME
+var appPublicDir string
+
+var Derivatives []*Derivative
+
+func init() {
+	currentDir, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+
+	appPublicDir = path.Join(currentDir, "/client/public")
+
+	Derivatives = []*Derivative{
+		&Derivative{
+			kind:    THUMB_KIND,
+			suffix:  THUMB_SUFFIX,
+			genFunc: genThumbnail,
+		},
+		&Derivative{
+			kind:    MEDIUM_KIND,
+			suffix:  MEDIUM_SUFFIX,
+			genFunc: genMedium,
+		},
+	}
+}
+
+// return a derivative definition
+func DerivativeForKind(kind string) *Derivative {
+	for _, derivative := range Derivatives {
+		if derivative.kind == kind {
+			return derivative
+		}
+	}
+
+	return nil
 }
 
 //
@@ -67,56 +124,91 @@ func (session *DBSession) EnsureImagesIndexes() {
 func (img *Image) MarshalJSON() ([]byte, error) {
 
 	imageJson := ImageJson{
-		Image:    *img,
-		URL:      img.URL(),
-		ThumbURL: img.ThumbURL(),
+		Image:     *img,
+		URL:       img.URL(),
+		ThumbURL:  img.derivativeURL(DerivativeForKind("thumb")),
+		MediumURL: img.derivativeURL(DerivativeForKind("medium")),
 	}
 
 	return json.Marshal(imageJson)
 }
 
-func (img *Image) ThumbPath() string {
-	fileName := path.Base(img.Path)
-	fileExt := path.Ext(img.Path)
-	fileBase := fileName[:len(fileName)-len(fileExt)]
+// Returns memoized image original image
+func (img *Image) Original() *image.Image {
+	if img.original == nil {
+		originalPath := path.Join(appPublicDir, img.Path)
 
-	return fmt.Sprintf("%s/%s%s%s", path.Dir(img.Path), fileBase, THUMB_SUFFIX, fileExt)
+		// open original
+		openedImage, err := imaging.Open(originalPath)
+		if err != nil {
+			log.Printf("Failed to open: %v", originalPath)
+		} else {
+			img.original = &openedImage
+		}
+	}
+
+	return img.original
 }
 
+// Returns image URL
 func (img *Image) URL() string {
 	// @todo FIXME
 	return img.Path
 }
 
-func (img *Image) ThumbURL() string {
-	// @todo FIXME
-	return img.ThumbPath()
+//
+// Derivatives
+//
+
+func genThumbnail(source *image.Image) *image.NRGBA {
+	return imaging.Thumbnail(*source, 100, 100, imaging.Lanczos)
 }
 
-func (img *Image) GenerateThumb(publicDir string) error {
+func genMedium(source *image.Image) *image.NRGBA {
+	return imaging.Fit(*source, 200, 200, imaging.Lanczos)
+}
+
+func (img *Image) derivativePath(derivative *Derivative) string {
+	return fmt.Sprintf("%s/%s%s%s", path.Dir(img.Path), utils.FileBase(img.Path), derivative.suffix, path.Ext(img.Path))
+}
+
+func (img *Image) derivativeURL(derivative *Derivative) string {
+	// @todo FIXME
+	return img.derivativePath(derivative)
+}
+
+func (img *Image) generateDerivative(derivative *Derivative) error {
 	var err error
-	var source image.Image
 
-	sourcePath := path.Join(publicDir, img.Path)
-	thumbPath := path.Join(publicDir, img.ThumbPath())
+	derivativePath := path.Join(appPublicDir, img.derivativePath(derivative))
 
-	// check if thumbnail already exists
-	if _, err = os.Stat(thumbPath); !os.IsNotExist(err) {
+	// check if derivative already exists
+	if _, err = os.Stat(derivativePath); !os.IsNotExist(err) {
 		return nil
 	}
 
-	log.Printf("Generating thumb: %s", thumbPath)
+	log.Printf("Generating derivative %s: %s", derivative.kind, derivativePath)
 
-	// open original
-	source, err = imaging.Open(sourcePath)
-	if err != nil {
-		log.Printf("Failed to open: %v", sourcePath)
-		return err
+	// create derivative
+	result := derivative.genFunc(img.Original())
+
+	// save derivative
+	return imaging.Save(result, derivativePath)
+}
+
+// Generate all derivatives that were not generated yet
+func (img *Image) GenerateDerivatives() error {
+	var err error
+
+	if img.Original() == nil {
+		return errors.New(fmt.Sprintf("Failed to load original image: %v", img.Path))
 	}
 
-	// create thumbnail
-	thumb := imaging.Thumbnail(source, 100, 100, imaging.CatmullRom)
+	for _, derivative := range Derivatives {
+		if errGen := img.generateDerivative(derivative); errGen != nil {
+			err = errGen
+		}
+	}
 
-	// save thumbnail
-	return imaging.Save(thumb, thumbPath)
+	return err
 }

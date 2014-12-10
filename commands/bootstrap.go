@@ -164,7 +164,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 			fileExt := path.Ext(imgFile.Name())
 			fileBase := fileName[:len(fileName)-len(fileExt)]
 
-			if !strings.HasSuffix(fileBase, models.THUMB_SUFFIX) {
+			if !strings.HasSuffix(fileBase, models.THUMB_SUFFIX) && !strings.HasSuffix(fileBase, models.MEDIUM_SUFFIX) {
 				switch fileExt {
 				case ".png", ".jpg", ".gif", ".PNG", ".JPG", ".GIF":
 					for i, site := range sites {
@@ -178,7 +178,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 						db.ImagesCol().Insert(&img)
 
 						if i == 0 {
-							errThumb := img.GenerateThumb(path.Join(currentDir, "/client/public"))
+							errThumb := img.GenerateDerivatives()
 							if errThumb != nil {
 								panic(errThumb)
 							}
