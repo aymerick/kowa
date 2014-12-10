@@ -185,11 +185,34 @@ func (site *Site) FindActions() *ActionsList {
 	return &result
 }
 
+func (site *Site) imagesBaseQuery() *mgo.Query {
+	return site.dbSession.ImagesCol().Find(bson.M{"site_id": site.Id})
+}
+
+func (site *Site) ImagesNb() int {
+	result, err := site.imagesBaseQuery().Count()
+	if err != nil {
+		panic(err)
+	}
+
+	return result
+}
+
 // Fetch from database: all images belonging to site
-func (site *Site) FindImages() *ImagesList {
+func (site *Site) FindImages(skip int, limit int) *ImagesList {
 	var result ImagesList
 
-	if err := site.dbSession.ImagesCol().Find(bson.M{"site_id": site.Id}).All(&result); err != nil {
+	query := site.imagesBaseQuery().Sort("-created_at")
+
+	if skip > 0 {
+		query = query.Skip(skip)
+	}
+
+	if limit > 0 {
+		query = query.Limit(limit)
+	}
+
+	if err := query.All(&result); err != nil {
 		panic(err)
 	}
 

@@ -3,7 +3,7 @@
 
 import Ember from 'ember';
 
-var styleBody = Ember.Mixin.create({
+var StyleBodyMixin = Ember.Mixin.create({
     activate: function () {
         this._super();
 
@@ -31,4 +31,4 @@ var styleBody = Ember.Mixin.create({
     }
 });
 
-export default styleBody;
+export default StyleBodyMixin;

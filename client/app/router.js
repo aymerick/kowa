@@ -50,6 +50,8 @@ Router.map(function() {
         this.resource('settings.members', {path: '/members'}, function () {
             this.route('member', {path: ':member_id'});
         });
+
+        this.route('images');
       });
     });
   });

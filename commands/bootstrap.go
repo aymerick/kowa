@@ -153,32 +153,36 @@ func bootstrap(cmd *cobra.Command, args []string) {
 		panic(errWd)
 	}
 
-	files, errDir := ioutil.ReadDir(path.Join(currentDir, "/client/public", IMAGE_FIXTURES_DIR))
+	imgFiles, errDir := ioutil.ReadDir(path.Join(currentDir, "/client/public", IMAGE_FIXTURES_DIR))
 	if errDir != nil {
 		panic(errDir)
 	}
 
-	for _, file := range files {
-		if !file.IsDir() {
-			fileName := path.Base(file.Name())
-			fileExt := path.Ext(file.Name())
+	for _, imgFile := range imgFiles {
+		if !imgFile.IsDir() {
+			fileName := path.Base(imgFile.Name())
+			fileExt := path.Ext(imgFile.Name())
 			fileBase := fileName[:len(fileName)-len(fileExt)]
 
 			if !strings.HasSuffix(fileBase, models.THUMB_SUFFIX) {
 				switch fileExt {
 				case ".png", ".jpg", ".gif", ".PNG", ".JPG", ".GIF":
-					img := models.Image{
-						Id:        bson.NewObjectId(),
-						CreatedAt: lastMonth.Add(time.Hour),
-						UpdatedAt: lastMonth.Add(time.Hour + 30),
-						SiteId:    sites[rand.Intn(len(sites))].Id,
-						Path:      path.Join(IMAGE_FIXTURES_DIR, file.Name()),
-					}
-					db.ImagesCol().Insert(&img)
+					for i, site := range sites {
+						img := models.Image{
+							Id:        bson.NewObjectId(),
+							CreatedAt: lastMonth.Add(time.Hour),
+							UpdatedAt: lastMonth.Add(time.Hour + 30),
+							SiteId:    site.Id,
+							Path:      path.Join(IMAGE_FIXTURES_DIR, imgFile.Name()),
+						}
+						db.ImagesCol().Insert(&img)
 
-					errThumb := img.GenerateThumb(path.Join(currentDir, "/client/public"))
-					if errThumb != nil {
-						panic(errThumb)
+						if i == 0 {
+							errThumb := img.GenerateThumb(path.Join(currentDir, "/client/public"))
+							if errThumb != nil {
+								panic(errThumb)
+							}
+						}
 					}
 				}
 			}

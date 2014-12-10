@@ -1,0 +1,10 @@
+<header class="settings-view-header">
+    <h2>Images</h2>
+</header>
+<section>
+    <ol class="images-list">
+        {{#each itemController="settings/image" itemTagName="li"}}
+            <img {{bind-attr src=thumbUrl}} />
+        {{/each}}
+    </ol>
+<section>
