@@ -21,10 +21,12 @@ const (
 	IMAGES_COL_NAME = "images"
 
 	// derivatives
-	THUMB_KIND    = "thumb"
-	THUMB_SUFFIX  = "_t"
-	MEDIUM_KIND   = "medium"
-	MEDIUM_SUFFIX = "_m"
+	THUMB_KIND         = "thumb"
+	THUMB_SUFFIX       = "_t"
+	MEDIUM_KIND        = "medium"
+	MEDIUM_SUFFIX      = "_m"
+	MEDIUM_CROP_KIND   = "medium_crop"
+	MEDIUM_CROP_SUFFIX = "_mc"
 )
 
 type Image struct {
@@ -43,9 +45,10 @@ type ImagesList []*Image
 
 type ImageJson struct {
 	Image
-	URL       string `json:"url"`
-	ThumbURL  string `json:"thumbUrl"`
-	MediumURL string `json:"mediumUrl"`
+	URL           string `json:"url"`
+	ThumbURL      string `json:"thumbUrl"`
+	MediumURL     string `json:"mediumUrl"`
+	MediumCropURL string `json:"mediumCropUrl"`
 }
 
 type DerivativeGenFunc func(source *image.Image) *image.NRGBA
@@ -79,6 +82,11 @@ func init() {
 			kind:    MEDIUM_KIND,
 			suffix:  MEDIUM_SUFFIX,
 			genFunc: genMedium,
+		},
+		&Derivative{
+			kind:    MEDIUM_CROP_KIND,
+			suffix:  MEDIUM_CROP_SUFFIX,
+			genFunc: genMediumCrop,
 		},
 	}
 }
@@ -137,10 +145,11 @@ func (session *DBSession) FindImage(imageId bson.ObjectId) *Image {
 func (img *Image) MarshalJSON() ([]byte, error) {
 
 	imageJson := ImageJson{
-		Image:     *img,
-		URL:       img.URL(),
-		ThumbURL:  img.derivativeURL(DerivativeForKind("thumb")),
-		MediumURL: img.derivativeURL(DerivativeForKind("medium")),
+		Image:         *img,
+		URL:           img.URL(),
+		ThumbURL:      img.derivativeURL(DerivativeForKind("thumb")),
+		MediumURL:     img.derivativeURL(DerivativeForKind("medium")),
+		MediumCropURL: img.derivativeURL(DerivativeForKind("medium_crop")),
 	}
 
 	return json.Marshal(imageJson)
@@ -212,6 +221,10 @@ func genThumbnail(source *image.Image) *image.NRGBA {
 }
 
 func genMedium(source *image.Image) *image.NRGBA {
+	return imaging.Fit(*source, 300, 225, imaging.Lanczos)
+}
+
+func genMediumCrop(source *image.Image) *image.NRGBA {
 	return imaging.Thumbnail(*source, 300, 225, imaging.Lanczos)
 }
 

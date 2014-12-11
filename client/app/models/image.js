@@ -6,6 +6,7 @@ var ImageModel = DS.Model.extend({
   url: DS.attr(),
   thumbUrl: DS.attr(),
   mediumUrl: DS.attr(),
+  mediumCropUrl: DS.attr(),
 
   site: DS.belongsTo('site', { inverse: 'images', async: true }),
 
