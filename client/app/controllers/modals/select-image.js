@@ -9,6 +9,8 @@ var SelectImageModal = Ember.ArrayController.extend(PaginationControllerMixin, {
   targetModel: null,
   targetField: null,
 
+  nothingSelected: Ember.computed.not('selectedImage'),
+
   actions: {
     selectImage: function (image) {
       this.set('selectedImage', image);

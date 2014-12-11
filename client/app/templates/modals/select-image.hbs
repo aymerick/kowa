@@ -1,4 +1,4 @@
-{{#modal-dialog title='Choose image' ok='save' okText='Select' okClass='btn-primary' close='closeModal' closeText='Cancel'}}
+{{#modal-dialog title='Choose image' ok='save' okText='Select' okClass='btn-primary' okDisabled=nothingSelected close='closeModal' closeText='Cancel'}}
     {{#view "paginated-scroll-box" tagName="section" classNames="select-images-grid-content"}}
         <ol class="select-images-grid ">
             {{#each image in controller itemViewClass="modals/image"}}
