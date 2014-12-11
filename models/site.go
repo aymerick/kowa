@@ -28,13 +28,14 @@ type Site struct {
 	CreatedAt time.Time `bson:"created_at"    json:"createdAt"`
 	UserId    string    `bson:"user_id"       json:"user"`
 
-	Name        string        `bson:"name"        json:"name"`
-	Tagline     string        `bson:"tagline"     json:"tagline"`
-	Description string        `bson:"description" json:"description"`
-	MoreDesc    string        `bson:"more_desc"   json:"moreDesc"`
-	JoinText    string        `bson:"join_text"   json:"joinText"`
-	Logo        bson.ObjectId `bson:"logo"        json:"logo,omitempty"`
-	Cover       bson.ObjectId `bson:"cover"       json:"cover,omitempty"`
+	Name        string `bson:"name"        json:"name"`
+	Tagline     string `bson:"tagline"     json:"tagline"`
+	Description string `bson:"description" json:"description"`
+	MoreDesc    string `bson:"more_desc"   json:"moreDesc"`
+	JoinText    string `bson:"join_text"   json:"joinText"`
+
+	Logo  bson.ObjectId `bson:"logo,omitempty"  json:"logo,omitempty"`
+	Cover bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
 
 	PageSettings []SitePageSettings `bson:"page_settings" json:"pageSettings"`
 
@@ -304,5 +305,11 @@ func (site *Site) Update(newSite *Site) error {
 
 // Delete site fields from database
 func (site *Site) DeleteFields(fields []string) error {
-	return site.dbSession.SitesCol().UpdateId(site.Id, bson.M{"$unset": fields})
+	var unset bson.D
+
+	for _, field := range fields {
+		unset = append(unset, bson.DocElem{field, 1})
+	}
+
+	return site.dbSession.SitesCol().UpdateId(site.Id, bson.M{"$unset": unset})
 }

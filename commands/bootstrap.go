@@ -77,7 +77,9 @@ func bootstrap(cmd *cobra.Command, args []string) {
 		Tagline:     "So powerfull !",
 		Description: "You will be astonished by what my site is about",
 	}
-	db.SitesCol().Insert(&siteJC1)
+	if err := db.SitesCol().Insert(&siteJC1); err != nil {
+		panic(err)
+	}
 
 	siteJC2 := models.Site{
 		Id:          "site_2",
