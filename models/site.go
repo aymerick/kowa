@@ -259,45 +259,88 @@ func (site *Site) FindCover() *Image {
 
 // Update site in database
 func (site *Site) Update(newSite *Site) error {
-	fields := bson.M{}
+	var set, unset, modifier bson.D
 
 	if site.Name != newSite.Name {
 		site.Name = newSite.Name
-		fields["name"] = site.Name
+
+		if site.Name == "" {
+			unset = append(unset, bson.DocElem{"name", 1})
+		} else {
+			set = append(set, bson.DocElem{"name", site.Name})
+		}
 	}
 
 	if site.Tagline != newSite.Tagline {
 		site.Tagline = newSite.Tagline
-		fields["tagline"] = site.Tagline
+
+		if site.Tagline == "" {
+			unset = append(unset, bson.DocElem{"tagline", 1})
+		} else {
+			set = append(set, bson.DocElem{"tagline", site.Tagline})
+		}
 	}
 
 	if site.Description != newSite.Description {
 		site.Description = newSite.Description
-		fields["description"] = site.Description
+
+		if site.Description == "" {
+			unset = append(unset, bson.DocElem{"description", 1})
+		} else {
+			set = append(set, bson.DocElem{"description", site.Description})
+		}
 	}
 
 	if site.MoreDesc != newSite.MoreDesc {
 		site.MoreDesc = newSite.MoreDesc
-		fields["more_desc"] = site.MoreDesc
+
+		if site.MoreDesc == "" {
+			unset = append(unset, bson.DocElem{"more_desc", 1})
+		} else {
+			set = append(set, bson.DocElem{"more_desc", site.MoreDesc})
+		}
 	}
 
 	if site.JoinText != newSite.JoinText {
 		site.JoinText = newSite.JoinText
-		fields["join_text"] = site.JoinText
+
+		if site.JoinText == "" {
+			unset = append(unset, bson.DocElem{"join_text", 1})
+		} else {
+			set = append(set, bson.DocElem{"join_text", site.JoinText})
+		}
 	}
 
 	if site.Logo != newSite.Logo {
 		site.Logo = newSite.Logo
-		fields["logo"] = site.Logo
+
+		if site.Logo == "" {
+			unset = append(unset, bson.DocElem{"logo", 1})
+		} else {
+			set = append(set, bson.DocElem{"logo", site.Logo})
+		}
 	}
 
 	if site.Cover != newSite.Cover {
 		site.Cover = newSite.Cover
-		fields["cover"] = site.Cover
+
+		if site.Cover == "" {
+			unset = append(unset, bson.DocElem{"cover", 1})
+		} else {
+			set = append(set, bson.DocElem{"cover", site.Cover})
+		}
 	}
 
-	if len(fields) > 0 {
-		return site.dbSession.SitesCol().UpdateId(site.Id, bson.M{"$set": fields})
+	if len(unset) > 0 {
+		modifier = append(modifier, bson.DocElem{"$unset", unset})
+	}
+
+	if len(set) > 0 {
+		modifier = append(modifier, bson.DocElem{"$set", set})
+	}
+
+	if len(modifier) > 0 {
+		return site.dbSession.SitesCol().UpdateId(site.Id, modifier)
 	} else {
 		return nil
 	}

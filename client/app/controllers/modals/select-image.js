@@ -27,7 +27,7 @@ var SelectImageModal = Ember.ArrayController.extend(PaginationControllerMixin, {
             self.get('flashes').success('Saved.');
             return siteSaved;
         }).catch(function () {
-            self.get('flashes').danger('Failed.');
+            self.get('flashes').danger('Failed to save.');
         });
       }
       else {
