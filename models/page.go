@@ -23,7 +23,7 @@ type Page struct {
 	// @todo Photo
 }
 
-type PagesList []Page
+type PagesList []*Page
 
 //
 // DBSession

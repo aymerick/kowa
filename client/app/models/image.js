@@ -7,7 +7,10 @@ var ImageModel = DS.Model.extend({
   thumbUrl: DS.attr(),
   mediumUrl: DS.attr(),
 
-  site: DS.belongsTo('site', { inverse: 'images', async: true })
+  site: DS.belongsTo('site', { inverse: 'images', async: true }),
+
+  logoSites: DS.hasMany('site', { inverse: 'logo', async: true }),
+  coverSites: DS.hasMany('site', { inverse: 'cover', async: true })
 });
 
 export default ImageModel;

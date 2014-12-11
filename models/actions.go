@@ -22,7 +22,7 @@ type Action struct {
 	// @todo Photos List
 }
 
-type ActionsList []Action
+type ActionsList []*Action
 
 //
 // DBSession

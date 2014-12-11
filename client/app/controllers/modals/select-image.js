@@ -5,16 +5,34 @@ var SelectImageModal = Ember.ArrayController.extend(PaginationControllerMixin, {
   sortProperties: ['createdAt'],
   sortAscending: false,
 
+  selectedImage: null,
+  targetModel: null,
+  targetField: null,
+
   actions: {
+    selectImage: function (image) {
+      this.set('selectedImage', image);
+    },
+
     save: function() {
       var self = this;
 
-      this.get('model').save().then(function (model) {
-          self.get('flashes').success('Saved.');
-          return model;
-      }).catch(function () {
-          self.get('flashes').danger('Failed.');
-      });
+      // @todo FIXME ! This is really ugly !
+      if (this.selectedImage && this.targetModel && this.targetField) {
+        // update model
+        this.targetModel.set(this.targetField, this.selectedImage);
+
+        // save model
+        this.targetModel.save().then(function (siteSaved) {
+            self.get('flashes').success('Saved.');
+            return siteSaved;
+        }).catch(function () {
+            self.get('flashes').danger('Failed.');
+        });
+      }
+      else {
+        self.get('flashes').danger('No image selected.');
+      }
     }
   }
 });

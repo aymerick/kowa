@@ -23,7 +23,7 @@ type Member struct {
 	// @todo Photo
 }
 
-type MembersList []Member
+type MembersList []*Member
 
 //
 // DBSession

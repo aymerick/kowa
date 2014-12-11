@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+
+	"github.com/aymerick/kowa/models"
 )
 
 // GET /api/me
@@ -55,7 +57,21 @@ func (app *Application) handleGetUserSites(rw http.ResponseWriter, req *http.Req
 	}
 
 	if user := app.dbSession.FindUser(userId); user != nil {
-		app.render.JSON(rw, http.StatusOK, renderMap{"sites": user.FindSites()})
+		var image *models.Image
+		images := []*models.Image{}
+
+		sites := user.FindSites()
+		for _, site := range *sites {
+			if image = site.FindLogo(); image != nil {
+				images = append(images, image)
+			}
+
+			if image = site.FindCover(); image != nil {
+				images = append(images, image)
+			}
+		}
+
+		app.render.JSON(rw, http.StatusOK, renderMap{"sites": sites, "images": images})
 	} else {
 		http.NotFound(rw, req)
 	}

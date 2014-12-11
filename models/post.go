@@ -25,7 +25,7 @@ type Post struct {
 	// @todo Photo
 }
 
-type PostsList []Post
+type PostsList []*Post
 
 //
 // DBSession

@@ -47,7 +47,7 @@
     <div class="form-group">
         <label for="site-logo">Site Logo</label>
         {{#if logo}}
-            <button type="button" {{action "openModal" "select-image" this "logo"}}><img id="site-logo" {{bind-attr src=logo}} alt="logo"></button>
+            <button type="button" class="thumbnail" {{action "openModal" "select-image" this "logo"}}><img id="site-logo" {{bind-attr src=logo.mediumUrl}} alt="logo"></button>
         {{else}}
             <button type="button" class="btn btn-success" {{action "openModal" "select-image" this "logo"}}>Choose Image</button>
         {{/if}}
@@ -59,7 +59,7 @@
     <div class="form-group">
         <label for="site-cover">Site Cover</label>
         {{#if cover}}
-            <button type="button" {{action "openModal" "select-image" this "cover"}}><img id="site-cover" {{bind-attr src=cover}} alt="cover"></button>
+            <button type="button" class="thumbnail" {{action "openModal" "select-image" this "cover"}}><img id="site-cover" {{bind-attr src=cover.mediumUrl}} alt="cover"></button>
         {{else}}
             <button type="button" class="btn btn-success" {{action "openModal" "select-image" this "cover"}}>Choose Image</button>
         {{/if}}

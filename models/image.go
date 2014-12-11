@@ -39,7 +39,7 @@ type Image struct {
 	original *image.Image
 }
 
-type ImagesList []Image
+type ImagesList []*Image
 
 type ImageJson struct {
 	Image

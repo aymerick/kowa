@@ -24,7 +24,7 @@ type Event struct {
 	// @todo Photo
 }
 
-type EventsList []Event
+type EventsList []*Event
 
 //
 // DBSession

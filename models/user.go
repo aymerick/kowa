@@ -30,7 +30,7 @@ type UserJson struct {
 	Links map[string]interface{} `json:"links"`
 }
 
-type UsersList []User
+type UsersList []*User
 
 //
 // DBSession
@@ -109,7 +109,9 @@ func (user *User) FindSites() *SitesList {
 	// @todo Handle err
 	user.dbSession.SitesCol().Find(bson.M{"user_id": user.Id}).All(&result)
 
-	// @todo Inject dbSession in all result sites
+	for _, site := range result {
+		site.dbSession = user.dbSession
+	}
 
 	return &result
 }

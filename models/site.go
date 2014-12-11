@@ -33,8 +33,8 @@ type Site struct {
 	Description string        `bson:"description" json:"description"`
 	MoreDesc    string        `bson:"more_desc"   json:"moreDesc"`
 	JoinText    string        `bson:"join_text"   json:"joinText"`
-	Logo        bson.ObjectId `bson:"logo"        json:"logo"`
-	Cover       bson.ObjectId `bson:"cover"       json:"cover"`
+	Logo        bson.ObjectId `bson:"logo"        json:"logo,omitempty"`
+	Cover       bson.ObjectId `bson:"cover"       json:"cover,omitempty"`
 
 	PageSettings []SitePageSettings `bson:"page_settings" json:"pageSettings"`
 
@@ -50,7 +50,7 @@ type SiteJson struct {
 	Links map[string]interface{} `json:"links"`
 }
 
-type SitesList []Site
+type SitesList []*Site
 
 //
 // DBSession
@@ -222,6 +222,40 @@ func (site *Site) FindImages(skip int, limit int) *ImagesList {
 	return &result
 }
 
+// Fetch Logo from database
+func (site *Site) FindLogo() *Image {
+	if site.Logo != "" {
+		var result Image
+
+		if err := site.dbSession.ImagesCol().FindId(site.Logo).One(&result); err != nil {
+			return nil
+		}
+
+		result.dbSession = site.dbSession
+
+		return &result
+	}
+
+	return nil
+}
+
+// Fetch Cover from database
+func (site *Site) FindCover() *Image {
+	if site.Cover != "" {
+		var result Image
+
+		if err := site.dbSession.ImagesCol().FindId(site.Cover).One(&result); err != nil {
+			return nil
+		}
+
+		result.dbSession = site.dbSession
+
+		return &result
+	}
+
+	return nil
+}
+
 // Update site in database
 func (site *Site) Update(newSite *Site) error {
 	fields := bson.M{}
@@ -266,4 +300,9 @@ func (site *Site) Update(newSite *Site) error {
 	} else {
 		return nil
 	}
+}
+
+// Delete site fields from database
+func (site *Site) DeleteFields(fields []string) error {
+	return site.dbSession.SitesCol().UpdateId(site.Id, bson.M{"$unset": fields})
 }

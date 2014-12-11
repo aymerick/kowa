@@ -9,8 +9,8 @@ var Site = DS.Model.extend({
   moreDesc: DS.attr(),
   joinText: DS.attr(),
 
-  logo: DS.attr(),
-  cover: DS.attr(),
+  logo: DS.belongsTo('image', { inverse: 'logoSites' }),
+  cover: DS.belongsTo('image', { inverse: 'coverSites' }),
 
   user: DS.belongsTo('user', { async: true }),
 
