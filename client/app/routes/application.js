@@ -10,8 +10,22 @@ var ApplicationRoute = Ember.Route.extend(SimpleAuthApplicationRouteMixin, {
     openModal: function(name, model /*, type */) {
       name = 'modals/' + name;
 
-      if (this.controllerFor(name, true)) {
-          this.controllerFor(name).set('model', model);
+      var controller = this.controllerFor(name, true);
+      if (controller) {
+        // @todo FIXME !
+        if (name === 'modals/select-image') {
+          var params = { 'site': model.get('id'), 'page': 1, 'perPage': 16 };
+
+          controller.set('model', this.store.filter('image', params, function () {
+            controller.setupPagination('image', params);
+
+            // nothing to filter
+            return true;
+          }));
+        }
+        else {
+          controller.set('model', model);
+        }
       }
 
       this.render(name, {

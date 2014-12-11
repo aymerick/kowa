@@ -7,7 +7,7 @@ var ImageModel = DS.Model.extend({
   thumbUrl: DS.attr(),
   mediumUrl: DS.attr(),
 
-  site: DS.belongsTo('site', { async: true })
+  site: DS.belongsTo('site', { inverse: 'images', async: true })
 });
 
 export default ImageModel;

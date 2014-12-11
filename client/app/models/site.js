@@ -8,6 +8,7 @@ var Site = DS.Model.extend({
   description: DS.attr(),
   moreDesc: DS.attr(),
   joinText: DS.attr(),
+
   logo: DS.attr(),
   cover: DS.attr(),
 
@@ -17,6 +18,7 @@ var Site = DS.Model.extend({
   // events: DS.hasMany('event', { async: true }),
   // pages: DS.hasMany('page', { async: true }),
   // actions: DS.hasMany('action', { async: true }),
+  images: DS.hasMany('image', { inverse: 'site', async: true }),
 
   pageSettings: DS.hasMany('sitePageSetting')
 });

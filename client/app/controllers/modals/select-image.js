@@ -1,6 +1,10 @@
 import Ember from 'ember';
+import PaginationControllerMixin from 'kowa/mixins/pagination-controller';
 
-var UploadModal = Ember.ObjectController.extend({
+var SelectImageModal = Ember.ArrayController.extend(PaginationControllerMixin, {
+  sortProperties: ['createdAt'],
+  sortAscending: false,
+
   actions: {
     save: function() {
       var self = this;
@@ -15,4 +19,4 @@ var UploadModal = Ember.ObjectController.extend({
   }
 });
 
-export default UploadModal;
+export default SelectImageModal;

@@ -28,13 +28,13 @@ type Site struct {
 	CreatedAt time.Time `bson:"created_at"    json:"createdAt"`
 	UserId    string    `bson:"user_id"       json:"user"`
 
-	Name        string `bson:"name"        json:"name"`
-	Tagline     string `bson:"tagline"     json:"tagline"`
-	Description string `bson:"description" json:"description"`
-	MoreDesc    string `bson:"more_desc"   json:"moreDesc"`
-	JoinText    string `bson:"join_text"   json:"joinText"`
-	Logo        string `bson:"logo"        json:"logo"`
-	Cover       string `bson:"cover"       json:"cover"`
+	Name        string        `bson:"name"        json:"name"`
+	Tagline     string        `bson:"tagline"     json:"tagline"`
+	Description string        `bson:"description" json:"description"`
+	MoreDesc    string        `bson:"more_desc"   json:"moreDesc"`
+	JoinText    string        `bson:"join_text"   json:"joinText"`
+	Logo        bson.ObjectId `bson:"logo"        json:"logo"`
+	Cover       bson.ObjectId `bson:"cover"       json:"cover"`
 
 	PageSettings []SitePageSettings `bson:"page_settings" json:"pageSettings"`
 
@@ -94,6 +94,7 @@ func (session *DBSession) FindSite(siteId string) *Site {
 // Implements json.MarshalJSON
 func (site *Site) MarshalJSON() ([]byte, error) {
 	// inject 'links' needed by Ember Data
+	// @todo Remove that ?
 	links := map[string]interface{}{
 		"posts":   fmt.Sprintf("/api/sites/%s/posts", site.Id),
 		"events":  fmt.Sprintf("/api/sites/%s/events", site.Id),
