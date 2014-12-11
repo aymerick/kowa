@@ -7,10 +7,10 @@ var ImageView = Ember.View.extend({
 
   isSelected: function() {
     var selectedImg = this.get('controller').get('selectedImage');
-    return (selectedImg && selectedImg.get('id') == this.get('content').get('id'));
+    return (selectedImg && selectedImg.get('id') === this.get('content').get('id'));
   }.property('controller.selectedImage'),
 
-  click: function(evt) {
+  click: function() {
     this.get('controller').send('selectImage', this.get('content'));
   }
 });
