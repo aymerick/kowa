@@ -71,6 +71,9 @@ func Run() {
 	apiRouter.Methods("GET").Path("/images/{image_id}").Handler(curImageOwnerChain.ThenFunc(app.handleGetImage))
 	apiRouter.Methods("DELETE").Path("/images/{image_id}").Handler(curImageOwnerChain.ThenFunc(app.handleDeleteImage))
 
+	// upload image
+	apiRouter.Methods("POST").Path("/images/upload").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleUploadImage))
+
 	fmt.Println("Running on port:", app.port)
 	http.ListenAndServe(":"+app.port, router)
 }
