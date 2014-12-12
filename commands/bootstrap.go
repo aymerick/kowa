@@ -6,15 +6,14 @@ import (
 	"math/rand"
 	"os"
 	"path"
-	"strings"
 	"time"
 
 	"code.google.com/p/go.crypto/bcrypt"
+	"github.com/spf13/cobra"
+	"gopkg.in/mgo.v2/bson"
 
 	"github.com/aymerick/kowa/models"
 	"github.com/aymerick/kowa/server"
-	"github.com/spf13/cobra"
-	"gopkg.in/mgo.v2/bson"
 )
 
 const (
@@ -161,31 +160,41 @@ func bootstrap(cmd *cobra.Command, args []string) {
 	}
 
 	for i, imgFile := range imgFiles {
-		if !imgFile.IsDir() {
-			fileName := path.Base(imgFile.Name())
+		if !imgFile.IsDir() && !models.IsDerivativePath(imgFile.Name()) {
 			fileExt := path.Ext(imgFile.Name())
-			fileBase := fileName[:len(fileName)-len(fileExt)]
+			switch fileExt {
+			case ".png", ".jpg", ".gif", ".PNG", ".JPG", ".GIF":
+				var fileType string
 
-			if !strings.HasSuffix(fileBase, models.THUMB_SUFFIX) && !strings.HasSuffix(fileBase, models.MEDIUM_SUFFIX) {
 				switch fileExt {
-				case ".png", ".jpg", ".gif", ".PNG", ".JPG", ".GIF":
-					for j, site := range sites {
-						nbHours := time.Duration(i)
+				case ".png", ".PNG":
+					fileType = "image/png"
+				case ".jpg", ".JPG":
+					fileType = "image/jpeg"
+				case ".gif", ".GIF":
+					fileType = "image/gif"
+				}
 
-						img := models.Image{
-							Id:        bson.NewObjectId(),
-							CreatedAt: lastMonth.Add(time.Hour * nbHours),
-							UpdatedAt: lastMonth.Add(time.Hour * nbHours),
-							SiteId:    site.Id,
-							Path:      path.Join(IMAGE_FIXTURES_DIR, imgFile.Name()),
-						}
-						db.ImagesCol().Insert(&img)
+				// insert image in all sites
+				for j, site := range sites {
+					nbHours := time.Duration(i)
 
-						if j == 0 {
-							errThumb := img.GenerateDerivatives()
-							if errThumb != nil {
-								panic(errThumb)
-							}
+					img := models.Image{
+						Id:        bson.NewObjectId(),
+						CreatedAt: lastMonth.Add(time.Hour * nbHours),
+						UpdatedAt: lastMonth.Add(time.Hour * nbHours),
+						SiteId:    site.Id,
+						Path:      path.Join(IMAGE_FIXTURES_DIR, imgFile.Name()),
+						Name:      imgFile.Name(),
+						Size:      imgFile.Size(),
+						Type:      fileType,
+					}
+					db.ImagesCol().Insert(&img)
+
+					if j == 0 {
+						errThumb := img.GenerateDerivatives()
+						if errThumb != nil {
+							panic(errThumb)
 						}
 					}
 				}

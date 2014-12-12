@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"strings"
 	"time"
 
 	"github.com/disintegration/imaging"
@@ -37,6 +38,9 @@ type Image struct {
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
 	SiteId    string        `bson:"site_id"       json:"site"`
 	Path      string        `bson:"path"          json:"-"`
+	Name      string        `bson:"name"          json:"name"`
+	Size      int64         `bson:"size"          json:"size"`
+	Type      string        `bson:"type"          json:"type"`
 
 	original *image.Image
 }
@@ -100,6 +104,18 @@ func DerivativeForKind(kind string) *Derivative {
 	}
 
 	return nil
+}
+
+// returns true if given path is an image derivative
+func IsDerivativePath(path string) bool {
+	for _, derivative := range Derivatives {
+		fileBase := utils.FileBase(path)
+		if strings.HasSuffix(fileBase, derivative.suffix) {
+			return true
+		}
+	}
+
+	return false
 }
 
 //
