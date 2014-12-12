@@ -17,8 +17,6 @@ import (
 // middleware: logs requests
 func (app *Application) loggingMiddleware(next http.Handler) http.Handler {
 	fn := func(rw http.ResponseWriter, req *http.Request) {
-		log.Printf("[middleware]: loggingMiddleware\n")
-
 		startAt := time.Now()
 		next.ServeHTTP(rw, req)
 		endAt := time.Now()
@@ -32,8 +30,6 @@ func (app *Application) loggingMiddleware(next http.Handler) http.Handler {
 // middleware: recovers panic
 func (app *Application) recoveryMiddleware(next http.Handler) http.Handler {
 	fn := func(rw http.ResponseWriter, req *http.Request) {
-		log.Printf("[middleware]: recoveryMiddleware\n")
-
 		defer func() {
 			if err := recover(); err != nil {
 				rw.WriteHeader(http.StatusInternalServerError)
@@ -65,8 +61,6 @@ func (app *Application) corsMiddleware() func(next http.Handler) http.Handler {
 // middleware: ensures user is authenticated and injects 'currentUser' in context
 func (app *Application) ensureAuthMiddleware(next http.Handler) http.Handler {
 	fn := func(rw http.ResponseWriter, req *http.Request) {
-		log.Printf("[middleware]: ensureAuthMiddleware\n")
-
 		var err error
 
 		// ex: Authorization: Bearer Zjg5ZmEwNDYtNGI3NS00MTk4LWFhYzgtZmVlNGRkZDQ3YzAx
@@ -108,8 +102,6 @@ func (app *Application) ensureAuthMiddleware(next http.Handler) http.Handler {
 // middleware: ensures that currently authenticated user is allowed to access a /users/{user_id}/* requests
 func (app *Application) ensureUserAccessMiddleware(next http.Handler) http.Handler {
 	fn := func(rw http.ResponseWriter, req *http.Request) {
-		log.Printf("[middleware]: ensureUserAccessMiddleware\n")
-
 		// check current user
 		currentUser := app.getCurrentUser(req)
 		if currentUser == nil {
@@ -135,8 +127,6 @@ func (app *Application) ensureUserAccessMiddleware(next http.Handler) http.Handl
 // middleware: ensures site exists and injects 'currentSite' in context
 func (app *Application) ensureSiteMiddleware(next http.Handler) http.Handler {
 	fn := func(rw http.ResponseWriter, req *http.Request) {
-		log.Printf("[middleware]: ensureSiteMiddleware\n")
-
 		vars := mux.Vars(req)
 
 		var currentSite *models.Site
@@ -176,8 +166,6 @@ func (app *Application) ensureSiteMiddleware(next http.Handler) http.Handler {
 // middleware: ensures that currently authenticated user is allowed to access a /sites/{site_id}/* requests
 func (app *Application) ensureSiteOwnerAccessMiddleware(next http.Handler) http.Handler {
 	fn := func(rw http.ResponseWriter, req *http.Request) {
-		log.Printf("[middleware]: ensureSiteOwnerAccessMiddleware\n")
-
 		// check current user
 		currentUser := app.getCurrentUser(req)
 		if currentUser == nil {
@@ -204,8 +192,6 @@ func (app *Application) ensureSiteOwnerAccessMiddleware(next http.Handler) http.
 // middleware: ensures post exists and injects 'currentPost' in context
 func (app *Application) ensurePostMiddleware(next http.Handler) http.Handler {
 	fn := func(rw http.ResponseWriter, req *http.Request) {
-		log.Printf("[middleware]: ensurePostMiddleware\n")
-
 		vars := mux.Vars(req)
 		postId := vars["post_id"]
 		if postId == "" {
@@ -228,8 +214,6 @@ func (app *Application) ensurePostMiddleware(next http.Handler) http.Handler {
 // middleware: ensures image exists and injects 'currentImage' in context
 func (app *Application) ensureImageMiddleware(next http.Handler) http.Handler {
 	fn := func(rw http.ResponseWriter, req *http.Request) {
-		log.Printf("[middleware]: ensureImageMiddleware\n")
-
 		vars := mux.Vars(req)
 		imageId := vars["image_id"]
 		if imageId == "" {
