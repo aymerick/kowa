@@ -1,7 +1,7 @@
 import Ember from 'ember';
-import EmberUploader from 'ember-uploader/uploader';
 
 import PaginationControllerMixin from 'kowa/mixins/pagination-controller';
+import UploadJob from 'kowa/services/upload-job';
 
 var ImagesController = Ember.ArrayController.extend(PaginationControllerMixin, {
   sortProperties: ['createdAt'],
@@ -17,15 +17,25 @@ var ImagesController = Ember.ArrayController.extend(PaginationControllerMixin, {
 
   actions: {
     uploadImage: function(file) {
-      var uploader = EmberUploader.create({ url: this.get('uploadUrl') });
+      var job = new UploadJob({
+        url: this.get('uploadUrl'),
+        file: file
+      });
 
-      var now = new Date();
-      var self = this;
+      // set dummy date to preserve images order when upload is finished and correct date is sent by the server
+      var at = null;
+      var lastDate = this.get('firstObject').get('createdAt');
+      if (lastDate) {
+        at = moment(lastDate).add(1, 'hours').toDate();
+      }
+      else {
+        at = new Date();
+      }
 
       // create temporary image
       var tmpImage = this.store.createRecord('image', {
-        createdAt: now,
-        updatedAt: now,
+        createdAt: at,
+        updatedAt: at,
         name: file.name,
         size: file.size,
         type: file.type,
@@ -33,11 +43,17 @@ var ImagesController = Ember.ArrayController.extend(PaginationControllerMixin, {
         uploadProgress: 0
       });
 
-      uploader.on('progress', function(e) {
-        tmpImage.set('uploadProgress', e.percent);
+      var controller = this;
+
+      job.on('willUpload', function() {
+        job.set('tmpImage', tmpImage);
       });
 
-      uploader.on('didUpload', function(response) {
+      job.on('progress', function(val) {
+        job.get('tmpImage').set('uploadProgress', val);
+      });
+
+      job.on('didUpload', function(response) {
         //
         // This is crazy but I don't find any correct way to just modify the localy created record and set its 'isDirty' and 'isNew' properties to false.
         // So we destroy it, and recreate a new one with the payload sent back by the server.
@@ -46,16 +62,14 @@ var ImagesController = Ember.ArrayController.extend(PaginationControllerMixin, {
         //
 
         // destroy temporary image
-        tmpImage.destroyRecord();
+        job.get('tmpImage').destroyRecord();
 
         // push uploaded image
-        var recordData = self.store.normalize('image', response.image);
-        self.store.update('image', recordData);
+        var recordData = controller.store.normalize('image', response.image);
+        controller.store.update('image', recordData);
       });
 
-      // @todo on error !
-
-      uploader.upload(file);
+      this.uploader.schedule(job);
     }
   }
 });
