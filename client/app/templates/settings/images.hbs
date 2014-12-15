@@ -7,13 +7,17 @@
             {{image-uploader upload='uploadImage'}}
         </li>
         {{#each image in controller itemViewClass="settings/image"}}
-            <img {{bind-attr src=image.mediumCropUrl}} class="img-responsive" />
-            <div class="caption">
-                <p>
-                    Added: {{ago image.createdAt}}
-                </p>
-                <button type="button" class="btn btn-sm btn-danger delete-button" {{action "openModal" "delete-image" image}}>Delete</button>
-            </div>
+            {{#if image.isUploading}}
+                {{spin-spinner lines=13 length=20 width=10}}
+            {{else}}
+                <img {{bind-attr src=image.mediumCropUrl}} class="img-responsive" />
+                <div class="caption">
+                    <p>
+                        Added: {{ago image.createdAt}}
+                    </p>
+                    <button type="button" class="btn btn-sm btn-danger delete-button" {{action "openModal" "delete-image" image}}>Delete</button>
+                </div>
+            {{/if}}
         {{/each}}
     </ol>
 <section>

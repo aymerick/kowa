@@ -22,8 +22,8 @@ var ImagesController = Ember.ArrayController.extend(PaginationControllerMixin, {
       var now = new Date();
       var self = this;
 
-      // create local record
-      var image = this.store.createRecord('image', {
+      // create temporary image
+      var tmpImage = this.store.createRecord('image', {
         createdAt: now,
         updatedAt: now,
         name: file.name,
@@ -34,21 +34,23 @@ var ImagesController = Ember.ArrayController.extend(PaginationControllerMixin, {
       });
 
       uploader.on('progress', function(e) {
-        image.set('uploadProgress', e.percent);
+        tmpImage.set('uploadProgress', e.percent);
       });
 
       uploader.on('didUpload', function(response) {
-        // update record
+        //
+        // This is crazy but I don't find any correct way to just modify the localy created record and set its 'isDirty' and 'isNew' properties to false.
+        // So we destroy it, and recreate a new one with the payload sent back by the server.
+        //
+        // cf. http://stackoverflow.com/questions/13342250/how-to-manually-set-an-object-state-to-clean-saved-using-ember-data/27482276
+        //
+
+        // destroy temporary image
+        tmpImage.destroyRecord();
+
+        // push uploaded image
         var recordData = self.store.normalize('image', response.image);
-        image.setupData(recordData);
-        image.materializeId(recordData.id);
-
-        // upload is over
-        image.set('isUploading', false);
-        image.set('uploadProgress', null);
-
-        // remove record dirtyness
-        image.transitionTo('loaded.saved');
+        self.store.update('image', recordData);
       });
 
       // @todo on error !

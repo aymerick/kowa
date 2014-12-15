@@ -3,7 +3,7 @@ import Ember from 'ember';
 var ImageView = Ember.View.extend({
   tagName: 'li',
   classNames: ['thumbnail', 'images-grid-item'],
-  classNameBindings: ['isSelected'],
+  classNameBindings: ['isSelected', 'content.isUploading'],
 
   isSelected: function() {
     var selectedImg = this.get('controller').get('selectedImage');
@@ -11,7 +11,10 @@ var ImageView = Ember.View.extend({
   }.property('controller.selectedImage'),
 
   click: function() {
-    this.get('controller').send('selectImage', this.get('content'));
+    var image = this.get('content');
+    if (!image.get('isUploading')) {
+      this.get('controller').send('selectImage', image);
+    }
   }
 });
 
