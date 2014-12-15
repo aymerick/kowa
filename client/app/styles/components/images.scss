@@ -88,12 +88,16 @@
       }
     }
 
-    .progress-bar {
+    .progress {
         position: absolute;
         left: 0;
         bottom: 0;
-        height: 2px;
         z-index: 4;
+
+        // bootstrap overwrites
+        margin-bottom: 0px;
+        height: 10px;
+        border-radius: 0px;
     }
 }
 

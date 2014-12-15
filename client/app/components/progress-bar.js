@@ -1,7 +1,7 @@
 import Ember from "ember";
 
 var ProgressBar = Ember.Component.extend({
-  classNames: 'progress-bar progress-bar-success',
+  classNames: 'progress',
   attributeBindings: 'style',
 
   style: function() {
