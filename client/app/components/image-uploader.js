@@ -8,7 +8,7 @@ var ImageUploader = EmberUploaderFileField.extend({
     var files = this.get('files');
 
     for (var i = 0; i < files.length; i++) {
-      this.sendAction('upload', files[i]);
+      this.sendAction('upload', files[i], i);
     }
   }).observes('files')
 });

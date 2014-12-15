@@ -1,3 +1,4 @@
+/* global moment */
 import Ember from 'ember';
 
 import PaginationControllerMixin from 'kowa/mixins/pagination-controller';
@@ -15,22 +16,26 @@ var ImagesController = Ember.ArrayController.extend(PaginationControllerMixin, {
     return "/api/images/upload?site=" + this.get('site').get('id');
   }.property('site'),
 
+  // compute a dummy date to preserve images order when upload is finished and correct date is sent by the server
+  // index is the file index when uploading multiple files at once
+  computeTmpImageDate: function(index) {
+    var lastDate = this.get('firstObject').get('createdAt');
+    if (lastDate) {
+      return moment(lastDate).add(index + 1, 'hours').toDate();
+    }
+    else {
+      return new Date();
+    }
+  },
+
   actions: {
-    uploadImage: function(file) {
+    uploadImage: function(file, index) {
       var job = new UploadJob({
         url: this.get('uploadUrl'),
         file: file
       });
 
-      // set dummy date to preserve images order when upload is finished and correct date is sent by the server
-      var at = null;
-      var lastDate = this.get('firstObject').get('createdAt');
-      if (lastDate) {
-        at = moment(lastDate).add(1, 'hours').toDate();
-      }
-      else {
-        at = new Date();
-      }
+      var at = this.computeTmpImageDate(index);
 
       // create temporary image
       var tmpImage = this.store.createRecord('image', {
@@ -49,7 +54,7 @@ var ImagesController = Ember.ArrayController.extend(PaginationControllerMixin, {
         job.set('tmpImage', tmpImage);
       });
 
-      job.on('progress', function(val) {
+      job.on('uploadProgress', function(val) {
         job.get('tmpImage').set('uploadProgress', val);
       });
 
@@ -60,8 +65,6 @@ var ImagesController = Ember.ArrayController.extend(PaginationControllerMixin, {
         //
         // cf. http://stackoverflow.com/questions/13342250/how-to-manually-set-an-object-state-to-clean-saved-using-ember-data/27482276
         //
-
-        // destroy temporary image
         job.get('tmpImage').destroyRecord();
 
         // push uploaded image
