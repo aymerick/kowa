@@ -4,7 +4,7 @@
 <section>
     <ol class="images-grid">
         <li class="image-uploader btn-success">
-            {{image-uploader url=controller.uploadUrl}}
+            {{image-uploader upload='uploadImage'}}
         </li>
         {{#each image in controller itemViewClass="settings/image"}}
             <img {{bind-attr src=image.mediumCropUrl}} class="img-responsive" />

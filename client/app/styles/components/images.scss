@@ -1,3 +1,6 @@
+//
+// settings/images
+//
 .images-grid {
     list-style: none;
 
@@ -6,6 +9,8 @@
 
     li {
         float: left;
+        width: 310px;
+        height: 235px;
         margin: 0 10px 20px 0;
 
         img {
@@ -13,50 +18,87 @@
             margin: 0 auto;
         }
     }
-}
 
-.images-grid-item {
-    position: relative;
+    .images-grid-item {
+        position: relative;
 
-    .caption {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 50px;
-
-        display: block;
-
-        background-color: #000;
-        color: #fff;
-        transition: opacity 0.1s;
-        opacity: 0;
-
-        p {
+        .caption {
             position: absolute;
-            left: 10px;
-            top: 0px;
-
-            width: 200px;
-            line-height: 50px;
+            bottom: 0;
+            left: 0;
+            right: 0;
             height: 50px;
 
-            overflow: hidden;
-        }
+            display: block;
 
-        .delete-button {
-            position: absolute;
-            right: 10px;
-            top: 10px;
+            background-color: #000;
+            color: #fff;
+            transition: opacity 0.1s;
+            opacity: 0;
+
+            p {
+                position: absolute;
+                left: 10px;
+                top: 0px;
+
+                width: 200px;
+                line-height: 50px;
+                height: 50px;
+
+                overflow: hidden;
+            }
+
+            .delete-button {
+                position: absolute;
+                right: 10px;
+                top: 10px;
+            }
         }
+    }
+
+    .images-grid-item:hover .caption {
+        opacity: 0.90;
+    }
+
+    // do not display caption if image is uploading
+    .images-grid-item.is-uploading:hover .caption {
+        display: none;
+    }
+
+    .image-uploader {
+      position: relative;
+      text-align: center;
+
+      &:before {
+        display: block;
+        content: '+';
+        font-size: 8em;
+        line-height: 210px;
+      }
+
+      input[type="file"] {
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: 0;
+        opacity: 0;
+        z-index: 2;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
     }
 }
 
-.images-grid-item:hover .caption {
-    opacity: 0.90;
-}
+//
+// select-images modal
+//
 
-.select-images-grid-content {
+.select-images-grid-wrapper {
     max-height: 400px;
     overflow: auto;
     padding: 15px;
@@ -68,6 +110,8 @@
     li {
         float: left;
         margin: 0 10px 20px 0;
+        width: 110px;
+        height: 110px;
 
         img {
             display: block;

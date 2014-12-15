@@ -16,6 +16,9 @@ var ImageModel = DS.Model.extend({
 
   logoSites: DS.hasMany('site', { inverse: 'logo', async: true }),
   coverSites: DS.hasMany('site', { inverse: 'cover', async: true })
+
+  // isUploading
+  // uploadProgress
 });
 
 export default ImageModel;

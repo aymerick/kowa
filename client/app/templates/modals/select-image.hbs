@@ -1,5 +1,5 @@
 {{#modal-dialog title='Choose image' ok='save' okText='Select' okClass='btn-primary' okDisabled=nothingSelected close='closeModal' closeText='Cancel'}}
-    {{#view "paginated-scroll-box" tagName="section" classNames="select-images-grid-content"}}
+    {{#view "paginated-scroll-box" tagName="section" classNames="select-images-grid-wrapper"}}
         <ol class="select-images-grid ">
             {{#each image in controller itemViewClass="modals/image"}}
                 <img {{bind-attr src=image.thumbUrl}} class="img-responsive" />

@@ -6,8 +6,11 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"time"
 
+	"github.com/aymerick/kowa/models"
 	"github.com/aymerick/kowa/utils"
+	"gopkg.in/mgo.v2/bson"
 )
 
 const (
@@ -101,25 +104,27 @@ func (app *Application) handleUploadImage(rw http.ResponseWriter, req *http.Requ
 		return
 	}
 
-	var partFileName string
+	var fileName string
+	var fileContentType string
 	var fileInfo os.FileInfo
 
-	for partFileName == "" {
-		log.Printf("partFileName: %s -> Next Part()", partFileName)
-
+	for fileName == "" {
 		part, err := reader.NextPart()
 		if err == io.EOF {
 			break
 		}
 
-		partFileName = part.FileName()
-		if partFileName == "" {
+		fileName = part.FileName()
+		if fileName == "" {
 			continue
 		}
 
-		log.Printf("Handling uploaded file: %s", partFileName)
+		// @todo Check that content-type is really an image
+		fileContentType = part.Header.Get("Content-Type")
 
-		dstPath := utils.AvailableFilePath(path.Join(appUploadDir, partFileName))
+		log.Printf("Handling uploaded file: %s", fileName)
+
+		dstPath := utils.AvailableFilePath(path.Join(appUploadDir, fileName))
 
 		dst, err := os.Create(dstPath)
 		if err != nil {
@@ -144,10 +149,40 @@ func (app *Application) handleUploadImage(rw http.ResponseWriter, req *http.Requ
 		}
 	}
 
-	if partFileName == "" {
-		http.Error(rw, "File data not found in multipart", http.StatusBadRequest)
+	if fileName == "" {
+		http.Error(rw, "Image not found in multipart", http.StatusBadRequest)
 	} else {
+		now := time.Now()
+
+		site := app.getCurrentSite(req)
+		if site == nil {
+			panic("Site should be set")
+		}
+
+		// create image model
+		img := &models.Image{
+			Id:        bson.NewObjectId(),
+			CreatedAt: now,
+			UpdatedAt: now,
+			SiteId:    site.Id,
+			Path:      path.Join(PUBLIC_UPLOAD_PATH, fileInfo.Name()),
+			Name:      fileName,
+			Size:      fileInfo.Size(),
+			Type:      fileContentType,
+		}
+
+		if err := app.dbSession.CreateImage(img); err != nil {
+			log.Printf("Can't create record: %v - %v", img, err.Error())
+			http.Error(rw, "Failed to create image record", http.StatusInternalServerError)
+			return
+		}
+
+		// @todo Async that the day it becomes problematic
+		if err := img.GenerateDerivatives(); err != nil {
+			log.Printf("Failed to generate image derivatives: %s - %v", img.Path, err.Error())
+		}
+
 		// returns uploaded file path
-		app.render.JSON(rw, http.StatusCreated, renderMap{"name": partFileName, "path": path.Join(PUBLIC_UPLOAD_PATH, fileInfo.Name()), "size": fileInfo.Size()})
+		app.render.JSON(rw, http.StatusCreated, renderMap{"image": img})
 	}
 }

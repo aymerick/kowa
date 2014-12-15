@@ -153,6 +153,16 @@ func (session *DBSession) FindImage(imageId bson.ObjectId) *Image {
 	return &result
 }
 
+func (session *DBSession) CreateImage(img *Image) error {
+	if err := session.ImagesCol().Insert(img); err != nil {
+		return err
+	}
+
+	img.dbSession = session
+
+	return nil
+}
+
 //
 // Image
 //
