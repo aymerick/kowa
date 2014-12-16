@@ -1,18 +1,16 @@
 {{#if isEditing}}
     <header class="content-item-header">
-        <button {{action "savePost"}} class="btn btn-success content-save"><i class="fa fa-pencil"></i> Save</button>
+        <button {{action "savePost"}} class="btn btn-success content-save"><i class="fa fa-floppy-o"></i> Save</button>
         <button {{action "cancelEdit"}} class="btn btn-default content-cancel">Cancel</button>
     </header>
     <section class="content-item-content">
         <form id="settings-general" role="form" {{action 'savePost' on='submit'}}>
             <div class="form-group">
-                <label for="post-title">Post title</label>
-                {{input id="post-title" name="post[title]" type="text" class="form-control" value=titleScratch}}
+                {{input id="post-title" name="post[title]" type="text" class="form-control" placeholder="Post title" value=titleScratch}}
             </div>
 
             <div class="form-group">
-                <label for="post-body">Post body</label>
-                {{textarea id="post-body" cols="80" rows="20" name="post[body]" class="form-control" value=bodyScratch}}
+                {{textarea id="post-body" cols="80" rows="20" name="post[body]" class="form-control" placeholder="Post body" value=bodyScratch}}
             </div>
         </form>
     </section>
