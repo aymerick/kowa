@@ -6,7 +6,7 @@
     width: 20%;
 
     background: #fff;
-    box-shadow: #edece4 1px 0 0;
+    box-shadow: $lightbrown 1px 0 0;
 
     ul {
         list-style: none;
@@ -22,13 +22,13 @@
             display: block;
             padding: 15px 30px;
 
-            color: #aaa9a2;
+            color: $brown;
             transition: background 0.2s, color 0.2s;
 
             &:hover,
             &:focus {
-                color: #242628;
-                background: #edece4;
+                color: $darkgrey;
+                background: $lightbrown;
                 text-decoration: none;
             }
         }
@@ -36,17 +36,17 @@
         &.active {
             position: relative;
             z-index: 300;
-            border-top: #edece4 1px solid;
-            box-shadow: #fff 1px 0 0, #edece4 0 1px 0;
+            border-top: $lightbrown 1px solid;
+            box-shadow: #fff 1px 0 0, $lightbrown 0 1px 0;
             transition: all 0.15s ease-out 0s;
 
             a {
-                color: #242628;
+                color: $darkgrey;
                 font-weight: bold;
                 background: #fff;
 
                 &:focus {
-                    background: #edece4;
+                    background: $lightbrown;
                 }
             }
         }
