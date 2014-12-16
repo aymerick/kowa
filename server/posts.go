@@ -1,9 +1,16 @@
 package server
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
+
+	"github.com/aymerick/kowa/models"
 )
+
+type postJson struct {
+	Post models.Post `json:"post"`
+}
 
 // GET /posts?site={site_id}
 // GET /sites/{site_id}/posts
@@ -32,6 +39,32 @@ func (app *Application) handleGetPost(rw http.ResponseWriter, req *http.Request)
 
 	post := app.getCurrentPost(req)
 	if post != nil {
+		app.render.JSON(rw, http.StatusOK, renderMap{"post": post})
+	} else {
+		http.NotFound(rw, req)
+	}
+}
+
+// PUT /posts/{post_id}
+func (app *Application) handleUpdatePost(rw http.ResponseWriter, req *http.Request) {
+	log.Printf("[handler]: handleUpdatePost\n")
+
+	post := app.getCurrentPost(req)
+	if post != nil {
+		var respJson postJson
+
+		if err := json.NewDecoder(req.Body).Decode(&respJson); err != nil {
+			log.Printf("ERROR: %v", err)
+			http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
+			return
+		}
+
+		if err := post.Update(&respJson.Post); err != nil {
+			log.Printf("ERROR: %v", err)
+			http.Error(rw, "Failed to update post", http.StatusInternalServerError)
+			return
+		}
+
 		app.render.JSON(rw, http.StatusOK, renderMap{"post": post})
 	} else {
 		http.NotFound(rw, req)

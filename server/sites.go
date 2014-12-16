@@ -30,18 +30,15 @@ func (app *Application) handleUpdateSite(rw http.ResponseWriter, req *http.Reque
 
 	currentSite := app.getCurrentSite(req)
 	if currentSite != nil {
-		var err error
 		var respJson siteJson
 
-		err = json.NewDecoder(req.Body).Decode(&respJson)
-		if err != nil {
+		if err := json.NewDecoder(req.Body).Decode(&respJson); err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
 			return
 		}
 
-		err = currentSite.Update(&respJson.Site)
-		if err != nil {
+		if err := currentSite.Update(&respJson.Site); err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to update site", http.StatusInternalServerError)
 			return

@@ -56,6 +56,7 @@ func Run() {
 	// /api/posts?site={site_id}
 	apiRouter.Methods("GET").Path("/posts").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetPosts))
 	apiRouter.Methods("GET").Path("/posts/{post_id}").Handler(curPostOwnerChain.ThenFunc(app.handleGetPost))
+	apiRouter.Methods("PUT").Path("/posts/{post_id}").Handler(curPostOwnerChain.ThenFunc(app.handleUpdatePost))
 
 	// /api/events?site={site_id}
 	apiRouter.Methods("GET").Path("/events").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetEvents))

@@ -2,7 +2,7 @@
     <h2>General</h2>
 </header>
 
-<form id="settings-general" role="form">
+<form id="settings-general" role="form" {{action 'save' on='submit'}}>
     <div class="form-group">
         <label for="site-name">Site Name</label>
         {{input id="site-name" name="general[name]" type="text" class="form-control" value=name}}

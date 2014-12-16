@@ -1,7 +1,7 @@
 <section class="content-list">
     <header class="content-list-header">
         <small>All Posts</small>
-        {{#link-to "editor.post" class="content-add btn btn-success btn-xs" title="New Post"}}<i class="fa fa-plus"></i> New post{{/link-to}}
+        {{#link-to "posts" class="content-add btn btn-success btn-xs" title="New Post"}}<i class="fa fa-plus"></i> New post{{/link-to}}
     </header>
     {{#view "paginated-scroll-box" tagName="section" classNames="content-list-content"}}
         <ol class="posts-list">
@@ -16,6 +16,6 @@
         </ol>
     {{/view}}
 </section>
-<section class="content-preview">
+<section class="content-item">
     {{outlet}}
 </section>

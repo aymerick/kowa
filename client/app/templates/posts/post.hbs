@@ -1,8 +1,28 @@
-<header class="content-preview-header">
-    <small class="content-date">Created on: {{moment createdAt}}</small>
-    {{#link-to "editor.post.edit" this class="btn btn-default content-edit"}}<i class="fa fa-pencil"></i> Edit{{/link-to}}
-</header>
-<section class="content-preview-content">
-    <h1>{{title}}</h1>
-    {{showdown-addon body}}
-</section>
+{{#if isEditing}}
+    <header class="content-item-header">
+        <button {{action "savePost"}} class="btn btn-success content-save"><i class="fa fa-pencil"></i> Save</button>
+        <button {{action "cancelEdit"}} class="btn btn-default content-cancel">Cancel</button>
+    </header>
+    <section class="content-item-content">
+        <form id="settings-general" role="form" {{action 'savePost' on='submit'}}>
+            <div class="form-group">
+                <label for="post-title">Post title</label>
+                {{input id="post-title" name="post[title]" type="text" class="form-control" value=titleScratch}}
+            </div>
+
+            <div class="form-group">
+                <label for="post-body">Post body</label>
+                {{textarea id="post-body" cols="80" rows="20" name="post[body]" class="form-control" value=bodyScratch}}
+            </div>
+        </form>
+    </section>
+{{else}}
+    <header class="content-item-header">
+        <small class="content-date">Created on: {{moment createdAt}}</small>
+        <button {{action "editPost"}} class="btn btn-default content-edit"><i class="fa fa-pencil"></i> Edit</button>
+    </header>
+    <section class="content-item-content">
+        <h1>{{title}}</h1>
+        {{showdown-addon body}}
+    </section>
+{{/if}}

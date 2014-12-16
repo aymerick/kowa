@@ -27,18 +27,6 @@ Router.map(function() {
         this.route('page', {path: ':page_id'});
       });
 
-      // content editor
-      this.resource('editor', function() {
-        this.route('post', {path: '/post'});
-        this.route('post.edit', {path: '/post/:post_id'});
-
-        this.route('event', {path: '/event'});
-        this.route('event.edit', {path: '/event/:event_id'});
-
-        this.route('page', {path: '/page'});
-        this.route('page.edit', {path: '/page/:page_id'});
-      });
-
       // settings
       this.resource('settings', function () {
         this.route('general');

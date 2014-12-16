@@ -71,3 +71,45 @@ func (session *DBSession) FindPost(postId bson.ObjectId) *Post {
 func (post *Post) FindSite() *Site {
 	return post.dbSession.FindSite(post.SiteId)
 }
+
+// Update post in database
+func (post *Post) Update(newPost *Post) error {
+	var set, unset, modifier bson.D
+
+	if post.Title != newPost.Title {
+		post.Title = newPost.Title
+
+		if post.Title == "" {
+			unset = append(unset, bson.DocElem{"title", 1})
+		} else {
+			set = append(set, bson.DocElem{"title", post.Title})
+		}
+	}
+
+	if post.Body != newPost.Body {
+		post.Body = newPost.Body
+
+		if post.Body == "" {
+			unset = append(unset, bson.DocElem{"body", 1})
+		} else {
+			set = append(set, bson.DocElem{"body", post.Body})
+		}
+	}
+
+	if len(unset) > 0 {
+		modifier = append(modifier, bson.DocElem{"$unset", unset})
+	}
+
+	if len(set) > 0 {
+		modifier = append(modifier, bson.DocElem{"$set", set})
+	}
+
+	if len(modifier) > 0 {
+		post.UpdatedAt = time.Now()
+		set = append(set, bson.DocElem{"updated_at", post.UpdatedAt})
+
+		return post.dbSession.PostsCol().UpdateId(post.Id, modifier)
+	} else {
+		return nil
+	}
+}
