@@ -1,11 +1,8 @@
 import AuthenticatedRoute from 'kowa/routes/authenticated';
 
 var SiteRoute = AuthenticatedRoute.extend({
-  afterModel: function (model, transition) {
-    // redirects /:site_id to /:site_id/posts
-    if (transition.targetName === "site.index") {
-      this.transitionTo('posts');
-    }
+  model: function(params) {
+    return this.store.find('site', params.site_id);
   }
 });
 
