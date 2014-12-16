@@ -17,6 +17,7 @@ Router.map(function() {
       // content
       this.resource('posts', function () {
         this.route('post', {path: ':post_id'});
+        this.route('new');
       });
 
       this.resource('events', function () {
