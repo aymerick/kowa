@@ -1,6 +1,6 @@
 <header class="content-item-header">
-    <button {{action "savePost"}} class="btn btn-success content-save"><i class="fa fa-floppy-o"></i> Save</button>
-    <button {{action "cancelEdit"}} class="btn btn-default content-cancel">Cancel</button>
+    <button {{action "savePost"}} class="btn btn-success content-action-button"><i class="fa fa-floppy-o"></i> Save</button>
+    <button {{action "cancelEdit"}} class="btn btn-default content-action-button">Cancel</button>
 </header>
 <section class="content-item-content">
     <form id="settings-general" role="form" {{action 'savePost' on='submit'}}>

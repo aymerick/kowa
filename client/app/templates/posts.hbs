@@ -1,19 +1,17 @@
 <section class="content-list">
     <header class="content-list-header">
-        <small>All Posts</small>
+        <span class="content-list-title">All Posts</span>
         {{#link-to "posts.new" class="content-add btn btn-success btn-xs" title="New Post"}}<i class="fa fa-plus"></i> New post{{/link-to}}
     </header>
-    {{#view "paginated-scroll-box" tagName="section" classNames="content-list-content"}}
-        <ol class="posts-list">
-            {{#each itemView="post-item-view" itemTagName="li"}}
-                {{#link-to "post" this class="permalink" title="Edit this post"}}
-                    <h3 class="entry-title">{{title}}</h3>
-                    <section class="entry-meta">
-                        Created: {{ago createdAt}}
-                    </section>
-                {{/link-to}}
-            {{/each}}
-        </ol>
+    {{#view "paginated-scroll-box" tagName="ol" classNames="content-list-items"}}
+        {{#each itemView="post-item-view" itemTagName="li"}}
+            {{#link-to "post" this class="permalink" title="Display this post"}}
+                <h3 class="item-title">{{title}}</h3>
+                <section class="item-meta">
+                    Created: {{ago createdAt}}
+                </section>
+            {{/link-to}}
+        {{/each}}
     {{/view}}
 </section>
 <section class="content-item">

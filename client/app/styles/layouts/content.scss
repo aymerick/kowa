@@ -2,6 +2,7 @@
 // Content pages
 //
 
+// list
 .content-list {
     position: absolute;
     width: 33%;
@@ -30,7 +31,7 @@
         color: #aaa9a2;
         text-transform: uppercase;
 
-        small {
+        .content-list-title {
             font-size: 0.85em;
         }
 
@@ -45,7 +46,7 @@
         }
     }
 
-    .content-list-content {
+    .content-list-items {
         position: absolute;
         top: 40px;
         right: 0;
@@ -53,49 +54,52 @@
         left: 0;
 
         overflow: auto;
-    }
 
-    .entry-title {
-        font-size: 1.6rem;
-        line-height: 1.25em;
-        font-weight: normal;
+        padding: 0;
+        margin: 0;
 
-        margin: 0 0 0.3em 0;
-    }
-
-    ol {
         list-style: none;
 
-        padding: 0;
-        margin: 0;
-
         border-top: #edece4 1px solid;
-    }
 
-    li {
-        margin: 0;
-        padding: 0;
+        li {
+            margin: 0;
+            padding: 0;
 
-        border-bottom: #edece4 1px solid;
+            border-bottom: #edece4 1px solid;
 
-        a {
-            display: block;
-            padding: 20px 20px;
-            color: rgba(0,0,0,0.5);
-            text-decoration: none;
+            a {
+                display: block;
+                padding: 20px 20px;
+                color: rgba(0,0,0,0.5);
+                text-decoration: none;
+            }
         }
-    }
 
-    li.active {
-        border-bottom: #e8eaeb 1px solid;
-        background: #f7f7f3;
-        box-shadow:
-            #e8eaeb 0 -1px 0, // top border
-            rgba(0,0,0,0.06) 7px 0 0 inset, // big left border
-            #e8eaeb 1px 0 0 inset; // small left border
+        li.active {
+            border-bottom: #e8eaeb 1px solid;
+            background: #f7f7f3;
+            box-shadow:
+                #e8eaeb 0 -1px 0, // top border
+                rgba(0,0,0,0.06) 7px 0 0 inset, // big left border
+                #e8eaeb 1px 0 0 inset; // small left border
+        }
+
+        .item-title {
+            font-size: 1.6rem;
+            line-height: 1.25em;
+            font-weight: normal;
+
+            margin: 0 0 0.3em 0;
+        }
+
+        .item-meta {
+            // @todo
+        }
     }
 }
 
+// item
 .content-item {
     position: absolute;
     width: 67%;
@@ -114,11 +118,14 @@
             float: left;
             margin-top: 7px;
             margin-left: 3px;
+
+            font-size: 0.85em;
         }
 
-        .content-edit, .content-save, .content-cancel {
-            float: right;
+        .content-action-button {
             position: relative;
+
+            float: right;
             top: 3px;
             margin-left: 15px;
 
@@ -129,9 +136,7 @@
     }
 
     .content-item-content {
-        padding-top: 5%;
-        padding-bottom: 5%;
-        max-width: 700px;
+        padding: 5%;
         margin: 0 auto;
     }
 }
