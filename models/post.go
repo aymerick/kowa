@@ -22,7 +22,8 @@ type Post struct {
 	PublishedAt time.Time `bson:"published_at" json:"publishedAt"`
 	Title       string    `bson:"title"        json:"title"`
 	Body        string    `bson:"body"         json:"body"`
-	// @todo Photo
+	// @todo Photo/Cover
+	// @todo Format (markdown|html)
 }
 
 type PostsList []*Post
