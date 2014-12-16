@@ -4,7 +4,7 @@ import Ember from 'ember';
 import PaginationControllerMixin from 'kowa/mixins/pagination-controller';
 import UploadJob from 'kowa/services/upload-job';
 
-var ImagesController = Ember.ArrayController.extend(PaginationControllerMixin, {
+var SettingsImagesController = Ember.ArrayController.extend(PaginationControllerMixin, {
   sortProperties: ['createdAt'],
   sortAscending: false,
   itemController: 'settings/image',
@@ -77,4 +77,4 @@ var ImagesController = Ember.ArrayController.extend(PaginationControllerMixin, {
   }
 });
 
-export default ImagesController;
+export default SettingsImagesController;

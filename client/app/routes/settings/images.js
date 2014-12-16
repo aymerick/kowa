@@ -3,7 +3,7 @@ import AuthenticatedRoute from 'kowa/routes/authenticated';
 
 var initialPaginationParams = { 'page': 1, 'perPage': 20 };
 
-var ImagesRoute = AuthenticatedRoute.extend({
+var SettingsImagesRoute = AuthenticatedRoute.extend({
   paginationParams: null,
 
   model: function() {
@@ -27,4 +27,4 @@ var ImagesRoute = AuthenticatedRoute.extend({
   }
 });
 
-export default ImagesRoute;
+export default SettingsImagesRoute;

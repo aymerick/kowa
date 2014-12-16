@@ -8,16 +8,19 @@ var Router = Ember.Router.extend({
 Router.map(function() {
   // auth
   this.route('login');
-  this.route('logout');
-  this.route('forgotten');
+  this.route('logout'); // @todo
+  this.route('forgotten'); // @todo
 
+  // sites
   this.resource('sites', {path: '/'}, function() {
     // site
     this.resource('site', {path: ':site_id'}, function() {
       // content
       this.resource('posts', function () {
-        this.route('post', {path: ':post_id'});
         this.route('new');
+        this.resource('post', {path: ':post_id'}, function() {
+          this.route('edit', {path: '/edit'});
+        });
       });
 
       this.resource('events', function () {

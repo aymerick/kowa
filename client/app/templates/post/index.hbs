@@ -1,0 +1,10 @@
+<div class="post-view">
+    <header class="content-item-header">
+        <small class="content-date">Created on: {{moment createdAt}}</small>
+        {{#link-to "post.edit" this class="btn btn-default content-edit"}}<i class="fa fa-pencil"></i> Edit{{/link-to}}
+    </header>
+    <section class="content-item-content">
+        <h1>{{title}}</h1>
+        {{showdown-addon body}}
+    </section>
+</div>

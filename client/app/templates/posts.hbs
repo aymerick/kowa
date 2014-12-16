@@ -5,8 +5,8 @@
     </header>
     {{#view "paginated-scroll-box" tagName="section" classNames="content-list-content"}}
         <ol class="posts-list">
-            {{#each itemController="posts/post" itemView="post-item-view" itemTagName="li"}}
-                {{#link-to "posts.post" this class="permalink" title="Edit this post"}}
+            {{#each itemView="post-item-view" itemTagName="li"}}
+                {{#link-to "post" this class="permalink" title="Edit this post"}}
                     <h3 class="entry-title">{{title}}</h3>
                     <section class="entry-meta">
                         Created: {{ago createdAt}}
