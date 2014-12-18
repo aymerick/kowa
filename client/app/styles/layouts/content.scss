@@ -177,16 +177,85 @@
 
 .content-edit-item {
     .CodeMirror {
+        height: auto;
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
 
-        height: auto;
-
         .CodeMirror-lines {
-          padding: 5%;
+            padding: 5%;
         }
+
+        pre {
+            font-size: 1.6rem;
+            line-height: 1.56em;
+            font-family: monospace;
+            color: lighten($darkgrey, 10%);
+        }
+
+        .CodeMirror-focused,
+        .CodeMirror-selected {
+            color: $darkgrey;
+            background: lighten($blue, 20%);
+            text-shadow: none;
+        }
+
+        ::selection {
+            color: $darkgrey;
+            background: lighten($blue, 20%);
+            text-shadow: none;
+        }
+    }
+
+    .cm-header {
+        color: #000;
+        font-weight: bold;
+
+        font-size: 1.4em;
+        line-height: 1.4em;
+    }
+    .cm-header-1 {
+        font-size: 2em;
+        line-height: 2em;
+    }
+    .cm-header-2 {
+        font-size: 1.8em;
+        line-height: 1.8em;
+    }
+    .cm-header-3 {
+        font-size: 1.6em;
+        line-height: 1.6em;
+    }
+    .cm-header-4 {
+        font-size: 1.4em;
+        line-height: 1.4em;
+    }
+    .cm-header-5 {
+        font-size: 1.2em;
+        line-height: 1.2em;
+    }
+    .cm-header-6 {
+        font-size: 1em;
+        line-height: 1em;
+    }
+
+    .cm-variable-2,
+    .cm-variable-3,
+    .cm-keyword {
+        color: lighten($darkgrey, 10%);
+    }
+
+    .cm-string,
+    .cm-strong,
+    .cm-link,
+    .cm-comment,
+    .cm-quote,
+    .cm-number,
+    .cm-atom,
+    .cm-tag {
+        color: #000;
+        font-weight: bold;
     }
 }
