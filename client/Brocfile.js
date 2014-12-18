@@ -3,7 +3,11 @@
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 var app = new EmberApp({
-  emberCliFontAwesome: { includeFontAwesomeAssets: false }
+  emberCliFontAwesome: { includeFontAwesomeAssets: false },
+  codemirror: {
+    modes: [ 'gfm', 'markdown' ],
+    themes: [ ]
+  }
 });
 
 // Use `app.import` to add additional libraries to the generated
@@ -32,5 +36,8 @@ app.import("bower_components/font-awesome/fonts/fontawesome-webfont.svg", { dest
 app.import("bower_components/font-awesome/fonts/fontawesome-webfont.ttf", { destDir: "fonts" });
 app.import("bower_components/font-awesome/fonts/fontawesome-webfont.woff", { destDir: "fonts" });
 app.import("bower_components/font-awesome/fonts/FontAwesome.otf", { destDir: "fonts" });
+
+// CodeMirror - missing import from ivy-codemirror ember addon
+app.import(app.bowerDirectory + '/codemirror/addon/mode/overlay.js');
 
 module.exports = app.toTree();
