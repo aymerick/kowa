@@ -1,15 +1,9 @@
-<header class="content-item-header">
+<header class="content-item-menu">
+    {{input name="post[title]" type="text" class="edit-item-title" placeholder="Post title" value=titleScratch}}
+
     <button {{action "savePost"}} class="btn btn-success content-action-button"><i class="fa fa-floppy-o"></i> Save</button>
     <button {{action "cancelEdit"}} class="btn btn-default content-action-button">Cancel</button>
 </header>
-<section class="content-item-content content-item-edit">
-    <form id="edit-post" role="form" {{action 'savePost' on='submit'}}>
-        <div class="form-group">
-            {{input name="post[title]" type="text" class="item-title" placeholder="Post title" value=titleScratch}}
-        </div>
-
-        <div class="form-group">
-            {{textarea cols="80" rows="20" name="post[body]" class="item-content" placeholder="Post body" value=bodyScratch}}
-        </div>
-    </form>
+<section class="content-item-content content-edit-item">
+    {{ivy-codemirror value=bodyScratch mode='gfm'}}
 </section>
