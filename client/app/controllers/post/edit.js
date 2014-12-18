@@ -19,19 +19,19 @@ var PostEditController = Ember.ObjectController.extend({
         model.save().then(function (postSaved) {
             self.get('flashes').success('Post saved.');
 
-            self.transitionTo('post');
+            self.transitionToRoute('post');
             return postSaved;
         }).catch(function () {
             self.get('flashes').danger('Failed to save post.');
         });
       }
       else {
-        this.transitionTo('post');
+        this.transitionToRoute('post');
       }
     },
 
     cancelEdit: function() {
-      this.transitionTo('post');
+      this.transitionToRoute('post');
     }
   }
 });
