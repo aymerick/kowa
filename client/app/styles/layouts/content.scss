@@ -139,4 +139,18 @@
         padding: 5%;
         margin: 0 auto;
     }
+
+    .content-item-edit {
+        .item-title {
+            width: 100%;
+            height: 60px;
+            border: 0;
+            margin: 0;
+            padding: 0;
+            font-size: 3.6rem;
+            font-weight: bold;
+            letter-spacing: -1px;
+            background: transparent;
+        }
+    }
 }

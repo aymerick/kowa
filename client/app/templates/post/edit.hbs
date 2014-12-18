@@ -2,14 +2,14 @@
     <button {{action "savePost"}} class="btn btn-success content-action-button"><i class="fa fa-floppy-o"></i> Save</button>
     <button {{action "cancelEdit"}} class="btn btn-default content-action-button">Cancel</button>
 </header>
-<section class="content-item-content">
-    <form id="settings-general" role="form" {{action 'savePost' on='submit'}}>
+<section class="content-item-content content-item-edit">
+    <form id="edit-post" role="form" {{action 'savePost' on='submit'}}>
         <div class="form-group">
-            {{input id="post-title" name="post[title]" type="text" class="form-control" placeholder="Post title" value=titleScratch}}
+            {{input name="post[title]" type="text" class="item-title" placeholder="Post title" value=titleScratch}}
         </div>
 
         <div class="form-group">
-            {{textarea id="post-body" cols="80" rows="20" name="post[body]" class="form-control" placeholder="Post body" value=bodyScratch}}
+            {{textarea cols="80" rows="20" name="post[body]" class="item-content" placeholder="Post body" value=bodyScratch}}
         </div>
     </form>
 </section>
