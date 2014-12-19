@@ -90,6 +90,18 @@ func (post *Post) FindSite() *Site {
 	return post.dbSession.FindSite(post.SiteId)
 }
 
+// Delete post from database
+func (post *Post) Delete() error {
+	var err error
+
+	// delete from database
+	if err = post.dbSession.PostsCol().RemoveId(post.Id); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // Update post in database
 func (post *Post) Update(newPost *Post) error {
 	var set, unset, modifier bson.D

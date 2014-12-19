@@ -7,27 +7,12 @@ var ApplicationRoute = Ember.Route.extend(SimpleAuthApplicationRouteMixin, {
       this.get('controller').get('flashes').danger('Authentication failed.');
     },
 
-    openModal: function(name, model, type) {
+    openModal: function(name, model, arg) {
       name = 'modals/' + name;
 
       var controller = this.controllerFor(name, true);
-      if (controller) {
-        // @todo FIXME ! This is really ugly !
-        if (name === 'modals/select-image') {
-          var params = { 'site': model.get('id'), 'page': 1, 'perPage': 16 };
-
-          controller.set('model', this.store.filter('image', params, function () {
-            controller.set('targetModel', model);
-            controller.set('targetField', type);
-            controller.setupPagination('image', params);
-
-            // nothing to filter
-            return true;
-          }));
-        }
-        else {
-          controller.set('model', model);
-        }
+      if (controller && (Ember.typeOf(controller.setupModal) == 'function')) {
+        controller.setupModal(model, arg);
       }
 
       this.render(name, {

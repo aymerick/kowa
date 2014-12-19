@@ -110,3 +110,20 @@ func (app *Application) handleUpdatePost(rw http.ResponseWriter, req *http.Reque
 		http.NotFound(rw, req)
 	}
 }
+
+// DELETE /posts/{post_id}
+func (app *Application) handleDeletePost(rw http.ResponseWriter, req *http.Request) {
+	log.Printf("[handler]: handleDeletePost\n")
+
+	post := app.getCurrentPost(req)
+	if post != nil {
+		if err := post.Delete(); err != nil {
+			http.Error(rw, "Failed to delete post", http.StatusInternalServerError)
+		} else {
+			// returns deleted post
+			app.render.JSON(rw, http.StatusOK, renderMap{"post": post})
+		}
+	} else {
+		http.NotFound(rw, req)
+	}
+}

@@ -11,6 +11,20 @@ var SelectImageModal = Ember.ArrayController.extend(PaginationControllerMixin, {
 
   nothingSelected: Ember.computed.not('selectedImage'),
 
+  setupModal: function(model, type) {
+    var params = { 'site': model.get('id'), 'page': 1, 'perPage': 16 };
+
+    var self = this;
+    this.set('model', this.store.filter('image', params, function () {
+      self.set('targetModel', model);
+      self.set('targetField', type);
+      self.setupPagination('image', params);
+
+      // nothing to filter
+      return true;
+    }));
+  },
+
   actions: {
     selectImage: function (image) {
       this.set('selectedImage', image);
