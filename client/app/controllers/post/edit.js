@@ -25,35 +25,34 @@ var PostEditController = Ember.ObjectController.extend({
 
   actions: {
     savePost: function() {
-      if (this.get('isDirty')) {
-        // update model
-        var model = this.get('model');
-        model.set('title', this.get('titleScratch'));
-        model.set('body', this.get('bodyScratch'));
-
-        // persist on server
-        var self = this;
-        model.save().then(function (postSaved) {
-          self.get('flashes').success('Post saved.');
-
-          self.transitionToRoute('post', postSaved);
-          return postSaved;
-        }).catch(function () {
-          self.get('flashes').danger('Failed to save post.');
-
-          // rollback model
-          if (model.get('isNew')) {
-            model.setProperties(Post.newRecordAttrs());
-          }
-          else {
-            model.rollback();
-          }
-        });
+      if (!this.get('isDirty')) {
+        // This should never happen
+        return;
       }
-      else {
-        // @todo We should never reach that
-        this.get('flashes').danger('Nothing to save.');
-      }
+
+      // update model
+      var model = this.get('model');
+      model.set('title', this.get('titleScratch'));
+      model.set('body', this.get('bodyScratch'));
+
+      // persist on server
+      var self = this;
+      model.save().then(function (postSaved) {
+        self.get('flashes').success('Post saved.');
+
+        self.transitionToRoute('post', postSaved);
+        return postSaved;
+      }).catch(function () {
+        self.get('flashes').danger('Failed to save post.');
+
+        // rollback model
+        if (model.get('isNew')) {
+          model.setProperties(Post.newRecordAttrs());
+        }
+        else {
+          model.rollback();
+        }
+      });
     }
   }
 });
