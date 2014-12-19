@@ -3,9 +3,18 @@ import Post from 'kowa/models/post';
 
 var PostEditController = Ember.ObjectController.extend({
   isDirty: function() {
-    return ((this.get('model').get('title') !== this.get('titleScratch')) ||
-            (this.get('model').get('body')  !== this.get('bodyScratch')));
-  }.property('titleScratch', 'bodyScratch', 'model.title', 'model.body'),
+    var model = this.get('model');
+    return ((model.get('isNew')) ||
+            (model.get('title') !== this.get('titleScratch')) ||
+            (model.get('body')  !== this.get('bodyScratch')));
+  }.property('titleScratch', 'bodyScratch', 'model.title', 'model.body', 'model.isNew'),
+
+  resetEdition: function() {
+    var model = this.get('model');
+
+    this.set('titleScratch', model.get('title'));
+    this.set('bodyScratch', model.get('body'));
+  },
 
   actions: {
     savePost: function() {
@@ -37,18 +46,6 @@ var PostEditController = Ember.ObjectController.extend({
       else {
         // @todo We should never reach that
         this.get('flashes').danger('Nothing to save.');
-      }
-    },
-
-    cancelEdit: function() {
-      var model = this.get('model');
-
-      if (model.get('isNew')) {
-        model.deleteRecord();
-        this.transitionToRoute('posts.index');
-      }
-      else {
-        this.transitionToRoute('post', model);
       }
     }
   }
