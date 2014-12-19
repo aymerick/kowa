@@ -11,7 +11,7 @@ var ApplicationRoute = Ember.Route.extend(SimpleAuthApplicationRouteMixin, {
       name = 'modals/' + name;
 
       var controller = this.controllerFor(name, true);
-      if (controller && (Ember.typeOf(controller.setupModal) == 'function')) {
+      if (controller && (Ember.typeOf(controller.setupModal) === 'function')) {
         controller.setupModal(model, arg);
       }
 

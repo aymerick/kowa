@@ -1,4 +1,5 @@
 import DS from 'ember-data';
+import Ember from 'ember';
 
 var Post = DS.Model.extend({
   createdAt: DS.attr('date'),
