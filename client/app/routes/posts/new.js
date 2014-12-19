@@ -1,23 +1,15 @@
 import AuthenticatedRoute from 'kowa/routes/authenticated';
+import PostEditionRoute from 'kowa/mixins/post-edition-route';
 import Post from 'kowa/models/post';
 
 // Uses post/edit controller and template, but with a new record
-var PostsNewRoute = AuthenticatedRoute.extend({
+var PostsNewRoute = AuthenticatedRoute.extend(PostEditionRoute, {
   controllerName: 'post.edit',
 
-  model: function(params) {
+  model: function() {
     return this.store.createRecord('post', Post.newRecordAttrs({
       site: this.modelFor('site')
     }));
-  },
-
-  // @todo Factorize that with post/edit route
-  setupController: function(controller, model) {
-    this._super(controller, model);
-
-    // init temp data
-    controller.set('titleScratch', model.get('title'));
-    controller.set('bodyScratch', model.get('body'));
   },
 
   renderTemplate: function() {

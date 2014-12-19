@@ -1,13 +1,7 @@
 import AuthenticatedRoute from 'kowa/routes/authenticated';
+import PostEditionRoute from 'kowa/mixins/post-edition-route';
 
-var PostEditRoute = AuthenticatedRoute.extend({
-  setupController: function (controller, model) {
-    this._super(controller, model);
-
-    // init temp data
-    controller.set('titleScratch', model.get('title'));
-    controller.set('bodyScratch', model.get('body'));
-  }
+var PostEditRoute = AuthenticatedRoute.extend(PostEditionRoute, {
 });
 
 export default PostEditRoute;
