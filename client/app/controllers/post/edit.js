@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import Post from 'kowa/models/post';
 
 var PostEditController = Ember.ObjectController.extend({
   isDirty: function() {
@@ -17,21 +18,38 @@ var PostEditController = Ember.ObjectController.extend({
         // persist on server
         var self = this;
         model.save().then(function (postSaved) {
-            self.get('flashes').success('Post saved.');
+          self.get('flashes').success('Post saved.');
 
-            self.transitionToRoute('post');
-            return postSaved;
+          self.transitionToRoute('post', postSaved);
+          return postSaved;
         }).catch(function () {
-            self.get('flashes').danger('Failed to save post.');
+          self.get('flashes').danger('Failed to save post.');
+
+          // rollback model
+          if (model.get('isNew')) {
+            model.setProperties(Post.newRecordAttrs());
+          }
+          else {
+            model.rollback();
+          }
         });
       }
       else {
-        this.transitionToRoute('post');
+        // @todo We should never reach that
+        this.get('flashes').danger('Nothing to save.');
       }
     },
 
     cancelEdit: function() {
-      this.transitionToRoute('post');
+      var model = this.get('model');
+
+      if (model.get('isNew')) {
+        model.deleteRecord();
+        this.transitionToRoute('posts.index');
+      }
+      else {
+        this.transitionToRoute('post', model);
+      }
     }
   }
 });

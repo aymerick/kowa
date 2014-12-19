@@ -5,7 +5,7 @@ var PostEditRoute = AuthenticatedRoute.extend({
     this._super(controller, model);
 
     // init temp data
-    controller.set('titleScratch', model.get('title') || "Untitled");
+    controller.set('titleScratch', model.get('title'));
     controller.set('bodyScratch', model.get('body'));
   }
 });

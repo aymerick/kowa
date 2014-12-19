@@ -11,4 +11,17 @@ var Post = DS.Model.extend({
   site: DS.belongsTo('site', { async: true })
 });
 
+Post.reopenClass({
+  newRecordAttrs: function() {
+    var now = new Date();
+
+    return {
+      createdAt: now,
+      updatedAt: now,
+      title: "(Untitled)",
+      body: ""
+    }
+  }
+});
+
 export default Post;
