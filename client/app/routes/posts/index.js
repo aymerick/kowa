@@ -6,7 +6,7 @@ var PostsIndexRoute = AuthenticatedRoute.extend({
     var posts = this.modelFor('posts');
     var firstPost = posts.get('firstObject');
     if (firstPost) {
-      this.transitionToRoute('post', firstPost);
+      this.transitionTo('post', firstPost);
     }
   }
 });

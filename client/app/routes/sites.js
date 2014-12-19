@@ -12,7 +12,7 @@ var SitesRoute = AuthenticatedRoute.extend({
     if (!transition.params.site) {
       var firstSite = sites.get('firstObject');
       if (firstSite) {
-        this.transitionToRoute('site', firstSite);
+        this.transitionTo('site', firstSite);
       }
     }
   }
