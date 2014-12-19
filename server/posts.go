@@ -33,6 +33,46 @@ func (app *Application) handleGetPosts(rw http.ResponseWriter, req *http.Request
 	}
 }
 
+// POST /posts
+func (app *Application) handlePostPosts(rw http.ResponseWriter, req *http.Request) {
+	log.Printf("[handler]: handlePostPosts\n")
+
+	var reqJson postJson
+
+	if err := json.NewDecoder(req.Body).Decode(&reqJson); err != nil {
+		log.Printf("ERROR: %v", err)
+		http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
+		return
+	}
+
+	post := &reqJson.Post
+
+	if post.SiteId == "" {
+		http.Error(rw, "Missing site field in post record", http.StatusBadRequest)
+		return
+	}
+
+	site := app.dbSession.FindSite(post.SiteId)
+	if site == nil {
+		http.Error(rw, "Site not found", http.StatusBadRequest)
+		return
+	}
+
+	currentUser := app.getCurrentUser(req)
+	if site.UserId != currentUser.Id {
+		unauthorized(rw)
+		return
+	}
+
+	if err := app.dbSession.CreatePost(post); err != nil {
+		log.Printf("ERROR: %v", err)
+		http.Error(rw, "Failed to create post", http.StatusInternalServerError)
+		return
+	}
+
+	app.render.JSON(rw, http.StatusCreated, renderMap{"post": post})
+}
+
 // GET /posts/{post_id}
 func (app *Application) handleGetPost(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("[handler]: handleGetPost\n")
@@ -51,15 +91,15 @@ func (app *Application) handleUpdatePost(rw http.ResponseWriter, req *http.Reque
 
 	post := app.getCurrentPost(req)
 	if post != nil {
-		var respJson postJson
+		var reqJson postJson
 
-		if err := json.NewDecoder(req.Body).Decode(&respJson); err != nil {
+		if err := json.NewDecoder(req.Body).Decode(&reqJson); err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
 			return
 		}
 
-		if err := post.Update(&respJson.Post); err != nil {
+		if err := post.Update(&reqJson.Post); err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to update post", http.StatusInternalServerError)
 			return

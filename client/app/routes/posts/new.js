@@ -1,14 +1,17 @@
 import AuthenticatedRoute from 'kowa/routes/authenticated';
 import Post from 'kowa/models/post';
 
-// Uses post/edit controller and template with a new record
+// Uses post/edit controller and template, but with a new record
 var PostsNewRoute = AuthenticatedRoute.extend({
   controllerName: 'post.edit',
 
   model: function(params) {
-    return this.store.createRecord('post', Post.newRecordAttrs());
+    return this.store.createRecord('post', Post.newRecordAttrs({
+      site: this.modelFor('site')
+    }));
   },
 
+  // @todo Factorize that with post/edit route
   setupController: function(controller, model) {
     this._super(controller, model);
 

@@ -14,14 +14,14 @@ const (
 type Post struct {
 	dbSession *DBSession `bson:"-" json:"-"`
 
-	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
+	Id        bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
 	SiteId    string        `bson:"site_id"       json:"site"`
 
-	PublishedAt time.Time `bson:"published_at" json:"publishedAt"`
-	Title       string    `bson:"title"        json:"title"`
-	Body        string    `bson:"body"         json:"body"`
+	PublishedAt *time.Time `bson:"published_at" json:"publishedAt,omitempty"`
+	Title       string     `bson:"title"        json:"title"`
+	Body        string     `bson:"body"         json:"body"`
 	// @todo Photo/Cover
 	// @todo Format (markdown|html)
 }
@@ -61,6 +61,24 @@ func (session *DBSession) FindPost(postId bson.ObjectId) *Post {
 	result.dbSession = session
 
 	return &result
+}
+
+// Persists a new post in database
+// Side effect: 'Id', 'CreatedAt' and 'UpdatedAt' fields are set on post record
+func (session *DBSession) CreatePost(post *Post) error {
+	post.Id = bson.NewObjectId()
+
+	now := time.Now()
+	post.CreatedAt = now
+	post.UpdatedAt = now
+
+	if err := session.PostsCol().Insert(post); err != nil {
+		return err
+	}
+
+	post.dbSession = session
+
+	return nil
 }
 
 //

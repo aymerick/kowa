@@ -108,24 +108,28 @@ func bootstrap(cmd *cobra.Command, args []string) {
 	for i := 1; i <= 30; i++ {
 		nbDays := time.Duration(i)
 
+		pubDate := lastMonth.Add(time.Hour*24*nbDays + 30)
+
 		post = models.Post{
 			Id:          bson.NewObjectId(),
 			CreatedAt:   lastMonth.Add(time.Hour * 24 * nbDays),
 			UpdatedAt:   lastMonth.Add(time.Hour*24*nbDays + 30),
 			SiteId:      siteJC1.Id,
-			PublishedAt: lastMonth.Add(time.Hour*24*nbDays + 30),
+			PublishedAt: &pubDate,
 			Title:       fmt.Sprintf("Post %d", i),
 			Body:        fmt.Sprintf(MD_FIXTURES[rand.Intn(len(MD_FIXTURES))]),
 		}
 		db.PostsCol().Insert(&post)
 	}
 
+	pubDate := lastMonth.Add(time.Hour + 30)
+
 	post = models.Post{
 		Id:          bson.NewObjectId(),
 		CreatedAt:   lastMonth.Add(time.Hour),
 		UpdatedAt:   lastMonth.Add(time.Hour + 30),
 		SiteId:      siteJC2.Id,
-		PublishedAt: lastMonth.Add(time.Hour + 30),
+		PublishedAt: &pubDate,
 		Title:       "This is a lonely",
 		Body:        "It appears on my second website.",
 	}
@@ -136,7 +140,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 		CreatedAt:   lastMonth.Add(48 * time.Hour),
 		UpdatedAt:   lastMonth.Add(48*time.Hour + 30),
 		SiteId:      siteH.Id,
-		PublishedAt: lastMonth.Add(48*time.Hour + 30),
+		PublishedAt: &pubDate,
 		Title:       "Hi, I am Henry",
 		Body:        "Je me présente, je m'appelle Henry. Je voudrais bien réussir ma vie, être aimé. Être beau, gagner de l'argent. Puis surtout être intelligent. Mais pour tout ça il faudrait que je bosse à plein temps",
 	}

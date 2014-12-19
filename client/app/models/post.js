@@ -12,15 +12,15 @@ var Post = DS.Model.extend({
 });
 
 Post.reopenClass({
-  newRecordAttrs: function() {
+  newRecordAttrs: function(moreAttrs) {
     var now = new Date();
 
-    return {
+    return Ember.merge({
       createdAt: now,
       updatedAt: now,
       title: "(Untitled)",
       body: ""
-    }
+    }, moreAttrs || { });
   }
 });
 
