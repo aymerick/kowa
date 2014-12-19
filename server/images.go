@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 	"path"
-	"time"
 
 	"github.com/aymerick/kowa/models"
 	"github.com/aymerick/kowa/utils"
@@ -152,8 +151,6 @@ func (app *Application) handleUploadImage(rw http.ResponseWriter, req *http.Requ
 	if fileName == "" {
 		http.Error(rw, "Image not found in multipart", http.StatusBadRequest)
 	} else {
-		now := time.Now()
-
 		site := app.getCurrentSite(req)
 		if site == nil {
 			panic("Site should be set")
@@ -161,14 +158,12 @@ func (app *Application) handleUploadImage(rw http.ResponseWriter, req *http.Requ
 
 		// create image model
 		img := &models.Image{
-			Id:        bson.NewObjectId(),
-			CreatedAt: now,
-			UpdatedAt: now,
-			SiteId:    site.Id,
-			Path:      path.Join(PUBLIC_UPLOAD_PATH, fileInfo.Name()),
-			Name:      fileName,
-			Size:      fileInfo.Size(),
-			Type:      fileContentType,
+			Id:     bson.NewObjectId(),
+			SiteId: site.Id,
+			Path:   path.Join(PUBLIC_UPLOAD_PATH, fileInfo.Name()),
+			Name:   fileName,
+			Size:   fileInfo.Size(),
+			Type:   fileContentType,
 		}
 
 		if err := app.dbSession.CreateImage(img); err != nil {

@@ -153,7 +153,12 @@ func (session *DBSession) FindImage(imageId bson.ObjectId) *Image {
 	return &result
 }
 
+// Persists a new image in database
 func (session *DBSession) CreateImage(img *Image) error {
+	now := time.Now()
+	img.CreatedAt = now
+	img.UpdatedAt = now
+
 	if err := session.ImagesCol().Insert(img); err != nil {
 		return err
 	}
