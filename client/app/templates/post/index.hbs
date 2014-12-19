@@ -1,8 +1,10 @@
-<header class="content-header content-preview">
-    <span class="content-date">Created on: {{moment createdAt}}</span>
-    {{#link-to "post.edit" this class="btn btn-default content-action-button"}}<i class="fa fa-pencil"></i> Edit{{/link-to}}
-</header>
-<section class="content-body content-preview">
-    <h1>{{title}}</h1>
-    {{showdown-addon body}}
+<section class="content-preview">
+    <header class="content-header">
+        <span class="content-date">Created on: {{moment createdAt}}</span>
+        {{#link-to "post.edit" this class="btn btn-default content-action-button"}}<i class="fa fa-pencil"></i> Edit{{/link-to}}
+    </header>
+    <section class="content-body">
+        <h1>{{title}}</h1>
+        {{showdown-addon body}}
+    </section>
 </section>

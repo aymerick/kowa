@@ -1,9 +1,11 @@
-<header class="content-header content-edit">
-    {{input name="post[title]" type="text" class="edit-item-title" placeholder="Post title" value=titleScratch}}
+<section class="content-edit">
+    <header class="content-header">
+        {{input name="post[title]" type="text" class="content-title" placeholder="Post title" value=titleScratch}}
 
-    <button {{action "savePost"}} class="btn btn-success content-action-button"><i class="fa fa-floppy-o"></i> Save</button>
-    <button {{action "cancelEdit"}} class="btn btn-default content-action-button">Cancel</button>
-</header>
-<section class="content-body content-edit">
-    {{ivy-codemirror value=bodyScratch mode='gfm' lineWrapping=true}}
+        <button {{action "savePost"}} class="btn btn-success content-action-button"><i class="fa fa-floppy-o"></i> Save</button>
+        <button {{action "cancelEdit"}} class="btn btn-default content-action-button">Cancel</button>
+    </header>
+    <section class="content-body">
+        {{ivy-codemirror value=bodyScratch mode='gfm' lineWrapping=true}}
+    </section>
 </section>

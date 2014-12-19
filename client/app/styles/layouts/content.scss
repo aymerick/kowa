@@ -2,6 +2,24 @@
 // Content pages
 //
 
+.content-header {
+    height: $content-header-height;
+    line-height: $content-header-height;
+    padding: 0px 15px;
+    border-bottom: $lightbrown 1px solid;
+    box-shadow: rgba(0, 0, 0, 0.03) 0 2px 3px;
+}
+
+.content-body {
+    position: absolute;
+    top: $content-header-height;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    overflow: auto;
+    margin: 0;
+}
+
 //
 // master view
 //
@@ -12,21 +30,10 @@
     top: 0;
     left: 0;
 
-    border-right: $lightbrown 1px solid;
     background: #fff;
+    border-right: $lightbrown 1px solid;
 
     .content-header {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 40px;
-        z-index: 400;
-
-        padding: 10px 20px;
-
-        box-shadow: rgba(0, 0, 0, 0.03) 0 2px 3px;
-
         font-size: 1.3rem;
         color: $brown;
         text-transform: uppercase;
@@ -34,7 +41,7 @@
         .content-add {
             position: absolute;
             top: 10px;
-            right: 20px;
+            right: 15px;
 
             .fa {
                 margin-right: 5px;
@@ -43,20 +50,9 @@
     }
 
     .content-body {
-        position: absolute;
-        top: 40px;
-        right: 0;
-        bottom: 0;
-        left: 0;
-
-        overflow: auto;
-
         padding: 0;
-        margin: 0;
 
         list-style: none;
-
-        border-top: $lightbrown 1px solid;
 
         li {
             margin: 0;
@@ -95,9 +91,9 @@
     }
 
     .content-footer {
-
+        // @todo
     }
-}
+} // .content-master
 
 //
 // details view
@@ -114,37 +110,51 @@
     background: #fff;
 
     .content-header {
-        height: $content-header-height;
-        border-bottom: $lightbrown 1px solid;
-        box-shadow: rgba(0, 0, 0, 0.03) 0 2px 3px;
-
-        // view
-        .content-date {
-            float: left;
-            margin: 15px;
-
-            font-size: 0.85em;
-        }
-
-        // view
         .content-action-button {
             position: relative;
 
             float: right;
-            margin: 20px 15px 15px 0px;
+            margin-top: 5px;
+            margin-right: 15px;
 
             .fa {
                 margin-right: 5px;
             }
         }
+    }
 
-        // edit
-        .edit-item-title {
+    .content-body {
+        padding: 2% 5% 5% 5%;
+    }
+
+    .content-footer {
+        // @todo
+    }
+} // .content-details
+
+//
+// preview content
+//
+.content-preview {
+    .content-header {
+        .content-date {
+            float: left;
+            font-size: 0.85em;
+        }
+    }
+} // .content-preview
+
+//
+// edit content
+//
+.content-edit {
+    .content-header {
+        .content-title {
             width: 60%;
             border: 0;
-            margin: 10px 15px;
+            margin-left: 15px;
             padding: 0;
-            font-size: 3.6rem;
+            font-size: 2em;
             font-weight: bold;
             letter-spacing: -1px;
             background: transparent;
@@ -152,113 +162,87 @@
     }
 
     .content-body {
-        position: absolute;
-        top: $content-header-height;
-        left: 0px;
-        right: 0px;
-        bottom: 0px;
+        .CodeMirror {
+            height: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
 
-        padding: 2% 5% 5% 5%;
-        margin: 0 auto;
-        overflow: auto;
-    }
+            .CodeMirror-lines {
+                padding: 5%;
+            }
 
-    .content-footer {
+            pre {
+                font-size: 1.6rem;
+                line-height: 1.56em;
+                font-family: monospace;
+                color: lighten($darkgrey, 10%);
+            }
 
-    }
-}
+            .CodeMirror-focused,
+            .CodeMirror-selected {
+                color: $darkgrey;
+                background: lighten($blue, 20%);
+                text-shadow: none;
+            }
 
-//
-// preview content
-//
-.content-preview {
-
-}
-
-//
-// edit content
-//
-.content-edit {
-    .CodeMirror {
-        height: auto;
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-
-        .CodeMirror-lines {
-            padding: 5%;
+            ::selection {
+                color: $darkgrey;
+                background: lighten($blue, 20%);
+                text-shadow: none;
+            }
         }
 
-        pre {
-            font-size: 1.6rem;
-            line-height: 1.56em;
-            font-family: monospace;
+        .cm-header {
+            color: #000;
+            font-weight: bold;
+
+            font-size: 1.4em;
+            line-height: 1.4em;
+        }
+        .cm-header-1 {
+            font-size: 2em;
+            line-height: 2em;
+        }
+        .cm-header-2 {
+            font-size: 1.8em;
+            line-height: 1.8em;
+        }
+        .cm-header-3 {
+            font-size: 1.6em;
+            line-height: 1.6em;
+        }
+        .cm-header-4 {
+            font-size: 1.4em;
+            line-height: 1.4em;
+        }
+        .cm-header-5 {
+            font-size: 1.2em;
+            line-height: 1.2em;
+        }
+        .cm-header-6 {
+            font-size: 1em;
+            line-height: 1em;
+        }
+
+        .cm-variable-2,
+        .cm-variable-3,
+        .cm-keyword {
             color: lighten($darkgrey, 10%);
         }
 
-        .CodeMirror-focused,
-        .CodeMirror-selected {
-            color: $darkgrey;
-            background: lighten($blue, 20%);
-            text-shadow: none;
+        .cm-string,
+        .cm-strong,
+        .cm-link,
+        .cm-comment,
+        .cm-quote,
+        .cm-number,
+        .cm-atom,
+        .cm-tag {
+            color: #000;
+            font-weight: bold;
         }
-
-        ::selection {
-            color: $darkgrey;
-            background: lighten($blue, 20%);
-            text-shadow: none;
-        }
     }
-
-    .cm-header {
-        color: #000;
-        font-weight: bold;
-
-        font-size: 1.4em;
-        line-height: 1.4em;
-    }
-    .cm-header-1 {
-        font-size: 2em;
-        line-height: 2em;
-    }
-    .cm-header-2 {
-        font-size: 1.8em;
-        line-height: 1.8em;
-    }
-    .cm-header-3 {
-        font-size: 1.6em;
-        line-height: 1.6em;
-    }
-    .cm-header-4 {
-        font-size: 1.4em;
-        line-height: 1.4em;
-    }
-    .cm-header-5 {
-        font-size: 1.2em;
-        line-height: 1.2em;
-    }
-    .cm-header-6 {
-        font-size: 1em;
-        line-height: 1em;
-    }
-
-    .cm-variable-2,
-    .cm-variable-3,
-    .cm-keyword {
-        color: lighten($darkgrey, 10%);
-    }
-
-    .cm-string,
-    .cm-strong,
-    .cm-link,
-    .cm-comment,
-    .cm-quote,
-    .cm-number,
-    .cm-atom,
-    .cm-tag {
-        color: #000;
-        font-weight: bold;
-    }
-}
+} // .content-edit
