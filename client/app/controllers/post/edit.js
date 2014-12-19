@@ -9,7 +9,7 @@ var PostEditController = Ember.ObjectController.extend({
             (model.get('body')  !== this.get('bodyScratch')));
   }.property('titleScratch', 'bodyScratch', 'model.title', 'model.body', 'model.isNew'),
 
-  resetEdition: function() {
+  setupEdition: function() {
     var model = this.get('model');
 
     this.set('titleScratch', model.get('title'));
