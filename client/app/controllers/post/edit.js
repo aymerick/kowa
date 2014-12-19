@@ -14,6 +14,8 @@ var PostEditController = Ember.ObjectController.extend({
             (model.get('body')  !== this.get('bodyScratch')));
   }.property('titleScratch', 'bodyScratch', 'model.title', 'model.body', 'model.isNew'),
 
+  nothingChanged: Ember.computed.not('isDirty'),
+
   setupEdition: function() {
     var model = this.get('model');
 
