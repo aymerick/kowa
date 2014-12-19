@@ -3,9 +3,9 @@
 //
 
 //
-// list
+// master view
 //
-.content-list {
+.content-master {
     position: absolute;
     width: 33%;
     bottom: 0;
@@ -15,7 +15,7 @@
     border-right: $lightbrown 1px solid;
     background: #fff;
 
-    .content-list-header {
+    .content-header {
         position: absolute;
         top: 0;
         left: 0;
@@ -31,10 +31,6 @@
         color: $brown;
         text-transform: uppercase;
 
-        .content-list-title {
-            font-size: 0.85em;
-        }
-
         .content-add {
             position: absolute;
             top: 10px;
@@ -46,7 +42,7 @@
         }
     }
 
-    .content-list-items {
+    .content-body {
         position: absolute;
         top: 40px;
         right: 0;
@@ -97,12 +93,16 @@
             // @todo
         }
     }
+
+    .content-footer {
+
+    }
 }
 
 //
-// item
+// details view
 //
-.content-item {
+.content-details {
     position: absolute;
     width: 67%;
     bottom: 0;
@@ -112,70 +112,73 @@
     overflow: auto;
 
     background: #fff;
-}
 
-.content-item-menu {
-    height: $content-item-menu-height;
-    border-bottom: $lightbrown 1px solid;
-    box-shadow: rgba(0, 0, 0, 0.03) 0 2px 3px;
+    .content-header {
+        height: $content-header-height;
+        border-bottom: $lightbrown 1px solid;
+        box-shadow: rgba(0, 0, 0, 0.03) 0 2px 3px;
 
-    .content-date {
-        float: left;
-        margin: 15px;
+        // view
+        .content-date {
+            float: left;
+            margin: 15px;
 
-        font-size: 0.85em;
-    }
+            font-size: 0.85em;
+        }
 
-    .content-action-button {
-        position: relative;
+        // view
+        .content-action-button {
+            position: relative;
 
-        float: right;
-        margin: 20px 15px 15px 0px;
+            float: right;
+            margin: 20px 15px 15px 0px;
 
-        .fa {
-            margin-right: 5px;
+            .fa {
+                margin-right: 5px;
+            }
+        }
+
+        // edit
+        .edit-item-title {
+            width: 60%;
+            border: 0;
+            margin: 10px 15px;
+            padding: 0;
+            font-size: 3.6rem;
+            font-weight: bold;
+            letter-spacing: -1px;
+            background: transparent;
         }
     }
-}
 
-.content-item-content {
-    position: absolute;
-    top: $content-item-menu-height;
-    left: 0px;
-    right: 0px;
-    bottom: 0px;
+    .content-body {
+        position: absolute;
+        top: $content-header-height;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
 
-    padding: 2% 5% 5% 5%;
-    margin: 0 auto;
-    overflow: auto;
-}
+        padding: 2% 5% 5% 5%;
+        margin: 0 auto;
+        overflow: auto;
+    }
 
-//
-// view item
-//
+    .content-footer {
 
-.content-view-item {
-
-}
-
-//
-// edit item
-//
-
-.content-item-menu {
-    .edit-item-title {
-        width: 60%;
-        border: 0;
-        margin: 10px 15px;
-        padding: 0;
-        font-size: 3.6rem;
-        font-weight: bold;
-        letter-spacing: -1px;
-        background: transparent;
     }
 }
 
-.content-edit-item {
+//
+// preview content
+//
+.content-preview {
+
+}
+
+//
+// edit content
+//
+.content-edit {
     .CodeMirror {
         height: auto;
         position: absolute;

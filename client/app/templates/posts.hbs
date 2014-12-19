@@ -1,9 +1,9 @@
-<section class="content-list">
-    <header class="content-list-header">
-        <span class="content-list-title">All Posts</span>
+<section class="content-master">
+    <header class="content-header">
+        <small>All Posts</small>
         {{#link-to "posts.new" class="content-add btn btn-success btn-xs" title="New Post"}}<i class="fa fa-plus"></i> New post{{/link-to}}
     </header>
-    {{#view "paginated-scroll-box" tagName="ol" classNames="content-list-items"}}
+    {{#view "paginated-scroll-box" tagName="ol" classNames="content-body"}}
         {{#each itemView="post-item-view" itemTagName="li"}}
             {{#link-to "post" this class="permalink" title="Display this post"}}
                 <h3 class="item-title">{{title}}</h3>
@@ -14,6 +14,6 @@
         {{/each}}
     {{/view}}
 </section>
-<section class="content-item">
+<section class="content-details">
     {{outlet}}
 </section>
