@@ -1,6 +1,11 @@
 import Ember from 'ember';
 import Post from 'kowa/models/post';
 
+// @todo Refactor that into a ContentEditionController Mixin with properties:
+//  - model fields that are editable (eg: ["title, "body"])
+//  - msg to display on save success (eg: "Post saved.")
+//  - msg to display on save error (eg: "Failed to save post.")
+//  - new record properties: (eg: Post.newRecordAttrs())
 var PostEditController = Ember.ObjectController.extend({
   isDirty: function() {
     var model = this.get('model');
