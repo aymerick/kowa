@@ -16,6 +16,10 @@ Start client:
     $ cd client
     $ ember server --proxy http://127.0.0.1:35830
 
+Start without live reload:
+
+    $ ember server --proxy http://127.0.0.1:35830 --live-reload=false
+
 Test:
 
     $ go test ./... -v
