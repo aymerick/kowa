@@ -143,7 +143,10 @@ func (site *Site) FindPosts(skip int, limit int) *PostsList {
 		panic(err)
 	}
 
-	// @todo Inject dbSession in all result items
+	// inject dbSession in all result items
+	for _, post := range result {
+		post.dbSession = site.dbSession
+	}
 
 	return &result
 }
@@ -253,6 +256,33 @@ func (site *Site) FindCover() *Image {
 
 		return &result
 	}
+
+	return nil
+}
+
+// Remove all references to given image from database
+func (site *Site) RemoveImageReferences(image *Image) error {
+	// remove image reference from site settings
+	fieldsToDelete := []string{}
+
+	if site.Logo == image.Id {
+		fieldsToDelete = append(fieldsToDelete, "logo")
+	}
+
+	if site.Cover == image.Id {
+		fieldsToDelete = append(fieldsToDelete, "cover")
+	}
+
+	if len(fieldsToDelete) > 0 {
+		site.DeleteFields(fieldsToDelete)
+	}
+
+	// remove image references from posts
+	if err := site.dbSession.RemoveImageReferencesFromPosts(image); err != nil {
+		return err
+	}
+
+	// @todo remove image references from actions / events / members / pages
 
 	return nil
 }

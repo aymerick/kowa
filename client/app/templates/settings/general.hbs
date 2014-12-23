@@ -50,12 +50,12 @@
     <div class="form-group">
         <label for="site-logo">Site Logo</label>
         {{#if logo}}
-            <button type="button" class="thumbnail select-image" {{action "openModal" "select-image" this "logo"}}>
+            <button type="button" class="thumbnail select-image" {{action "openModal" "select-image" controller "logo"}}>
                 <img id="site-logo" {{bind-attr src=logo.mediumUrl}} alt="logo">
                 <span class="remove-image" {{action 'removeLogo'}}>&#10006;</span>
             </button>
         {{else}}
-            <button type="button" class="btn btn-success" {{action "openModal" "select-image" this "logo"}}>Choose Image</button>
+            <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "logo"}}>Choose Image</button>
         {{/if}}
         <p>
             Display a logo for your site
@@ -65,12 +65,12 @@
     <div class="form-group">
         <label for="site-cover">Site Cover</label>
         {{#if cover}}
-            <button type="button" class="thumbnail select-image" {{action "openModal" "select-image" this "cover"}}>
+            <button type="button" class="thumbnail select-image" {{action "openModal" "select-image" controller "cover"}}>
                 <img id="site-cover" {{bind-attr src=cover.mediumUrl}} alt="cover">
                 <span class="remove-image" {{action 'removeCover'}}>&#10006;</span>
             </button>
         {{else}}
-            <button type="button" class="btn btn-success" {{action "openModal" "select-image" this "cover"}}>Choose Image</button>
+            <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "cover"}}>Choose Image</button>
         {{/if}}
         <p>
             Display a cover image on your site

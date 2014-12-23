@@ -1,6 +1,6 @@
 import DS from 'ember-data';
 
-var POST_SERIALIZER_FIELDS = [ 'title', 'body', 'site' ];
+var POST_SERIALIZER_FIELDS = [ 'title', 'body', 'site', 'cover' ];
 
 var PostSerializer = DS.RESTSerializer.extend({
   serialize: function(post, options) {
@@ -16,6 +16,17 @@ var PostSerializer = DS.RESTSerializer.extend({
     // site
     if (result['site']) {
       result['site'] = result['site'].get('id');
+    }
+
+    debugger;
+
+    // cover
+    if (result['cover']) {
+      result['cover'] = result['cover'].get('id');
+    }
+
+    if (result['cover'] == null) {
+      delete(result['cover']);
     }
 
     return result;

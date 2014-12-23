@@ -3,6 +3,17 @@
         {{input name="post[title]" type="text" class="content-title" placeholder="Post title" value=titleScratch}}
 
         <button {{action "savePost"}} class="btn btn-success content-action-button" {{bind-attr disabled=nothingChanged}}><i class="fa fa-floppy-o"></i> Save</button>
+
+        <div class="content-cover">
+            {{#if coverScratch}}
+                <button type="button" class="thumbnail select-image small-kind" {{action "openModal" "select-image" controller "coverScratch"}}>
+                    <img {{bind-attr src=coverScratch.smallUrl}} alt="cover image" />
+                    <span class="remove-image" {{action 'removeCover'}}>&#10006;</span>
+                </button>
+            {{else}}
+                <button type="button" class="btn btn-default select-image small-kind no-image" {{action "openModal" "select-image" controller "coverScratch"}}>Select Cover</button>
+            {{/if}}
+        </div>
     </header>
     <section class="content-body">
         {{ivy-codemirror value=bodyScratch mode='gfm' lineWrapping=true}}

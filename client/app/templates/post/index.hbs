@@ -2,7 +2,15 @@
     <header class="content-header">
         <span class="content-date">Created on: {{moment createdAt}}</span>
         {{#link-to "post.edit" this class="btn btn-default content-action-button"}}<i class="fa fa-pencil"></i> Edit{{/link-to}}
-        <button {{action "openModal" "delete-post" model 'posts.index'}} class="btn btn-danger content-action-button">Delete</button>
+        <button {{action "openModal" "delete-post" controller 'posts.index'}} class="btn btn-danger content-action-button">Delete</button>
+
+        <div class="content-cover">
+            {{#if cover}}
+                <img {{bind-attr src=cover.smallUrl}} class="thumbnail" alt="cover image" />
+            {{else}}
+                <div class="thumbnail no-image text-center"></div>
+            {{/if}}
+        </div>
     </header>
     <section class="content-body">
         <h1>{{title}}</h1>

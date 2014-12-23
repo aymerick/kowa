@@ -19,10 +19,11 @@ type Post struct {
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
 	SiteId    string        `bson:"site_id"       json:"site"`
 
-	PublishedAt *time.Time `bson:"published_at" json:"publishedAt,omitempty"`
-	Title       string     `bson:"title"        json:"title"`
-	Body        string     `bson:"body"         json:"body"`
-	// @todo Photo/Cover
+	PublishedAt *time.Time    `bson:"published_at"    json:"publishedAt,omitempty"`
+	Title       string        `bson:"title"           json:"title"`
+	Body        string        `bson:"body"            json:"body"`
+	Cover       bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
+
 	// @todo Format (markdown|html)
 }
 
@@ -81,6 +82,12 @@ func (session *DBSession) CreatePost(post *Post) error {
 	return nil
 }
 
+// Remove all references to given image from all posts
+func (session *DBSession) RemoveImageReferencesFromPosts(image *Image) error {
+	// @todo
+	return nil
+}
+
 //
 // Post
 //
@@ -88,6 +95,23 @@ func (session *DBSession) CreatePost(post *Post) error {
 // Fetch from database: site that post belongs to
 func (post *Post) FindSite() *Site {
 	return post.dbSession.FindSite(post.SiteId)
+}
+
+// Fetch Cover from database
+func (post *Post) FindCover() *Image {
+	if post.Cover != "" {
+		var result Image
+
+		if err := post.dbSession.ImagesCol().FindId(post.Cover).One(&result); err != nil {
+			return nil
+		}
+
+		result.dbSession = post.dbSession
+
+		return &result
+	}
+
+	return nil
 }
 
 // Delete post from database
@@ -123,6 +147,16 @@ func (post *Post) Update(newPost *Post) error {
 			unset = append(unset, bson.DocElem{"body", 1})
 		} else {
 			set = append(set, bson.DocElem{"body", post.Body})
+		}
+	}
+
+	if post.Cover != newPost.Cover {
+		post.Cover = newPost.Cover
+
+		if post.Cover == "" {
+			unset = append(unset, bson.DocElem{"cover", 1})
+		} else {
+			set = append(set, bson.DocElem{"cover", post.Cover})
 		}
 	}
 

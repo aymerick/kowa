@@ -3,8 +3,8 @@ import Ember from 'ember';
 var DeletePostModal = Ember.ObjectController.extend({
   nextRoute: null,
 
-  setupModal: function(model, nextRoute) {
-    this.set('model', model);
+  setupModal: function(masterController, nextRoute) {
+    this.set('model', masterController.get('model'));
     this.set('nextRoute', nextRoute);
   },
 

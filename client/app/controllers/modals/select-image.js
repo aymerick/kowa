@@ -6,20 +6,19 @@ var SelectImageModal = Ember.ArrayController.extend(PaginationControllerMixin, {
   sortAscending: false,
 
   selectedImage: null,
-  targetModel: null,
-  targetField: null,
 
   nothingSelected: Ember.computed.not('selectedImage'),
 
-  setupModal: function(model, type) {
-    var params = { 'site': model.get('id'), 'page': 1, 'perPage': 16 };
+  setupModal: function(masterController, field) {
+    this.set('masterController', masterController);
+    this.set('field', field);
 
-    var self = this;
+    var site = masterController.get('site');
+
+    var params = { 'site': site.get('id'), 'page': 1, 'perPage': 16 };
+    this.setupPagination('image', params);
+
     this.set('model', this.store.filter('image', params, function () {
-      self.set('targetModel', model);
-      self.set('targetField', type);
-      self.setupPagination('image', params);
-
       // nothing to filter
       return true;
     }));
@@ -31,24 +30,10 @@ var SelectImageModal = Ember.ArrayController.extend(PaginationControllerMixin, {
     },
 
     save: function() {
-      var self = this;
+      var masterController = this.get('masterController');
+      var field = this.get('field');
 
-      // @todo FIXME ! This is really ugly !
-      if (this.selectedImage && this.targetModel && this.targetField) {
-        // update model
-        this.targetModel.set(this.targetField, this.selectedImage);
-
-        // save model
-        this.targetModel.save().then(function (siteSaved) {
-            self.get('flashes').success('Saved.');
-            return siteSaved;
-        }).catch(function () {
-            self.get('flashes').danger('Failed to save.');
-        });
-      }
-      else {
-        self.get('flashes').danger('No image selected.');
-      }
+      masterController.send('imageSelected', field, this.get('selectedImage'));
     }
   }
 });

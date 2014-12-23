@@ -19,6 +19,7 @@ func (app *Application) handleGetPosts(rw http.ResponseWriter, req *http.Request
 
 	site := app.getCurrentSite(req)
 	if site != nil {
+		// fetch paginated posts
 		pagination := NewPagination()
 		if err := pagination.fillFromRequest(req); err != nil {
 			http.Error(rw, "Invalid pagination parameters", http.StatusBadRequest)
@@ -27,7 +28,18 @@ func (app *Application) handleGetPosts(rw http.ResponseWriter, req *http.Request
 
 		pagination.Total = site.PostsNb()
 
-		app.render.JSON(rw, http.StatusOK, renderMap{"posts": site.FindPosts(pagination.Skip, pagination.PerPage), "meta": pagination})
+		posts := site.FindPosts(pagination.Skip, pagination.PerPage)
+
+		// fetch covers
+		images := []*models.Image{}
+
+		for _, post := range *posts {
+			if image := post.FindCover(); image != nil {
+				images = append(images, image)
+			}
+		}
+
+		app.render.JSON(rw, http.StatusOK, renderMap{"posts": posts, "meta": pagination, "images": images})
 	} else {
 		http.NotFound(rw, req)
 	}

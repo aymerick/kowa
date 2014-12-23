@@ -16,7 +16,7 @@
                     <p>
                         Added: {{ago image.createdAt}}
                     </p>
-                    <button type="button" class="btn btn-sm btn-danger delete-button" {{action "openModal" "delete-image" image}}>Delete</button>
+                    <button type="button" class="btn btn-sm btn-danger delete-button" {{action "openModal" "delete-image" controller image}}>Delete</button>
                 </div>
             {{/if}}
         {{/each}}

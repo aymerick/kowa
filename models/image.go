@@ -22,12 +22,25 @@ const (
 	IMAGES_COL_NAME = "images"
 
 	// derivatives
-	THUMB_KIND         = "thumb"
-	THUMB_SUFFIX       = "_t"
-	MEDIUM_KIND        = "medium"
-	MEDIUM_SUFFIX      = "_m"
+	SMALL_KIND   = "small"
+	SMALL_SUFFIX = "_s"
+	SMALL_WIDTH  = 100
+	SMALL_HEIGHT = 60
+
+	THUMB_KIND   = "thumb"
+	THUMB_SUFFIX = "_t"
+	THUMB_WIDTH  = 100
+	THUMB_HEIGHT = 100
+
+	MEDIUM_KIND   = "medium"
+	MEDIUM_SUFFIX = "_m"
+	MEDIUM_WIDTH  = 300
+	MEDIUM_HEIGHT = 225
+
 	MEDIUM_CROP_KIND   = "medium_crop"
 	MEDIUM_CROP_SUFFIX = "_mc"
+	MEDIUM_CROP_WIDTH  = 300
+	MEDIUM_CROP_HEIGHT = 225
 )
 
 type Image struct {
@@ -50,6 +63,7 @@ type ImagesList []*Image
 type ImageJson struct {
 	Image
 	URL           string `json:"url"`
+	SmallURL      string `json:"smallUrl"`
 	ThumbURL      string `json:"thumbUrl"`
 	MediumURL     string `json:"mediumUrl"`
 	MediumCropURL string `json:"mediumCropUrl"`
@@ -77,6 +91,11 @@ func init() {
 	appPublicDir = path.Join(currentDir, "/client/public")
 
 	Derivatives = []*Derivative{
+		&Derivative{
+			kind:    SMALL_KIND,
+			suffix:  SMALL_SUFFIX,
+			genFunc: genSmall,
+		},
 		&Derivative{
 			kind:    THUMB_KIND,
 			suffix:  THUMB_SUFFIX,
@@ -178,9 +197,10 @@ func (img *Image) MarshalJSON() ([]byte, error) {
 	imageJson := ImageJson{
 		Image:         *img,
 		URL:           img.URL(),
-		ThumbURL:      img.derivativeURL(DerivativeForKind("thumb")),
-		MediumURL:     img.derivativeURL(DerivativeForKind("medium")),
-		MediumCropURL: img.derivativeURL(DerivativeForKind("medium_crop")),
+		SmallURL:      img.derivativeURL(DerivativeForKind(SMALL_KIND)),
+		ThumbURL:      img.derivativeURL(DerivativeForKind(THUMB_KIND)),
+		MediumURL:     img.derivativeURL(DerivativeForKind(MEDIUM_KIND)),
+		MediumCropURL: img.derivativeURL(DerivativeForKind(MEDIUM_CROP_KIND)),
 	}
 
 	return json.Marshal(imageJson)
@@ -247,16 +267,20 @@ func (img *Image) URL() string {
 // Derivatives
 //
 
+func genSmall(source *image.Image) *image.NRGBA {
+	return imaging.Thumbnail(*source, SMALL_WIDTH, SMALL_HEIGHT, imaging.Lanczos)
+}
+
 func genThumbnail(source *image.Image) *image.NRGBA {
-	return imaging.Thumbnail(*source, 100, 100, imaging.Lanczos)
+	return imaging.Thumbnail(*source, THUMB_WIDTH, THUMB_HEIGHT, imaging.Lanczos)
 }
 
 func genMedium(source *image.Image) *image.NRGBA {
-	return imaging.Fit(*source, 300, 225, imaging.Lanczos)
+	return imaging.Fit(*source, MEDIUM_WIDTH, MEDIUM_HEIGHT, imaging.Lanczos)
 }
 
 func genMediumCrop(source *image.Image) *image.NRGBA {
-	return imaging.Thumbnail(*source, 300, 225, imaging.Lanczos)
+	return imaging.Thumbnail(*source, MEDIUM_CROP_WIDTH, MEDIUM_CROP_HEIGHT, imaging.Lanczos)
 }
 
 func (img *Image) derivativePath(derivative *Derivative) string {

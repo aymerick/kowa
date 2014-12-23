@@ -3,6 +3,7 @@
 //
 
 .content-header {
+    position: relative;
     height: $content-header-height;
     line-height: $content-header-height;
     padding: 0px 15px;
@@ -115,6 +116,24 @@
 
             .fa {
                 margin-right: 5px;
+            }
+        }
+
+        .thumbnail {
+            margin-bottom: 0px;
+
+        }
+
+        .content-cover {
+            position: absolute;
+            left: 44%;
+            bottom: -$img-small-thumbnail-height / 2;
+
+            z-index: 3;
+
+            .no-image {
+                height: $img-small-thumbnail-height;
+                width: $img-small-thumbnail-width;
             }
         }
     }

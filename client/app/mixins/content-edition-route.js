@@ -13,7 +13,7 @@ var ContentEditionRoute = Ember.Mixin.create({
       var controller = this.get('controller');
       if (controller.get('isDirty')) {
         transition.abort();
-        this.send('openModal', 'leave-edition', [ controller, transition ]);
+        this.send('openModal', 'leave-edition', controller, transition);
         return;
       }
     }

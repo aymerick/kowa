@@ -1,23 +1,23 @@
 import Ember from 'ember';
 
 var LeaveEditionModal = Ember.ObjectController.extend({
-  setupModal: function(model) {
-    this.set('model', model);
+  setupModal: function(masterController, haltedTransition) {
+    this.set('masterController', masterController);
+    this.set('haltedTransition', haltedTransition);
   },
 
   actions: {
     confirm: function() {
-      var args = this.get('model');
-      var editionController, transition, model;
+      var editionController, haltedTransition, model;
 
       // get arguments
       if (Ember.isArray(args)) {
-          editionController = args[0];
-          transition = args[1];
+          editionController = this.get('masterController');
+          haltedTransition = this.get('transition');
           model = editionController.get('model');
       }
 
-      if (Ember.isNone(transition) || Ember.isNone(editionController) || Ember.isNone(model)) {
+      if (Ember.isNone(haltedTransition) || Ember.isNone(editionController) || Ember.isNone(model)) {
           this.get('flashes').danger('An error occured.');
           return true;
       }
@@ -31,7 +31,7 @@ var LeaveEditionModal = Ember.ObjectController.extend({
       // reset edition
       editionController.setupEdition();
 
-      transition.retry();
+      haltedTransition.retry();
     }
   }
 });

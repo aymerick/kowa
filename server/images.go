@@ -68,21 +68,13 @@ func (app *Application) handleDeleteImage(rw http.ResponseWriter, req *http.Requ
 		if err := image.Delete(); err != nil {
 			http.Error(rw, "Failed to delete image", http.StatusInternalServerError)
 		} else {
-			// update site
+			// remove all references to image from site content
 			site := app.getCurrentSite(req)
 
-			fieldsToDelete := []string{}
-
-			if site.Logo == image.Id {
-				fieldsToDelete = append(fieldsToDelete, "logo")
-			}
-
-			if site.Cover == image.Id {
-				fieldsToDelete = append(fieldsToDelete, "cover")
-			}
-
-			if len(fieldsToDelete) > 0 {
-				site.DeleteFields(fieldsToDelete)
+			if err := site.RemoveImageReferences(image); err != nil {
+				log.Printf("Failed to remove image references: %v", err.Error())
+				http.Error(rw, "Error while deleting image", http.StatusInternalServerError)
+				return
 			}
 
 			// returns deleted image

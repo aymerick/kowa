@@ -8,6 +8,7 @@ var ImageModel = DS.Model.extend({
   type: DS.attr(),
 
   url: DS.attr(),
+  smallUrl: DS.attr(),
   thumbUrl: DS.attr(),
   mediumUrl: DS.attr(),
   mediumCropUrl: DS.attr(),
@@ -15,7 +16,8 @@ var ImageModel = DS.Model.extend({
   site: DS.belongsTo('site', { inverse: 'images', async: true }),
 
   logoSites: DS.hasMany('site', { inverse: 'logo', async: true }),
-  coverSites: DS.hasMany('site', { inverse: 'cover', async: true })
+  coverSites: DS.hasMany('site', { inverse: 'cover', async: true }),
+  coverPosts: DS.hasMany('post', { inverse: 'cover', async: true })
 
   // isUploading
   // uploadProgress

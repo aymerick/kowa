@@ -9,6 +9,8 @@ var Post = DS.Model.extend({
   title: DS.attr(''),
   body: DS.attr(''),
 
+  cover: DS.belongsTo('image', { inverse: 'coverPosts' }),
+
   site: DS.belongsTo('site', { async: true })
 });
 

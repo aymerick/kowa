@@ -1,8 +1,9 @@
 import Ember from 'ember';
 
 var DeleteImageModal = Ember.ObjectController.extend({
-  setupModal: function(model) {
-    this.set('model', model);
+  setupModal: function(masterController, image) {
+    this.set('masterController', masterController);
+    this.set('model', image);
   },
 
   actions: {

@@ -11,8 +11,9 @@ var PostEditController = Ember.ObjectController.extend({
     var model = this.get('model');
     return ((model.get('isNew')) ||
             (model.get('title') !== this.get('titleScratch')) ||
-            (model.get('body')  !== this.get('bodyScratch')));
-  }.property('titleScratch', 'bodyScratch', 'model.title', 'model.body', 'model.isNew'),
+            (model.get('body')  !== this.get('bodyScratch')) ||
+            (model.get('cover') !== this.get('coverScratch')));
+  }.property('titleScratch', 'bodyScratch', 'coverScratch', 'model.title', 'model.body', 'model.coverScratch', 'model.isNew'),
 
   nothingChanged: Ember.computed.not('isDirty'),
 
@@ -21,9 +22,15 @@ var PostEditController = Ember.ObjectController.extend({
 
     this.set('titleScratch', model.get('title'));
     this.set('bodyScratch', model.get('body'));
+    this.set('coverScratch', model.get('cover'));
   },
 
   actions: {
+    // called by 'select-image' modal controller
+    imageSelected: function(field, image) {
+      this.set(field, image);
+    },
+
     savePost: function() {
       if (!this.get('isDirty')) {
         // This should never happen
@@ -34,6 +41,7 @@ var PostEditController = Ember.ObjectController.extend({
       var model = this.get('model');
       model.set('title', this.get('titleScratch'));
       model.set('body', this.get('bodyScratch'));
+      model.set('cover', this.get('coverScratch'));
 
       // persist on server
       var self = this;
