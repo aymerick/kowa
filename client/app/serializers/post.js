@@ -18,8 +18,6 @@ var PostSerializer = DS.RESTSerializer.extend({
       result['site'] = result['site'].get('id');
     }
 
-    debugger;
-
     // cover
     if (result['cover']) {
       result['cover'] = result['cover'].get('id');
