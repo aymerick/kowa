@@ -9,10 +9,10 @@ var SelectImageModal = Ember.ArrayController.extend(PaginationControllerMixin, {
 
   nothingSelected: Ember.computed.not('selectedImage'),
 
-  setupModal: function(masterController, field) {
-    this.set('masterController', masterController);
-    this.set('field', field);
+  masterController: null,
+  masterField: null,
 
+  setupModal: function(masterController, masterField) {
     var site = masterController.get('site');
 
     var params = { 'site': site.get('id'), 'page': 1, 'perPage': 16 };
@@ -22,6 +22,9 @@ var SelectImageModal = Ember.ArrayController.extend(PaginationControllerMixin, {
       // nothing to filter
       return true;
     }));
+
+    this.set('masterController', masterController);
+    this.set('masterField', masterField);
   },
 
   actions: {
@@ -31,9 +34,9 @@ var SelectImageModal = Ember.ArrayController.extend(PaginationControllerMixin, {
 
     save: function() {
       var masterController = this.get('masterController');
-      var field = this.get('field');
+      var masterField = this.get('masterField');
 
-      masterController.send('imageSelected', field, this.get('selectedImage'));
+      masterController.send('imageSelected', masterField, this.get('selectedImage'));
     }
   }
 });
