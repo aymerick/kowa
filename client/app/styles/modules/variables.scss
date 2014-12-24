@@ -20,15 +20,21 @@ $blue: #5ba4e5;
 //
 
 $content-header-height: 44px;
+$content-details-body-padding: 5%;
+$content-cover-z-index: 3;
+
+$content-action-button-width: 85px;
+$content-action-button-margin: 15px;
+$content-action-button-width-with-margin: $content-action-button-width + $content-action-button-margin;
 
 //
 // Images
 //
 
-// Keep that in sync with SMALL_HEIGHT constant on server
+// keep that in sync with SMALL_HEIGHT constant on server
 $img-small-height: 60px;
 
-// Keep that in sync with SMALL_WIDTH constant on server
+// keep that in sync with SMALL_WIDTH constant on server
 $img-small-width: 100px;
 
 // small image with bootstrap class 'thumbnail'

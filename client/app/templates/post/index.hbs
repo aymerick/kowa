@@ -1,8 +1,6 @@
 <section class="content-preview">
     <header class="content-header">
-        <span class="content-date">Created on: {{moment createdAt}}</span>
-        {{#link-to "post.edit" this class="btn btn-default content-action-button"}}<i class="fa fa-pencil"></i> Edit{{/link-to}}
-        <button {{action "openModal" "delete-post" controller 'posts.index'}} class="btn btn-danger content-action-button">Delete</button>
+        <div class="content-title">{{title}}</div>
 
         <div class="content-cover">
             {{#if cover}}
@@ -11,9 +9,11 @@
                 <div class="thumbnail no-image text-center"></div>
             {{/if}}
         </div>
+
+        {{#link-to "post.edit" this class="btn btn-default content-action-button action-edit"}}<i class="fa fa-pencil"></i> Edit{{/link-to}}
+        <button {{action "openModal" "delete-post" controller 'posts.index'}} class="btn btn-danger content-action-button action-delete">Delete</button>
     </header>
     <section class="content-body">
-        <h1>{{title}}</h1>
         {{showdown-addon body}}
     </section>
 </section>
