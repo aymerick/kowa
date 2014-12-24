@@ -188,6 +188,9 @@
                 border: 0;
                 padding: 0;
                 background: transparent;
+
+                // removes the blue box shadow set by bootstrap
+                outline: none;
             }
         }
 
