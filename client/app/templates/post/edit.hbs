@@ -18,6 +18,6 @@
         <button {{action "savePost"}} class="btn btn-success content-action-button action-save" {{bind-attr disabled=nothingChanged}}><i class="fa fa-floppy-o"></i> Save</button>
     </header>
     <section class="content-body">
-        {{ivy-codemirror value=bodyScratch mode='gfm' lineWrapping=true}}
+        {{codemirror-editor value=bodyScratch placeholder="Post body"}}
     </section>
 </section>

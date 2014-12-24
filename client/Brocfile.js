@@ -3,11 +3,7 @@
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 var app = new EmberApp({
-  emberCliFontAwesome: { includeFontAwesomeAssets: false },
-  codemirror: {
-    modes: [ 'gfm', 'markdown' ],
-    themes: [ ]
-  }
+  emberCliFontAwesome: { includeFontAwesomeAssets: false }
 });
 
 // Use `app.import` to add additional libraries to the generated
@@ -30,14 +26,23 @@ app.import('bower_components/bootstrap-sass-official/assets/javascripts/bootstra
 // });
 
 // Font awesome
-app.import("bower_components/font-awesome/css/font-awesome.css");
-app.import("bower_components/font-awesome/fonts/fontawesome-webfont.eot", { destDir: "fonts" });
-app.import("bower_components/font-awesome/fonts/fontawesome-webfont.svg", { destDir: "fonts" });
-app.import("bower_components/font-awesome/fonts/fontawesome-webfont.ttf", { destDir: "fonts" });
-app.import("bower_components/font-awesome/fonts/fontawesome-webfont.woff", { destDir: "fonts" });
-app.import("bower_components/font-awesome/fonts/FontAwesome.otf", { destDir: "fonts" });
+app.import(app.bowerDirectory + "/font-awesome/css/font-awesome.css");
+app.import(app.bowerDirectory + "/font-awesome/fonts/fontawesome-webfont.eot", { destDir: "fonts" });
+app.import(app.bowerDirectory + "/font-awesome/fonts/fontawesome-webfont.svg", { destDir: "fonts" });
+app.import(app.bowerDirectory + "/font-awesome/fonts/fontawesome-webfont.ttf", { destDir: "fonts" });
+app.import(app.bowerDirectory + "/font-awesome/fonts/fontawesome-webfont.woff", { destDir: "fonts" });
+app.import(app.bowerDirectory + "/font-awesome/fonts/FontAwesome.otf", { destDir: "fonts" });
 
-// CodeMirror - missing import from ivy-codemirror ember addon
+// CodeMirror
+app.import(app.bowerDirectory + '/codemirror/lib/codemirror.css');
+app.import(app.bowerDirectory + '/codemirror/lib/codemirror.js');
+app.import(app.bowerDirectory + '/codemirror/mode/markdown/markdown.js');
+app.import(app.bowerDirectory + '/codemirror/mode/gfm/gfm.js');
 app.import(app.bowerDirectory + '/codemirror/addon/mode/overlay.js');
+app.import(app.bowerDirectory + '/codemirror/addon/display/placeholder.js');
+
+app.import(app.bowerDirectory + '/ember-cli-codemirror-shim/codemirror-shim.js', {
+  exports: { 'codemirror': ['default'] }
+});
 
 module.exports = app.toTree();

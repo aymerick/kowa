@@ -221,6 +221,10 @@
                 line-height: 1.56em;
                 font-family: monospace;
                 color: lighten($darkgrey, 10%);
+
+                &.CodeMirror-placeholder {
+                    color: #ccc;
+                }
             }
 
             .CodeMirror-focused,
