@@ -13,7 +13,7 @@ var PostEditController = Ember.ObjectController.extend({
             (model.get('title') !== this.get('titleScratch')) ||
             (model.get('body')  !== this.get('bodyScratch')) ||
             (model.get('cover') !== this.get('coverScratch')));
-  }.property('titleScratch', 'bodyScratch', 'coverScratch', 'model.title', 'model.body', 'model.coverScratch', 'model.isNew'),
+  }.property('titleScratch', 'bodyScratch', 'coverScratch', 'model.title', 'model.body', 'model.cover', 'model.isNew'),
 
   nothingChanged: Ember.computed.not('isDirty'),
 
@@ -39,6 +39,11 @@ var PostEditController = Ember.ObjectController.extend({
       if (!this.get('isDirty')) {
         // This should never happen
         return;
+      }
+
+      // set a default title
+      if (!this.get('titleScratch')) {
+          this.set('titleScratch', '(Untitled)');
       }
 
       // update model
