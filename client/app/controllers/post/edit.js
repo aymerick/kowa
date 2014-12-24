@@ -31,6 +31,10 @@ var PostEditController = Ember.ObjectController.extend({
       this.set(field, image);
     },
 
+    removeCover: function() {
+      this.set('coverScratch', null);
+    },
+
     savePost: function() {
       if (!this.get('isDirty')) {
         // This should never happen
@@ -49,6 +53,7 @@ var PostEditController = Ember.ObjectController.extend({
         self.get('flashes').success('Post saved.');
 
         self.transitionToRoute('post', postSaved);
+
         return postSaved;
       }).catch(function () {
         self.get('flashes').danger('Failed to save post.');
