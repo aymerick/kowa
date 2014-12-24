@@ -55,7 +55,14 @@
 
         list-style: none;
 
+        $item-active-shadow-width: 7px;
+        $item-height: 80px;
+        $cover-size: 60px;
+        $item-padding: ($item-height - $cover-size) / 2;
+
         li {
+            position: relative;
+            height: $item-height;
             margin: 0;
             padding: 0;
 
@@ -63,31 +70,57 @@
 
             a {
                 display: block;
-                padding: 20px 20px;
                 color: rgba(0,0,0,0.5);
                 text-decoration: none;
             }
-        }
 
-        li.active {
-            border-bottom: lighten($midgrey, 40%) 1px solid;
-            background: lighten($lightbrown, 5%);
-            box-shadow:
-                lighten($midgrey, 40%) 0 -1px 0, // top border
-                rgba(0,0,0,0.06) 7px 0 0 inset, // big left border
-                lighten($midgrey, 40%) 1px 0 0 inset; // small left border
-        }
+            .item-cover {
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                bottom: 0px;
+                right: 0px;
 
-        .item-title {
-            font-size: 1.6rem;
-            line-height: 1.25em;
-            font-weight: normal;
+                img {
+                    position: absolute;
+                    top: $item-padding;
+                    left: $item-active-shadow-width + $item-padding;
 
-            margin: 0 0 0.3em 0;
-        }
+                    height: $cover-size;
+                    width: $cover-size;
+                    border-radius: 100%;
+                }
+            }
 
-        .item-meta {
-            // @todo
+            .item-infos {
+                position: absolute;
+                top: 0px;
+                left: $item-active-shadow-width + $cover-size + (2 * $item-padding);
+                right: 0px;
+                bottom: 0px;
+
+                padding: $item-padding;
+            }
+
+            .item-title {
+                font-size: 1.6rem;
+                line-height: 1.25em;
+                font-weight: normal;
+
+                margin: 0 0 0.3em 0;
+            }
+
+            .item-meta {
+                // @todo
+            }
+
+            &.active {
+                border-bottom: lighten($midgrey, 40%) 1px solid;
+                background: lighten($lightbrown, 5%);
+                box-shadow: lighten($midgrey, 40%) 0 -1px 0, // top border
+                            rgba(0,0,0,0.06) $item-active-shadow-width 0 0 inset, // big left border
+                            lighten($midgrey, 40%) 1px 0 0 inset; // small left border
+            }
         }
     }
 } // .content-master
