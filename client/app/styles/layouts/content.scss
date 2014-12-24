@@ -68,6 +68,9 @@
 
             border-bottom: $lightbrown 1px solid;
 
+            white-space: nowrap;
+            overflow: hidden;
+
             a {
                 display: block;
                 color: rgba(0,0,0,0.5);
