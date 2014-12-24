@@ -57,8 +57,6 @@ var PostEditController = Ember.ObjectController.extend({
       model.save().then(function (postSaved) {
         self.get('flashes').success('Post saved.');
 
-        self.transitionToRoute('post', postSaved);
-
         return postSaved;
       }).catch(function () {
         self.get('flashes').danger('Failed to save post.');
