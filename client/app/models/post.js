@@ -21,7 +21,7 @@ Post.reopenClass({
     return Ember.merge({
       createdAt: now,
       updatedAt: now,
-      title: "(Untitled)",
+      title: "",
       body: ""
     }, moreAttrs || { });
   }
