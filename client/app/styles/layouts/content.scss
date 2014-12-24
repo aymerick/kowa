@@ -234,6 +234,19 @@
             &.action-save {
                 right: $content-action-button-margin;
             }
+
+            &.action-view {
+                right: $content-action-button-width-with-margin + $content-action-button-margin;
+
+                font-size: 2em;
+                line-height: 32px;
+                color: #333;
+                width: 35px;
+
+                &.disabled {
+                    color: #bbb;
+                }
+            }
         }
     }
 

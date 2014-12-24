@@ -15,6 +15,11 @@
             {{/if}}
         </div>
 
+        {{#if nothingChanged}}
+            {{#link-to "post" this class="content-action-button action-view"}}<i class="fa fa-eye"></i>{{/link-to}}
+        {{else}}
+            <div class="content-action-button action-view disabled" title="Save to view post"><i class="fa fa-eye-slash"></i></div>
+        {{/if}}
         <button {{action "savePost"}} class="btn btn-success content-action-button action-save" {{bind-attr disabled=nothingChanged}}><i class="fa fa-floppy-o"></i> Save</button>
     </header>
     <section class="content-body">
