@@ -35,18 +35,24 @@ func bootstrap(cmd *cobra.Command, args []string) {
 	now := time.Now()
 	lastMonth := now.Add(-31 * 24 * time.Hour)
 
+	//
 	// Insert oauth client
+	//
+
 	oauthStorage := server.NewOAuthStorage()
 	oauthStorage.SetupDefaultClient()
 
 	db := models.NewDBSession()
+
+	//
+	// Insert users
+	//
 
 	password, err := bcrypt.GenerateFromPassword([]byte("test"), bcrypt.DefaultCost)
 	if err != nil {
 		panic("Arg")
 	}
 
-	// Insert users
 	userJeanClaude := models.User{
 		Id:        "test",
 		CreatedAt: lastMonth,
@@ -67,7 +73,10 @@ func bootstrap(cmd *cobra.Command, args []string) {
 	}
 	db.UsersCol().Insert(&userHenry)
 
+	//
 	// Insert sites
+	//
+
 	siteJC1 := models.Site{
 		Id:          "site_1",
 		UserId:      userJeanClaude.Id,
@@ -102,57 +111,12 @@ func bootstrap(cmd *cobra.Command, args []string) {
 
 	sites := []models.Site{siteJC1, siteJC2, siteH}
 
-	// Insert posts
-	var post models.Post
-
-	for i := 1; i <= 30; i++ {
-		nbDays := time.Duration(i)
-
-		pubDate := lastMonth.Add(time.Hour*24*nbDays + 30)
-
-		post = models.Post{
-			Id:          bson.NewObjectId(),
-			CreatedAt:   lastMonth.Add(time.Hour * 24 * nbDays),
-			UpdatedAt:   lastMonth.Add(time.Hour*24*nbDays + 30),
-			SiteId:      siteJC1.Id,
-			PublishedAt: &pubDate,
-			Title:       fmt.Sprintf("Post %d", i),
-			Body:        fmt.Sprintf(MD_FIXTURES[rand.Intn(len(MD_FIXTURES))]),
-		}
-		db.PostsCol().Insert(&post)
-	}
-
-	pubDate := lastMonth.Add(time.Hour + 30)
-
-	post = models.Post{
-		Id:          bson.NewObjectId(),
-		CreatedAt:   lastMonth.Add(time.Hour),
-		UpdatedAt:   lastMonth.Add(time.Hour + 30),
-		SiteId:      siteJC2.Id,
-		PublishedAt: &pubDate,
-		Title:       "This is a lonely",
-		Body:        "It appears on my second website.",
-	}
-	db.PostsCol().Insert(&post)
-
-	post = models.Post{
-		Id:          bson.NewObjectId(),
-		CreatedAt:   lastMonth.Add(48 * time.Hour),
-		UpdatedAt:   lastMonth.Add(48*time.Hour + 30),
-		SiteId:      siteH.Id,
-		PublishedAt: &pubDate,
-		Title:       "Hi, I am Henry",
-		Body:        "Je me présente, je m'appelle Henry. Je voudrais bien réussir ma vie, être aimé. Être beau, gagner de l'argent. Puis surtout être intelligent. Mais pour tout ça il faudrait que je bosse à plein temps",
-	}
-	db.PostsCol().Insert(&post)
-
-	// @todo Insert events
-
-	// @todo Insert pages
-
-	// @todo Insert actions
-
+	//
 	// Insert images
+	//
+
+	siteJC1Images := []models.Image{}
+
 	currentDir, errWd := os.Getwd()
 	if errWd != nil {
 		panic(errWd)
@@ -195,6 +159,10 @@ func bootstrap(cmd *cobra.Command, args []string) {
 					}
 					db.ImagesCol().Insert(&img)
 
+					if site.Id == siteJC1.Id {
+						siteJC1Images = append(siteJC1Images, img)
+					}
+
 					if j == 0 {
 						errThumb := img.GenerateDerivatives()
 						if errThumb != nil {
@@ -205,4 +173,58 @@ func bootstrap(cmd *cobra.Command, args []string) {
 			}
 		}
 	}
+
+	//
+	// Insert posts
+	//
+
+	var post models.Post
+
+	for i := 1; i <= 30; i++ {
+		nbDays := time.Duration(i)
+
+		pubDate := lastMonth.Add(time.Hour*24*nbDays + 30)
+
+		post = models.Post{
+			Id:          bson.NewObjectId(),
+			CreatedAt:   lastMonth.Add(time.Hour * 24 * nbDays),
+			UpdatedAt:   lastMonth.Add(time.Hour*24*nbDays + 30),
+			SiteId:      siteJC1.Id,
+			PublishedAt: &pubDate,
+			Title:       fmt.Sprintf("Post %d", i),
+			Body:        fmt.Sprintf(MD_FIXTURES[rand.Intn(len(MD_FIXTURES))]),
+			Cover:       siteJC1Images[rand.Intn(len(siteJC1Images))].Id,
+		}
+		db.PostsCol().Insert(&post)
+	}
+
+	pubDate := lastMonth.Add(time.Hour + 30)
+
+	post = models.Post{
+		Id:          bson.NewObjectId(),
+		CreatedAt:   lastMonth.Add(time.Hour),
+		UpdatedAt:   lastMonth.Add(time.Hour + 30),
+		SiteId:      siteJC2.Id,
+		PublishedAt: &pubDate,
+		Title:       "This is a lonely post",
+		Body:        "It appears on my second website.",
+	}
+	db.PostsCol().Insert(&post)
+
+	post = models.Post{
+		Id:          bson.NewObjectId(),
+		CreatedAt:   lastMonth.Add(48 * time.Hour),
+		UpdatedAt:   lastMonth.Add(48*time.Hour + 30),
+		SiteId:      siteH.Id,
+		PublishedAt: &pubDate,
+		Title:       "Hi, I am Henry",
+		Body:        "Je me présente, je m'appelle Henry. Je voudrais bien réussir ma vie, être aimé. Être beau, gagner de l'argent. Puis surtout être intelligent. Mais pour tout ça il faudrait que je bosse à plein temps",
+	}
+	db.PostsCol().Insert(&post)
+
+	// @todo Insert events
+
+	// @todo Insert pages
+
+	// @todo Insert actions
 }
