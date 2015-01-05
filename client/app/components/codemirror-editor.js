@@ -8,7 +8,8 @@ var CodemirrorEditor = Ember.TextArea.extend({
   initCodemirror: function() {
     var codeMirror = CodeMirror.fromTextArea(this.get('element'), {
       mode:'gfm',
-      lineWrapping: true
+      lineWrapping: true,
+      dragDrop: false
     });
 
     this.set('codeMirror', codeMirror);
