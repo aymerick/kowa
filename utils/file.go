@@ -31,7 +31,7 @@ func AvailableFilePath(filePath string) string {
 
 	// check if file already exists
 	if _, err := os.Stat(newFilePath); !os.IsNotExist(err) {
-		panic("Really !?")
+		panic(fmt.Sprintf("Random file already exists: %s", newFilePath))
 	}
 
 	return newFilePath
