@@ -4,17 +4,17 @@
         {{#link-to "posts.new" class="content-add btn btn-success btn-xs" title="New Post"}}<i class="fa fa-plus"></i> New post{{/link-to}}
     </header>
     {{#view "paginated-scroll-box" tagName="ol" classNames="content-body"}}
-        {{#each itemView="post-item-view" itemTagName="li"}}
-            {{#link-to "post" this class="permalink" title="Display this post"}}
-                {{#if cover}}
+        {{#each item in controller itemView="post-item-view" itemTagName="li"}}
+            {{#link-to "post" item class="permalink" title="Display this post"}}
+                {{#if item.cover}}
                     <div class="item-cover">
-                        <img {{bind-attr src=cover.thumbUrl}} alt="cover image" />
+                        <img {{bind-attr src=item.cover.thumbUrl}} alt="cover image" />
                     </div>
                 {{/if}}
                 <div class="item-infos">
-                    <h3 class="item-title">{{title}}</h3>
+                    <h3 class="item-title">{{item.title}}</h3>
                     <section class="item-meta">
-                        Created: {{ago createdAt}}
+                        Created: {{ago item.createdAt}}
                     </section>
                 </div>
             {{/link-to}}
