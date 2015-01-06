@@ -69,7 +69,7 @@ var SettingsImagesController = Ember.ArrayController.extend(PaginationController
 
         // push uploaded image
         var recordData = controller.store.normalize('image', response.image);
-        controller.store.update('image', recordData);
+        controller.store.push('image', recordData);
       });
 
       this.uploader.schedule(job);
