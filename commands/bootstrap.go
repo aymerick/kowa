@@ -30,7 +30,7 @@ var bootstrapCmd = &cobra.Command{
 func bootstrap(cmd *cobra.Command, args []string) {
 	// @todo Check that we are NOT in production
 
-	rand.Seed(8941)
+	rand.Seed(time.Now().UTC().UnixNano())
 
 	now := time.Now()
 	lastMonth := now.Add(-31 * 24 * time.Hour)
