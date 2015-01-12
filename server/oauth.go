@@ -11,6 +11,8 @@ import (
 
 // POST /oauth/token
 func (app *Application) handleOauthToken(rw http.ResponseWriter, req *http.Request) {
+	currentDBSession := app.getCurrentDBSession(req)
+
 	resp := app.oauthServer.NewResponse()
 	defer resp.Close()
 
@@ -19,9 +21,9 @@ func (app *Application) handleOauthToken(rw http.ResponseWriter, req *http.Reque
 		case osin.PASSWORD:
 			var user *models.User
 
-			user = app.dbSession.FindUser(ar.Username)
+			user = currentDBSession.FindUser(ar.Username)
 			if user == nil {
-				user = app.dbSession.FindUserByEmail(ar.Username)
+				user = currentDBSession.FindUserByEmail(ar.Username)
 			}
 
 			if user != nil {

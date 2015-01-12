@@ -43,6 +43,13 @@ func NewApplication() *Application {
 // Request context
 //
 
+func (app *Application) getCurrentDBSession(req *http.Request) *models.DBSession {
+	if currentDBSession := context.Get(req, "currentDBSession"); currentDBSession != nil {
+		return currentDBSession.(*models.DBSession)
+	}
+	return nil
+}
+
 func (app *Application) getCurrentUser(req *http.Request) *models.User {
 	if currentUser := context.Get(req, "currentUser"); currentUser != nil {
 		return currentUser.(*models.User)

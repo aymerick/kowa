@@ -88,6 +88,8 @@ func (app *Application) handleDeleteImage(rw http.ResponseWriter, req *http.Requ
 func (app *Application) handleUploadImage(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("[handler]: handleUploadImage\n")
 
+	currentDBSession := app.getCurrentDBSession(req)
+
 	reader, err := req.MultipartReader()
 	if err != nil {
 		log.Printf("Multipart error: %v", err.Error())
@@ -158,7 +160,7 @@ func (app *Application) handleUploadImage(rw http.ResponseWriter, req *http.Requ
 			Type:   fileContentType,
 		}
 
-		if err := app.dbSession.CreateImage(img); err != nil {
+		if err := currentDBSession.CreateImage(img); err != nil {
 			log.Printf("Can't create record: %v - %v", img, err.Error())
 			http.Error(rw, "Failed to create image record", http.StatusInternalServerError)
 			return

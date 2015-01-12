@@ -60,6 +60,17 @@ func MongoDBSessionForURI(uri string) *mgo.Session {
 // DBSession
 //
 
+func (session *DBSession) Copy() *DBSession {
+	return &DBSession{
+		mongoSession: session.mongoSession.Copy(),
+		dbName:       session.dbName,
+	}
+}
+
+func (session *DBSession) Close() {
+	session.mongoSession.Close()
+}
+
 // ensure indexes on all collections
 func (session *DBSession) EnsureIndexes() {
 	session.EnsureUsersIndexes()

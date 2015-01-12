@@ -17,7 +17,7 @@ func Run() {
 	app := NewApplication()
 
 	// setup middlewares
-	baseChain := alice.New(context.ClearHandler, app.loggingMiddleware, app.recoveryMiddleware, app.corsMiddleware())
+	baseChain := alice.New(context.ClearHandler, app.dbSessionMiddleware, app.loggingMiddleware, app.recoveryMiddleware, app.corsMiddleware())
 
 	// setup API routes
 	router := mux.NewRouter()

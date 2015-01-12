@@ -14,6 +14,20 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// middleware: setup database session
+func (app *Application) dbSessionMiddleware(next http.Handler) http.Handler {
+	fn := func(rw http.ResponseWriter, req *http.Request) {
+		dbSessionCopy := app.dbSession.Copy()
+
+		context.Set(req, "currentDBSession", dbSessionCopy)
+		defer dbSessionCopy.Close()
+
+		next.ServeHTTP(rw, req)
+	}
+
+	return http.HandlerFunc(fn)
+}
+
 // middleware: logs requests
 func (app *Application) loggingMiddleware(next http.Handler) http.Handler {
 	fn := func(rw http.ResponseWriter, req *http.Request) {
@@ -85,7 +99,9 @@ func (app *Application) ensureAuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		if currentUser := app.dbSession.FindUser(userId); currentUser != nil {
+		currentDBSession := app.getCurrentDBSession(req)
+
+		if currentUser := currentDBSession.FindUser(userId); currentUser != nil {
 			log.Printf("Current user is: %s [%s]\n", currentUser.Fullname(), userId)
 			context.Set(req, "currentUser", currentUser)
 		} else {
@@ -127,6 +143,8 @@ func (app *Application) ensureUserAccessMiddleware(next http.Handler) http.Handl
 // middleware: ensures site exists and injects 'currentSite' in context
 func (app *Application) ensureSiteMiddleware(next http.Handler) http.Handler {
 	fn := func(rw http.ResponseWriter, req *http.Request) {
+		currentDBSession := app.getCurrentDBSession(req)
+
 		vars := mux.Vars(req)
 
 		var currentSite *models.Site
@@ -134,7 +152,7 @@ func (app *Application) ensureSiteMiddleware(next http.Handler) http.Handler {
 		// site id
 		siteId := vars["site_id"]
 		if siteId != "" {
-			currentSite = app.dbSession.FindSite(siteId)
+			currentSite = currentDBSession.FindSite(siteId)
 		} else {
 			// post
 			currentPost := app.getCurrentPost(req)
@@ -192,13 +210,15 @@ func (app *Application) ensureSiteOwnerAccessMiddleware(next http.Handler) http.
 // middleware: ensures post exists and injects 'currentPost' in context
 func (app *Application) ensurePostMiddleware(next http.Handler) http.Handler {
 	fn := func(rw http.ResponseWriter, req *http.Request) {
+		currentDBSession := app.getCurrentDBSession(req)
+
 		vars := mux.Vars(req)
 		postId := vars["post_id"]
 		if postId == "" {
 			panic("Should have post_id")
 		}
 
-		if currentPost := app.dbSession.FindPost(bson.ObjectIdHex(postId)); currentPost != nil {
+		if currentPost := currentDBSession.FindPost(bson.ObjectIdHex(postId)); currentPost != nil {
 			context.Set(req, "currentPost", currentPost)
 		} else {
 			http.NotFound(rw, req)
@@ -214,13 +234,15 @@ func (app *Application) ensurePostMiddleware(next http.Handler) http.Handler {
 // middleware: ensures image exists and injects 'currentImage' in context
 func (app *Application) ensureImageMiddleware(next http.Handler) http.Handler {
 	fn := func(rw http.ResponseWriter, req *http.Request) {
+		currentDBSession := app.getCurrentDBSession(req)
+
 		vars := mux.Vars(req)
 		imageId := vars["image_id"]
 		if imageId == "" {
 			panic("Should have image_id")
 		}
 
-		if currentImage := app.dbSession.FindImage(bson.ObjectIdHex(imageId)); currentImage != nil {
+		if currentImage := currentDBSession.FindImage(bson.ObjectIdHex(imageId)); currentImage != nil {
 			context.Set(req, "currentImage", currentImage)
 		} else {
 			http.NotFound(rw, req)

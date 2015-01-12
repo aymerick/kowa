@@ -49,6 +49,8 @@ func (app *Application) handleGetPosts(rw http.ResponseWriter, req *http.Request
 func (app *Application) handlePostPosts(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("[handler]: handlePostPosts\n")
 
+	currentDBSession := app.getCurrentDBSession(req)
+
 	var reqJson postJson
 
 	if err := json.NewDecoder(req.Body).Decode(&reqJson); err != nil {
@@ -64,7 +66,7 @@ func (app *Application) handlePostPosts(rw http.ResponseWriter, req *http.Reques
 		return
 	}
 
-	site := app.dbSession.FindSite(post.SiteId)
+	site := currentDBSession.FindSite(post.SiteId)
 	if site == nil {
 		http.Error(rw, "Site not found", http.StatusBadRequest)
 		return
@@ -76,7 +78,7 @@ func (app *Application) handlePostPosts(rw http.ResponseWriter, req *http.Reques
 		return
 	}
 
-	if err := app.dbSession.CreatePost(post); err != nil {
+	if err := currentDBSession.CreatePost(post); err != nil {
 		log.Printf("ERROR: %v", err)
 		http.Error(rw, "Failed to create post", http.StatusInternalServerError)
 		return
