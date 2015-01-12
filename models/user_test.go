@@ -117,8 +117,8 @@ func (suite *UserTestSuite) TestJSON() {
 
 	// UsersList
 	users := UsersList{
-		User{FirstName: "Jean-Claude", LastName: "Trucmush", CreatedAt: time.Now()},
-		User{FirstName: "Marie", LastName: "Koushtoala", CreatedAt: time.Now()},
+		&User{FirstName: "Jean-Claude", LastName: "Trucmush", CreatedAt: time.Now()},
+		&User{FirstName: "Marie", LastName: "Koushtoala", CreatedAt: time.Now()},
 	}
 
 	result, err = json.Marshal(users)
