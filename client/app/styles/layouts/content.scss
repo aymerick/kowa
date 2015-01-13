@@ -182,7 +182,9 @@
     }
 
     .content-body {
-        padding: $content-details-body-padding;
+        .content-preview {
+            padding: $content-details-body-padding;
+        }
     }
 } // .content-details
 
@@ -227,6 +229,7 @@
 
                 // removes the blue box shadow set by bootstrap
                 outline: none;
+                box-shadow: none;
             }
         }
 
@@ -251,6 +254,39 @@
     }
 
     .content-body {
+        .content-fields {
+            position: relative;
+            height: $content-edit-fields-height;
+
+            font-family: monospace;
+
+            padding: 15px;
+
+            border-bottom: $lightbrown 1px solid;
+            box-shadow: rgba(0, 0, 0, 0.03) 0 2px 3px;
+
+            input {
+                width: 100%;
+                border: 0;
+                padding: 0;
+                background: transparent;
+
+                font-size: 1.8em;
+
+                // removes the blue box shadow set by bootstrap
+                outline: none !important;
+                box-shadow: none;
+            }
+        }
+
+        .content-editor {
+            position: absolute;
+            top: $content-edit-fields-height;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
         .CodeMirror {
             height: auto;
             position: absolute;

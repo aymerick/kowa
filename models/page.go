@@ -12,15 +12,19 @@ const (
 )
 
 type Page struct {
+	dbSession *DBSession `bson:"-" json:"-"`
+
 	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
 	SiteId    string        `bson:"site_id"       json:"site"`
 
-	Title   string `bson:"title"   json:"title"`
-	Tagline string `bson:"tagline" json:"tagline"`
-	Body    string `bson:"body"    json:"body"`
-	// @todo Photo
+	Title   string        `bson:"title"           json:"title"`
+	Tagline string        `bson:"tagline"         json:"tagline"`
+	Body    string        `bson:"body"            json:"body"`
+	Cover   bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
+
+	// @todo Format (markdown|html)
 }
 
 type PagesList []*Page
@@ -47,8 +51,139 @@ func (session *DBSession) EnsurePagesIndexes() {
 	}
 }
 
+// Find page by id
+func (session *DBSession) FindPage(pageId bson.ObjectId) *Page {
+	var result Page
+
+	if err := session.PagesCol().FindId(pageId).One(&result); err != nil {
+		return nil
+	}
+
+	result.dbSession = session
+
+	return &result
+}
+
+// Persists a new page in database
+// Side effect: 'Id', 'CreatedAt' and 'UpdatedAt' fields are set on page record
+func (session *DBSession) CreatePage(page *Page) error {
+	page.Id = bson.NewObjectId()
+
+	now := time.Now()
+	page.CreatedAt = now
+	page.UpdatedAt = now
+
+	if err := session.PagesCol().Insert(page); err != nil {
+		return err
+	}
+
+	page.dbSession = session
+
+	return nil
+}
+
+// Remove all references to given image from all pages
+func (session *DBSession) RemoveImageReferencesFromPages(image *Image) error {
+	// @todo
+	return nil
+}
+
 //
 // Page
 //
 
-// @todo
+// Fetch from database: site that page belongs to
+func (page *Page) FindSite() *Site {
+	return page.dbSession.FindSite(page.SiteId)
+}
+
+// Fetch Cover from database
+func (page *Page) FindCover() *Image {
+	if page.Cover != "" {
+		var result Image
+
+		if err := page.dbSession.ImagesCol().FindId(page.Cover).One(&result); err != nil {
+			return nil
+		}
+
+		result.dbSession = page.dbSession
+
+		return &result
+	}
+
+	return nil
+}
+
+// Delete page from database
+func (page *Page) Delete() error {
+	var err error
+
+	// delete from database
+	if err = page.dbSession.PagesCol().RemoveId(page.Id); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Update page in database
+func (page *Page) Update(newPage *Page) error {
+	var set, unset, modifier bson.D
+
+	if page.Title != newPage.Title {
+		page.Title = newPage.Title
+
+		if page.Title == "" {
+			unset = append(unset, bson.DocElem{"title", 1})
+		} else {
+			set = append(set, bson.DocElem{"title", page.Title})
+		}
+	}
+
+	if page.Tagline != newPage.Tagline {
+		page.Tagline = newPage.Tagline
+
+		if page.Tagline == "" {
+			unset = append(unset, bson.DocElem{"tagline", 1})
+		} else {
+			set = append(set, bson.DocElem{"tagline", page.Tagline})
+		}
+	}
+
+	if page.Body != newPage.Body {
+		page.Body = newPage.Body
+
+		if page.Body == "" {
+			unset = append(unset, bson.DocElem{"body", 1})
+		} else {
+			set = append(set, bson.DocElem{"body", page.Body})
+		}
+	}
+
+	if page.Cover != newPage.Cover {
+		page.Cover = newPage.Cover
+
+		if page.Cover == "" {
+			unset = append(unset, bson.DocElem{"cover", 1})
+		} else {
+			set = append(set, bson.DocElem{"cover", page.Cover})
+		}
+	}
+
+	if len(unset) > 0 {
+		modifier = append(modifier, bson.DocElem{"$unset", unset})
+	}
+
+	if len(set) > 0 {
+		modifier = append(modifier, bson.DocElem{"$set", set})
+	}
+
+	if len(modifier) > 0 {
+		page.UpdatedAt = time.Now()
+		set = append(set, bson.DocElem{"updated_at", page.UpdatedAt})
+
+		return page.dbSession.PagesCol().UpdateId(page.Id, modifier)
+	} else {
+		return nil
+	}
+}

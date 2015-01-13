@@ -224,7 +224,38 @@ func bootstrap(cmd *cobra.Command, args []string) {
 
 	// @todo Insert events
 
-	// @todo Insert pages
+	//
+	// Insert pages
+	//
+
+	var page models.Page
+
+	for i := 1; i <= 30; i++ {
+		nbDays := time.Duration(i)
+
+		page = models.Page{
+			Id:        bson.NewObjectId(),
+			CreatedAt: lastMonth.Add(time.Hour * 24 * nbDays),
+			UpdatedAt: lastMonth.Add(time.Hour*24*nbDays + 30),
+			SiteId:    siteJC1.Id,
+			Title:     fmt.Sprintf("Page %d", i),
+			Tagline:   fmt.Sprintf("This a fantastic tagline %d", i),
+			Body:      fmt.Sprintf(MD_FIXTURES[rand.Intn(len(MD_FIXTURES))]),
+			Cover:     siteJC1Images[rand.Intn(len(siteJC1Images))].Id,
+		}
+		db.PagesCol().Insert(&page)
+	}
+
+	page = models.Page{
+		Id:        bson.NewObjectId(),
+		CreatedAt: lastMonth.Add(time.Hour),
+		UpdatedAt: lastMonth.Add(time.Hour + 30),
+		SiteId:    siteJC2.Id,
+		Title:     "This is a lonely page",
+		Tagline:   "That page rocks so much",
+		Body:      "It appears on my second website.",
+	}
+	db.PagesCol().Insert(&page)
 
 	// @todo Insert actions
 }

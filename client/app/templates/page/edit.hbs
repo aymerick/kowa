@@ -1,0 +1,33 @@
+<section class="content-edit">
+    <header class="content-header">
+        <div class="content-title">
+            {{autofocus-input name="page[title]" type="text" placeholder="Page title" value=titleScratch}}
+        </div>
+
+        <div class="content-cover">
+            {{#if coverScratch}}
+                <button type="button" class="thumbnail select-image small-kind" {{action "openModal" "select-image" controller "coverScratch"}}>
+                    <img {{bind-attr src=coverScratch.smallUrl}} alt="cover image" />
+                    <span class="remove-image" {{action 'removeCover'}}>&#10006;</span>
+                </button>
+            {{else}}
+                <button type="button" class="btn btn-default select-image small-kind no-image" {{action "openModal" "select-image" controller "coverScratch"}}>Select Cover</button>
+            {{/if}}
+        </div>
+
+        {{#if nothingChanged}}
+            {{#link-to "page" this class="content-action-button action-view"}}<i class="fa fa-eye"></i>{{/link-to}}
+        {{else}}
+            <div class="content-action-button action-view disabled" title="Save to view page"><i class="fa fa-eye-slash"></i></div>
+        {{/if}}
+        <button {{action "savePage"}} class="btn btn-success content-action-button action-save" {{bind-attr disabled=nothingChanged}}><i class="fa fa-floppy-o"></i> Save</button>
+    </header>
+    <section class="content-body">
+        <div class="content-fields">
+            {{input id='page-tagline' type="text" class="form-control" placeholder='Page tagline' value=taglineScratch}}
+        </div>
+        <div class="content-editor">
+            {{codemirror-editor value=bodyScratch placeholder="Page body"}}
+        </div>
+    </section>
+</section>

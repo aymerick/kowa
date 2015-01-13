@@ -1,0 +1,26 @@
+<section class="content-master">
+    <header class="content-header">
+        <small>Pages</small>
+        {{#link-to "pages.new" class="content-add btn btn-success btn-xs" title="New Page"}}<i class="fa fa-plus"></i> New page{{/link-to}}
+    </header>
+    {{#view "paginated-scroll-box" tagName="ol" classNames="content-body"}}
+        {{#each item in controller itemView="list-item-view" itemTagName="li"}}
+            {{#link-to "page" item class="permalink" title="Display this page"}}
+                {{#if item.cover}}
+                    <div class="item-cover">
+                        <img {{bind-attr src=item.cover.thumbUrl}} alt="cover image" />
+                    </div>
+                {{/if}}
+                <div class="item-infos">
+                    <h3 class="item-title">{{item.title}}</h3>
+                    <section class="item-meta">
+                        {{item.tagline}}
+                    </section>
+                </div>
+            {{/link-to}}
+        {{/each}}
+    {{/view}}
+</section>
+<section class="content-details">
+    {{outlet}}
+</section>

@@ -116,6 +116,7 @@ func (site *Site) postsBaseQuery() *mgo.Query {
 	return site.dbSession.PostsCol().Find(bson.M{"site_id": site.Id})
 }
 
+// Returns the total number of posts
 func (site *Site) PostsNb() int {
 	result, err := site.postsBaseQuery().Count()
 	if err != nil {
@@ -127,7 +128,7 @@ func (site *Site) PostsNb() int {
 
 // Fetch from database: all posts belonging to site
 func (site *Site) FindPosts(skip int, limit int) *PostsList {
-	var result PostsList
+	result := PostsList{}
 
 	query := site.postsBaseQuery().Sort("-created_at")
 
@@ -153,7 +154,7 @@ func (site *Site) FindPosts(skip int, limit int) *PostsList {
 
 // Fetch from database: all events belonging to site
 func (site *Site) FindEvents() *EventsList {
-	var result EventsList
+	result := EventsList{}
 
 	if err := site.dbSession.EventsCol().Find(bson.M{"site_id": site.Id}).All(&result); err != nil {
 		panic(err)
@@ -164,22 +165,49 @@ func (site *Site) FindEvents() *EventsList {
 	return &result
 }
 
-// Fetch from database: all pages belonging to site
-func (site *Site) FindPages() *PagesList {
-	var result PagesList
+func (site *Site) pagesBaseQuery() *mgo.Query {
+	return site.dbSession.PagesCol().Find(bson.M{"site_id": site.Id})
+}
 
-	if err := site.dbSession.PagesCol().Find(bson.M{"site_id": site.Id}).All(&result); err != nil {
+// Returns the total number of pages
+func (site *Site) PagesNb() int {
+	result, err := site.pagesBaseQuery().Count()
+	if err != nil {
 		panic(err)
 	}
 
-	// @todo Inject dbSession in all result items
+	return result
+}
+
+// Fetch from database: all pages belonging to site
+func (site *Site) FindPages(skip int, limit int) *PagesList {
+	result := PagesList{}
+
+	query := site.pagesBaseQuery().Sort("-created_at")
+
+	if skip > 0 {
+		query = query.Skip(skip)
+	}
+
+	if limit > 0 {
+		query = query.Limit(limit)
+	}
+
+	if err := query.All(&result); err != nil {
+		panic(err)
+	}
+
+	// inject dbSession in all result items
+	for _, page := range result {
+		page.dbSession = site.dbSession
+	}
 
 	return &result
 }
 
 // Fetch from database: all actions belonging to site
 func (site *Site) FindActions() *ActionsList {
-	var result ActionsList
+	result := ActionsList{}
 
 	if err := site.dbSession.ActionsCol().Find(bson.M{"site_id": site.Id}).All(&result); err != nil {
 		panic(err)
@@ -205,7 +233,7 @@ func (site *Site) ImagesNb() int {
 
 // Fetch from database: all images belonging to site
 func (site *Site) FindImages(skip int, limit int) *ImagesList {
-	var result ImagesList
+	result := ImagesList{}
 
 	query := site.imagesBaseQuery().Sort("-created_at")
 
@@ -279,6 +307,11 @@ func (site *Site) RemoveImageReferences(image *Image) error {
 
 	// remove image references from posts
 	if err := site.dbSession.RemoveImageReferencesFromPosts(image); err != nil {
+		return err
+	}
+
+	// remove image references from pages
+	if err := site.dbSession.RemoveImageReferencesFromPages(image); err != nil {
 		return err
 	}
 

@@ -28,7 +28,10 @@ Router.map(function() {
       });
 
       this.resource('pages', function () {
-        this.route('page', {path: ':page_id'});
+        this.route('new');
+        this.resource('page', {path: ':page_id'}, function() {
+          this.route('edit', {path: '/edit'});
+        });
       });
 
       // settings

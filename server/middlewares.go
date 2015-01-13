@@ -153,17 +153,29 @@ func (app *Application) ensureSiteMiddleware(next http.Handler) http.Handler {
 		siteId := vars["site_id"]
 		if siteId != "" {
 			currentSite = currentDBSession.FindSite(siteId)
-		} else {
-			// post
+		}
+
+		// post
+		if currentSite == nil {
 			currentPost := app.getCurrentPost(req)
 			if currentPost != nil {
 				currentSite = currentPost.FindSite()
-			} else {
-				// image
-				currentImage := app.getCurrentImage(req)
-				if currentImage != nil {
-					currentSite = currentImage.FindSite()
-				}
+			}
+		}
+
+		// page
+		if currentSite == nil {
+			currentPage := app.getCurrentPage(req)
+			if currentPage != nil {
+				currentSite = currentPage.FindSite()
+			}
+		}
+
+		// image
+		if currentSite == nil {
+			currentImage := app.getCurrentImage(req)
+			if currentImage != nil {
+				currentSite = currentImage.FindSite()
 			}
 		}
 
@@ -220,6 +232,30 @@ func (app *Application) ensurePostMiddleware(next http.Handler) http.Handler {
 
 		if currentPost := currentDBSession.FindPost(bson.ObjectIdHex(postId)); currentPost != nil {
 			context.Set(req, "currentPost", currentPost)
+		} else {
+			http.NotFound(rw, req)
+			return
+		}
+
+		next.ServeHTTP(rw, req)
+	}
+
+	return http.HandlerFunc(fn)
+}
+
+// middleware: ensures page exists and injects 'currentPage' in context
+func (app *Application) ensurePageMiddleware(next http.Handler) http.Handler {
+	fn := func(rw http.ResponseWriter, req *http.Request) {
+		currentDBSession := app.getCurrentDBSession(req)
+
+		vars := mux.Vars(req)
+		pageId := vars["page_id"]
+		if pageId == "" {
+			panic("Should have page_id")
+		}
+
+		if currentPage := currentDBSession.FindPage(bson.ObjectIdHex(pageId)); currentPage != nil {
+			context.Set(req, "currentPage", currentPage)
 		} else {
 			http.NotFound(rw, req)
 			return

@@ -104,7 +104,7 @@ func (user *User) MarshalJSON() ([]byte, error) {
 
 // Fetch from database: all sites belonging to user
 func (user *User) FindSites() *SitesList {
-	var result SitesList
+	result := SitesList{}
 
 	// @todo Handle err
 	user.dbSession.SitesCol().Find(bson.M{"user_id": user.Id}).All(&result)
