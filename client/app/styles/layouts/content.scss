@@ -4,16 +4,12 @@
 
 .content-header {
     position: relative;
-    height: $content-header-height;
-    line-height: $content-header-height;
-    padding: 0px 15px;
     border-bottom: $lightbrown 1px solid;
     box-shadow: rgba(0, 0, 0, 0.03) 0 2px 3px;
 }
 
 .content-body {
     position: absolute;
-    top: $content-header-height;
     left: 0px;
     right: 0px;
     bottom: 0px;
@@ -35,14 +31,21 @@
     border-right: $lightbrown 1px solid;
 
     .content-header {
+        height: $content-master-header-height;
+        line-height: $content-master-header-height;
+
         font-size: 1.3rem;
         color: $brown;
         text-transform: uppercase;
 
+        .content-kind-title {
+            margin-left: $content-header-spacing;
+        }
+
         .content-add {
             position: absolute;
             top: 10px;
-            right: 15px;
+            right: $content-header-spacing;
 
             .fa {
                 margin-right: 5px;
@@ -51,6 +54,7 @@
     }
 
     .content-body {
+        top: $content-master-header-height;
         padding: 0;
 
         list-style: none;
@@ -97,7 +101,7 @@
 
             .item-infos {
                 position: absolute;
-                top: 0px;
+                top: 6px;
                 left: $item-active-shadow-width + $cover-size + (2 * $item-padding);
                 right: 0px;
                 bottom: 0px;
@@ -111,10 +115,16 @@
                 font-weight: normal;
 
                 margin: 0 0 0.3em 0;
+
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
 
             .item-meta {
-                // @todo
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
 
             &.active {
@@ -143,83 +153,104 @@
     background: #fff;
 
     .content-header {
-        .content-title {
-            position: absolute;
-            top: 0px;
-            left: 15px;
-            font-size: 1.6em;
-            font-weight: bold;
-        }
-
-        .content-action-button {
-            position: absolute;
-            top: 5px;
-            width: $content-action-button-width;
-            z-index: $content-cover-z-index + 1;
-
-            .fa {
-                margin-right: 5px;
-            }
-        }
-
-        .thumbnail {
-            margin-bottom: 0px;
-
-        }
+        height: $content-details-header-height;
 
         .content-cover {
             position: absolute;
-            left: 44%;
-            bottom: -$img-small-thumbnail-height / 2;
+            top: $content-header-spacing;
+            left: $content-header-spacing;
 
             z-index: $content-cover-z-index;
+
+            .thumbnail {
+                margin-bottom: 0px;
+            }
 
             .no-image {
                 height: $img-small-thumbnail-height;
                 width: $img-small-thumbnail-width;
             }
         }
+
+        .content-fields {
+            position: absolute;
+            top: $content-header-spacing;
+            left: $content-header-spacing + $img-small-thumbnail-width + $content-header-spacing;
+        }
+
+        .content-actions {
+            .content-action-button {
+                position: absolute;
+                top: $content-header-spacing;
+                width: $content-action-button-width;
+                z-index: $content-cover-z-index + 1;
+
+                .fa {
+                    margin-right: 5px;
+                }
+            }
+        }
     }
 
     .content-body {
-        .content-preview {
+        top: $content-details-header-height;
+
+        &.content-preview {
             padding: $content-details-body-padding;
         }
     }
 } // .content-details
 
 //
-// preview content
+// details: show content
 //
-.content-preview {
+.content-show {
     .content-header {
-        .content-title {
-            right: ($content-action-button-width-with-margin * 2 ) + $content-action-button-margin;
-            height: $content-header-height;
-            overflow: hidden;
+        .content-fields {
+            right: ($content-action-button-width-with-margin * 2) + ($content-header-spacing * 3);
+
+            .content-title {
+                font-weight: bold;
+                font-size: 1.6em;
+                line-height: 1.6em;
+                height: 1.6em;
+
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .content-tagline {
+                font-size: 1.3em;
+                line-height: 1.3em;
+                height: 1.3em;
+
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
         }
 
         .content-action-button {
             &.action-edit {
-                right: $content-action-button-margin;
+                right: $content-header-spacing;
             }
 
             &.action-delete {
-                right: $content-action-button-width-with-margin + $content-action-button-margin;
+                right: $content-action-button-width-with-margin + $content-header-spacing;
             }
         }
     }
-} // .content-preview
+} // .content-show
 
 //
-// edit content
+// details: edit content
 //
 .content-edit {
     .content-header {
-        .content-title {
-            right: $content-action-button-width-with-margin + $content-action-button-margin;
+        .content-fields {
+            right: ($content-action-button-width-with-margin + $content-action-view-width) + ($content-header-spacing * 3);
             font-family: monospace;
-            font-size: 2em;
 
             input {
                 width: 100%;
@@ -228,23 +259,32 @@
                 background: transparent;
 
                 // removes the blue box shadow set by bootstrap
-                outline: none;
+                outline: none !important;
                 box-shadow: none;
+            }
+
+            .content-title {
+                font-weight: bold;
+                font-size: 2em;
+            }
+
+            .content-tagline {
+                font-size: 1.5em;
             }
         }
 
         .content-action-button {
             &.action-save {
-                right: $content-action-button-margin;
+                right: $content-header-spacing;
             }
 
             &.action-view {
-                right: $content-action-button-width-with-margin + $content-action-button-margin;
+                right: $content-action-button-width-with-margin + $content-header-spacing;
 
                 font-size: 2em;
                 line-height: 32px;
                 color: #333;
-                width: 35px;
+                width: $content-action-view-width;
 
                 &.disabled {
                     color: #bbb;
@@ -254,39 +294,6 @@
     }
 
     .content-body {
-        .content-fields {
-            position: relative;
-            height: $content-edit-fields-height;
-
-            font-family: monospace;
-
-            padding: 15px;
-
-            border-bottom: $lightbrown 1px solid;
-            box-shadow: rgba(0, 0, 0, 0.03) 0 2px 3px;
-
-            input {
-                width: 100%;
-                border: 0;
-                padding: 0;
-                background: transparent;
-
-                font-size: 1.8em;
-
-                // removes the blue box shadow set by bootstrap
-                outline: none !important;
-                box-shadow: none;
-            }
-        }
-
-        .content-editor {
-            position: absolute;
-            top: $content-edit-fields-height;
-            bottom: 0;
-            left: 0;
-            right: 0;
-        }
-
         .CodeMirror {
             height: auto;
             position: absolute;

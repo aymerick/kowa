@@ -1,7 +1,5 @@
-<section class="content-preview">
+<section class="content-show">
     <header class="content-header">
-        <div class="content-title">{{title}}</div>
-
         <div class="content-cover">
             {{#if cover}}
                 <img {{bind-attr src=cover.smallUrl}} class="thumbnail" alt="cover image" />
@@ -10,12 +8,16 @@
             {{/if}}
         </div>
 
-        {{#link-to "post.edit" this class="btn btn-default content-action-button action-edit"}}<i class="fa fa-pencil"></i> Edit{{/link-to}}
-        <button {{action "openModal" "delete-post" controller 'posts.index'}} class="btn btn-danger content-action-button action-delete">Delete</button>
-    </header>
-    <section class="content-body">
-        <div class="content-preview">
-            {{showdown-addon body}}
+        <div class="content-fields">
+            <div class="content-title">{{title}}</div>
         </div>
+
+        <div class="content-actions">
+            {{#link-to "post.edit" this class="btn btn-default content-action-button action-edit"}}<i class="fa fa-pencil"></i> Edit{{/link-to}}
+            <button {{action "openModal" "delete-post" controller 'posts.index'}} class="btn btn-danger content-action-button action-delete">Delete</button>
+        </div>
+    </header>
+    <section class="content-body content-preview">
+        {{showdown-addon body}}
     </section>
 </section>

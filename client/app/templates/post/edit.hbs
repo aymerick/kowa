@@ -1,9 +1,5 @@
 <section class="content-edit">
     <header class="content-header">
-        <div class="content-title">
-            {{autofocus-input name="post[title]" type="text" placeholder="Post title" value=titleScratch}}
-        </div>
-
         <div class="content-cover">
             {{#if coverScratch}}
                 <button type="button" class="thumbnail select-image small-kind" {{action "openModal" "select-image" controller "coverScratch"}}>
@@ -15,14 +11,20 @@
             {{/if}}
         </div>
 
-        {{#if nothingChanged}}
-            {{#link-to "post" this class="content-action-button action-view"}}<i class="fa fa-eye"></i>{{/link-to}}
-        {{else}}
-            <div class="content-action-button action-view disabled" title="Save to view post"><i class="fa fa-eye-slash"></i></div>
-        {{/if}}
-        <button {{action "savePost"}} class="btn btn-success content-action-button action-save" {{bind-attr disabled=nothingChanged}}><i class="fa fa-floppy-o"></i> Save</button>
+        <div class="content-fields">
+            {{autofocus-input class="content-title" name="post[title]" type="text" placeholder="Post title" value=titleScratch}}
+        </div>
+
+        <div class="content-actions">
+            {{#if nothingChanged}}
+                {{#link-to "post" this class="content-action-button action-view"}}<i class="fa fa-eye"></i>{{/link-to}}
+            {{else}}
+                <div class="content-action-button action-view disabled" title="Save to view post"><i class="fa fa-eye-slash"></i></div>
+            {{/if}}
+            <button {{action "savePost"}} class="btn btn-success content-action-button action-save" {{bind-attr disabled=nothingChanged}}><i class="fa fa-floppy-o"></i> Save</button>
+        </div>
     </header>
-    <section class="content-body">
+    <section class="content-body content-editor">
         {{codemirror-editor value=bodyScratch placeholder="Post body"}}
     </section>
 </section>
