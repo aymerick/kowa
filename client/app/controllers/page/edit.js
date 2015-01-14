@@ -1,6 +1,5 @@
 import Ember from 'ember';
 
-// @todo Refactor that into a ContentEditionController Mixin
 var PageEditController = Ember.ObjectController.extend({
   isDirty: Ember.computed.alias('model.isDirty'),
   nothingChanged: Ember.computed.not('model.isDirty'),

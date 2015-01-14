@@ -1,10 +1,5 @@
 import Ember from 'ember';
 
-// @todo Refactor that into a ContentEditionController Mixin with properties:
-//  - model fields that are editable (eg: ["title, "body"])
-//  - msg to display on save success (eg: "Post saved.")
-//  - msg to display on save error (eg: "Failed to save post.")
-//  - new record properties: (eg: Post.newRecordAttrs())
 var PostEditController = Ember.ObjectController.extend({
   isDirty: Ember.computed.alias('model.isDirty'),
   nothingChanged: Ember.computed.not('model.isDirty'),
