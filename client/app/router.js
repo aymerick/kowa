@@ -38,8 +38,8 @@ Router.map(function() {
       this.resource('settings', function () {
         this.route('general');
 
-        this.resource('settings.actions', {path: '/actions'}, function () {
-            this.route('action', {path: ':action_id'});
+        this.resource('settings.activities', {path: '/activities'}, function () {
+            this.route('activity', {path: ':activity_id'});
         });
 
         this.resource('settings.members', {path: '/members'}, function () {
