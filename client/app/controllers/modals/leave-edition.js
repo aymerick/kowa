@@ -29,9 +29,6 @@ var LeaveEditionModal = Ember.ObjectController.extend({
           model.rollback();
       }
 
-      // reset edition
-      masterController.setupEdition();
-
       haltedTransition.retry();
     }
   }

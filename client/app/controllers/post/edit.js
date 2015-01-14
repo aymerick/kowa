@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import Post from 'kowa/models/post';
 
 // @todo Refactor that into a ContentEditionController Mixin with properties:
 //  - model fields that are editable (eg: ["title, "body"])
@@ -7,23 +6,8 @@ import Post from 'kowa/models/post';
 //  - msg to display on save error (eg: "Failed to save post.")
 //  - new record properties: (eg: Post.newRecordAttrs())
 var PostEditController = Ember.ObjectController.extend({
-  isDirty: function() {
-    var model = this.get('model');
-    return ((model.get('isNew')) ||
-            (model.get('title') !== this.get('titleScratch')) ||
-            (model.get('body')  !== this.get('bodyScratch')) ||
-            (model.get('cover') !== this.get('coverScratch')));
-  }.property('titleScratch', 'bodyScratch', 'coverScratch', 'model.title', 'model.body', 'model.cover', 'model.isNew'),
-
-  nothingChanged: Ember.computed.not('isDirty'),
-
-  setupEdition: function() {
-    var model = this.get('model');
-
-    this.set('titleScratch', model.get('title'));
-    this.set('bodyScratch', model.get('body'));
-    this.set('coverScratch', model.get('cover'));
-  },
+  isDirty: Ember.computed.alias('model.isDirty'),
+  nothingChanged: Ember.computed.not('model.isDirty'),
 
   actions: {
     // called by 'select-image' modal controller
@@ -32,7 +16,7 @@ var PostEditController = Ember.ObjectController.extend({
     },
 
     removeCover: function() {
-      this.set('coverScratch', null);
+      this.get('model').set('cover', null);
     },
 
     savePost: function() {
@@ -42,15 +26,10 @@ var PostEditController = Ember.ObjectController.extend({
       }
 
       // set a default title
-      if (!this.get('titleScratch')) {
-          this.set('titleScratch', '(Untitled)');
-      }
-
-      // update model
       var model = this.get('model');
-      model.set('title', this.get('titleScratch'));
-      model.set('body', this.get('bodyScratch'));
-      model.set('cover', this.get('coverScratch'));
+      if (!model.get('title')) {
+          model.set('title', '(Untitled)');
+      }
 
       // persist on server
       var self = this;
@@ -60,14 +39,6 @@ var PostEditController = Ember.ObjectController.extend({
         return postSaved;
       }).catch(function () {
         self.get('flashes').danger('Failed to save post.');
-
-        // rollback model
-        if (model.get('isNew')) {
-          model.setProperties(Post.newRecordAttrs());
-        }
-        else {
-          model.rollback();
-        }
       });
     }
   }

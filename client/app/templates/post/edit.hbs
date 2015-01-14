@@ -1,18 +1,18 @@
 <section class="content-edit">
     <header class="content-header">
         <div class="content-cover">
-            {{#if coverScratch}}
-                <button type="button" class="thumbnail select-image small-kind" {{action "openModal" "select-image" controller "coverScratch"}}>
-                    <img {{bind-attr src=coverScratch.smallUrl}} alt="cover image" />
+            {{#if model.cover}}
+                <button type="button" class="thumbnail select-image small-kind" {{action "openModal" "select-image" controller "model.cover"}}>
+                    <img {{bind-attr src=model.cover.smallUrl}} alt="cover image" />
                     <span class="remove-image" {{action 'removeCover'}}>&#10006;</span>
                 </button>
             {{else}}
-                <button type="button" class="btn btn-default select-image small-kind no-image" {{action "openModal" "select-image" controller "coverScratch"}}>Select Cover</button>
+                <button type="button" class="btn btn-default select-image small-kind no-image" {{action "openModal" "select-image" controller "model.cover"}}>Select Cover</button>
             {{/if}}
         </div>
 
         <div class="content-fields">
-            {{autofocus-input class="content-title" name="post[title]" type="text" placeholder="Post title" value=titleScratch}}
+            {{autofocus-input class="content-title" name="post[title]" type="text" placeholder="Post title" value=model.title}}
         </div>
 
         <div class="content-actions">
@@ -25,6 +25,6 @@
         </div>
     </header>
     <section class="content-body content-editor">
-        {{codemirror-editor value=bodyScratch placeholder="Post body"}}
+        {{codemirror-editor value=model.body placeholder="Post body"}}
     </section>
 </section>
