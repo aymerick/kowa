@@ -23,9 +23,9 @@ Router.map(function() {
         });
       });
 
-      this.resource('events', function () {
-        this.route('event', {path: ':event_id'});
-      });
+      // this.resource('events', function () {
+      //   this.route('event', {path: ':event_id'});
+      // });
 
       this.resource('pages', function () {
         this.route('new');
