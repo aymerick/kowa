@@ -4,8 +4,8 @@
 
 .content-header {
     position: relative;
-    border-bottom: $lightbrown 1px solid;
-    box-shadow: rgba(0, 0, 0, 0.03) 0 2px 3px;
+    border-bottom: $blue-light 1px solid;
+    box-shadow: lighten($blue-light, 2%) 0 2px 3px;
 }
 
 .content-body {
@@ -28,14 +28,14 @@
     left: 0;
 
     background: #fff;
-    border-right: $lightbrown 1px solid;
+    border-right: $blue-light 1px solid;
 
     .content-header {
         height: $content-master-header-height;
         line-height: $content-master-header-height;
 
         font-size: 1.3rem;
-        color: $brown;
+        color: $blue;
         text-transform: uppercase;
 
         .content-kind-title {
@@ -70,7 +70,7 @@
             margin: 0;
             padding: 0;
 
-            border-bottom: $lightbrown 1px solid;
+            border-bottom: $blue-light 1px solid;
 
             white-space: nowrap;
             overflow: hidden;
@@ -129,7 +129,7 @@
 
             &.active {
                 border-bottom: lighten($midgrey, 40%) 1px solid;
-                background: lighten($lightbrown, 5%);
+                background: lighten($blue-light, 2%);
                 box-shadow: lighten($midgrey, 40%) 0 -1px 0, // top border
                             rgba(0,0,0,0.06) $item-active-shadow-width 0 0 inset, // big left border
                             lighten($midgrey, 40%) 1px 0 0 inset; // small left border
@@ -322,13 +322,13 @@
             .CodeMirror-focused,
             .CodeMirror-selected {
                 color: $darkgrey;
-                background: lighten($blue, 20%);
+                background: lighten($blue, 50%);
                 text-shadow: none;
             }
 
             ::selection {
                 color: $darkgrey;
-                background: lighten($blue, 20%);
+                background: lighten($blue, 50%);
                 text-shadow: none;
             }
         }
