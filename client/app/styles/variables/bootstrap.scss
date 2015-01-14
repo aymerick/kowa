@@ -6,8 +6,10 @@
 
 $navbar-height: 60px !default;
 $body-bg: #f9f9f9 !default;
-$navbar-inverse-link-hover-bg: #0e0f10;
-// $font-family-sans-serif: 'Open Sans', sans-serif;
+
+$navbar-inverse-bg: $blue-abisso !default;
+$navbar-inverse-link-hover-bg: $blue-abissodark !default;
+$navbar-inverse-link-active-bg: $blue-abissodark !default;
 
 // Alternative: import individual bootstrap components from "bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/*""
 @import "bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap";
