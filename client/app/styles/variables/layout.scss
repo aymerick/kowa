@@ -1,0 +1,19 @@
+//
+// Layout Vars
+//
+
+$content-header-spacing: 15px;
+
+$content-master-header-height: 44px;
+
+$content-details-header-height: $img-small-thumbnail-height + ($content-header-spacing * 2);
+$content-details-body-padding: 5%;
+
+$content-cover-z-index: 3;
+
+$content-action-button-width: 85px;
+$content-action-button-width-with-margin: $content-action-button-width + $content-header-spacing;
+
+$content-action-view-width: 35px;
+
+$content-edit-fields-height: 70px;

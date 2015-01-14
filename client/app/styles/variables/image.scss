@@ -1,0 +1,13 @@
+//
+// Image Vars
+//
+
+// keep that in sync with SMALL_HEIGHT constant on server
+$img-small-height: 60px;
+
+// keep that in sync with SMALL_WIDTH constant on server
+$img-small-width: 100px;
+
+// small image with bootstrap class 'thumbnail'
+$img-small-thumbnail-height: ($img-small-height + ($thumbnail-padding + 1px) * 2);
+$img-small-thumbnail-width: ($img-small-width + ($thumbnail-padding + 1px) * 2);

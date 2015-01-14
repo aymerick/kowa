@@ -1,6 +1,9 @@
-@import "bootstrap";
-
-@import "variables";
+// Variables
+@import "variables/color";
+@import "variables/bootstrap";
+@import "variables/image";
+@import "variables/responsive";
+@import "variables/layout";
 
 // Patterns
 @import "patterns/forms";
