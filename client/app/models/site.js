@@ -17,7 +17,7 @@ var Site = DS.Model.extend({
   posts: DS.hasMany('post', { async: true }),
   // events: DS.hasMany('event', { async: true }),
   // pages: DS.hasMany('page', { async: true }),
-  // actions: DS.hasMany('action', { async: true }),
+  // activities: DS.hasMany('activity', { async: true }),
   images: DS.hasMany('image', { inverse: 'site', async: true }),
 
   pageSettings: DS.hasMany('sitePageSetting')

@@ -51,7 +51,7 @@ func Run() {
 	apiRouter.Methods("GET").Path("/sites/{site_id}/posts").Handler(curSiteOwnerChain.ThenFunc(app.handleGetPosts))
 	apiRouter.Methods("GET").Path("/sites/{site_id}/events").Handler(curSiteOwnerChain.ThenFunc(app.handleGetEvents))
 	apiRouter.Methods("GET").Path("/sites/{site_id}/pages").Handler(curSiteOwnerChain.ThenFunc(app.handleGetPages))
-	apiRouter.Methods("GET").Path("/sites/{site_id}/actions").Handler(curSiteOwnerChain.ThenFunc(app.handleGetActions))
+	apiRouter.Methods("GET").Path("/sites/{site_id}/activities").Handler(curSiteOwnerChain.ThenFunc(app.handleGetActivities))
 	apiRouter.Methods("GET").Path("/sites/{site_id}/images").Handler(curSiteOwnerChain.ThenFunc(app.handleGetImages))
 
 	// /api/posts?site={site_id}
@@ -71,8 +71,8 @@ func Run() {
 	apiRouter.Methods("PUT").Path("/pages/{page_id}").Handler(curPageOwnerChain.ThenFunc(app.handleUpdatePage))
 	apiRouter.Methods("DELETE").Path("/pages/{page_id}").Handler(curPageOwnerChain.ThenFunc(app.handleDeletePage))
 
-	// /api/actions?site={site_id}
-	apiRouter.Methods("GET").Path("/actions").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetActions))
+	// /api/activities?site={site_id}
+	apiRouter.Methods("GET").Path("/activities").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetActivities))
 
 	// /api/images?site={site_id}
 	apiRouter.Methods("GET").Path("/images").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetImages))

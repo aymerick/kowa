@@ -257,5 +257,5 @@ func bootstrap(cmd *cobra.Command, args []string) {
 	}
 	db.PagesCol().Insert(&page)
 
-	// @todo Insert actions
+	// @todo Insert activities
 }

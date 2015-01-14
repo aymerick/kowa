@@ -8,10 +8,10 @@ import (
 )
 
 const (
-	ACTIONS_COL_NAME = "actions"
+	ACTIVITIES_COL_NAME = "activities"
 )
 
-type Action struct {
+type Activity struct {
 	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
@@ -22,32 +22,32 @@ type Action struct {
 	// @todo Photos List
 }
 
-type ActionsList []*Action
+type ActivitiesList []*Activity
 
 //
 // DBSession
 //
 
-// Actions collection
-func (session *DBSession) ActionsCol() *mgo.Collection {
-	return session.DB().C(ACTIONS_COL_NAME)
+// Activities collection
+func (session *DBSession) ActivitiesCol() *mgo.Collection {
+	return session.DB().C(ACTIVITIES_COL_NAME)
 }
 
-// Ensure indexes on Actions collection
-func (session *DBSession) EnsureActionsIndexes() {
+// Ensure indexes on Activities collection
+func (session *DBSession) EnsureActivitiesIndexes() {
 	index := mgo.Index{
 		Key:        []string{"site_id"},
 		Background: true,
 	}
 
-	err := session.ActionsCol().EnsureIndex(index)
+	err := session.ActivitiesCol().EnsureIndex(index)
 	if err != nil {
 		panic(err)
 	}
 }
 
 //
-// Action
+// Activity
 //
 
 // @todo

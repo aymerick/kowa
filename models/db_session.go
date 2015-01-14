@@ -78,7 +78,7 @@ func (session *DBSession) EnsureIndexes() {
 	session.EnsurePostsIndexes()
 	session.EnsureEventsIndexes()
 	session.EnsurePagesIndexes()
-	session.EnsureActionsIndexes()
+	session.EnsureActivitiesIndexes()
 }
 
 // returns a database handler

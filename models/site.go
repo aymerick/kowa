@@ -15,7 +15,7 @@ const (
 
 type SitePageSettings struct {
 	Id      string `bson:"_id,omitempty" json:"id"`
-	Kind    string `bson:"kind"    json:"kind"` // 'contact' || 'actions' || 'posts' || 'events' || 'staff'
+	Kind    string `bson:"kind"    json:"kind"` // 'contact' || 'activities' || 'posts' || 'events' || 'staff'
 	Title   string `bson:"title"   json:"title"`
 	Tagline string `bson:"tagline" json:"tagline"`
 	// @todo Photo
@@ -97,11 +97,11 @@ func (site *Site) MarshalJSON() ([]byte, error) {
 	// inject 'links' needed by Ember Data
 	// @todo Remove that ?
 	links := map[string]interface{}{
-		"posts":   fmt.Sprintf("/api/sites/%s/posts", site.Id),
-		"events":  fmt.Sprintf("/api/sites/%s/events", site.Id),
-		"pages":   fmt.Sprintf("/api/sites/%s/pages", site.Id),
-		"actions": fmt.Sprintf("/api/sites/%s/actions", site.Id),
-		"images":  fmt.Sprintf("/api/sites/%s/images", site.Id),
+		"posts":      fmt.Sprintf("/api/sites/%s/posts", site.Id),
+		"events":     fmt.Sprintf("/api/sites/%s/events", site.Id),
+		"pages":      fmt.Sprintf("/api/sites/%s/pages", site.Id),
+		"activities": fmt.Sprintf("/api/sites/%s/activities", site.Id),
+		"images":     fmt.Sprintf("/api/sites/%s/images", site.Id),
 	}
 
 	siteJson := SiteJson{
@@ -205,11 +205,11 @@ func (site *Site) FindPages(skip int, limit int) *PagesList {
 	return &result
 }
 
-// Fetch from database: all actions belonging to site
-func (site *Site) FindActions() *ActionsList {
-	result := ActionsList{}
+// Fetch from database: all activities belonging to site
+func (site *Site) FindActivities() *ActivitiesList {
+	result := ActivitiesList{}
 
-	if err := site.dbSession.ActionsCol().Find(bson.M{"site_id": site.Id}).All(&result); err != nil {
+	if err := site.dbSession.ActivitiesCol().Find(bson.M{"site_id": site.Id}).All(&result); err != nil {
 		panic(err)
 	}
 
@@ -315,7 +315,7 @@ func (site *Site) RemoveImageReferences(image *Image) error {
 		return err
 	}
 
-	// @todo remove image references from actions / events / members / pages
+	// @todo remove image references from activities / events / members / pages
 
 	return nil
 }
