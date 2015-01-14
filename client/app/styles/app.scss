@@ -1,35 +1,17 @@
 @import "bootstrap";
 
-//
-// SCSS organisation borrowed from ghost:
-// https://github.com/TryGhost/Ghost/blob/master/core/client/assets/sass/screen.scss
-//
+@import "variables";
 
-//
-// Modules: Mixins, variables, and utilities
-//
-@import "modules/variables";
-
-//
-// Libraries: Code by others
-//
-
-//
-// Patterns: Groups of Styles
-//
+// Patterns
 @import "patterns/forms";
 
-//
-// Components: Groups of Patterns
-//
+// Components
 @import "components/navigation";
 @import "components/notifications";
 @import "components/modals";
 @import "components/images";
 
-//
-// Layouts: Groups of Components
-//
+// Layouts
 @import "layouts/main";
 @import "layouts/auth";
 @import "layouts/content";
