@@ -42,9 +42,9 @@ Router.map(function() {
             this.route('activity', {path: ':activity_id'});
         });
 
-        this.resource('settings.members', {path: '/members'}, function () {
-            this.route('member', {path: ':member_id'});
-        });
+        // this.resource('settings.members', {path: '/members'}, function () {
+        //     this.route('member', {path: ':member_id'});
+        // });
 
         this.route('images');
       });
