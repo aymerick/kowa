@@ -1,36 +1,8 @@
 import Ember from 'ember';
+import ContentEditionController from 'kowa/mixins/content-edition-controller';
 
-var PageEditController = Ember.ObjectController.extend({
-  previousCover: null,
-
-  isDirty: function() {
-    var model = this.get('model');
-
-    return (model.get('isDirty') || model.get('isNew') ||
-            (model.get('cover') !== this.get('previousCover')));
-  }.property('model.isDirty', 'model.isNew', 'model.cover', 'previousCover'),
-
-  nothingChanged: Ember.computed.not('isDirty'),
-
-  setupEdition: function() {
-    var model = this.get('model');
-
-    // cf. https://github.com/emberjs/data/issues/1308
-    this.set('previousCover', model.get('cover'));
-  },
-
-  rollbackEdition: function() {
-    var model = this.get('model');
-
-    if (model.get('isNew')) {
-        model.deleteRecord();
-    } else {
-        // cf. https://github.com/emberjs/data/issues/1308
-        model.set('cover', this.get('previousCover'));
-
-        model.rollback();
-    }
-  },
+var PageEditController = Ember.ObjectController.extend(ContentEditionController, {
+  editionFields: Ember.A([ 'cover' ]),
 
   actions: {
     // called by 'select-image' modal controller
@@ -43,28 +15,14 @@ var PageEditController = Ember.ObjectController.extend({
     },
 
     savePage: function() {
-      if (!this.get('isDirty')) {
-        // This should never happen
-        return;
-      }
-
       // set a default title
       var model = this.get('model');
       if (!model.get('title')) {
           model.set('title', '(Untitled)');
       }
 
-      // persist on server
-      var self = this;
-      model.save().then(function (pageSaved) {
-        self.get('flashes').success('Page saved.');
-
-        self.set('previousCover', model.get('cover'));
-
-        return pageSaved;
-      }).catch(function () {
-        self.get('flashes').danger('Failed to save page.');
-      });
+      // save
+      this.commitEdition('Page saved.', 'Failed to save page.');
     }
   }
 });
