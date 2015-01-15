@@ -27,7 +27,6 @@ var PageEditController = Ember.ObjectController.extend({
     } else {
         // cf. https://github.com/emberjs/data/issues/1308
         model.set('cover', this.get('previousCover'));
-        this.set('previousCover', null);
 
         model.rollback();
     }
