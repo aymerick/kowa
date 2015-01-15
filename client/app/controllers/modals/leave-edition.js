@@ -23,11 +23,7 @@ var LeaveEditionModal = Ember.ObjectController.extend({
           return true;
       }
 
-      if (model.get('isNew')) {
-          model.deleteRecord();
-      } else {
-          model.rollback();
-      }
+      masterController.rollbackEdition();
 
       haltedTransition.retry();
     }

@@ -1,6 +1,13 @@
 import Ember from 'ember';
 
 var ContentEditionRoute = Ember.Mixin.create({
+  setupController: function (controller, model) {
+    this._super(controller, model);
+
+    // setup edition
+    controller.setupEdition();
+  },
+
   actions: {
     willTransition: function (transition) {
       var controller = this.get('controller');
