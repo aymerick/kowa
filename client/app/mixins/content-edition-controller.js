@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
-// cf. https://github.com/emberjs/data/issues/1308
+// All that mess simply because of that issue:
+//  https://github.com/emberjs/data/issues/1308
 var ContentEditionController = Ember.Mixin.create({
   editionFields: Ember.A([ ]),
 
@@ -17,7 +18,8 @@ var ContentEditionController = Ember.Mixin.create({
       self.set(self.previousFieldName(field), model.get(field));
     });
 
-    this.defineDirtyProperties();
+    this.defineIsDirtyProperty();
+    this.defineNothingChangedProperty();
   },
 
   commitEdition: function(okMsg, errorMsg) {
@@ -77,7 +79,13 @@ var ContentEditionController = Ember.Mixin.create({
     });
   },
 
-  defineDirtyProperties: function() {
+  // define isDirty property
+  defineIsDirtyProperty: function() {
+    // check if property was already defined
+    if (this.hasOwnProperty('isDirty')) {
+      return;
+    }
+
     var self = this;
 
     var watchProperties = Ember.A([ 'model.isDirty', 'model.isNew' ]);
@@ -87,7 +95,6 @@ var ContentEditionController = Ember.Mixin.create({
       watchProperties.pushObject(self.previousFieldName(field));
     });
 
-    // isDirty property
     var prop = Ember.computed(function() {
       var model = self.get('model');
 
@@ -99,6 +106,14 @@ var ContentEditionController = Ember.Mixin.create({
     prop = Ember.apply(prop, Ember.ComputedProperty.prototype.property, watchProperties);
 
     Ember.defineProperty(this, 'isDirty', prop);
+  },
+
+  // define nothingChanged property
+  defineNothingChangedProperty: function() {
+    // check if property was already defined
+    if (this.hasOwnProperty('nothingChanged')) {
+      return;
+    }
 
     // nothingChanged property
     Ember.defineProperty(this, 'nothingChanged', Ember.computed.not('isDirty'));
