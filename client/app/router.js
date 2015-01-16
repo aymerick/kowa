@@ -39,6 +39,7 @@ Router.map(function() {
         this.route('general');
 
         this.resource('settings.activities', {path: '/activities'}, function () {
+            this.route('new');
             this.route('activity', {path: ':activity_id'});
         });
 

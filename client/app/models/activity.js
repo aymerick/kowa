@@ -12,4 +12,17 @@ var Activity = DS.Model.extend({
   site: DS.belongsTo('site', { async: true })
 });
 
+Activity.reopenClass({
+  newRecordAttrs: function(moreAttrs) {
+    var now = new Date();
+
+    return Ember.merge({
+      createdAt: now,
+      updatedAt: now,
+      title: "",
+      body: ""
+    }, moreAttrs || { });
+  }
+});
+
 export default Activity;
