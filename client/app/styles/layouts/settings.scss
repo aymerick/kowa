@@ -130,6 +130,10 @@
 
     .action-save, .action-add {
         float: right;
+
+        .fa-plus {
+            margin-right: 5px;
+        }
     }
 }
 
