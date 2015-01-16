@@ -1,13 +1,15 @@
+import Ember from 'ember';
 import AuthenticatedRoute from 'kowa/routes/authenticated';
 
 var SettingsActivitiesIndexRoute = AuthenticatedRoute.extend({
-  // redirects /:site_id/settings/activities to /:site_id/settings/activities/:activity_id
-  beforeModel: function () {
-    var activities = this.modelFor('settings.activities');
-    var firstActivity = activities.get('firstObject');
-    if (firstActivity) {
-      this.transitionTo('settings.activities.activity', firstActivity);
-    }
+  model: function() {
+    var site = this.modelFor('site');
+
+    // using filter() allows the template to auto-update when new models are pulled in from the server
+    return this.store.filter('activity', { 'site': site.get('id') }, function () {
+      // nothing to filter
+      return true;
+    });
   }
 });
 

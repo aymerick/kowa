@@ -1,0 +1,12 @@
+<header class="settings-view-header">
+    <h2>Activities</h2>
+</header>
+<section>
+    <ol>
+        {{#each activity in controller itemView="list-item-view" itemTagName="li"}}
+            {{#link-to "settings.activities.activity" activity title="Display this activity"}}
+                {{activity.title}}
+            {{/link-to}}
+        {{/each}}
+    </ol>
+<section>
