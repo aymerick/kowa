@@ -18,3 +18,7 @@ $content-action-button-width-with-margin: $content-action-button-width + $conten
 $content-action-view-width: 35px;
 
 $content-edit-fields-height: 70px;
+
+// Settings
+$settings-item-spacing: 15px;
+$settings-item-height: $img-small-thumbnail-height + ($settings-item-spacing * 2);

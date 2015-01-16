@@ -1,8 +1,10 @@
-<header class="settings-view-header">
-    <h2>General</h2>
+<header class="settings-header">
+    <h2 class="settings-item-title">General</h2>
+
+    <button class="btn btn-primary action-save" {{action "save"}}>Save</button>
 </header>
 
-<form id="settings-general" role="form" {{action 'save' on='submit'}}>
+<form class="settings-body" role="form" {{action 'save' on='submit'}}>
     <div class="form-group">
         <label for="site-name">Site Name</label>
         {{input id="site-name" name="general[name]" type="text" class="form-control" value=name}}
@@ -41,10 +43,6 @@
         <p>
             Explain to visitors why then should become a member of your site
         </p>
-    </div>
-
-    <div class="form-group text-center">
-        <button type="button" class="btn btn-primary btn-lg settings-save" {{action "save"}}>Save</button>
     </div>
 
     <div class="form-group">

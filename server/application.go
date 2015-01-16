@@ -78,6 +78,13 @@ func (app *Application) getCurrentPage(req *http.Request) *models.Page {
 	return nil
 }
 
+func (app *Application) getCurrentActivity(req *http.Request) *models.Activity {
+	if currentActivity := context.Get(req, "currentActivity"); currentActivity != nil {
+		return currentActivity.(*models.Activity)
+	}
+	return nil
+}
+
 func (app *Application) getCurrentImage(req *http.Request) *models.Image {
 	if currentImage := context.Get(req, "currentImage"); currentImage != nil {
 		return currentImage.(*models.Image)

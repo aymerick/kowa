@@ -1,11 +1,16 @@
 package server
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
 	"github.com/aymerick/kowa/models"
 )
+
+type activityJson struct {
+	Activity models.Activity `json:"activity"`
+}
 
 // GET /activities?site={site_id}
 // GET /sites/{site_id}/activities
@@ -35,6 +40,103 @@ func (app *Application) handleGetActivities(rw http.ResponseWriter, req *http.Re
 		}
 
 		app.render.JSON(rw, http.StatusOK, renderMap{"activities": activities, "meta": pagination, "images": images})
+	} else {
+		http.NotFound(rw, req)
+	}
+}
+
+// POST /activities
+func (app *Application) handlePostActivities(rw http.ResponseWriter, req *http.Request) {
+	log.Printf("[handler]: handlePostActivities\n")
+
+	currentDBSession := app.getCurrentDBSession(req)
+
+	var reqJson activityJson
+
+	if err := json.NewDecoder(req.Body).Decode(&reqJson); err != nil {
+		log.Printf("ERROR: %v", err)
+		http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
+		return
+	}
+
+	activity := &reqJson.Activity
+
+	if activity.SiteId == "" {
+		http.Error(rw, "Missing site field in activity record", http.StatusBadRequest)
+		return
+	}
+
+	site := currentDBSession.FindSite(activity.SiteId)
+	if site == nil {
+		http.Error(rw, "Site not found", http.StatusBadRequest)
+		return
+	}
+
+	currentUser := app.getCurrentUser(req)
+	if site.UserId != currentUser.Id {
+		unauthorized(rw)
+		return
+	}
+
+	if err := currentDBSession.CreateActivity(activity); err != nil {
+		log.Printf("ERROR: %v", err)
+		http.Error(rw, "Failed to create activity", http.StatusInternalServerError)
+		return
+	}
+
+	app.render.JSON(rw, http.StatusCreated, renderMap{"activity": activity})
+}
+
+// GET /activities/{activity_id}
+func (app *Application) handleGetActivity(rw http.ResponseWriter, req *http.Request) {
+	log.Printf("[handler]: handleGetActivity\n")
+
+	activity := app.getCurrentActivity(req)
+	if activity != nil {
+		app.render.JSON(rw, http.StatusOK, renderMap{"activity": activity})
+	} else {
+		http.NotFound(rw, req)
+	}
+}
+
+// PUT /activities/{activity_id}
+func (app *Application) handleUpdateActivity(rw http.ResponseWriter, req *http.Request) {
+	log.Printf("[handler]: handleUpdateActivity\n")
+
+	activity := app.getCurrentActivity(req)
+	if activity != nil {
+		var reqJson activityJson
+
+		if err := json.NewDecoder(req.Body).Decode(&reqJson); err != nil {
+			log.Printf("ERROR: %v", err)
+			http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
+			return
+		}
+
+		if err := activity.Update(&reqJson.Activity); err != nil {
+			log.Printf("ERROR: %v", err)
+			http.Error(rw, "Failed to update activity", http.StatusInternalServerError)
+			return
+		}
+
+		app.render.JSON(rw, http.StatusOK, renderMap{"activity": activity})
+	} else {
+		http.NotFound(rw, req)
+	}
+}
+
+// DELETE /activities/{activity_id}
+func (app *Application) handleDeleteActivity(rw http.ResponseWriter, req *http.Request) {
+	log.Printf("[handler]: handleDeleteActivity\n")
+
+	activity := app.getCurrentActivity(req)
+	if activity != nil {
+		if err := activity.Delete(); err != nil {
+			http.Error(rw, "Failed to delete activity", http.StatusInternalServerError)
+		} else {
+			// returns deleted activity
+			app.render.JSON(rw, http.StatusOK, renderMap{"activity": activity})
+		}
 	} else {
 		http.NotFound(rw, req)
 	}

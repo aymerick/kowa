@@ -1,12 +1,23 @@
-<header class="settings-view-header">
+<header class="settings-header">
     <h2>Activities</h2>
 </header>
-<section>
-    <ol>
-        {{#each activity in controller itemView="list-item-view" itemTagName="li"}}
-            {{#link-to "settings.activities.activity" activity title="Display this activity"}}
-                {{activity.title}}
+
+<section class="settings-body">
+    <div class="settings-list">
+        {{#each activity in controller}}
+            {{#link-to "settings.activities.activity" activity class="settings-item" title="Display this activity"}}
+                <div class="settings-item-cover">
+                    {{#if activity.cover}}
+                        <img {{bind-attr src=activity.cover.smallUrl}} class="thumbnail" alt="cover image" />
+                    {{else}}
+                        <div class="thumbnail no-image text-center"></div>
+                    {{/if}}
+                </div>
+
+                <div class="settings-item-fields">
+                    <div class="settings-item-title">{{activity.title}}</div>
+                </div>
             {{/link-to}}
         {{/each}}
-    </ol>
+    </div>
 <section>

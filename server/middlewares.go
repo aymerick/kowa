@@ -171,6 +171,14 @@ func (app *Application) ensureSiteMiddleware(next http.Handler) http.Handler {
 			}
 		}
 
+		// page
+		if currentSite == nil {
+			currentActivity := app.getCurrentActivity(req)
+			if currentActivity != nil {
+				currentSite = currentActivity.FindSite()
+			}
+		}
+
 		// image
 		if currentSite == nil {
 			currentImage := app.getCurrentImage(req)
@@ -256,6 +264,30 @@ func (app *Application) ensurePageMiddleware(next http.Handler) http.Handler {
 
 		if currentPage := currentDBSession.FindPage(bson.ObjectIdHex(pageId)); currentPage != nil {
 			context.Set(req, "currentPage", currentPage)
+		} else {
+			http.NotFound(rw, req)
+			return
+		}
+
+		next.ServeHTTP(rw, req)
+	}
+
+	return http.HandlerFunc(fn)
+}
+
+// middleware: ensures activity exists and injects 'currentActivity' in context
+func (app *Application) ensureActivityMiddleware(next http.Handler) http.Handler {
+	fn := func(rw http.ResponseWriter, req *http.Request) {
+		currentDBSession := app.getCurrentDBSession(req)
+
+		vars := mux.Vars(req)
+		activityId := vars["activity_id"]
+		if activityId == "" {
+			panic("Should have activity_id")
+		}
+
+		if currentActivity := currentDBSession.FindActivity(bson.ObjectIdHex(activityId)); currentActivity != nil {
+			context.Set(req, "currentActivity", currentActivity)
 		} else {
 			http.NotFound(rw, req)
 			return

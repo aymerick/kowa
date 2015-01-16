@@ -51,9 +51,51 @@ func (session *DBSession) EnsureActivitiesIndexes() {
 	}
 }
 
+// Find activity by id
+func (session *DBSession) FindActivity(activityId bson.ObjectId) *Activity {
+	var result Activity
+
+	if err := session.ActivitiesCol().FindId(activityId).One(&result); err != nil {
+		return nil
+	}
+
+	result.dbSession = session
+
+	return &result
+}
+
+// Persists a new activity in database
+// Side effect: 'Id', 'CreatedAt' and 'UpdatedAt' fields are set on activity record
+func (session *DBSession) CreateActivity(activity *Activity) error {
+	activity.Id = bson.NewObjectId()
+
+	now := time.Now()
+	activity.CreatedAt = now
+	activity.UpdatedAt = now
+
+	if err := session.ActivitiesCol().Insert(activity); err != nil {
+		return err
+	}
+
+	activity.dbSession = session
+
+	return nil
+}
+
+// Remove all references to given image from all activities
+func (session *DBSession) RemoveImageReferencesFromActivities(image *Image) error {
+	// @todo
+	return nil
+}
+
 //
 // Activity
 //
+
+// Fetch from database: site that activity belongs to
+func (activity *Activity) FindSite() *Site {
+	return activity.dbSession.FindSite(activity.SiteId)
+}
 
 // Fetch Cover from database
 func (activity *Activity) FindCover() *Image {
@@ -70,4 +112,68 @@ func (activity *Activity) FindCover() *Image {
 	}
 
 	return nil
+}
+
+// Delete activity from database
+func (activity *Activity) Delete() error {
+	var err error
+
+	// delete from database
+	if err = activity.dbSession.ActivitiesCol().RemoveId(activity.Id); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Update activity in database
+func (activity *Activity) Update(newActivity *Activity) error {
+	var set, unset, modifier bson.D
+
+	if activity.Title != newActivity.Title {
+		activity.Title = newActivity.Title
+
+		if activity.Title == "" {
+			unset = append(unset, bson.DocElem{"title", 1})
+		} else {
+			set = append(set, bson.DocElem{"title", activity.Title})
+		}
+	}
+
+	if activity.Body != newActivity.Body {
+		activity.Body = newActivity.Body
+
+		if activity.Body == "" {
+			unset = append(unset, bson.DocElem{"body", 1})
+		} else {
+			set = append(set, bson.DocElem{"body", activity.Body})
+		}
+	}
+
+	if activity.Cover != newActivity.Cover {
+		activity.Cover = newActivity.Cover
+
+		if activity.Cover == "" {
+			unset = append(unset, bson.DocElem{"cover", 1})
+		} else {
+			set = append(set, bson.DocElem{"cover", activity.Cover})
+		}
+	}
+
+	if len(unset) > 0 {
+		modifier = append(modifier, bson.DocElem{"$unset", unset})
+	}
+
+	if len(set) > 0 {
+		modifier = append(modifier, bson.DocElem{"$set", set})
+	}
+
+	if len(modifier) > 0 {
+		activity.UpdatedAt = time.Now()
+		set = append(set, bson.DocElem{"updated_at", activity.UpdatedAt})
+
+		return activity.dbSession.ActivitiesCol().UpdateId(activity.Id, modifier)
+	} else {
+		return nil
+	}
 }

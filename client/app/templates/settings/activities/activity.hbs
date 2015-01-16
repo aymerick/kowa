@@ -1,0 +1,40 @@
+<header class="settings-header settings-item-show">
+    {{#link-to "settings.activities.index" class="btn btn-default action-back"}}<i class="fa fa-angle-left"></i> Activities{{/link-to}}
+
+    <h2 class="settings-item-title">{{model.title}}</h2>
+
+    <button class="btn btn-primary action-save" {{action "save"}}>Save</button>
+</header>
+
+<form class="settings-body" id="settings-activity" role="form" {{action 'save' on='submit'}}>
+    <div class="form-group">
+        <label for="activity-title">Activity Name</label>
+        {{input id="activity-title" name="activity[title]" type="text" class="form-control" value=model.title}}
+        <p>
+            A title for this activity
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="activity-body">Activity Description</label>
+        {{textarea rows=10 id="activity-body" name="activity[body]" class="form-control" value=model.body}}
+        <p>
+            Describe what this activity is about
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="activity-cover">Activity Cover</label>
+        {{#if model.cover}}
+            <button type="button" class="thumbnail select-image" {{action "openModal" "select-image" controller "cover"}}>
+                <img id="activity-cover" {{bind-attr src=cover.mediumUrl}} alt="cover">
+                <span class="remove-image" {{action 'removeCover'}}>&#10006;</span>
+            </button>
+        {{else}}
+            <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "cover"}}>Choose Image</button>
+        {{/if}}
+        <p>
+            Set a cover image for this activity
+        </p>
+    </div>
+</form>

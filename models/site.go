@@ -342,7 +342,12 @@ func (site *Site) RemoveImageReferences(image *Image) error {
 		return err
 	}
 
-	// @todo remove image references from activities / events / members / pages
+	// remove image references from activities
+	if err := site.dbSession.RemoveImageReferencesFromActivities(image); err != nil {
+		return err
+	}
+
+	// @todo remove image references from events / members
 
 	return nil
 }

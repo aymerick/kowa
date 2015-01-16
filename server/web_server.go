@@ -43,6 +43,7 @@ func Run() {
 	curSiteOwnerChain := authChain.Append(app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
 	curPostOwnerChain := authChain.Append(app.ensurePostMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
 	curPageOwnerChain := authChain.Append(app.ensurePageMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
+	curActivityOwnerChain := authChain.Append(app.ensureActivityMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
 	curImageOwnerChain := authChain.Append(app.ensureImageMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
 
 	// /api/sites/{site_id}
@@ -73,6 +74,10 @@ func Run() {
 
 	// /api/activities?site={site_id}
 	apiRouter.Methods("GET").Path("/activities").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetActivities))
+	apiRouter.Methods("POST").Path("/activities").Handler(authChain.ThenFunc(app.handlePostActivities))
+	apiRouter.Methods("GET").Path("/activities/{activity_id}").Handler(curActivityOwnerChain.ThenFunc(app.handleGetActivity))
+	apiRouter.Methods("PUT").Path("/activities/{activity_id}").Handler(curActivityOwnerChain.ThenFunc(app.handleUpdateActivity))
+	apiRouter.Methods("DELETE").Path("/activities/{activity_id}").Handler(curActivityOwnerChain.ThenFunc(app.handleDeleteActivity))
 
 	// /api/images?site={site_id}
 	apiRouter.Methods("GET").Path("/images").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetImages))
