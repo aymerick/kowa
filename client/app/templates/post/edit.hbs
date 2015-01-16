@@ -21,7 +21,7 @@
             {{else}}
                 {{#link-to "post" this class="content-action-button action-view"}}<i class="fa fa-eye"></i>{{/link-to}}
             {{/if}}
-            <button {{action "savePost"}} class="btn btn-success content-action-button action-save" {{bind-attr disabled=nothingChanged}}><i class="fa fa-floppy-o"></i> Save</button>
+            <button {{action "savePost"}} class="btn btn-primary content-action-button action-save" {{bind-attr disabled=nothingChanged}}><i class="fa fa-floppy-o"></i> Save</button>
         </div>
     </header>
     <section class="content-body content-editor">
