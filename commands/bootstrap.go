@@ -257,5 +257,24 @@ func bootstrap(cmd *cobra.Command, args []string) {
 	}
 	db.PagesCol().Insert(&page)
 
-	// @todo Insert activities
+	//
+	// Insert activities
+	//
+
+	var activity models.Activity
+
+	for i := 1; i <= 30; i++ {
+		nbDays := time.Duration(i)
+
+		activity = models.Activity{
+			Id:        bson.NewObjectId(),
+			CreatedAt: lastMonth.Add(time.Hour * 24 * nbDays),
+			UpdatedAt: lastMonth.Add(time.Hour*24*nbDays + 30),
+			SiteId:    siteJC1.Id,
+			Title:     fmt.Sprintf("Activity %d", i),
+			Body:      fmt.Sprintf(MD_FIXTURES[rand.Intn(len(MD_FIXTURES))]),
+			Cover:     siteJC1Images[rand.Intn(len(siteJC1Images))].Id,
+		}
+		db.ActivitiesCol().Insert(&activity)
+	}
 }

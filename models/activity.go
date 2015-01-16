@@ -12,14 +12,19 @@ const (
 )
 
 type Activity struct {
+	dbSession *DBSession `bson:"-" json:"-"`
+
 	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
 	SiteId    string        `bson:"site_id"       json:"site"`
 
-	Title string `bson:"title" json:"title"`
-	Body  string `bson:"body"  json:"body"`
-	// @todo Photos List
+	Title string `bson:"title" json:"title"`
+	Body  string `bson:"body"  json:"body"`
+
+	Cover bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
+
+	// @todo Format (markdown|html)
 }
 
 type ActivitiesList []*Activity
@@ -50,4 +55,19 @@ func (session *DBSession) EnsureActivitiesIndexes() {
 // Activity
 //
 
-// @todo
+// Fetch Cover from database
+func (activity *Activity) FindCover() *Image {
+	if activity.Cover != "" {
+		var result Image
+
+		if err := activity.dbSession.ImagesCol().FindId(activity.Cover).One(&result); err != nil {
+			return nil
+		}
+
+		result.dbSession = activity.dbSession
+
+		return &result
+	}
+
+	return nil
+}

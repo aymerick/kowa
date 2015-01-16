@@ -205,15 +205,42 @@ func (site *Site) FindPages(skip int, limit int) *PagesList {
 	return &result
 }
 
-// Fetch from database: all activities belonging to site
-func (site *Site) FindActivities() *ActivitiesList {
-	result := ActivitiesList{}
+func (site *Site) activitiesBaseQuery() *mgo.Query {
+	return site.dbSession.ActivitiesCol().Find(bson.M{"site_id": site.Id})
+}
 
-	if err := site.dbSession.ActivitiesCol().Find(bson.M{"site_id": site.Id}).All(&result); err != nil {
+// Returns the total number of activities
+func (site *Site) ActivitiesNb() int {
+	result, err := site.activitiesBaseQuery().Count()
+	if err != nil {
 		panic(err)
 	}
 
-	// @todo Inject dbSession in all result items
+	return result
+}
+
+// Fetch from database: all activities belonging to site
+func (site *Site) FindActivities(skip int, limit int) *ActivitiesList {
+	result := ActivitiesList{}
+
+	query := site.activitiesBaseQuery().Sort("-created_at")
+
+	if skip > 0 {
+		query = query.Skip(skip)
+	}
+
+	if limit > 0 {
+		query = query.Limit(limit)
+	}
+
+	if err := query.All(&result); err != nil {
+		panic(err)
+	}
+
+	// inject dbSession in all result items
+	for _, activity := range result {
+		activity.dbSession = site.dbSession
+	}
 
 	return &result
 }
