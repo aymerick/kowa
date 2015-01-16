@@ -19,6 +19,10 @@
                 <div class="settings-item-fields">
                     <div class="settings-item-title">{{activity.title}}</div>
                 </div>
+
+                <div class="settings-item-actions">
+                    <button {{action "openModal" "delete-activity" controller activity bubbles=false}} class="btn btn-danger action-delete">Delete</button>
+                </div>
             {{/link-to}}
         {{/each}}
     </div>
