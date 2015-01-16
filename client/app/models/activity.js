@@ -7,7 +7,7 @@ var Activity = DS.Model.extend({
   title: DS.attr(''),
   body: DS.attr(''),
 
-  cover: DS.belongsTo('image', { inverse: 'coverActivities' }),
+  cover: DS.belongsTo('image', { inverse: 'coverActivities', async: true }),
 
   site: DS.belongsTo('site', { async: true })
 });

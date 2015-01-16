@@ -9,15 +9,15 @@ var Site = DS.Model.extend({
   moreDesc: DS.attr(),
   joinText: DS.attr(),
 
-  logo: DS.belongsTo('image', { inverse: 'logoSites' }),
-  cover: DS.belongsTo('image', { inverse: 'coverSites' }),
+  logo: DS.belongsTo('image', { inverse: 'logoSites', async: true }),
+  cover: DS.belongsTo('image', { inverse: 'coverSites', async: true }),
 
   user: DS.belongsTo('user', { async: true }),
 
   posts: DS.hasMany('post', { async: true }),
   // events: DS.hasMany('event', { async: true }),
-  // pages: DS.hasMany('page', { async: true }),
-  // activities: DS.hasMany('activity', { async: true }),
+  pages: DS.hasMany('page', { async: true }),
+  activities: DS.hasMany('activity', { async: true }),
   images: DS.hasMany('image', { inverse: 'site', async: true }),
 
   pageSettings: DS.hasMany('sitePageSetting')
