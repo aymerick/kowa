@@ -97,6 +97,11 @@
             top: $settings-item-spacing;
 
             width: $img-small-thumbnail-width;
+
+            .no-image {
+                height: $img-small-thumbnail-height;
+                width: $img-small-thumbnail-width;
+            }
         }
 
         .settings-item-fields {
