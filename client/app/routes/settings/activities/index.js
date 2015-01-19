@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import AuthenticatedRoute from 'kowa/routes/authenticated';
 
 var SettingsActivitiesIndexRoute = AuthenticatedRoute.extend({
@@ -10,7 +9,7 @@ var SettingsActivitiesIndexRoute = AuthenticatedRoute.extend({
     var resultPromise = this.get('resultPromise') || this.store.filter('activity', { 'site': site.get('id') }, function () {
       // nothing to filter
       return true;
-    })
+    });
 
     this.set('resultPromise', resultPromise);
 
