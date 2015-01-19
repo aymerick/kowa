@@ -25,18 +25,6 @@ Test:
     $ go test ./... -v
 
 
-## Hugo website generation
-
-### Build and dev theme
-
-    $ cd hugo/themes/willy
-    $ grunt
-
-### Test site
-
-    $ cd hugo/test_site
-    $ hugo server -w
-
 ## Sublime Text
 
 Search Where: -*/bower_components/*,-*/node_modules/*,-*/client/dist/*,-*/client/tmp/*,-*.min.js,-*.min.css,-*.css.map,-*.svg,-*hugo/test_site/public/*
