@@ -23,7 +23,7 @@ const (
 var bootstrapCmd = &cobra.Command{
 	Use:   "bootstrap",
 	Short: "Bootstrap Kowa",
-	Long:  `Creates records in database`,
+	Long:  `Bootstrap database with fake data`,
 	Run:   bootstrap,
 }
 
