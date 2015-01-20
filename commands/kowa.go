@@ -25,13 +25,13 @@ func initKowaConf() {
 	cobra.OnInitialize(setupConfig)
 
 	// config file
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/kowa/config.toml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.kowa/config.toml)")
 
 	// mongodb database
-	rootCmd.PersistentFlags().String("mongodb_uri", DEFAULT_MONGODB_URI, "Uri to connect to mongoDB")
+	rootCmd.PersistentFlags().StringP("mongodb_uri", "u", DEFAULT_MONGODB_URI, "Uri to connect to mongoDB")
 	viper.BindPFlag("mongodb_uri", rootCmd.PersistentFlags().Lookup("mongodb_uri"))
 
-	rootCmd.PersistentFlags().String("mongodb_dbname", DEFAULT_MONGODB_DBNAME, "MongoDB database name")
+	rootCmd.PersistentFlags().StringP("mongodb_dbname", "d", DEFAULT_MONGODB_DBNAME, "MongoDB database name")
 	viper.BindPFlag("mongodb_dbname", rootCmd.PersistentFlags().Lookup("mongodb_dbname"))
 }
 

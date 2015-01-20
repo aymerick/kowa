@@ -21,7 +21,7 @@ var serverCmd = &cobra.Command{
 }
 
 func initServerConf() {
-	serverCmd.Flags().Int("port", DEFAULT_PORT, "Port to run Kowa server on")
+	serverCmd.Flags().IntP("port", "p", DEFAULT_PORT, "Port to run Kowa server on")
 	viper.BindPFlag("port", serverCmd.Flags().Lookup("port"))
 }
 
