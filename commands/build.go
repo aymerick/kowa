@@ -23,5 +23,6 @@ func initBuilderConf() {
 }
 
 func buildSite(cmd *cobra.Command, args []string) {
-	builder.Build()
+	site := builder.NewSite()
+	site.Build()
 }
