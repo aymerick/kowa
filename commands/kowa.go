@@ -33,6 +33,10 @@ func initKowaConf() {
 
 	rootCmd.PersistentFlags().StringP("mongodb_dbname", "d", DEFAULT_MONGODB_DBNAME, "MongoDB database name")
 	viper.BindPFlag("mongodb_dbname", rootCmd.PersistentFlags().Lookup("mongodb_dbname"))
+
+	// misc
+	rootCmd.PersistentFlags().StringP("working_dir", "w", defaultWorkginDir(), "Working directory")
+	viper.BindPFlag("working_dir", rootCmd.PersistentFlags().Lookup("working_dir"))
 }
 
 func setupConfig() {
@@ -47,9 +51,17 @@ func setupConfig() {
 
 // Add commands to root command
 func addCommands() {
+	rootCmd.AddCommand(buildCmd)
 	rootCmd.AddCommand(serverCmd)
 	rootCmd.AddCommand(bootstrapCmd)
 	rootCmd.AddCommand(resetCmd)
+}
+
+// returns default working directory
+func defaultWorkginDir() string {
+	result, _ := os.Getwd()
+
+	return result
 }
 
 //
@@ -59,6 +71,7 @@ func addCommands() {
 // Init commands configuration
 func InitConf() {
 	initKowaConf()
+	initBuilderConf()
 	initServerConf()
 }
 
