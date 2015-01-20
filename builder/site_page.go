@@ -35,10 +35,7 @@ type SitePageBuilder interface {
 const (
 	KIND_ACTIVITIES = "activities"
 	KIND_CONTACT    = "contact"
-	KIND_EVENT      = "event"
-	KIND_EVENTS     = "events"
-	KIND_INDEX      = "index"
-	KIND_MEMBERS    = "members"
+	KIND_HOMEPAGE   = "homepage"
 	KIND_PAGE       = "page"
 	KIND_POST       = "post"
 	KIND_POSTS      = "posts"
@@ -47,11 +44,8 @@ const (
 // site page builders
 var SitePageBuilders = map[string]SitePageBuilder{
 	KIND_ACTIVITIES: NewActivitiesBuilder(),
-	KIND_CONTACT:    nil,
-	KIND_EVENT:      nil,
-	KIND_EVENTS:     nil,
-	KIND_INDEX:      nil,
-	KIND_MEMBERS:    nil,
+	KIND_CONTACT:    NewContactBuilder(),
+	KIND_HOMEPAGE:   NewHomepageBuilder(),
 	KIND_PAGE:       nil,
 	KIND_POST:       nil,
 	KIND_POSTS:      nil,

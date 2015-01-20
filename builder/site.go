@@ -9,16 +9,16 @@ import (
 )
 
 type Site struct {
-	Layout *template.Template
-	Pages  map[string]*SitePage
-	Errors []error
+	Layout    *template.Template
+	SitePages map[string]*SitePage
+	Errors    []error
 }
 
 func NewSite() *Site {
 	result := &Site{
-		Layout: template.Must(template.ParseFiles(templatePath("layout"))),
-		Pages:  make(map[string]*SitePage),
-		Errors: []error{},
+		Layout:    template.Must(template.ParseFiles(templatePath("layout"))),
+		SitePages: make(map[string]*SitePage),
+		Errors:    []error{},
 	}
 
 	// @todo Load partials
@@ -29,43 +29,45 @@ func NewSite() *Site {
 
 // Build site
 func (site *Site) Build() {
-	// load pages
-	if len(site.Pages) == 0 {
-		site.LoadPages()
+	// load
+	if len(site.SitePages) == 0 {
+		site.LoadSitePages()
 		if len(site.Errors) > 0 {
-			log.Printf("%d error(s) while loading pages: %v", len(site.Errors), site.Errors)
+			log.Printf("%d error(s) while loading site pages: %v", len(site.Errors), site.Errors)
 			site.Errors = nil
 		}
 	}
 
-	// fill pages data
-	site.FillPages()
+	// fill
+	site.FillSitePages()
 	if len(site.Errors) > 0 {
-		log.Printf("%d error(s) while filling pages: %v", len(site.Errors), site.Errors)
+		log.Printf("%d error(s) while filling site pages: %v", len(site.Errors), site.Errors)
 		site.Errors = nil
 	}
 
-	// generate pages
-	site.GeneratePages()
+	// generate
+	site.GenerateSitePages()
 	if len(site.Errors) > 0 {
-		log.Printf("%d error(s) while generating pages: %v", len(site.Errors), site.Errors)
+		log.Printf("%d error(s) while generating site pages: %v", len(site.Errors), site.Errors)
 		site.Errors = nil
 	}
 }
 
-// Load site pages
-func (site *Site) LoadPages() {
+// Load site site pages
+func (site *Site) LoadSitePages() {
 	for kind, _ := range SitePageBuilders {
-		site.Pages[kind] = NewSitePage(kind)
-		site.Pages[kind].layout = site.Layout
+		site.SitePages[kind] = NewSitePage(kind)
+		site.SitePages[kind].layout = site.Layout
 	}
 }
 
 // Fill site pages
-func (site *Site) FillPages() {
-	for kind, page := range site.Pages {
+func (site *Site) FillSitePages() {
+	for kind, sitePage := range site.SitePages {
+		sitePage.BodyClass = kind
+
 		if SitePageBuilders[kind] != nil {
-			if err := SitePageBuilders[kind].Fill(page, site); err != nil {
+			if err := SitePageBuilders[kind].Fill(sitePage, site); err != nil {
 				site.Errors = append(site.Errors, err)
 			}
 		}
@@ -73,12 +75,15 @@ func (site *Site) FillPages() {
 }
 
 // Generate site pages
-func (site *Site) GeneratePages() {
-	for kind, page := range site.Pages {
+func (site *Site) GenerateSitePages() {
+	for kind, sitePage := range site.SitePages {
 		if SitePageBuilders[kind] == nil {
-			site.Errors = append(site.Errors, errors.New(fmt.Sprintf("Can't generate page %s because there is no builder for it", kind)))
-		} else if err := page.Generate(os.Stdout); err != nil {
-			site.Errors = append(site.Errors, err)
+			site.Errors = append(site.Errors, errors.New(fmt.Sprintf("Can't generate site page %s because there is no builder for it", kind)))
+		} else {
+			// generate
+			if err := sitePage.Generate(os.Stdout); err != nil {
+				site.Errors = append(site.Errors, err)
+			}
 		}
 	}
 }
