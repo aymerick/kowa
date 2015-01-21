@@ -1,5 +1,10 @@
 package builder
 
+import (
+	"github.com/aymerick/kowa/models"
+	"github.com/aymerick/kowa/utils"
+)
+
 // Builder for posts pages
 type PostsBuilder struct {
 	*NodeBuilder
@@ -21,31 +26,27 @@ func (builder *PostsBuilder) Load() {
 }
 
 func (builder *PostsBuilder) BuildPostsLists() {
-	node := builder.NewNodeForKind(KIND_POSTS)
-
-	node.Title = "Posts"
-
-	node.Meta = &NodeMeta{
-		Description: "Posts list",
-	}
-
-	node.Content = "Soon"
-
-	builder.AddNode(node)
+	// @todo !!!
 }
 
 func (builder *PostsBuilder) BuildPosts() {
+	for _, post := range *builder.Site().Model.FindAllPosts() {
+		builder.BuildPost(post)
+	}
+}
+
+func (builder *PostsBuilder) BuildPost(post *models.Post) {
 	node := builder.NewNode()
 
-	node.Path = "post-1.html"
+	node.basePath = utils.Urlify(post.Title)
 
-	node.Title = "Post #1"
+	node.Title = post.Title
 
 	node.Meta = &NodeMeta{
-		Description: "Post test #1",
+		Description: "@todo",
 	}
 
-	node.Content = "Soon"
+	node.Content = post
 
 	builder.AddNode(node)
 }

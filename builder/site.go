@@ -18,6 +18,7 @@ type Site struct {
 	WorkingDir string
 	OutputDir  string
 	Theme      string
+	UglyURL    bool
 
 	layout *template.Template
 }
@@ -37,6 +38,7 @@ func NewSite(siteId string) *Site {
 		WorkingDir: viper.GetString("working_dir"),
 		OutputDir:  viper.GetString("output_dir"),
 		Theme:      viper.GetString("theme"),
+		UglyURL:    viper.GetBool("ugly_url"),
 	}
 
 	return result
@@ -115,9 +117,9 @@ func (site *Site) EnsureFileDir(osPath string) error {
 	return err
 }
 
-// Computes an absolute file path
-func (site *Site) FilePath(relativePath string) string {
-	return path.Join(site.GenDir(), relativePath)
+// Computes local file path for given URL
+func (site *Site) FilePath(url string) string {
+	return path.Join(site.GenDir(), url)
 }
 
 // Get master layout template

@@ -18,8 +18,6 @@ func NewHomepageBuilder(site *Site) *HomepageBuilder {
 func (builder *HomepageBuilder) Load() {
 	node := builder.NewNode()
 
-	node.Path = "index.html"
-
 	node.Title = "Homepage"
 
 	node.Meta = &NodeMeta{

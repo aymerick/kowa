@@ -152,6 +152,10 @@ func (site *Site) FindPosts(skip int, limit int) *PostsList {
 	return &result
 }
 
+func (site *Site) FindAllPosts() *PostsList {
+	return site.FindPosts(0, 0)
+}
+
 // Fetch from database: all events belonging to site
 func (site *Site) FindEvents() *EventsList {
 	result := EventsList{}
@@ -203,6 +207,10 @@ func (site *Site) FindPages(skip int, limit int) *PagesList {
 	}
 
 	return &result
+}
+
+func (site *Site) FindAllPages() *PagesList {
+	return site.FindPages(0, 0)
 }
 
 func (site *Site) activitiesBaseQuery() *mgo.Query {

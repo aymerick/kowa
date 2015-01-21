@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path"
 )
 
 // node builder
@@ -41,13 +42,7 @@ func (builder *NodeBuilder) Generate() {
 
 // generate given node
 func (builder *NodeBuilder) GenerateNode(node *Node) {
-	filePath := node.FilePath()
-	if filePath == "" {
-		builder.AddGenError(errors.New(fmt.Sprintf("No path defined for node: %v", node)))
-		return
-	}
-
-	osFilePath := builder.Site().FilePath(filePath)
+	osFilePath := builder.Site().FilePath(node.Url)
 
 	// ensure dir
 	if err := builder.Site().EnsureFileDir(osFilePath); err != nil {
@@ -81,11 +76,31 @@ func (builder *NodeBuilder) NewNodeForKind(nodeKind string) *Node {
 }
 
 // add a new node to build
+// SIDE EFFECT: fill node.Url field
 func (builder *NodeBuilder) AddNode(node *Node) {
+	if node.Url == "" {
+		basePath := node.BasePath()
+		if basePath == "" {
+			builder.AddGenError(errors.New(fmt.Sprintf("No base path defined for node: %v", node)))
+			return
+		}
+
+		node.Url = builder.UrlForBasePath(basePath)
+	}
+
 	builder.Nodes = append(builder.Nodes, node)
 }
 
 // add a node generation error
 func (builder *NodeBuilder) AddGenError(err error) {
 	builder.Site().AddGenError(builder.NodeKind, err)
+}
+
+// computes URL for given base path
+func (builder *NodeBuilder) UrlForBasePath(basePath string) string {
+	if builder.Site().UglyURL || (basePath == "index") {
+		return fmt.Sprintf("%s.html", basePath)
+	} else {
+		return path.Join(basePath, "index.html")
+	}
 }

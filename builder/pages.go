@@ -1,5 +1,10 @@
 package builder
 
+import (
+	"github.com/aymerick/kowa/models"
+	"github.com/aymerick/kowa/utils"
+)
+
 // Builder for pages
 type PagesBuilder struct {
 	*NodeBuilder
@@ -16,17 +21,23 @@ func NewPagesBuilder(site *Site) *PagesBuilder {
 
 // NodeBuilderInterface
 func (builder *PagesBuilder) Load() {
+	for _, page := range *builder.Site().Model.FindAllPages() {
+		builder.BuildPage(page)
+	}
+}
+
+func (builder *PagesBuilder) BuildPage(page *models.Page) {
 	node := builder.NewNode()
 
-	node.Path = "page-1.html"
+	node.basePath = utils.Urlify(page.Title)
 
-	node.Title = "Page #1"
+	node.Title = page.Title
 
 	node.Meta = &NodeMeta{
-		Description: "Page test page #1",
+		Description: page.Tagline,
 	}
 
-	node.Content = "Soon"
+	node.Content = page
 
 	builder.AddNode(node)
 }

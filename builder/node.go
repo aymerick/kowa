@@ -2,7 +2,6 @@ package builder
 
 import (
 	"errors"
-	"fmt"
 	"html/template"
 	"io"
 	"io/ioutil"
@@ -24,8 +23,10 @@ type Node struct {
 	Footer    string
 	Content   interface{}
 
+	Url string
+
 	Builder  NodeBuilderInterface
-	Path     string
+	basePath string
 	template *template.Template
 }
 
@@ -47,11 +48,15 @@ func NewNode(builder NodeBuilderInterface, kind string) *Node {
 	}
 }
 
-func (node *Node) FilePath() string {
-	if node.Path == "" {
-		return fmt.Sprintf("%s.html", node.Kind)
+func (node *Node) BasePath() string {
+	if node.basePath == "" {
+		if node.Kind == KIND_HOMEPAGE {
+			return "index"
+		} else {
+			return node.Kind
+		}
 	} else {
-		return node.Path
+		return node.basePath
 	}
 }
 
