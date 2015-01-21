@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/aymerick/kowa/models"
-	"github.com/aymerick/kowa/utils"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday"
 )
@@ -56,7 +55,7 @@ func (builder *PostsBuilder) BuildPosts() {
 func (builder *PostsBuilder) BuildPost(post *models.Post) {
 	node := builder.NewNode()
 
-	node.slug = utils.Urlify(post.Title)
+	node.slug = post.Slug()
 
 	node.Title = post.Title
 	node.Meta = &NodeMeta{

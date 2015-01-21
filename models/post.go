@@ -1,8 +1,10 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
+	"github.com/aymerick/kowa/utils"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -91,6 +93,14 @@ func (session *DBSession) RemoveImageReferencesFromPosts(image *Image) error {
 //
 // Post
 //
+
+// Computes slug
+func (post *Post) Slug() string {
+	// @todo Should use PublishedAt
+	year, month, day := post.CreatedAt.Date()
+
+	return fmt.Sprintf("%d/%02d/%02d/%s", year, month, day, utils.Urlify(post.Title))
+}
 
 // Fetch from database: site that post belongs to
 func (post *Post) FindSite() *Site {
