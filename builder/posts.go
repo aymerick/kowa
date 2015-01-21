@@ -1,5 +1,6 @@
 package builder
 
+// Builder for posts pages
 type PostsBuilder struct {
 	*NodeBuilder
 }
@@ -7,12 +8,13 @@ type PostsBuilder struct {
 func NewPostsBuilder(site *Site) *PostsBuilder {
 	return &PostsBuilder{
 		&NodeBuilder{
-			Site:     site,
 			NodeKind: KIND_POST,
+			site:     site,
 		},
 	}
 }
 
+// NodeBuilderInterface
 func (builder *PostsBuilder) Load() {
 	builder.BuildPostsLists()
 	builder.BuildPosts()

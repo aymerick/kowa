@@ -7,25 +7,37 @@ import (
 	"os"
 	"path"
 
+	"github.com/aymerick/kowa/models"
 	"github.com/spf13/viper"
 )
 
 type Site struct {
-	Layout         *template.Template
+	Model          *models.Site
 	ErrorCollector *ErrorCollector
 
-	GenDir string
+	WorkingDir string
+	OutputDir  string
+	Theme      string
+
+	layout *template.Template
 }
 
-func NewSite() *Site {
-	result := &Site{
-		Layout:         template.Must(template.ParseFiles(templatePath("layout"))),
-		ErrorCollector: NewErrorCollector(),
-		GenDir:         path.Join(viper.GetString("working_dir"), viper.GetString("output_dir")),
+func NewSite(siteId string) *Site {
+	dbSession := models.NewDBSession()
+
+	model := dbSession.FindSite(siteId)
+	if model == nil {
+		log.Fatalln("Can't find site with provided id")
 	}
 
-	// @todo Load partials
-	// template.Must(site.Layout.ParseGlob(path.Join(partialsPath(), "*.html")))
+	result := &Site{
+		Model:          model,
+		ErrorCollector: NewErrorCollector(),
+
+		WorkingDir: viper.GetString("working_dir"),
+		OutputDir:  viper.GetString("output_dir"),
+		Theme:      viper.GetString("theme"),
+	}
 
 	return result
 }
@@ -84,6 +96,12 @@ func (site *Site) AddGenError(nodeKind string, err error) {
 	site.ErrorCollector.AddError(step, err)
 }
 
+// Computes directory where site is generated
+func (site *Site) GenDir() string {
+	return path.Join(site.WorkingDir, site.OutputDir)
+}
+
+// Prune directories for given absolute file path
 func (site *Site) EnsureFileDir(osPath string) error {
 	fileDir := path.Dir(osPath)
 
@@ -99,5 +117,29 @@ func (site *Site) EnsureFileDir(osPath string) error {
 
 // Computes an absolute file path
 func (site *Site) FilePath(relativePath string) string {
-	return path.Join(site.GenDir, relativePath)
+	return path.Join(site.GenDir(), relativePath)
+}
+
+// Get master layout template
+func (site *Site) Layout() *template.Template {
+	if site.layout != nil {
+		return site.layout
+	} else {
+		site.layout = template.Must(template.ParseFiles(site.TemplatePath("layout")))
+
+		// @todo Load partials
+		// template.Must(site.layout.ParseGlob(path.Join(site.PartialsPath(), "*.html")))
+
+		return site.layout
+	}
+}
+
+// Compute template path for given template name
+func (site *Site) TemplatePath(tplName string) string {
+	return path.Join(site.WorkingDir, "themes", site.Theme, fmt.Sprintf("%s.html", tplName))
+}
+
+// Returns partials directory path
+func (site *Site) PartialsPath() string {
+	return path.Join(site.WorkingDir, "themes", site.Theme, "partials")
 }

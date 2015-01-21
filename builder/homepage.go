@@ -1,5 +1,6 @@
 package builder
 
+// Builder for homepage
 type HomepageBuilder struct {
 	*NodeBuilder
 }
@@ -7,12 +8,13 @@ type HomepageBuilder struct {
 func NewHomepageBuilder(site *Site) *HomepageBuilder {
 	return &HomepageBuilder{
 		&NodeBuilder{
-			Site:     site,
 			NodeKind: KIND_HOMEPAGE,
+			site:     site,
 		},
 	}
 }
 
+// NodeBuilderInterface
 func (builder *HomepageBuilder) Load() {
 	node := builder.NewNode()
 

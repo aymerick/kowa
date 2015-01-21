@@ -1,5 +1,6 @@
 package builder
 
+// Builder for pages
 type PagesBuilder struct {
 	*NodeBuilder
 }
@@ -7,12 +8,13 @@ type PagesBuilder struct {
 func NewPagesBuilder(site *Site) *PagesBuilder {
 	return &PagesBuilder{
 		&NodeBuilder{
-			Site:     site,
 			NodeKind: KIND_PAGE,
+			site:     site,
 		},
 	}
 }
 
+// NodeBuilderInterface
 func (builder *PagesBuilder) Load() {
 	node := builder.NewNode()
 

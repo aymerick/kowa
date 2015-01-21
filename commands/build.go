@@ -1,6 +1,8 @@
 package commands
 
 import (
+	"log"
+
 	"github.com/aymerick/kowa/builder"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -12,7 +14,7 @@ const (
 )
 
 var buildCmd = &cobra.Command{
-	Use:   "build",
+	Use:   "build [site_id]",
 	Short: "Site builder",
 	Long:  `Build a static site.`,
 	Run:   buildSite,
@@ -27,6 +29,14 @@ func initBuilderConf() {
 }
 
 func buildSite(cmd *cobra.Command, args []string) {
-	site := builder.NewSite()
+	if len(args) < 1 {
+		cmd.Usage()
+		log.Fatalln("No site id argument provided")
+	}
+
+	site := builder.NewSite(args[0])
+
+	log.Printf("Building site [%s] with theme '%s' into %s", args[0], site.Theme, site.GenDir())
+
 	site.Build()
 }

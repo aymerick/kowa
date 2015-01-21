@@ -1,5 +1,6 @@
 package builder
 
+// Builder for contact page
 type ContactBuilder struct {
 	*NodeBuilder
 }
@@ -7,12 +8,13 @@ type ContactBuilder struct {
 func NewContactBuilder(site *Site) *ContactBuilder {
 	return &ContactBuilder{
 		&NodeBuilder{
-			Site:     site,
 			NodeKind: KIND_CONTACT,
+			site:     site,
 		},
 	}
 }
 
+// NodeBuilderInterface
 func (builder *ContactBuilder) Load() {
 	node := builder.NewNode()
 

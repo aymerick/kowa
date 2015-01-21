@@ -24,6 +24,7 @@ type Node struct {
 	Footer    string
 	Content   interface{}
 
+	Builder  NodeBuilderInterface
 	Path     string
 	template *template.Template
 }
@@ -39,9 +40,10 @@ const (
 )
 
 // create a new node
-func NewNode(kind string) *Node {
+func NewNode(builder NodeBuilderInterface, kind string) *Node {
 	return &Node{
-		Kind: kind,
+		Kind:    kind,
+		Builder: builder,
 	}
 }
 
@@ -62,7 +64,7 @@ func (node *Node) Template(layout *template.Template) (*template.Template, error
 	} else {
 		result := template.Must(layout.Clone())
 
-		binData, err := ioutil.ReadFile(templatePath(node.Kind))
+		binData, err := ioutil.ReadFile(node.Builder.Site().TemplatePath(node.Kind))
 		if err == nil {
 			_, err = result.New("content").Parse(string(binData))
 			if err != nil {

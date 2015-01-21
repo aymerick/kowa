@@ -1,5 +1,6 @@
 package builder
 
+// Builder for activities page
 type ActivitiesBuilder struct {
 	*NodeBuilder
 }
@@ -7,12 +8,13 @@ type ActivitiesBuilder struct {
 func NewActivitiesBuilder(site *Site) *ActivitiesBuilder {
 	return &ActivitiesBuilder{
 		&NodeBuilder{
-			Site:     site,
 			NodeKind: KIND_ACTIVITIES,
+			site:     site,
 		},
 	}
 }
 
+// NodeBuilderInterface
 func (builder *ActivitiesBuilder) Load() {
 	node := builder.NewNode()
 
