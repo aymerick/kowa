@@ -3,6 +3,8 @@ package builder
 import (
 	"fmt"
 	"html/template"
+	"log"
+	"os"
 	"path"
 
 	"github.com/spf13/viper"
@@ -80,4 +82,22 @@ func (site *Site) BuildHomepage() {
 func (site *Site) AddGenError(nodeKind string, err error) {
 	step := fmt.Sprintf("Generating %s", nodeKind)
 	site.ErrorCollector.AddError(step, err)
+}
+
+func (site *Site) EnsureFileDir(osPath string) error {
+	fileDir := path.Dir(osPath)
+
+	log.Printf("[DBG] Creating dir: %s", fileDir)
+
+	err := os.MkdirAll(fileDir, 0777)
+	if err != nil && err != os.ErrExist {
+		return err
+	}
+
+	return err
+}
+
+// Computes an absolute file path
+func (site *Site) FilePath(relativePath string) string {
+	return path.Join(site.GenDir, relativePath)
 }

@@ -1,7 +1,4 @@
-/hugo/test_site/public/
-/hugo/themes/*/bower_components/
-/hugo/themes/*/node_modules/
-/hugo/themes/*/.sass-cache
+/_site
 .DS_Store
 kowa
 kowa.sublime-project

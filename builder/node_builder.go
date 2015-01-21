@@ -3,8 +3,8 @@ package builder
 import (
 	"errors"
 	"fmt"
+	"log"
 	"os"
-	"path"
 )
 
 // node builder
@@ -34,12 +34,21 @@ func (builder *NodeBuilder) GenerateNode(node *Node) {
 		return
 	}
 
-	outputFile, err := os.Create(path.Join(builder.Site.GenDir, filePath))
-	if err != nil {
+	osFilePath := builder.Site.FilePath(filePath)
+
+	if err := builder.Site.EnsureFileDir(osFilePath); err != nil {
 		builder.AddGenError(err)
 		return
 	}
 
+	outputFile, err := os.Create(osFilePath)
+	if err != nil {
+		builder.AddGenError(err)
+		return
+	}
+	defer outputFile.Close()
+
+	log.Printf("[DBG] Writing file: %s", osFilePath)
 	if err := node.Generate(outputFile, builder.Site.Layout); err != nil {
 		builder.AddGenError(err)
 	}
