@@ -45,7 +45,7 @@ func (builder *PagesBuilder) Load() {
 func (builder *PagesBuilder) BuildPage(page *models.Page) {
 	node := builder.NewNode()
 
-	node.basePath = utils.Urlify(page.Title)
+	node.slug = utils.Urlify(page.Title)
 
 	node.Title = page.Title
 	node.Meta = &NodeMeta{

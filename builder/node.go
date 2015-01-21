@@ -27,7 +27,7 @@ type Node struct {
 
 	Builder NodeBuilderInterface
 
-	basePath string
+	slug     string
 	template *template.Template
 }
 
@@ -49,25 +49,25 @@ func NewNode(builder NodeBuilderInterface, kind string) *Node {
 	}
 }
 
-func (node *Node) BasePath() string {
-	if node.basePath == "" {
+func (node *Node) Slug() string {
+	if node.slug == "" {
 		if node.Kind == KIND_HOMEPAGE {
 			return "index"
 		} else {
 			return node.Kind
 		}
 	} else {
-		return node.basePath
+		return node.slug
 	}
 }
 
 func (node *Node) FullUrl() string {
-	basePath := node.BasePath()
+	slug := node.Slug()
 
-	if node.Builder.Site().UglyURL || (basePath == "index") {
-		return fmt.Sprintf("%s.html", basePath)
+	if node.Builder.Site().UglyURL || (slug == "index") {
+		return path.Join("/", fmt.Sprintf("%s.html", slug))
 	} else {
-		return path.Join(basePath, "index.html")
+		return path.Join("/", slug, "index.html")
 	}
 }
 

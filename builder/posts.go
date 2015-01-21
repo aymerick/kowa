@@ -56,7 +56,7 @@ func (builder *PostsBuilder) BuildPosts() {
 func (builder *PostsBuilder) BuildPost(post *models.Post) {
 	node := builder.NewNode()
 
-	node.basePath = utils.Urlify(post.Title)
+	node.slug = utils.Urlify(post.Title)
 
 	node.Title = post.Title
 	node.Meta = &NodeMeta{
