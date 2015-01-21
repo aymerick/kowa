@@ -197,10 +197,10 @@ func (img *Image) MarshalJSON() ([]byte, error) {
 	imageJson := ImageJson{
 		Image:         *img,
 		URL:           img.URL(),
-		SmallURL:      img.derivativeURL(DerivativeForKind(SMALL_KIND)),
-		ThumbURL:      img.derivativeURL(DerivativeForKind(THUMB_KIND)),
-		MediumURL:     img.derivativeURL(DerivativeForKind(MEDIUM_KIND)),
-		MediumCropURL: img.derivativeURL(DerivativeForKind(MEDIUM_CROP_KIND)),
+		SmallURL:      img.SmallURL(),
+		ThumbURL:      img.ThumbURL(),
+		MediumURL:     img.MediumURL(),
+		MediumCropURL: img.MediumCropURL(),
 	}
 
 	return json.Marshal(imageJson)
@@ -266,6 +266,26 @@ func (img *Image) URL() string {
 //
 // Derivatives
 //
+
+// Returns small derivative URL
+func (img *Image) SmallURL() string {
+	return img.derivativeURL(DerivativeForKind(SMALL_KIND))
+}
+
+// Returns thumb derivative URL
+func (img *Image) ThumbURL() string {
+	return img.derivativeURL(DerivativeForKind(THUMB_KIND))
+}
+
+// Returns medium derivative URL
+func (img *Image) MediumURL() string {
+	return img.derivativeURL(DerivativeForKind(MEDIUM_KIND))
+}
+
+// Returns medium derivative URL
+func (img *Image) MediumCropURL() string {
+	return img.derivativeURL(DerivativeForKind(MEDIUM_CROP_KIND))
+}
 
 func genSmall(source *image.Image) *image.NRGBA {
 	return imaging.Thumbnail(*source, SMALL_WIDTH, SMALL_HEIGHT, imaging.Lanczos)

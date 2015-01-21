@@ -118,8 +118,8 @@ func (site *Site) EnsureFileDir(osPath string) error {
 }
 
 // Computes local file path for given URL
-func (site *Site) FilePath(url string) string {
-	return path.Join(site.GenDir(), url)
+func (site *Site) FilePath(fullUrl string) string {
+	return path.Join(site.GenDir(), fullUrl)
 }
 
 // Get master layout template

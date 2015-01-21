@@ -2,9 +2,11 @@ package builder
 
 import (
 	"errors"
+	"fmt"
 	"html/template"
 	"io"
 	"io/ioutil"
+	"path"
 )
 
 // node metadata
@@ -23,9 +25,8 @@ type Node struct {
 	Footer    string
 	Content   interface{}
 
-	Url string
+	Builder NodeBuilderInterface
 
-	Builder  NodeBuilderInterface
 	basePath string
 	template *template.Template
 }
@@ -57,6 +58,27 @@ func (node *Node) BasePath() string {
 		}
 	} else {
 		return node.basePath
+	}
+}
+
+func (node *Node) FullUrl() string {
+	basePath := node.BasePath()
+
+	if node.Builder.Site().UglyURL || (basePath == "index") {
+		return fmt.Sprintf("%s.html", basePath)
+	} else {
+		return path.Join(basePath, "index.html")
+	}
+}
+
+func (node *Node) Url() string {
+	fullUrl := node.FullUrl()
+
+	dir, fileName := path.Split(fullUrl)
+	if fileName == "index.html" {
+		return dir
+	} else {
+		return fullUrl
 	}
 }
 
