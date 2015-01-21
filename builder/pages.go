@@ -16,6 +16,8 @@ func NewPagesBuilder(site *Site) *PagesBuilder {
 func (builder *PagesBuilder) Load() {
 	node := builder.NewNode()
 
+	node.Path = "page-1.html"
+
 	node.Title = "Page #1"
 
 	node.Meta = &NodeMeta{

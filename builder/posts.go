@@ -35,6 +35,8 @@ func (builder *PostsBuilder) BuildPostsLists() {
 func (builder *PostsBuilder) BuildPosts() {
 	node := builder.NewNode()
 
+	node.Path = "post-1.html"
+
 	node.Title = "Post #1"
 
 	node.Meta = &NodeMeta{

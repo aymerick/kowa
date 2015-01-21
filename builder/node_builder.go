@@ -1,6 +1,11 @@
 package builder
 
-import "io"
+import (
+	"errors"
+	"fmt"
+	"os"
+	"path"
+)
 
 // node builder
 type NodeBuilder struct {
@@ -16,11 +21,27 @@ type NodeBuilderInterface interface {
 }
 
 // generate nodes
-func (builder *NodeBuilder) Generate(wr io.Writer) {
+func (builder *NodeBuilder) Generate() {
 	for _, node := range builder.Nodes {
-		if err := node.Generate(wr, builder.Site.Layout); err != nil {
-			builder.AddGenerationError(err)
-		}
+		builder.GenerateNode(node)
+	}
+}
+
+func (builder *NodeBuilder) GenerateNode(node *Node) {
+	filePath := node.FilePath()
+	if filePath == "" {
+		builder.AddGenError(errors.New(fmt.Sprintf("No path defined for node: %v", node)))
+		return
+	}
+
+	outputFile, err := os.Create(path.Join(builder.Site.GenDir, filePath))
+	if err != nil {
+		builder.AddGenError(err)
+		return
+	}
+
+	if err := node.Generate(outputFile, builder.Site.Layout); err != nil {
+		builder.AddGenError(err)
 	}
 }
 
@@ -40,6 +61,6 @@ func (builder *NodeBuilder) AddNode(node *Node) {
 }
 
 // add a node generation error
-func (builder *NodeBuilder) AddGenerationError(err error) {
-	builder.Site.AddGenerationError(builder.NodeKind, err)
+func (builder *NodeBuilder) AddGenError(err error) {
+	builder.Site.AddGenError(builder.NodeKind, err)
 }

@@ -7,7 +7,8 @@ import (
 )
 
 const (
-	DEFAULT_THEME = "minimal"
+	DEFAULT_THEME      = "minimal"
+	DEFAULT_OUTPUT_DIR = "_site"
 )
 
 var buildCmd = &cobra.Command{
@@ -20,6 +21,9 @@ var buildCmd = &cobra.Command{
 func initBuilderConf() {
 	buildCmd.Flags().StringP("theme", "t", DEFAULT_THEME, "Theme to use")
 	viper.BindPFlag("theme", buildCmd.Flags().Lookup("theme"))
+
+	buildCmd.Flags().StringP("output_dir", "o", DEFAULT_OUTPUT_DIR, "Output directory")
+	viper.BindPFlag("output_dir", buildCmd.Flags().Lookup("output_dir"))
 }
 
 func buildSite(cmd *cobra.Command, args []string) {

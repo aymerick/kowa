@@ -2,6 +2,7 @@ package builder
 
 import (
 	"errors"
+	"fmt"
 	"html/template"
 	"io"
 	"io/ioutil"
@@ -23,6 +24,7 @@ type Node struct {
 	Footer    string
 	Content   interface{}
 
+	Path     string
 	template *template.Template
 }
 
@@ -40,6 +42,14 @@ const (
 func NewNode(kind string) *Node {
 	return &Node{
 		Kind: kind,
+	}
+}
+
+func (node *Node) FilePath() string {
+	if node.Path == "" {
+		return fmt.Sprintf("%s.html", node.Kind)
+	} else {
+		return node.Path
 	}
 }
 
