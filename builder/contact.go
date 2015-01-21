@@ -1,20 +1,28 @@
 package builder
 
 type ContactBuilder struct {
+	*NodeBuilder
 }
 
-func NewContactBuilder() *ContactBuilder {
-	return &ContactBuilder{}
+func NewContactBuilder(site *Site) *ContactBuilder {
+	return &ContactBuilder{
+		&NodeBuilder{
+			Site:     site,
+			NodeKind: KIND_CONTACT,
+		},
+	}
 }
 
-func (builder *ContactBuilder) Fill(page *SitePage, site *Site) error {
-	page.Title = "Contact"
+func (builder *ContactBuilder) Load() {
+	node := builder.NewNode()
 
-	page.Meta = &SitePageMeta{
-		Description: "Contact test page",
+	node.Title = "Contact"
+
+	node.Meta = &NodeMeta{
+		Description: "Contact test node",
 	}
 
-	page.Content = "Soon"
+	node.Content = "Soon"
 
-	return nil
+	builder.AddNode(node)
 }

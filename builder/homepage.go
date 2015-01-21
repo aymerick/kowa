@@ -1,20 +1,28 @@
 package builder
 
 type HomepageBuilder struct {
+	*NodeBuilder
 }
 
-func NewHomepageBuilder() *HomepageBuilder {
-	return &HomepageBuilder{}
+func NewHomepageBuilder(site *Site) *HomepageBuilder {
+	return &HomepageBuilder{
+		&NodeBuilder{
+			Site:     site,
+			NodeKind: KIND_HOMEPAGE,
+		},
+	}
 }
 
-func (builder *HomepageBuilder) Fill(page *SitePage, site *Site) error {
-	page.Title = "Homepage"
+func (builder *HomepageBuilder) Load() {
+	node := builder.NewNode()
 
-	page.Meta = &SitePageMeta{
-		Description: "Homepage test page",
+	node.Title = "Homepage"
+
+	node.Meta = &NodeMeta{
+		Description: "Homepage test node",
 	}
 
-	page.Content = "Soon"
+	node.Content = "Soon"
 
-	return nil
+	builder.AddNode(node)
 }

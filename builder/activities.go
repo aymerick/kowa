@@ -1,20 +1,28 @@
 package builder
 
 type ActivitiesBuilder struct {
+	*NodeBuilder
 }
 
-func NewActivitiesBuilder() *ActivitiesBuilder {
-	return &ActivitiesBuilder{}
+func NewActivitiesBuilder(site *Site) *ActivitiesBuilder {
+	return &ActivitiesBuilder{
+		&NodeBuilder{
+			Site:     site,
+			NodeKind: KIND_ACTIVITIES,
+		},
+	}
 }
 
-func (builder *ActivitiesBuilder) Fill(page *SitePage, site *Site) error {
-	page.Title = "Activities"
+func (builder *ActivitiesBuilder) Load() {
+	node := builder.NewNode()
 
-	page.Meta = &SitePageMeta{
+	node.Title = "Activities"
+
+	node.Meta = &NodeMeta{
 		Description: "Activities test page",
 	}
 
-	page.Content = "Soon"
+	node.Content = "Soon"
 
-	return nil
+	builder.AddNode(node)
 }
