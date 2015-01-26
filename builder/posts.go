@@ -11,11 +11,11 @@ import (
 
 // Post content for template
 type PostContent struct {
-	Date    time.Time     // CreatedAt
-	Image   string        // Cover
-	Title   string        // Title
-	Content template.HTML // Body
-	Url     string        // Absolute URL
+	Date  time.Time     // CreatedAt
+	Cover string        // Cover
+	Title string        // Title
+	Body  template.HTML // Body
+	Url   string        // Absolute URL
 }
 
 // Builder for posts pages
@@ -77,11 +77,11 @@ func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *Post
 
 	cover := post.FindCover()
 	if cover != nil {
-		result.Image = cover.MediumURL()
+		result.Cover = cover.MediumURL()
 	}
 
 	html := blackfriday.MarkdownCommon([]byte(post.Body))
-	result.Content = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
+	result.Body = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
 
 	return result
 }

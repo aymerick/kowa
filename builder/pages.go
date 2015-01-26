@@ -13,10 +13,10 @@ import (
 // Page content for template
 type PageContent struct {
 	Date    time.Time     // CreatedAt
-	Image   string        // Cover
+	Cover   string        // Cover
 	Title   string        // Title
 	Tagline string        // Tagline
-	Content template.HTML // Body
+	Body    template.HTML // Body
 	Url     string        // Absolute URL
 }
 
@@ -68,11 +68,11 @@ func (builder *PagesBuilder) NewPageContent(page *models.Page, node *Node) *Page
 
 	cover := page.FindCover()
 	if cover != nil {
-		result.Image = cover.MediumURL()
+		result.Cover = cover.MediumURL()
 	}
 
 	html := blackfriday.MarkdownCommon([]byte(page.Body))
-	result.Content = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
+	result.Body = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
 
 	return result
 }

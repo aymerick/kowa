@@ -44,8 +44,9 @@ const (
 // create a new node
 func NewNode(builder NodeBuilderInterface, kind string) *Node {
 	return &Node{
-		Kind:    kind,
-		Builder: builder,
+		Kind:      kind,
+		BodyClass: kind,
+		Builder:   builder,
 	}
 }
 

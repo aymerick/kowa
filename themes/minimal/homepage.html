@@ -1,2 +1,17 @@
-<h1>Welcome</h1>
-{{.}}
+{{if .Logo}}
+<img src="{{.Logo}}" />
+{{end}}
+
+<h1>{{.Name}}</h1>
+
+{{if .Cover}}
+<img src="{{.Cover}}" />
+{{end}}
+
+<h3>{{.Tagline}}</h3>
+
+{{.Description}}
+
+{{.MoreDesc}}
+
+{{.JoinText}}
