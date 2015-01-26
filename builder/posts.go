@@ -77,7 +77,7 @@ func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *Post
 
 	cover := post.FindCover()
 	if cover != nil {
-		result.Cover = cover.MediumURL()
+		result.Cover = builder.AddImage(cover, models.MEDIUM_KIND)
 	}
 
 	html := blackfriday.MarkdownCommon([]byte(post.Body))

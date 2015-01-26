@@ -1,8 +1,9 @@
 package builder
 
 import (
-	"log"
 	"os"
+
+	"github.com/aymerick/kowa/models"
 )
 
 // node builder
@@ -10,7 +11,8 @@ type NodeBuilder struct {
 	Nodes    []*Node
 	NodeKind string
 
-	site *Site
+	site   *Site
+	images map[string]*models.Image
 }
 
 // interface for node builder
@@ -56,7 +58,7 @@ func (builder *NodeBuilder) GenerateNode(node *Node) {
 	defer outputFile.Close()
 
 	// write to file
-	log.Printf("[DBG] Writing file: %s", osFilePath)
+	// log.Printf("[DBG] Writing file: %s", osFilePath)
 	if err := node.Generate(outputFile, builder.Site().Layout()); err != nil {
 		builder.AddGenError(err)
 	}
@@ -75,6 +77,11 @@ func (builder *NodeBuilder) NewNodeForKind(nodeKind string) *Node {
 // add a new node to build
 func (builder *NodeBuilder) AddNode(node *Node) {
 	builder.Nodes = append(builder.Nodes, node)
+}
+
+// add an image to copy
+func (builder *NodeBuilder) AddImage(img *models.Image, kind string) string {
+	return builder.Site().AddImage(img, kind)
 }
 
 // add a node generation error

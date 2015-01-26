@@ -3,6 +3,8 @@ package builder
 import (
 	"html/template"
 
+	"github.com/aymerick/kowa/models"
+
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday"
 )
@@ -69,12 +71,12 @@ func (builder *HomepageBuilder) NewHomepageContent() *HomepageContent {
 
 	logo := siteModel.FindLogo()
 	if logo != nil {
-		result.Logo = logo.MediumURL()
+		result.Logo = builder.AddImage(logo, models.MEDIUM_KIND)
 	}
 
 	cover := siteModel.FindCover()
 	if cover != nil {
-		result.Cover = cover.MediumURL()
+		result.Cover = builder.AddImage(cover, models.MEDIUM_KIND)
 	}
 
 	return result

@@ -1,7 +1,9 @@
 package commands
 
 import (
+	"fmt"
 	"log"
+	"net/http"
 
 	"github.com/aymerick/kowa/builder"
 	"github.com/spf13/cobra"
@@ -12,6 +14,8 @@ const (
 	DEFAULT_THEME      = "minimal"
 	DEFAULT_OUTPUT_DIR = "_site"
 	DEFAULT_UGLY_URL   = false
+	DEFAULT_SERVE      = false
+	DEFAULT_SERVE_PORT = 48910
 )
 
 var buildCmd = &cobra.Command{
@@ -28,8 +32,14 @@ func initBuilderConf() {
 	buildCmd.Flags().StringP("output_dir", "o", DEFAULT_OUTPUT_DIR, "Output directory")
 	viper.BindPFlag("output_dir", buildCmd.Flags().Lookup("output_dir"))
 
-	buildCmd.Flags().BoolP("urgly_url", "g", DEFAULT_UGLY_URL, "Generate ugly URLs")
-	viper.BindPFlag("urgly_url", buildCmd.Flags().Lookup("urgly_url"))
+	buildCmd.Flags().BoolP("ugly_url", "g", DEFAULT_UGLY_URL, "Generate ugly URLs")
+	viper.BindPFlag("ugly_url", buildCmd.Flags().Lookup("ugly_url"))
+
+	buildCmd.Flags().BoolP("serve", "s", DEFAULT_SERVE, "Start a server to test built site")
+	viper.BindPFlag("serve", buildCmd.Flags().Lookup("serve"))
+
+	serverCmd.Flags().IntP("serve_port", "t", DEFAULT_SERVE_PORT, "Port to test built site")
+	viper.BindPFlag("serve_port", serverCmd.Flags().Lookup("serve_port"))
 }
 
 func buildSite(cmd *cobra.Command, args []string) {
@@ -42,5 +52,20 @@ func buildSite(cmd *cobra.Command, args []string) {
 
 	log.Printf("Building site '%s' with theme '%s' into %s", args[0], site.Theme, site.GenDir())
 
+	// build site
 	site.Build()
+
+	if viper.GetBool("serve") {
+		// server site
+		serve(site, viper.GetInt("serve_port"))
+	}
+}
+
+func serve(site *builder.Site, port int) {
+	log.Printf("Serving built site from: " + site.GenDir())
+
+	log.Printf("Web Server is available at http://127.0.0.1:%d\n", port)
+	log.Printf("Press Ctrl+C to stop")
+
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), http.FileServer(http.Dir(site.GenDir()))))
 }

@@ -206,14 +206,14 @@ func (img *Image) Delete() error {
 
 	// delete files
 	for _, derivative := range Derivatives {
-		derivativePath := img.derivativeFilePath(derivative)
+		derivativePath := img.DerivativeFilePath(derivative)
 
 		if err := os.Remove(derivativePath); err != nil {
 			log.Printf("Failed to delete image: %s", derivativePath)
 		}
 	}
 
-	originalPath := img.originalFilePath()
+	originalPath := img.OriginalFilePath()
 	if err = os.Remove(originalPath); err != nil {
 		log.Printf("Failed to delete image: %s", originalPath)
 	}
@@ -229,7 +229,7 @@ func (img *Image) FindSite() *Site {
 // Returns memoized image original image
 func (img *Image) Original() *image.Image {
 	if img.original == nil {
-		originalPath := img.originalFilePath()
+		originalPath := img.OriginalFilePath()
 
 		// open original
 		openedImage, err := imaging.Open(originalPath)
@@ -243,7 +243,7 @@ func (img *Image) Original() *image.Image {
 	return img.original
 }
 
-func (img *Image) originalFilePath() string {
+func (img *Image) OriginalFilePath() string {
 	return path.Join(utils.AppPublicDir(), img.Path)
 }
 
@@ -259,22 +259,22 @@ func (img *Image) URL() string {
 
 // Returns small derivative URL
 func (img *Image) SmallURL() string {
-	return img.derivativeURL(DerivativeForKind(SMALL_KIND))
+	return img.DerivativeURL(DerivativeForKind(SMALL_KIND))
 }
 
 // Returns thumb derivative URL
 func (img *Image) ThumbURL() string {
-	return img.derivativeURL(DerivativeForKind(THUMB_KIND))
+	return img.DerivativeURL(DerivativeForKind(THUMB_KIND))
 }
 
 // Returns medium derivative URL
 func (img *Image) MediumURL() string {
-	return img.derivativeURL(DerivativeForKind(MEDIUM_KIND))
+	return img.DerivativeURL(DerivativeForKind(MEDIUM_KIND))
 }
 
 // Returns medium derivative URL
 func (img *Image) MediumCropURL() string {
-	return img.derivativeURL(DerivativeForKind(MEDIUM_CROP_KIND))
+	return img.DerivativeURL(DerivativeForKind(MEDIUM_CROP_KIND))
 }
 
 func genSmall(source *image.Image) *image.NRGBA {
@@ -297,17 +297,17 @@ func (img *Image) derivativePath(derivative *Derivative) string {
 	return fmt.Sprintf("%s/%s%s%s", path.Dir(img.Path), utils.FileBase(img.Path), derivative.suffix, path.Ext(img.Path))
 }
 
-func (img *Image) derivativeURL(derivative *Derivative) string {
+func (img *Image) DerivativeURL(derivative *Derivative) string {
 	// @todo FIXME
 	return img.derivativePath(derivative)
 }
 
-func (img *Image) derivativeFilePath(derivative *Derivative) string {
+func (img *Image) DerivativeFilePath(derivative *Derivative) string {
 	return path.Join(utils.AppPublicDir(), img.derivativePath(derivative))
 }
 
 func (img *Image) generateDerivative(derivative *Derivative) error {
-	derivativePath := img.derivativeFilePath(derivative)
+	derivativePath := img.DerivativeFilePath(derivative)
 
 	// check if derivative already exists
 	if _, err := os.Stat(derivativePath); !os.IsNotExist(err) {

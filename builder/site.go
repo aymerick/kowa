@@ -3,6 +3,7 @@ package builder
 import (
 	"fmt"
 	"html/template"
+	"io"
 	"log"
 	"os"
 	"path"
@@ -11,8 +12,13 @@ import (
 	"github.com/spf13/viper"
 )
 
+const (
+	IMAGES_DIR = "img"
+)
+
 type Site struct {
 	Model          *models.Site
+	ImageCollector *ImageCollector
 	ErrorCollector *ErrorCollector
 
 	WorkingDir string
@@ -33,6 +39,7 @@ func NewSite(siteId string) *Site {
 
 	result := &Site{
 		Model:          model,
+		ImageCollector: NewImageCollector(),
 		ErrorCollector: NewErrorCollector(),
 
 		WorkingDir: viper.GetString("working_dir"),
@@ -52,6 +59,9 @@ func (site *Site) Build() {
 	site.BuildPages()
 	site.BuildPosts()
 	site.BuildHomepage()
+
+	// copy images
+	site.CopyCollectedImages()
 
 	// dump errors
 	site.ErrorCollector.Dump()
@@ -92,10 +102,71 @@ func (site *Site) BuildHomepage() {
 	homepageBuilder.Generate()
 }
 
+// Copy images
+func (site *Site) CopyCollectedImages() {
+	errStep := "Copy images"
+	imgDir := path.Join(site.GenDir(), IMAGES_DIR)
+
+	if err := site.EnsureDir(imgDir); err != nil {
+		site.AddError(errStep, err)
+		return
+	}
+
+	for _, imgKind := range site.ImageCollector.Images {
+		// Copy medium image
+		derivative := models.DerivativeForKind(imgKind.Kind)
+		srcFile := imgKind.Image.DerivativeFilePath(derivative)
+
+		if err := site.CopyFile(srcFile, imgDir); err != nil {
+			site.AddError(errStep, err)
+		}
+	}
+}
+
+// Copy a file to given directory
+func (site *Site) CopyFile(fromFilePath string, toDir string) error {
+	// open source
+	src, err := os.Open(fromFilePath)
+	if err != nil {
+		return err
+	}
+	defer src.Close()
+
+	// open destination
+	dstFilePath := path.Join(toDir, path.Base(fromFilePath))
+
+	dst, err := os.Create(dstFilePath)
+	if err != nil {
+		return err
+	}
+	defer dst.Close()
+
+	// copy
+	if _, err := io.Copy(dst, src); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Add an image to process, and returns the URL for that image
+func (site *Site) AddImage(img *models.Image, kind string) string {
+	site.ImageCollector.AddImage(img, kind)
+
+	// fix image URL
+	// eg: /site_1/image_m.jpg => /img/image_m.jpg
+	return "/" + path.Join(IMAGES_DIR, path.Base(img.DerivativeURL(models.DerivativeForKind(kind))))
+}
+
+// Add an error
+func (site *Site) AddError(step string, err error) {
+	site.ErrorCollector.AddError(step, err)
+}
+
 // Add an error when generating a node
 func (site *Site) AddGenError(nodeKind string, err error) {
 	step := fmt.Sprintf("Generating %s", nodeKind)
-	site.ErrorCollector.AddError(step, err)
+	site.AddError(step, err)
 }
 
 // Computes directory where site is generated
@@ -103,18 +174,21 @@ func (site *Site) GenDir() string {
 	return path.Join(site.WorkingDir, site.OutputDir)
 }
 
-// Prune directories for given absolute file path
-func (site *Site) EnsureFileDir(osPath string) error {
-	fileDir := path.Dir(osPath)
+// Prune directories for given absolute dir path
+func (site *Site) EnsureDir(dirPath string) error {
+	// log.Printf("[DBG] Creating dir: %s", dirPath)
 
-	log.Printf("[DBG] Creating dir: %s", fileDir)
-
-	err := os.MkdirAll(fileDir, 0777)
+	err := os.MkdirAll(dirPath, 0777)
 	if err != nil && err != os.ErrExist {
 		return err
 	}
 
 	return err
+}
+
+// Prune directories for given absolute file path
+func (site *Site) EnsureFileDir(osPath string) error {
+	return site.EnsureDir(path.Dir(osPath))
 }
 
 // Computes local file path for given URL
