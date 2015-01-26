@@ -12,7 +12,7 @@ var SiteSerializer = DS.RESTSerializer.extend({
 
     // logo
     if (result['logo']) {
-      result['logo'] = result['logo']['id'];
+      result['logo'] = result['logo'].get('id');
     }
 
     if (result['logo'] == null) {
@@ -21,7 +21,7 @@ var SiteSerializer = DS.RESTSerializer.extend({
 
     // cover
     if (result['cover']) {
-      result['cover'] = result['cover']['id'];
+      result['cover'] = result['cover'].get('id');
     }
 
     if (result['cover'] == null) {
