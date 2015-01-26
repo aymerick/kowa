@@ -77,19 +77,9 @@ type Derivative struct {
 	genFunc DerivativeGenFunc
 }
 
-// @todo FIXME
-var appPublicDir string
-
 var Derivatives []*Derivative
 
 func init() {
-	currentDir, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-
-	appPublicDir = path.Join(currentDir, "/client/public")
-
 	Derivatives = []*Derivative{
 		&Derivative{
 			kind:    SMALL_KIND,
@@ -254,7 +244,7 @@ func (img *Image) Original() *image.Image {
 }
 
 func (img *Image) originalFilePath() string {
-	return path.Join(appPublicDir, img.Path)
+	return path.Join(utils.AppPublicDir(), img.Path)
 }
 
 // Returns image URL
@@ -313,7 +303,7 @@ func (img *Image) derivativeURL(derivative *Derivative) string {
 }
 
 func (img *Image) derivativeFilePath(derivative *Derivative) string {
-	return path.Join(appPublicDir, img.derivativePath(derivative))
+	return path.Join(utils.AppPublicDir(), img.derivativePath(derivative))
 }
 
 func (img *Image) generateDerivative(derivative *Derivative) error {

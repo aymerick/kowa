@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path"
 )
@@ -35,4 +36,13 @@ func AvailableFilePath(filePath string) string {
 	}
 
 	return newFilePath
+}
+
+func EnsureDirectory(dirPath string) {
+	log.Printf("[DBG] Ensuring dir: %s", dirPath)
+
+	err := os.MkdirAll(dirPath, 0777)
+	if err != nil && err != os.ErrExist {
+		panic(err)
+	}
 }

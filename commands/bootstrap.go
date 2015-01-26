@@ -14,6 +14,7 @@ import (
 
 	"github.com/aymerick/kowa/models"
 	"github.com/aymerick/kowa/server"
+	"github.com/aymerick/kowa/utils"
 )
 
 const (
@@ -29,6 +30,8 @@ var bootstrapCmd = &cobra.Command{
 
 func bootstrap(cmd *cobra.Command, args []string) {
 	// @todo Check that we are NOT in production
+
+	utils.AppEnsureUploadDir()
 
 	rand.Seed(time.Now().UTC().UnixNano())
 
@@ -89,6 +92,8 @@ func bootstrap(cmd *cobra.Command, args []string) {
 		panic(err)
 	}
 
+	utils.AppEnsureSiteUploadDir(siteJC1.Id)
+
 	siteJC2 := models.Site{
 		Id:          "site_2",
 		UserId:      userJeanClaude.Id,
@@ -99,6 +104,8 @@ func bootstrap(cmd *cobra.Command, args []string) {
 	}
 	db.SitesCol().Insert(&siteJC2)
 
+	utils.AppEnsureSiteUploadDir(siteJC2.Id)
+
 	siteH := models.Site{
 		Id:          "ultimate",
 		UserId:      userHenry.Id,
@@ -108,6 +115,8 @@ func bootstrap(cmd *cobra.Command, args []string) {
 		Description: "C'est vraiment le sport du futur. Messieurs, preparez vos boules !",
 	}
 	db.SitesCol().Insert(&siteH)
+
+	utils.AppEnsureSiteUploadDir(siteH.Id)
 
 	sites := []models.Site{siteJC1, siteJC2, siteH}
 

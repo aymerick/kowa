@@ -5,28 +5,11 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"path"
 
 	"github.com/aymerick/kowa/models"
 	"github.com/aymerick/kowa/utils"
 	"gopkg.in/mgo.v2/bson"
 )
-
-const (
-	PUBLIC_UPLOAD_PATH = "/upload"
-)
-
-// @todo FIXME
-var appUploadDir string
-
-func init() {
-	currentDir, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-
-	appUploadDir = path.Join(currentDir, "/client/public", PUBLIC_UPLOAD_PATH)
-}
 
 // GET /images?site={site_id}
 // GET /sites/{site_id}/images
@@ -90,6 +73,11 @@ func (app *Application) handleUploadImage(rw http.ResponseWriter, req *http.Requ
 
 	currentDBSession := app.getCurrentDBSession(req)
 
+	site := app.getCurrentSite(req)
+	if site == nil {
+		panic("Site should be set")
+	}
+
 	reader, err := req.MultipartReader()
 	if err != nil {
 		log.Printf("Multipart error: %v", err.Error())
@@ -117,7 +105,7 @@ func (app *Application) handleUploadImage(rw http.ResponseWriter, req *http.Requ
 
 		log.Printf("Handling uploaded file: %s", fileName)
 
-		dstPath := utils.AvailableFilePath(path.Join(appUploadDir, fileName))
+		dstPath := utils.AvailableFilePath(utils.AppUploadSiteFilePath(site.Id, fileName))
 
 		dst, err := os.Create(dstPath)
 		if err != nil {
@@ -145,16 +133,11 @@ func (app *Application) handleUploadImage(rw http.ResponseWriter, req *http.Requ
 	if fileName == "" {
 		http.Error(rw, "Image not found in multipart", http.StatusBadRequest)
 	} else {
-		site := app.getCurrentSite(req)
-		if site == nil {
-			panic("Site should be set")
-		}
-
 		// create image model
 		img := &models.Image{
 			Id:     bson.NewObjectId(),
 			SiteId: site.Id,
-			Path:   path.Join(PUBLIC_UPLOAD_PATH, fileInfo.Name()),
+			Path:   utils.AppUploadSiteUrlPath(site.Id, fileInfo.Name()),
 			Name:   fileName,
 			Size:   fileInfo.Size(),
 			Type:   fileContentType,
