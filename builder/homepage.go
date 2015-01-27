@@ -32,7 +32,7 @@ func init() {
 func NewHomepageBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 	return &HomepageBuilder{
 		&NodeBuilderBase{
-			NodeKind:    KIND_HOMEPAGE,
+			nodeKind:    KIND_HOMEPAGE,
 			siteBuilder: siteBuilder,
 		},
 	}

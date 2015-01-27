@@ -14,14 +14,12 @@
 
 <body class="{{.BodyClass}}">
     {{/* Navigation */}}
-    {{template "navbar.html" .}}
+    {{template "navbar.html" .Site.NavBar}}
 
     {{/* Page content */}}
     {{template "content" .Content}}
 
-    {{/* Page footer */}}
-    <footer>
-        @todo Footer
-    </footer>
+    {{/* Navigation */}}
+    {{template "footer.html" .Site}}
 </body>
 </html>

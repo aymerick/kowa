@@ -12,7 +12,7 @@ func init() {
 func NewContactBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 	return &ContactBuilder{
 		&NodeBuilderBase{
-			NodeKind:    KIND_CONTACT,
+			nodeKind:    KIND_CONTACT,
 			siteBuilder: siteBuilder,
 		},
 	}

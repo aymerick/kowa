@@ -31,7 +31,7 @@ func init() {
 func NewPostsBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 	return &PostsBuilder{
 		&NodeBuilderBase{
-			NodeKind:    KIND_POST,
+			nodeKind:    KIND_POST,
 			siteBuilder: siteBuilder,
 		},
 	}

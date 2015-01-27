@@ -8,18 +8,32 @@ import (
 
 // interface for node builder
 type NodeBuilder interface {
+	// Returns site builder
 	SiteBuilder() *SiteBuilder
+
+	// Load all nodes
 	Load()
+
+	// Generate all nodes
 	Generate()
+
+	// Returns loaded nodes that must be placed in navigation bar
+	NavBarNodes() []*Node
 }
 
 // node builder base
 type NodeBuilderBase struct {
-	Nodes    []*Node
-	NodeKind string
+	// All loaded nodes
+	nodes []*Node
 
+	// Loaded nodes that must be placed in navigation bar
+	navBarNodes []*Node
+
+	// Node kind
+	nodeKind string
+
+	// Suite builder
 	siteBuilder *SiteBuilder
-	images      map[string]*models.Image
 }
 
 // NodeBuilder
@@ -34,17 +48,25 @@ func (builder *NodeBuilderBase) Load() {
 
 // NodeBuilder
 func (builder *NodeBuilderBase) Generate() {
-	for _, node := range builder.Nodes {
+	for _, node := range builder.nodes {
+		// fill node with more data
+		node.Site = builder.siteBuilder.siteVars
+
 		builder.generateNode(node)
 	}
 }
 
+// NodeBuilder
+func (builder *NodeBuilderBase) NavBarNodes() []*Node {
+	return builder.navBarNodes
+}
+
 // generate given node
 func (builder *NodeBuilderBase) generateNode(node *Node) {
-	osFilePath := builder.SiteBuilder().filePath(node.FullUrl())
+	osFilePath := builder.siteBuilder.filePath(node.FullUrl())
 
 	// ensure dir
-	if err := builder.SiteBuilder().ensureFileDir(osFilePath); err != nil {
+	if err := builder.siteBuilder.ensureFileDir(osFilePath); err != nil {
 		builder.addGenError(err)
 		return
 	}
@@ -59,14 +81,14 @@ func (builder *NodeBuilderBase) generateNode(node *Node) {
 
 	// write to file
 	// log.Printf("[DBG] Writing file: %s", osFilePath)
-	if err := node.Generate(outputFile, builder.SiteBuilder().layout()); err != nil {
+	if err := node.Generate(outputFile, builder.siteBuilder.layout()); err != nil {
 		builder.addGenError(err)
 	}
 }
 
 // init a new node with builder node kind
 func (builder *NodeBuilderBase) NewNode() *Node {
-	return builder.NewNodeForKind(builder.NodeKind)
+	return builder.NewNodeForKind(builder.nodeKind)
 }
 
 // init a new node with given node kind
@@ -76,15 +98,19 @@ func (builder *NodeBuilderBase) NewNodeForKind(nodeKind string) *Node {
 
 // add a new node to build
 func (builder *NodeBuilderBase) AddNode(node *Node) {
-	builder.Nodes = append(builder.Nodes, node)
+	builder.nodes = append(builder.nodes, node)
+
+	if node.InNavBar {
+		builder.navBarNodes = append(builder.navBarNodes, node)
+	}
 }
 
 // add an image to copy
 func (builder *NodeBuilderBase) AddImage(img *models.Image, kind string) string {
-	return builder.SiteBuilder().AddImage(img, kind)
+	return builder.siteBuilder.AddImage(img, kind)
 }
 
 // add a node generation error
 func (builder *NodeBuilderBase) addGenError(err error) {
-	builder.SiteBuilder().addGenError(builder.NodeKind, err)
+	builder.siteBuilder.addGenError(builder.nodeKind, err)
 }

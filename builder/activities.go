@@ -12,7 +12,7 @@ func init() {
 func NewActivitiesBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 	return &ActivitiesBuilder{
 		&NodeBuilderBase{
-			NodeKind:    KIND_ACTIVITIES,
+			nodeKind:    KIND_ACTIVITIES,
 			siteBuilder: siteBuilder,
 		},
 	}

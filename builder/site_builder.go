@@ -22,15 +22,15 @@ const (
 	ASSETS_DIR   = "assets"
 )
 
-var nodeBuilders = make(map[string]func(*SiteBuilder) NodeBuilder)
+var registeredNodeBuilders = make(map[string]func(*SiteBuilder) NodeBuilder)
 
 // Registers a node builder
 func RegisterNodeBuilder(name string, initializer func(*SiteBuilder) NodeBuilder) {
-	if _, exists := nodeBuilders[name]; exists {
+	if _, exists := registeredNodeBuilders[name]; exists {
 		panic(fmt.Sprintf("Builder initializer already registered: %s", name))
 	}
 
-	nodeBuilders[name] = initializer
+	registeredNodeBuilders[name] = initializer
 }
 
 type SiteBuilder struct {
@@ -48,6 +48,7 @@ type SiteBuilder struct {
 	masterLayout *template.Template
 
 	site         *models.Site
+	siteVars     *SiteVars
 	nodeBuilders map[string]NodeBuilder
 }
 
@@ -83,6 +84,9 @@ func (builder *SiteBuilder) Build() {
 	// load nodes
 	builder.loadNodes()
 
+	// compute site variables
+	builder.fillSiteVars()
+
 	// generate nodes
 	builder.generateNodes()
 
@@ -98,22 +102,41 @@ func (builder *SiteBuilder) Build() {
 
 // Initialize builders
 func (builder *SiteBuilder) initBuilders() {
-	for name, initializer := range nodeBuilders {
+	for name, initializer := range registeredNodeBuilders {
 		builder.nodeBuilders[name] = initializer(builder)
 	}
 }
 
 // Load nodes
 func (builder *SiteBuilder) loadNodes() {
-	for _, builder := range builder.nodeBuilders {
-		builder.Load()
+	for _, nodeBuilder := range builder.nodeBuilders {
+		nodeBuilder.Load()
 	}
+}
+
+func (builder *SiteBuilder) NavBarNodes() []*Node {
+	result := make([]*Node, 0)
+
+	for _, nodeBuilder := range builder.nodeBuilders {
+		nodes := nodeBuilder.NavBarNodes()
+		if len(nodes) > 0 {
+			result = append(result, nodes...)
+		}
+	}
+
+	return result
+}
+
+// Fill site variables
+func (builder *SiteBuilder) fillSiteVars() {
+	builder.siteVars = NewSiteVars(builder)
+	builder.siteVars.Fill()
 }
 
 // Generate nodes
 func (builder *SiteBuilder) generateNodes() {
-	for _, builder := range builder.nodeBuilders {
-		builder.Generate()
+	for _, nodeBuilder := range builder.nodeBuilders {
+		nodeBuilder.Generate()
 	}
 }
 

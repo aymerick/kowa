@@ -18,6 +18,7 @@ type NodeMeta struct {
 type Node struct {
 	// template vars
 	Kind string
+	Site *SiteVars
 
 	Title     string
 	Meta      *NodeMeta
