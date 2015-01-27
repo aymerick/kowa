@@ -41,12 +41,12 @@ func NewPagesBuilder(site *Site) NodeBuilder {
 // NodeBuilder
 func (builder *PagesBuilder) Load() {
 	for _, page := range *builder.Site().model.FindAllPages() {
-		builder.BuildPage(page)
+		builder.buildPage(page)
 	}
 }
 
 // Build page
-func (builder *PagesBuilder) BuildPage(page *models.Page) {
+func (builder *PagesBuilder) buildPage(page *models.Page) {
 	node := builder.NewNode()
 
 	node.slug = utils.Urlify(page.Title)

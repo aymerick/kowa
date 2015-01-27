@@ -35,32 +35,32 @@ func (builder *NodeBuilderBase) Load() {
 // NodeBuilder
 func (builder *NodeBuilderBase) Generate() {
 	for _, node := range builder.Nodes {
-		builder.GenerateNode(node)
+		builder.generateNode(node)
 	}
 }
 
 // generate given node
-func (builder *NodeBuilderBase) GenerateNode(node *Node) {
-	osFilePath := builder.Site().FilePath(node.FullUrl())
+func (builder *NodeBuilderBase) generateNode(node *Node) {
+	osFilePath := builder.Site().filePath(node.FullUrl())
 
 	// ensure dir
-	if err := builder.Site().EnsureFileDir(osFilePath); err != nil {
-		builder.AddGenError(err)
+	if err := builder.Site().ensureFileDir(osFilePath); err != nil {
+		builder.addGenError(err)
 		return
 	}
 
 	// open file
 	outputFile, err := os.Create(osFilePath)
 	if err != nil {
-		builder.AddGenError(err)
+		builder.addGenError(err)
 		return
 	}
 	defer outputFile.Close()
 
 	// write to file
 	// log.Printf("[DBG] Writing file: %s", osFilePath)
-	if err := node.Generate(outputFile, builder.Site().Layout()); err != nil {
-		builder.AddGenError(err)
+	if err := node.Generate(outputFile, builder.Site().layout()); err != nil {
+		builder.addGenError(err)
 	}
 }
 
@@ -85,6 +85,6 @@ func (builder *NodeBuilderBase) AddImage(img *models.Image, kind string) string 
 }
 
 // add a node generation error
-func (builder *NodeBuilderBase) AddGenError(err error) {
-	builder.Site().AddGenError(builder.NodeKind, err)
+func (builder *NodeBuilderBase) addGenError(err error) {
+	builder.Site().addGenError(builder.NodeKind, err)
 }

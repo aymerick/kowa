@@ -24,6 +24,7 @@ type Node struct {
 	Meta      *NodeMeta
 	BodyClass string
 	Content   interface{}
+	InNavBar  bool
 
 	builder  NodeBuilder
 	slug     string
@@ -46,6 +47,7 @@ func NewNode(builder NodeBuilder, kind string) *Node {
 		Kind:      kind,
 		Site:      builder.Site(),
 		BodyClass: kind,
+		InNavBar:  false,
 
 		builder: builder,
 	}
@@ -93,7 +95,7 @@ func (node *Node) Template(layout *template.Template) (*template.Template, error
 	} else {
 		result := template.Must(layout.Clone())
 
-		binData, err := ioutil.ReadFile(node.builder.Site().TemplatePath(node.Kind))
+		binData, err := ioutil.ReadFile(node.builder.Site().templatePath(node.Kind))
 		if err == nil {
 			_, err = result.New("content").Parse(string(binData))
 			if err != nil {

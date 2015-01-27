@@ -39,24 +39,36 @@ func NewPostsBuilder(site *Site) NodeBuilder {
 
 // NodeBuilder
 func (builder *PostsBuilder) Load() {
-	builder.BuildPostsLists()
-	builder.BuildPosts()
+	builder.buildPostsLists()
+	builder.buildPosts()
 }
 
 // Build posts list pages
-func (builder *PostsBuilder) BuildPostsLists() {
-	// @todo !!!
+func (builder *PostsBuilder) buildPostsLists() {
+	node := builder.NewNodeForKind(KIND_POSTS)
+
+	node.Title = "Posts"
+
+	node.Meta = &NodeMeta{
+		Description: "Posts test node",
+	}
+
+	node.Content = "Soon"
+
+	node.InNavBar = true
+
+	builder.AddNode(node)
 }
 
 // Build posts single pages
-func (builder *PostsBuilder) BuildPosts() {
+func (builder *PostsBuilder) buildPosts() {
 	for _, post := range *builder.Site().model.FindAllPosts() {
-		builder.BuildPost(post)
+		builder.buildPost(post)
 	}
 }
 
 // Build post single page
-func (builder *PostsBuilder) BuildPost(post *models.Post) {
+func (builder *PostsBuilder) buildPost(post *models.Post) {
 	node := builder.NewNode()
 
 	node.slug = post.Slug()

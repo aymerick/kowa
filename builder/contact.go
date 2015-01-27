@@ -30,5 +30,7 @@ func (builder *ContactBuilder) Load() {
 
 	node.Content = "Soon"
 
+	node.InNavBar = true
+
 	builder.AddNode(node)
 }

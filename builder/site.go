@@ -44,8 +44,8 @@ type Site struct {
 	imageCollector *ImageCollector
 	errorCollector *ErrorCollector
 
-	// cache for #Layout method
-	layout *template.Template
+	// cache for #layout method
+	masterLayout *template.Template
 
 	model    *models.Site
 	builders map[string]NodeBuilder
@@ -94,10 +94,10 @@ func (site *Site) Build() {
 	site.generateNodes()
 
 	// copy images
-	site.CopyCollectedImages()
+	site.copyCollectedImages()
 
 	// copy assets
-	site.CopyAssets()
+	site.copyAssets()
 
 	// dump errors
 	site.errorCollector.Dump()
@@ -118,14 +118,14 @@ func (site *Site) generateNodes() {
 }
 
 // Copy images
-func (site *Site) CopyCollectedImages() {
+func (site *Site) copyCollectedImages() {
 	errStep := "Copy images"
 
-	imgDir := site.GenImagesDir()
+	imgDir := site.genImagesDir()
 
 	// ensure img dir
-	if err := site.EnsureDir(imgDir); err != nil {
-		site.AddError(errStep, err)
+	if err := site.ensureDir(imgDir); err != nil {
+		site.addError(errStep, err)
 		return
 	}
 
@@ -134,19 +134,19 @@ func (site *Site) CopyCollectedImages() {
 		derivative := models.DerivativeForKind(imgKind.Kind)
 		srcFile := imgKind.Image.DerivativeFilePath(derivative)
 
-		if err := site.CopyFile(srcFile, imgDir); err != nil {
-			site.AddError(errStep, err)
+		if err := site.copyFile(srcFile, imgDir); err != nil {
+			site.addError(errStep, err)
 		}
 	}
 }
 
 // Copy theme assets
-func (site *Site) CopyAssets() error {
+func (site *Site) copyAssets() error {
 	syncer := fsync.NewSyncer()
 	syncer.SrcFs = new(afero.OsFs)
 	syncer.DestFs = new(afero.OsFs)
 
-	return syncer.Sync(site.GenAssetsDir(), site.ThemeAssetsDir())
+	return syncer.Sync(site.genAssetsDir(), site.themeAssetsDir())
 }
 
 // Add an image to collector, and returns the URL for that image
@@ -159,24 +159,24 @@ func (site *Site) AddImage(img *models.Image, kind string) string {
 }
 
 // Add an error to collector
-func (site *Site) AddError(step string, err error) {
+func (site *Site) addError(step string, err error) {
 	site.errorCollector.AddError(step, err)
 }
 
 // Add an error when generating a node
-func (site *Site) AddGenError(nodeKind string, err error) {
+func (site *Site) addGenError(nodeKind string, err error) {
 	step := fmt.Sprintf("Generating %s", nodeKind)
-	site.AddError(step, err)
+	site.addError(step, err)
 }
 
 // Computes theme directory
-func (site *Site) ThemeDir() string {
+func (site *Site) themeDir() string {
 	return path.Join(site.workingDir, THEMES_DIR, site.theme)
 }
 
 // Computes theme assets directory
-func (site *Site) ThemeAssetsDir() string {
-	return path.Join(site.ThemeDir(), ASSETS_DIR)
+func (site *Site) themeAssetsDir() string {
+	return path.Join(site.themeDir(), ASSETS_DIR)
 }
 
 // Computes directory where site is generated
@@ -185,45 +185,45 @@ func (site *Site) GenDir() string {
 }
 
 // Copmputes directory where images are copied
-func (site *Site) GenImagesDir() string {
+func (site *Site) genImagesDir() string {
 	return path.Join(site.GenDir(), IMAGES_DIR)
 }
 
 // Copmputes directory where assets are copied
-func (site *Site) GenAssetsDir() string {
+func (site *Site) genAssetsDir() string {
 	return path.Join(site.GenDir(), ASSETS_DIR)
 }
 
 // Compute template path for given template name
-func (site *Site) TemplatePath(tplName string) string {
-	return path.Join(site.ThemeDir(), fmt.Sprintf("%s.html", tplName))
+func (site *Site) templatePath(tplName string) string {
+	return path.Join(site.themeDir(), fmt.Sprintf("%s.html", tplName))
 }
 
 // Get master layout template
-func (site *Site) Layout() *template.Template {
-	if site.layout != nil {
-		return site.layout
+func (site *Site) layout() *template.Template {
+	if site.masterLayout != nil {
+		return site.masterLayout
 	} else {
-		site.layout = template.Must(template.ParseFiles(site.TemplatePath("layout")))
+		site.masterLayout = template.Must(template.ParseFiles(site.templatePath("layout")))
 
 		// Load partials
-		template.Must(site.layout.ParseGlob(path.Join(site.PartialsPath(), "*.html")))
+		template.Must(site.masterLayout.ParseGlob(path.Join(site.partialsPath(), "*.html")))
 
-		// for _, tpl := range site.layout.Templates() {
+		// for _, tpl := range site.masterLayout.Templates() {
 		// 	log.Printf("Template: %s", tpl.Name())
 		// }
 
-		return site.layout
+		return site.masterLayout
 	}
 }
 
 // Returns partials directory path
-func (site *Site) PartialsPath() string {
-	return path.Join(site.ThemeDir(), PARTIALS_DIR)
+func (site *Site) partialsPath() string {
+	return path.Join(site.themeDir(), PARTIALS_DIR)
 }
 
 // Prune directories for given absolute dir path
-func (site *Site) EnsureDir(dirPath string) error {
+func (site *Site) ensureDir(dirPath string) error {
 	// log.Printf("[DBG] Creating dir: %s", dirPath)
 
 	err := os.MkdirAll(dirPath, 0777)
@@ -235,17 +235,17 @@ func (site *Site) EnsureDir(dirPath string) error {
 }
 
 // Prune directories for given absolute file path
-func (site *Site) EnsureFileDir(osPath string) error {
-	return site.EnsureDir(path.Dir(osPath))
+func (site *Site) ensureFileDir(osPath string) error {
+	return site.ensureDir(path.Dir(osPath))
 }
 
 // Computes local file path for given URL
-func (site *Site) FilePath(fullUrl string) string {
+func (site *Site) filePath(fullUrl string) string {
 	return path.Join(site.GenDir(), fullUrl)
 }
 
 // Copy file to given directory
-func (site *Site) CopyFile(fromFilePath string, toDir string) error {
+func (site *Site) copyFile(fromFilePath string, toDir string) error {
 	// open source file
 	src, err := os.Open(fromFilePath)
 	if err != nil {
