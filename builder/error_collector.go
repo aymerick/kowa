@@ -17,15 +17,15 @@ func NewErrorCollector() *ErrorCollector {
 	}
 }
 
-// add a new error for given step
-func (collector *ErrorCollector) AddError(step string, err error) {
+// Add a new error for given step
+func (collector *ErrorCollector) addError(step string, err error) {
 	collector.Errors[step] = append(collector.Errors[step], err)
 
 	collector.ErrorsNb += 1
 }
 
-// dump all errors
-func (collector *ErrorCollector) Dump() {
+// Dump all errors
+func (collector *ErrorCollector) dump() {
 	if collector.ErrorsNb > 0 {
 		log.Printf("[ERR] Built with %d error(s)", collector.ErrorsNb)
 

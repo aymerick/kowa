@@ -6,7 +6,7 @@ import (
 	"github.com/aymerick/kowa/models"
 )
 
-// interface for node builder
+// Interface for node builder
 type NodeBuilder interface {
 	// Returns site builder
 	SiteBuilder() *SiteBuilder
@@ -21,7 +21,7 @@ type NodeBuilder interface {
 	NavBarNodes() []*Node
 }
 
-// node builder base
+// Node builder base
 type NodeBuilderBase struct {
 	// All loaded nodes
 	nodes []*Node
@@ -61,7 +61,7 @@ func (builder *NodeBuilderBase) NavBarNodes() []*Node {
 	return builder.navBarNodes
 }
 
-// generate given node
+// Generate given node
 func (builder *NodeBuilderBase) generateNode(node *Node) {
 	osFilePath := builder.siteBuilder.filePath(node.FullUrl())
 
@@ -86,18 +86,18 @@ func (builder *NodeBuilderBase) generateNode(node *Node) {
 	}
 }
 
-// init a new node with builder node kind
-func (builder *NodeBuilderBase) NewNode() *Node {
-	return builder.NewNodeForKind(builder.nodeKind)
+// Init a new node with builder node kind
+func (builder *NodeBuilderBase) newNode() *Node {
+	return builder.newNodeForKind(builder.nodeKind)
 }
 
-// init a new node with given node kind
-func (builder *NodeBuilderBase) NewNodeForKind(nodeKind string) *Node {
+// Init a new node with given node kind
+func (builder *NodeBuilderBase) newNodeForKind(nodeKind string) *Node {
 	return NewNode(builder, nodeKind)
 }
 
-// add a new node to build
-func (builder *NodeBuilderBase) AddNode(node *Node) {
+// Add a new node to build
+func (builder *NodeBuilderBase) addNode(node *Node) {
 	builder.nodes = append(builder.nodes, node)
 
 	if node.InNavBar {
@@ -105,12 +105,12 @@ func (builder *NodeBuilderBase) AddNode(node *Node) {
 	}
 }
 
-// add an image to copy
-func (builder *NodeBuilderBase) AddImage(img *models.Image, kind string) string {
-	return builder.siteBuilder.AddImage(img, kind)
+// Add an image to copy
+func (builder *NodeBuilderBase) addImage(img *models.Image, kind string) string {
+	return builder.siteBuilder.addImage(img, kind)
 }
 
-// add a node generation error
+// Add a node generation error
 func (builder *NodeBuilderBase) addGenError(err error) {
 	builder.siteBuilder.addGenError(builder.nodeKind, err)
 }

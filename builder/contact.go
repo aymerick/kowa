@@ -20,12 +20,12 @@ func NewContactBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 
 // NodeBuilder
 func (builder *ContactBuilder) Load() {
-	node := builder.NewNode()
+	node := builder.newNode()
 
 	node.Title = "Contact"
 	node.Meta = &NodeMeta{Description: "Contact test node"}
 	node.Content = "Soon"
 	node.InNavBar = true
 
-	builder.AddNode(node)
+	builder.addNode(node)
 }

@@ -9,12 +9,12 @@ import (
 	"path"
 )
 
-// node metadata
+// Node metadata
 type NodeMeta struct {
 	Description string
 }
 
-// node
+// Node
 type Node struct {
 	// template vars
 	Kind string
@@ -31,7 +31,7 @@ type Node struct {
 	template *template.Template
 }
 
-// all node kinds
+// All node kinds
 const (
 	KIND_ACTIVITIES = "activities"
 	KIND_CONTACT    = "contact"
@@ -41,7 +41,7 @@ const (
 	KIND_POSTS      = "posts"
 )
 
-// create a new node
+// Create a new node
 func NewNode(builder NodeBuilder, kind string) *Node {
 	return &Node{
 		Kind:      kind,
@@ -85,7 +85,7 @@ func (node *Node) Url() string {
 	}
 }
 
-// get node template
+// Get node template
 func (node *Node) Template(layout *template.Template) (*template.Template, error) {
 	if node.template != nil {
 		return node.template, nil
@@ -106,7 +106,7 @@ func (node *Node) Template(layout *template.Template) (*template.Template, error
 	}
 }
 
-// generate node
+// Generate node
 func (node *Node) Generate(wr io.Writer, layout *template.Template) error {
 	tpl := template.Must(node.Template(layout))
 

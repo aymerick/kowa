@@ -97,7 +97,7 @@ func (builder *SiteBuilder) Build() {
 	builder.copyAssets()
 
 	// dump errors
-	builder.errorCollector.Dump()
+	builder.errorCollector.dump()
 }
 
 // Initialize builders
@@ -114,7 +114,7 @@ func (builder *SiteBuilder) loadNodes() {
 	}
 }
 
-func (builder *SiteBuilder) NavBarNodes() []*Node {
+func (builder *SiteBuilder) navBarNodes() []*Node {
 	result := make([]*Node, 0)
 
 	for _, nodeBuilder := range builder.nodeBuilders {
@@ -130,7 +130,7 @@ func (builder *SiteBuilder) NavBarNodes() []*Node {
 // Fill site variables
 func (builder *SiteBuilder) fillSiteVars() {
 	builder.siteVars = NewSiteVars(builder)
-	builder.siteVars.Fill()
+	builder.siteVars.fill()
 }
 
 // Generate nodes
@@ -173,8 +173,8 @@ func (builder *SiteBuilder) copyAssets() error {
 }
 
 // Add an image to collector, and returns the URL for that image
-func (builder *SiteBuilder) AddImage(img *models.Image, kind string) string {
-	builder.imageCollector.AddImage(img, kind)
+func (builder *SiteBuilder) addImage(img *models.Image, kind string) string {
+	builder.imageCollector.addImage(img, kind)
 
 	// compute image URL
 	// eg: /site_1/image_m.jpg => /img/image_m.jpg
@@ -183,7 +183,7 @@ func (builder *SiteBuilder) AddImage(img *models.Image, kind string) string {
 
 // Add an error to collector
 func (builder *SiteBuilder) addError(step string, err error) {
-	builder.errorCollector.AddError(step, err)
+	builder.errorCollector.addError(step, err)
 }
 
 // Add an error when generating a node
@@ -207,12 +207,12 @@ func (builder *SiteBuilder) GenDir() string {
 	return path.Join(builder.workingDir, builder.outputDir)
 }
 
-// Copmputes directory where images are copied
+// Computes directory where images are copied
 func (builder *SiteBuilder) genImagesDir() string {
 	return path.Join(builder.GenDir(), IMAGES_DIR)
 }
 
-// Copmputes directory where assets are copied
+// Computes directory where assets are copied
 func (builder *SiteBuilder) genAssetsDir() string {
 	return path.Join(builder.GenDir(), ASSETS_DIR)
 }

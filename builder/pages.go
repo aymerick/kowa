@@ -47,14 +47,14 @@ func (builder *PagesBuilder) Load() {
 
 // Build page
 func (builder *PagesBuilder) buildPage(page *models.Page) {
-	node := builder.NewNode()
+	node := builder.newNode()
 
 	node.slug = utils.Urlify(page.Title)
 	node.Title = page.Title
 	node.Meta = &NodeMeta{Description: page.Tagline}
 	node.Content = builder.NewPageContent(page, node)
 
-	builder.AddNode(node)
+	builder.addNode(node)
 }
 
 /// Instanciate a new page content
@@ -68,7 +68,7 @@ func (builder *PagesBuilder) NewPageContent(page *models.Page, node *Node) *Page
 
 	cover := page.FindCover()
 	if cover != nil {
-		result.Cover = builder.AddImage(cover, models.MEDIUM_KIND)
+		result.Cover = builder.addImage(cover, models.MEDIUM_KIND)
 	}
 
 	html := blackfriday.MarkdownCommon([]byte(page.Body))

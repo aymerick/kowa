@@ -45,14 +45,14 @@ func (builder *PostsBuilder) Load() {
 
 // Build posts list pages
 func (builder *PostsBuilder) buildPostsLists() {
-	node := builder.NewNodeForKind(KIND_POSTS)
+	node := builder.newNodeForKind(KIND_POSTS)
 
 	node.Title = "Posts"
 	node.Meta = &NodeMeta{Description: "Posts test node"}
 	node.Content = "Soon"
 	node.InNavBar = true
 
-	builder.AddNode(node)
+	builder.addNode(node)
 }
 
 // Build all posts
@@ -64,7 +64,7 @@ func (builder *PostsBuilder) buildPosts() {
 
 // Build post page
 func (builder *PostsBuilder) buildPost(post *models.Post) {
-	node := builder.NewNode()
+	node := builder.newNode()
 
 	node.slug = post.Slug()
 
@@ -75,7 +75,7 @@ func (builder *PostsBuilder) buildPost(post *models.Post) {
 
 	node.Content = builder.NewPostContent(post, node)
 
-	builder.AddNode(node)
+	builder.addNode(node)
 }
 
 /// Instanciate a new post content
@@ -88,7 +88,7 @@ func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *Post
 
 	cover := post.FindCover()
 	if cover != nil {
-		result.Cover = builder.AddImage(cover, models.MEDIUM_KIND)
+		result.Cover = builder.addImage(cover, models.MEDIUM_KIND)
 	}
 
 	html := blackfriday.MarkdownCommon([]byte(post.Body))

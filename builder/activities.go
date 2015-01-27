@@ -20,12 +20,12 @@ func NewActivitiesBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 
 // NodeBuilder
 func (builder *ActivitiesBuilder) Load() {
-	node := builder.NewNode()
+	node := builder.newNode()
 
 	node.Title = "Activities"
 	node.Meta = &NodeMeta{Description: "Activities test page"}
 	node.Content = "Soon"
 	node.InNavBar = true
 
-	builder.AddNode(node)
+	builder.addNode(node)
 }

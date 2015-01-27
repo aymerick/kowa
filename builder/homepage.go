@@ -40,13 +40,13 @@ func NewHomepageBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 
 // NodeBuilder
 func (builder *HomepageBuilder) Load() {
-	node := builder.NewNode()
+	node := builder.newNode()
 
 	node.Title = "Homepage"
 	node.Meta = &NodeMeta{Description: "Homepage test node"}
 	node.Content = builder.NewHomepageContent()
 
-	builder.AddNode(node)
+	builder.addNode(node)
 }
 
 /// Instanciate a new homepage content
@@ -71,12 +71,12 @@ func (builder *HomepageBuilder) NewHomepageContent() *HomepageContent {
 
 	logo := site.FindLogo()
 	if logo != nil {
-		result.Logo = builder.AddImage(logo, models.MEDIUM_KIND)
+		result.Logo = builder.addImage(logo, models.MEDIUM_KIND)
 	}
 
 	cover := site.FindCover()
 	if cover != nil {
-		result.Cover = builder.AddImage(cover, models.MEDIUM_KIND)
+		result.Cover = builder.addImage(cover, models.MEDIUM_KIND)
 	}
 
 	return result

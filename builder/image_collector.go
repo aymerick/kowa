@@ -28,8 +28,8 @@ func NewImageKind(img *models.Image, kind string) *ImageKind {
 	}
 }
 
-// add a new error for given step
-func (collector *ImageCollector) AddImage(img *models.Image, kind string) {
+// Add a new error for given step
+func (collector *ImageCollector) addImage(img *models.Image, kind string) {
 	key := fmt.Sprintf("%s-%s", img.Id.String(), kind)
 	collector.Images[key] = NewImageKind(img, kind)
 }

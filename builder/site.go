@@ -30,13 +30,14 @@ func NewSiteNavBarItem(url string, title string) *SiteNavBarItem {
 	}
 }
 
-func (vars *SiteVars) Fill() {
+// Fill site variables
+func (vars *SiteVars) fill() {
 	site := vars.builder.site
 
 	vars.Name = site.Name
 
 	if logo := site.FindLogo(); logo != nil {
-		vars.Logo = vars.builder.AddImage(logo, models.MEDIUM_KIND)
+		vars.Logo = vars.builder.addImage(logo, models.MEDIUM_KIND)
 	}
 
 	vars.NavBar = computeNavBarItems(vars.builder)
@@ -45,7 +46,7 @@ func (vars *SiteVars) Fill() {
 func computeNavBarItems(builder *SiteBuilder) []*SiteNavBarItem {
 	result := make([]*SiteNavBarItem, 0)
 
-	nodes := builder.NavBarNodes()
+	nodes := builder.navBarNodes()
 	for _, node := range nodes {
 		result = append(result, NewSiteNavBarItem(node.Url(), node.Title))
 	}
