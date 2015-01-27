@@ -9,12 +9,12 @@
     <title>{{.Title}}</title>
     <meta name="description" content="{{.Meta.Description}}" />
 
-    <link href="assets/css/minimal.css" rel="stylesheet">
+    <link href="/assets/css/minimal.css" rel="stylesheet">
 </head>
 
 <body class="{{.BodyClass}}">
     {{/* Navigation */}}
-    {{template "navbar.html" .Site.NavBar}}
+    {{template "navbar.html" .}}
 
     {{/* Page content */}}
     {{template "content" .Content}}

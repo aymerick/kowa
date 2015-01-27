@@ -1,5 +1,6 @@
+<h3><a href="/">{{.Site.Name}}</a><h3>
 <ul class="nav">
-    {{range .}}
+    {{range .Site.NavBar}}
         <li><a href="{{.Url}}">{{.Title}}</a></li>
     {{end}}
 </ul>
