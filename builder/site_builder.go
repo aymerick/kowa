@@ -47,8 +47,8 @@ type SiteBuilder struct {
 	// cache for #layout method
 	masterLayout *template.Template
 
-	site     *models.Site
-	builders map[string]NodeBuilder
+	site         *models.Site
+	nodeBuilders map[string]NodeBuilder
 }
 
 func NewSiteBuilder(siteId string) *SiteBuilder {
@@ -70,7 +70,7 @@ func NewSiteBuilder(siteId string) *SiteBuilder {
 		imageCollector: NewImageCollector(),
 		errorCollector: NewErrorCollector(),
 
-		builders: make(map[string]NodeBuilder),
+		nodeBuilders: make(map[string]NodeBuilder),
 	}
 
 	result.initBuilders()
@@ -99,20 +99,20 @@ func (builder *SiteBuilder) Build() {
 // Initialize builders
 func (builder *SiteBuilder) initBuilders() {
 	for name, initializer := range nodeBuilders {
-		builder.builders[name] = initializer(builder)
+		builder.nodeBuilders[name] = initializer(builder)
 	}
 }
 
 // Load nodes
 func (builder *SiteBuilder) loadNodes() {
-	for _, builder := range builder.builders {
+	for _, builder := range builder.nodeBuilders {
 		builder.Load()
 	}
 }
 
 // Generate nodes
 func (builder *SiteBuilder) generateNodes() {
-	for _, builder := range builder.builders {
+	for _, builder := range builder.nodeBuilders {
 		builder.Generate()
 	}
 }
