@@ -39,20 +39,8 @@ func NewPostsBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 
 // NodeBuilder
 func (builder *PostsBuilder) Load() {
-	builder.buildPostsLists()
 	builder.buildPosts()
-}
-
-// Build posts list pages
-func (builder *PostsBuilder) buildPostsLists() {
-	node := builder.newNodeForKind(KIND_POSTS)
-
-	node.Title = "Posts"
-	node.Meta = &NodeMeta{Description: "Posts test node"}
-	node.Content = "Soon"
-	node.InNavBar = true
-
-	builder.addNode(node)
+	builder.buildPostsLists()
 }
 
 // Build all posts
@@ -95,4 +83,16 @@ func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *Post
 	result.Body = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
 
 	return result
+}
+
+// Build posts list pages
+func (builder *PostsBuilder) buildPostsLists() {
+	node := builder.newNodeForKind(KIND_POSTS)
+
+	node.Title = "Posts"
+	node.Meta = &NodeMeta{Description: "Posts test node"}
+	node.Content = "Soon"
+	node.InNavBar = true
+
+	builder.addNode(node)
 }

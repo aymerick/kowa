@@ -1,4 +1,8 @@
 <nav role="navigation">
+    {{if .Site.Logo}}
+        <img src="{{.Site.Logo}}" />
+    {{end}}
+
     <h3><a href="/">{{.Site.Name}}</a></h3>
 
     <ul>
