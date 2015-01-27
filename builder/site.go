@@ -17,16 +17,27 @@ const (
 )
 
 type Site struct {
-	Model          *models.Site
-	ImageCollector *ImageCollector
-	ErrorCollector *ErrorCollector
+	Model *models.Site
 
+	// settings
 	WorkingDir string
 	OutputDir  string
 	Theme      string
 	UglyURL    bool
 
+	// collectors
+	ImageCollector *ImageCollector
+	ErrorCollector *ErrorCollector
+
+	// cache for #Layout method
 	layout *template.Template
+
+	// builders
+	activitiesBuilder *ActivitiesBuilder
+	contactBuilder    *ContactBuilder
+	pagesBuilder      *PagesBuilder
+	postsBuilder      *PostsBuilder
+	homepageBuilder   *HomepageBuilder
 }
 
 func NewSite(siteId string) *Site {
@@ -38,14 +49,15 @@ func NewSite(siteId string) *Site {
 	}
 
 	result := &Site{
-		Model:          model,
-		ImageCollector: NewImageCollector(),
-		ErrorCollector: NewErrorCollector(),
+		Model: model,
 
 		WorkingDir: viper.GetString("working_dir"),
 		OutputDir:  viper.GetString("output_dir"),
 		Theme:      viper.GetString("theme"),
 		UglyURL:    viper.GetBool("ugly_url"),
+
+		ImageCollector: NewImageCollector(),
+		ErrorCollector: NewErrorCollector(),
 	}
 
 	return result
@@ -53,12 +65,28 @@ func NewSite(siteId string) *Site {
 
 // Build site
 func (site *Site) Build() {
+	// init builders
+	site.activitiesBuilder = NewActivitiesBuilder(site)
+	site.activitiesBuilder.Load()
+
+	site.contactBuilder = NewContactBuilder(site)
+	site.contactBuilder.Load()
+
+	site.pagesBuilder = NewPagesBuilder(site)
+	site.pagesBuilder.Load()
+
+	site.postsBuilder = NewPostsBuilder(site)
+	site.postsBuilder.Load()
+
+	site.homepageBuilder = NewHomepageBuilder(site)
+	site.homepageBuilder.Load()
+
 	// build nodes
-	site.BuildActivities()
-	site.BuildContact()
-	site.BuildPages()
-	site.BuildPosts()
-	site.BuildHomepage()
+	site.activitiesBuilder.Generate()
+	site.contactBuilder.Generate()
+	site.pagesBuilder.Generate()
+	site.postsBuilder.Generate()
+	site.homepageBuilder.Generate()
 
 	// copy images
 	site.CopyCollectedImages()
@@ -67,53 +95,20 @@ func (site *Site) Build() {
 	site.ErrorCollector.Dump()
 }
 
-// Build activities node
-func (site *Site) BuildActivities() {
-	activitiesBuilder := NewActivitiesBuilder(site)
-	activitiesBuilder.Load()
-	activitiesBuilder.Generate()
-}
-
-// Build contact node
-func (site *Site) BuildContact() {
-	contactBuilder := NewContactBuilder(site)
-	contactBuilder.Load()
-	contactBuilder.Generate()
-}
-
-// Build pages nodes
-func (site *Site) BuildPages() {
-	pagesBuilder := NewPagesBuilder(site)
-	pagesBuilder.Load()
-	pagesBuilder.Generate()
-}
-
-// Build posts nodes
-func (site *Site) BuildPosts() {
-	postsBuilder := NewPostsBuilder(site)
-	postsBuilder.Load()
-	postsBuilder.Generate()
-}
-
-// Build homepage node
-func (site *Site) BuildHomepage() {
-	homepageBuilder := NewHomepageBuilder(site)
-	homepageBuilder.Load()
-	homepageBuilder.Generate()
-}
-
 // Copy images
 func (site *Site) CopyCollectedImages() {
 	errStep := "Copy images"
+
 	imgDir := path.Join(site.GenDir(), IMAGES_DIR)
 
+	// ensure img dir
 	if err := site.EnsureDir(imgDir); err != nil {
 		site.AddError(errStep, err)
 		return
 	}
 
+	// copy images to img dir
 	for _, imgKind := range site.ImageCollector.Images {
-		// Copy medium image
 		derivative := models.DerivativeForKind(imgKind.Kind)
 		srcFile := imgKind.Image.DerivativeFilePath(derivative)
 
@@ -123,16 +118,16 @@ func (site *Site) CopyCollectedImages() {
 	}
 }
 
-// Copy a file to given directory
+// Copy file to given directory
 func (site *Site) CopyFile(fromFilePath string, toDir string) error {
-	// open source
+	// open source file
 	src, err := os.Open(fromFilePath)
 	if err != nil {
 		return err
 	}
 	defer src.Close()
 
-	// open destination
+	// open destination file
 	dstFilePath := path.Join(toDir, path.Base(fromFilePath))
 
 	dst, err := os.Create(dstFilePath)
@@ -149,16 +144,16 @@ func (site *Site) CopyFile(fromFilePath string, toDir string) error {
 	return nil
 }
 
-// Add an image to process, and returns the URL for that image
+// Add an image to collector, and returns the URL for that image
 func (site *Site) AddImage(img *models.Image, kind string) string {
 	site.ImageCollector.AddImage(img, kind)
 
-	// fix image URL
+	// compute image URL
 	// eg: /site_1/image_m.jpg => /img/image_m.jpg
 	return "/" + path.Join(IMAGES_DIR, path.Base(img.DerivativeURL(models.DerivativeForKind(kind))))
 }
 
-// Add an error
+// Add an error to collector
 func (site *Site) AddError(step string, err error) {
 	site.ErrorCollector.AddError(step, err)
 }
