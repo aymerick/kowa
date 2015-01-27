@@ -22,21 +22,25 @@ type PageContent struct {
 
 // Builder for pages
 type PagesBuilder struct {
-	*NodeBuilder
+	*NodeBuilderBase
 }
 
-func NewPagesBuilder(site *Site) *PagesBuilder {
+func init() {
+	RegisterBuilderInitializer(KIND_PAGE, NewPagesBuilder)
+}
+
+func NewPagesBuilder(site *Site) NodeBuilder {
 	return &PagesBuilder{
-		&NodeBuilder{
+		&NodeBuilderBase{
 			NodeKind: KIND_PAGE,
 			site:     site,
 		},
 	}
 }
 
-// NodeBuilderInterface
+// NodeBuilder
 func (builder *PagesBuilder) Load() {
-	for _, page := range *builder.Site().Model.FindAllPages() {
+	for _, page := range *builder.Site().model.FindAllPages() {
 		builder.BuildPage(page)
 	}
 }

@@ -16,17 +16,16 @@ type NodeMeta struct {
 
 // node
 type Node struct {
+	// template vars
 	Kind string
+	Site *Site
 
 	Title     string
 	Meta      *NodeMeta
 	BodyClass string
-	Head      string
-	Footer    string
 	Content   interface{}
 
-	Builder NodeBuilderInterface
-
+	builder  NodeBuilder
 	slug     string
 	template *template.Template
 }
@@ -42,11 +41,13 @@ const (
 )
 
 // create a new node
-func NewNode(builder NodeBuilderInterface, kind string) *Node {
+func NewNode(builder NodeBuilder, kind string) *Node {
 	return &Node{
 		Kind:      kind,
+		Site:      builder.Site(),
 		BodyClass: kind,
-		Builder:   builder,
+
+		builder: builder,
 	}
 }
 
@@ -65,7 +66,7 @@ func (node *Node) Slug() string {
 func (node *Node) FullUrl() string {
 	slug := node.Slug()
 
-	if node.Builder.Site().UglyURL || (slug == "index") {
+	if node.builder.Site().uglyURL || (slug == "index") {
 		return path.Join("/", fmt.Sprintf("%s.html", slug))
 	} else {
 		return path.Join("/", slug, "index.html")
@@ -92,7 +93,7 @@ func (node *Node) Template(layout *template.Template) (*template.Template, error
 	} else {
 		result := template.Must(layout.Clone())
 
-		binData, err := ioutil.ReadFile(node.Builder.Site().TemplatePath(node.Kind))
+		binData, err := ioutil.ReadFile(node.builder.Site().TemplatePath(node.Kind))
 		if err == nil {
 			_, err = result.New("content").Parse(string(binData))
 			if err != nil {

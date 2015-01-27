@@ -20,20 +20,24 @@ type PostContent struct {
 
 // Builder for posts pages
 type PostsBuilder struct {
-	*NodeBuilder
+	*NodeBuilderBase
+}
+
+func init() {
+	RegisterBuilderInitializer(KIND_POSTS, NewPostsBuilder)
 }
 
 // Instanciate a new builder
-func NewPostsBuilder(site *Site) *PostsBuilder {
+func NewPostsBuilder(site *Site) NodeBuilder {
 	return &PostsBuilder{
-		&NodeBuilder{
+		&NodeBuilderBase{
 			NodeKind: KIND_POST,
 			site:     site,
 		},
 	}
 }
 
-// NodeBuilderInterface
+// NodeBuilder
 func (builder *PostsBuilder) Load() {
 	builder.BuildPostsLists()
 	builder.BuildPosts()
@@ -46,7 +50,7 @@ func (builder *PostsBuilder) BuildPostsLists() {
 
 // Build posts single pages
 func (builder *PostsBuilder) BuildPosts() {
-	for _, post := range *builder.Site().Model.FindAllPosts() {
+	for _, post := range *builder.Site().model.FindAllPosts() {
 		builder.BuildPost(post)
 	}
 }

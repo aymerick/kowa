@@ -22,19 +22,23 @@ type HomepageContent struct {
 
 // Builder for homepage
 type HomepageBuilder struct {
-	*NodeBuilder
+	*NodeBuilderBase
 }
 
-func NewHomepageBuilder(site *Site) *HomepageBuilder {
+func init() {
+	RegisterBuilderInitializer(KIND_HOMEPAGE, NewHomepageBuilder)
+}
+
+func NewHomepageBuilder(site *Site) NodeBuilder {
 	return &HomepageBuilder{
-		&NodeBuilder{
+		&NodeBuilderBase{
 			NodeKind: KIND_HOMEPAGE,
 			site:     site,
 		},
 	}
 }
 
-// NodeBuilderInterface
+// NodeBuilder
 func (builder *HomepageBuilder) Load() {
 	node := builder.NewNode()
 
@@ -51,7 +55,7 @@ func (builder *HomepageBuilder) Load() {
 
 /// Instanciate a new homepage content
 func (builder *HomepageBuilder) NewHomepageContent() *HomepageContent {
-	siteModel := builder.Site().Model
+	siteModel := builder.Site().model
 
 	result := &HomepageContent{
 		Name:    siteModel.Name,

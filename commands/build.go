@@ -50,7 +50,7 @@ func buildSite(cmd *cobra.Command, args []string) {
 
 	site := builder.NewSite(args[0])
 
-	log.Printf("Building site '%s' with theme '%s' into %s", args[0], site.Theme, site.GenDir())
+	log.Printf("Building site '%s' with theme '%s' into %s", args[0], viper.GetString("theme"), site.GenDir())
 
 	// build site
 	site.Build()

@@ -6,8 +6,15 @@ import (
 	"github.com/aymerick/kowa/models"
 )
 
-// node builder
-type NodeBuilder struct {
+// interface for node builder
+type NodeBuilder interface {
+	Site() *Site
+	Load()
+	Generate()
+}
+
+// node builder base
+type NodeBuilderBase struct {
 	Nodes    []*Node
 	NodeKind string
 
@@ -15,32 +22,25 @@ type NodeBuilder struct {
 	images map[string]*models.Image
 }
 
-// interface for node builder
-type NodeBuilderInterface interface {
-	Site() *Site
-	Load()
-	Generate()
-}
-
-// NodeBuilderInterface
-func (builder *NodeBuilder) Site() *Site {
+// NodeBuilder
+func (builder *NodeBuilderBase) Site() *Site {
 	return builder.site
 }
 
-// NodeBuilderInterface
-func (builder *NodeBuilder) Load() {
+// NodeBuilder
+func (builder *NodeBuilderBase) Load() {
 	panic("Should be implemented by includer")
 }
 
-// NodeBuilderInterface
-func (builder *NodeBuilder) Generate() {
+// NodeBuilder
+func (builder *NodeBuilderBase) Generate() {
 	for _, node := range builder.Nodes {
 		builder.GenerateNode(node)
 	}
 }
 
 // generate given node
-func (builder *NodeBuilder) GenerateNode(node *Node) {
+func (builder *NodeBuilderBase) GenerateNode(node *Node) {
 	osFilePath := builder.Site().FilePath(node.FullUrl())
 
 	// ensure dir
@@ -65,26 +65,26 @@ func (builder *NodeBuilder) GenerateNode(node *Node) {
 }
 
 // init a new node with builder node kind
-func (builder *NodeBuilder) NewNode() *Node {
+func (builder *NodeBuilderBase) NewNode() *Node {
 	return builder.NewNodeForKind(builder.NodeKind)
 }
 
 // init a new node with given node kind
-func (builder *NodeBuilder) NewNodeForKind(nodeKind string) *Node {
+func (builder *NodeBuilderBase) NewNodeForKind(nodeKind string) *Node {
 	return NewNode(builder, nodeKind)
 }
 
 // add a new node to build
-func (builder *NodeBuilder) AddNode(node *Node) {
+func (builder *NodeBuilderBase) AddNode(node *Node) {
 	builder.Nodes = append(builder.Nodes, node)
 }
 
 // add an image to copy
-func (builder *NodeBuilder) AddImage(img *models.Image, kind string) string {
+func (builder *NodeBuilderBase) AddImage(img *models.Image, kind string) string {
 	return builder.Site().AddImage(img, kind)
 }
 
 // add a node generation error
-func (builder *NodeBuilder) AddGenError(err error) {
+func (builder *NodeBuilderBase) AddGenError(err error) {
 	builder.Site().AddGenError(builder.NodeKind, err)
 }

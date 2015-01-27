@@ -2,19 +2,23 @@ package builder
 
 // Builder for activities page
 type ActivitiesBuilder struct {
-	*NodeBuilder
+	*NodeBuilderBase
 }
 
-func NewActivitiesBuilder(site *Site) *ActivitiesBuilder {
+func init() {
+	RegisterBuilderInitializer(KIND_ACTIVITIES, NewActivitiesBuilder)
+}
+
+func NewActivitiesBuilder(site *Site) NodeBuilder {
 	return &ActivitiesBuilder{
-		&NodeBuilder{
+		&NodeBuilderBase{
 			NodeKind: KIND_ACTIVITIES,
 			site:     site,
 		},
 	}
 }
 
-// NodeBuilderInterface
+// NodeBuilder
 func (builder *ActivitiesBuilder) Load() {
 	node := builder.NewNode()
 

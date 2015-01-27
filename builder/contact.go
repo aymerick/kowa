@@ -2,19 +2,23 @@ package builder
 
 // Builder for contact page
 type ContactBuilder struct {
-	*NodeBuilder
+	*NodeBuilderBase
 }
 
-func NewContactBuilder(site *Site) *ContactBuilder {
+func init() {
+	RegisterBuilderInitializer(KIND_CONTACT, NewContactBuilder)
+}
+
+func NewContactBuilder(site *Site) NodeBuilder {
 	return &ContactBuilder{
-		&NodeBuilder{
+		&NodeBuilderBase{
 			NodeKind: KIND_CONTACT,
 			site:     site,
 		},
 	}
 }
 
-// NodeBuilderInterface
+// NodeBuilder
 func (builder *ContactBuilder) Load() {
 	node := builder.NewNode()
 
