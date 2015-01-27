@@ -1,6 +1,9 @@
-<h3><a href="/">{{.Site.Name}}</a><h3>
-<ul class="nav">
-    {{range .Site.NavBar}}
-        <li><a href="{{.Url}}">{{.Title}}</a></li>
-    {{end}}
-</ul>
+<nav role="navigation">
+    <h3><a href="/">{{.Site.Name}}</a></h3>
+
+    <ul>
+        {{range .Site.NavBar}}
+            <li><a href="{{.Url}}">{{.Title}}</a></li>
+        {{end}}
+    </ul>
+</nav>
