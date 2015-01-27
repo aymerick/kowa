@@ -55,14 +55,14 @@ func (builder *PostsBuilder) buildPostsLists() {
 	builder.AddNode(node)
 }
 
-// Build posts single pages
+// Build all posts
 func (builder *PostsBuilder) buildPosts() {
 	for _, post := range *builder.Site().model.FindAllPosts() {
 		builder.buildPost(post)
 	}
 }
 
-// Build post single page
+// Build post page
 func (builder *PostsBuilder) buildPost(post *models.Post) {
 	node := builder.NewNode()
 
