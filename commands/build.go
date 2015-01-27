@@ -48,24 +48,24 @@ func buildSite(cmd *cobra.Command, args []string) {
 		log.Fatalln("No site id argument provided")
 	}
 
-	site := builder.NewSite(args[0])
+	siteBuilder := builder.NewSiteBuilder(args[0])
 
-	log.Printf("Building site '%s' with theme '%s' into %s", args[0], viper.GetString("theme"), site.GenDir())
+	log.Printf("Building site '%s' with theme '%s' into %s", args[0], viper.GetString("theme"), siteBuilder.GenDir())
 
 	// build site
-	site.Build()
+	siteBuilder.Build()
 
 	if viper.GetBool("serve") {
 		// server site
-		serve(site, viper.GetInt("serve_port"))
+		serve(siteBuilder, viper.GetInt("serve_port"))
 	}
 }
 
-func serve(site *builder.Site, port int) {
-	log.Printf("Serving built site from: " + site.GenDir())
+func serve(siteBuilder *builder.SiteBuilder, port int) {
+	log.Printf("Serving built site from: " + siteBuilder.GenDir())
 
 	log.Printf("Web Server is available at http://127.0.0.1:%d\n", port)
 	log.Printf("Press Ctrl+C to stop")
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), http.FileServer(http.Dir(site.GenDir()))))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), http.FileServer(http.Dir(siteBuilder.GenDir()))))
 }

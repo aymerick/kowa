@@ -29,11 +29,11 @@ func init() {
 	RegisterNodeBuilder(KIND_HOMEPAGE, NewHomepageBuilder)
 }
 
-func NewHomepageBuilder(site *Site) NodeBuilder {
+func NewHomepageBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 	return &HomepageBuilder{
 		&NodeBuilderBase{
-			NodeKind: KIND_HOMEPAGE,
-			site:     site,
+			NodeKind:    KIND_HOMEPAGE,
+			siteBuilder: siteBuilder,
 		},
 	}
 }
@@ -51,30 +51,30 @@ func (builder *HomepageBuilder) Load() {
 
 /// Instanciate a new homepage content
 func (builder *HomepageBuilder) NewHomepageContent() *HomepageContent {
-	siteModel := builder.Site().model
+	site := builder.SiteBuilder().site
 
 	result := &HomepageContent{
-		Name:    siteModel.Name,
-		Tagline: siteModel.Tagline,
+		Name:    site.Name,
+		Tagline: site.Tagline,
 	}
 
 	var html []byte
 
-	html = blackfriday.MarkdownCommon([]byte(siteModel.Description))
+	html = blackfriday.MarkdownCommon([]byte(site.Description))
 	result.Description = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
 
-	html = blackfriday.MarkdownCommon([]byte(siteModel.MoreDesc))
+	html = blackfriday.MarkdownCommon([]byte(site.MoreDesc))
 	result.MoreDesc = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
 
-	html = blackfriday.MarkdownCommon([]byte(siteModel.JoinText))
+	html = blackfriday.MarkdownCommon([]byte(site.JoinText))
 	result.JoinText = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
 
-	logo := siteModel.FindLogo()
+	logo := site.FindLogo()
 	if logo != nil {
 		result.Logo = builder.AddImage(logo, models.MEDIUM_KIND)
 	}
 
-	cover := siteModel.FindCover()
+	cover := site.FindCover()
 	if cover != nil {
 		result.Cover = builder.AddImage(cover, models.MEDIUM_KIND)
 	}

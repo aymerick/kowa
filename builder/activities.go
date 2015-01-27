@@ -9,11 +9,11 @@ func init() {
 	RegisterNodeBuilder(KIND_ACTIVITIES, NewActivitiesBuilder)
 }
 
-func NewActivitiesBuilder(site *Site) NodeBuilder {
+func NewActivitiesBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 	return &ActivitiesBuilder{
 		&NodeBuilderBase{
-			NodeKind: KIND_ACTIVITIES,
-			site:     site,
+			NodeKind:    KIND_ACTIVITIES,
+			siteBuilder: siteBuilder,
 		},
 	}
 }

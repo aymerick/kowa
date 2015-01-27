@@ -28,11 +28,11 @@ func init() {
 }
 
 // Instanciate a new builder
-func NewPostsBuilder(site *Site) NodeBuilder {
+func NewPostsBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 	return &PostsBuilder{
 		&NodeBuilderBase{
-			NodeKind: KIND_POST,
-			site:     site,
+			NodeKind:    KIND_POST,
+			siteBuilder: siteBuilder,
 		},
 	}
 }
@@ -57,7 +57,7 @@ func (builder *PostsBuilder) buildPostsLists() {
 
 // Build all posts
 func (builder *PostsBuilder) buildPosts() {
-	for _, post := range *builder.Site().model.FindAllPosts() {
+	for _, post := range *builder.SiteBuilder().site.FindAllPosts() {
 		builder.buildPost(post)
 	}
 }

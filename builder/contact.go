@@ -9,11 +9,11 @@ func init() {
 	RegisterNodeBuilder(KIND_CONTACT, NewContactBuilder)
 }
 
-func NewContactBuilder(site *Site) NodeBuilder {
+func NewContactBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 	return &ContactBuilder{
 		&NodeBuilderBase{
-			NodeKind: KIND_CONTACT,
-			site:     site,
+			NodeKind:    KIND_CONTACT,
+			siteBuilder: siteBuilder,
 		},
 	}
 }

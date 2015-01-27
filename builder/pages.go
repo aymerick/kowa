@@ -29,18 +29,18 @@ func init() {
 	RegisterNodeBuilder(KIND_PAGE, NewPagesBuilder)
 }
 
-func NewPagesBuilder(site *Site) NodeBuilder {
+func NewPagesBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 	return &PagesBuilder{
 		&NodeBuilderBase{
-			NodeKind: KIND_PAGE,
-			site:     site,
+			NodeKind:    KIND_PAGE,
+			siteBuilder: siteBuilder,
 		},
 	}
 }
 
 // NodeBuilder
 func (builder *PagesBuilder) Load() {
-	for _, page := range *builder.Site().model.FindAllPages() {
+	for _, page := range *builder.SiteBuilder().site.FindAllPages() {
 		builder.buildPage(page)
 	}
 }

@@ -18,7 +18,6 @@ type NodeMeta struct {
 type Node struct {
 	// template vars
 	Kind string
-	Site *Site
 
 	Title     string
 	Meta      *NodeMeta
@@ -45,7 +44,6 @@ const (
 func NewNode(builder NodeBuilder, kind string) *Node {
 	return &Node{
 		Kind:      kind,
-		Site:      builder.Site(),
 		BodyClass: kind,
 		InNavBar:  false,
 
@@ -68,7 +66,7 @@ func (node *Node) Slug() string {
 func (node *Node) FullUrl() string {
 	slug := node.Slug()
 
-	if node.builder.Site().uglyURL || (slug == "index") {
+	if node.builder.SiteBuilder().uglyURL || (slug == "index") {
 		return path.Join("/", fmt.Sprintf("%s.html", slug))
 	} else {
 		return path.Join("/", slug, "index.html")
@@ -95,7 +93,7 @@ func (node *Node) Template(layout *template.Template) (*template.Template, error
 	} else {
 		result := template.Must(layout.Clone())
 
-		binData, err := ioutil.ReadFile(node.builder.Site().templatePath(node.Kind))
+		binData, err := ioutil.ReadFile(node.builder.SiteBuilder().templatePath(node.Kind))
 		if err == nil {
 			_, err = result.New("content").Parse(string(binData))
 			if err != nil {

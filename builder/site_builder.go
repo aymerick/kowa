@@ -22,10 +22,10 @@ const (
 	ASSETS_DIR   = "assets"
 )
 
-var nodeBuilders = make(map[string]func(*Site) NodeBuilder)
+var nodeBuilders = make(map[string]func(*SiteBuilder) NodeBuilder)
 
 // Registers a node builder
-func RegisterNodeBuilder(name string, initializer func(*Site) NodeBuilder) {
+func RegisterNodeBuilder(name string, initializer func(*SiteBuilder) NodeBuilder) {
 	if _, exists := nodeBuilders[name]; exists {
 		panic(fmt.Sprintf("Builder initializer already registered: %s", name))
 	}
@@ -33,7 +33,7 @@ func RegisterNodeBuilder(name string, initializer func(*Site) NodeBuilder) {
 	nodeBuilders[name] = initializer
 }
 
-type Site struct {
+type SiteBuilder struct {
 	// settings
 	workingDir string
 	outputDir  string
@@ -47,20 +47,20 @@ type Site struct {
 	// cache for #layout method
 	masterLayout *template.Template
 
-	model    *models.Site
+	site     *models.Site
 	builders map[string]NodeBuilder
 }
 
-func NewSite(siteId string) *Site {
+func NewSiteBuilder(siteId string) *SiteBuilder {
 	dbSession := models.NewDBSession()
 
-	model := dbSession.FindSite(siteId)
-	if model == nil {
+	site := dbSession.FindSite(siteId)
+	if site == nil {
 		log.Fatalln("Can't find site with provided id")
 	}
 
-	result := &Site{
-		model: model,
+	result := &SiteBuilder{
+		site: site,
 
 		workingDir: viper.GetString("working_dir"),
 		outputDir:  viper.GetString("output_dir"),
@@ -79,79 +79,79 @@ func NewSite(siteId string) *Site {
 }
 
 // Build site
-func (site *Site) Build() {
+func (builder *SiteBuilder) Build() {
 	// load nodes
-	site.loadNodes()
+	builder.loadNodes()
 
 	// generate nodes
-	site.generateNodes()
+	builder.generateNodes()
 
 	// copy images
-	site.copyCollectedImages()
+	builder.copyCollectedImages()
 
 	// copy assets
-	site.copyAssets()
+	builder.copyAssets()
 
 	// dump errors
-	site.errorCollector.Dump()
+	builder.errorCollector.Dump()
 }
 
 // Initialize builders
-func (site *Site) initBuilders() {
+func (builder *SiteBuilder) initBuilders() {
 	for name, initializer := range nodeBuilders {
-		site.builders[name] = initializer(site)
+		builder.builders[name] = initializer(builder)
 	}
 }
 
 // Load nodes
-func (site *Site) loadNodes() {
-	for _, builder := range site.builders {
+func (builder *SiteBuilder) loadNodes() {
+	for _, builder := range builder.builders {
 		builder.Load()
 	}
 }
 
 // Generate nodes
-func (site *Site) generateNodes() {
-	for _, builder := range site.builders {
+func (builder *SiteBuilder) generateNodes() {
+	for _, builder := range builder.builders {
 		builder.Generate()
 	}
 }
 
 // Copy images
-func (site *Site) copyCollectedImages() {
+func (builder *SiteBuilder) copyCollectedImages() {
 	errStep := "Copy images"
 
-	imgDir := site.genImagesDir()
+	imgDir := builder.genImagesDir()
 
 	// ensure img dir
-	if err := site.ensureDir(imgDir); err != nil {
-		site.addError(errStep, err)
+	if err := builder.ensureDir(imgDir); err != nil {
+		builder.addError(errStep, err)
 		return
 	}
 
 	// copy images to img dir
-	for _, imgKind := range site.imageCollector.Images {
+	for _, imgKind := range builder.imageCollector.Images {
 		derivative := models.DerivativeForKind(imgKind.Kind)
 		srcFile := imgKind.Image.DerivativeFilePath(derivative)
 
-		if err := site.copyFile(srcFile, imgDir); err != nil {
-			site.addError(errStep, err)
+		if err := builder.copyFile(srcFile, imgDir); err != nil {
+			builder.addError(errStep, err)
 		}
 	}
 }
 
 // Copy theme assets
-func (site *Site) copyAssets() error {
+func (builder *SiteBuilder) copyAssets() error {
 	syncer := fsync.NewSyncer()
 	syncer.SrcFs = new(afero.OsFs)
 	syncer.DestFs = new(afero.OsFs)
 
-	return syncer.Sync(site.genAssetsDir(), site.themeAssetsDir())
+	return syncer.Sync(builder.genAssetsDir(), builder.themeAssetsDir())
 }
 
 // Add an image to collector, and returns the URL for that image
-func (site *Site) AddImage(img *models.Image, kind string) string {
-	site.imageCollector.AddImage(img, kind)
+func (builder *SiteBuilder) AddImage(img *models.Image, kind string) string {
+	builder.imageCollector.AddImage(img, kind)
 
 	// compute image URL
 	// eg: /site_1/image_m.jpg => /img/image_m.jpg
@@ -159,71 +159,71 @@ func (site *Site) AddImage(img *models.Image, kind string) string {
 }
 
 // Add an error to collector
-func (site *Site) addError(step string, err error) {
-	site.errorCollector.AddError(step, err)
+func (builder *SiteBuilder) addError(step string, err error) {
+	builder.errorCollector.AddError(step, err)
 }
 
 // Add an error when generating a node
-func (site *Site) addGenError(nodeKind string, err error) {
+func (builder *SiteBuilder) addGenError(nodeKind string, err error) {
 	step := fmt.Sprintf("Generating %s", nodeKind)
-	site.addError(step, err)
+	builder.addError(step, err)
 }
 
 // Computes theme directory
-func (site *Site) themeDir() string {
-	return path.Join(site.workingDir, THEMES_DIR, site.theme)
+func (builder *SiteBuilder) themeDir() string {
+	return path.Join(builder.workingDir, THEMES_DIR, builder.theme)
 }
 
 // Computes theme assets directory
-func (site *Site) themeAssetsDir() string {
-	return path.Join(site.themeDir(), ASSETS_DIR)
+func (builder *SiteBuilder) themeAssetsDir() string {
+	return path.Join(builder.themeDir(), ASSETS_DIR)
 }
 
 // Computes directory where site is generated
-func (site *Site) GenDir() string {
-	return path.Join(site.workingDir, site.outputDir)
+func (builder *SiteBuilder) GenDir() string {
+	return path.Join(builder.workingDir, builder.outputDir)
 }
 
 // Copmputes directory where images are copied
-func (site *Site) genImagesDir() string {
-	return path.Join(site.GenDir(), IMAGES_DIR)
+func (builder *SiteBuilder) genImagesDir() string {
+	return path.Join(builder.GenDir(), IMAGES_DIR)
 }
 
 // Copmputes directory where assets are copied
-func (site *Site) genAssetsDir() string {
-	return path.Join(site.GenDir(), ASSETS_DIR)
+func (builder *SiteBuilder) genAssetsDir() string {
+	return path.Join(builder.GenDir(), ASSETS_DIR)
 }
 
 // Compute template path for given template name
-func (site *Site) templatePath(tplName string) string {
-	return path.Join(site.themeDir(), fmt.Sprintf("%s.html", tplName))
+func (builder *SiteBuilder) templatePath(tplName string) string {
+	return path.Join(builder.themeDir(), fmt.Sprintf("%s.html", tplName))
 }
 
 // Get master layout template
-func (site *Site) layout() *template.Template {
-	if site.masterLayout != nil {
-		return site.masterLayout
+func (builder *SiteBuilder) layout() *template.Template {
+	if builder.masterLayout != nil {
+		return builder.masterLayout
 	} else {
-		site.masterLayout = template.Must(template.ParseFiles(site.templatePath("layout")))
+		builder.masterLayout = template.Must(template.ParseFiles(builder.templatePath("layout")))
 
 		// Load partials
-		template.Must(site.masterLayout.ParseGlob(path.Join(site.partialsPath(), "*.html")))
+		template.Must(builder.masterLayout.ParseGlob(path.Join(builder.partialsPath(), "*.html")))
 
-		// for _, tpl := range site.masterLayout.Templates() {
+		// for _, tpl := range builder.masterLayout.Templates() {
 		// 	log.Printf("Template: %s", tpl.Name())
 		// }
 
-		return site.masterLayout
+		return builder.masterLayout
 	}
 }
 
 // Returns partials directory path
-func (site *Site) partialsPath() string {
-	return path.Join(site.themeDir(), PARTIALS_DIR)
+func (builder *SiteBuilder) partialsPath() string {
+	return path.Join(builder.themeDir(), PARTIALS_DIR)
 }
 
 // Prune directories for given absolute dir path
-func (site *Site) ensureDir(dirPath string) error {
+func (builder *SiteBuilder) ensureDir(dirPath string) error {
 	// log.Printf("[DBG] Creating dir: %s", dirPath)
 
 	err := os.MkdirAll(dirPath, 0777)
@@ -235,17 +235,17 @@ func (site *Site) ensureDir(dirPath string) error {
 }
 
 // Prune directories for given absolute file path
-func (site *Site) ensureFileDir(osPath string) error {
-	return site.ensureDir(path.Dir(osPath))
+func (builder *SiteBuilder) ensureFileDir(osPath string) error {
+	return builder.ensureDir(path.Dir(osPath))
 }
 
 // Computes local file path for given URL
-func (site *Site) filePath(fullUrl string) string {
-	return path.Join(site.GenDir(), fullUrl)
+func (builder *SiteBuilder) filePath(fullUrl string) string {
+	return path.Join(builder.GenDir(), fullUrl)
 }
 
 // Copy file to given directory
-func (site *Site) copyFile(fromFilePath string, toDir string) error {
+func (builder *SiteBuilder) copyFile(fromFilePath string, toDir string) error {
 	// open source file
 	src, err := os.Open(fromFilePath)
 	if err != nil {

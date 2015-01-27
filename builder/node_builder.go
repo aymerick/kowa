@@ -8,7 +8,7 @@ import (
 
 // interface for node builder
 type NodeBuilder interface {
-	Site() *Site
+	SiteBuilder() *SiteBuilder
 	Load()
 	Generate()
 }
@@ -18,13 +18,13 @@ type NodeBuilderBase struct {
 	Nodes    []*Node
 	NodeKind string
 
-	site   *Site
-	images map[string]*models.Image
+	siteBuilder *SiteBuilder
+	images      map[string]*models.Image
 }
 
 // NodeBuilder
-func (builder *NodeBuilderBase) Site() *Site {
-	return builder.site
+func (builder *NodeBuilderBase) SiteBuilder() *SiteBuilder {
+	return builder.siteBuilder
 }
 
 // NodeBuilder
@@ -41,10 +41,10 @@ func (builder *NodeBuilderBase) Generate() {
 
 // generate given node
 func (builder *NodeBuilderBase) generateNode(node *Node) {
-	osFilePath := builder.Site().filePath(node.FullUrl())
+	osFilePath := builder.SiteBuilder().filePath(node.FullUrl())
 
 	// ensure dir
-	if err := builder.Site().ensureFileDir(osFilePath); err != nil {
+	if err := builder.SiteBuilder().ensureFileDir(osFilePath); err != nil {
 		builder.addGenError(err)
 		return
 	}
@@ -59,7 +59,7 @@ func (builder *NodeBuilderBase) generateNode(node *Node) {
 
 	// write to file
 	// log.Printf("[DBG] Writing file: %s", osFilePath)
-	if err := node.Generate(outputFile, builder.Site().layout()); err != nil {
+	if err := node.Generate(outputFile, builder.SiteBuilder().layout()); err != nil {
 		builder.addGenError(err)
 	}
 }
@@ -81,10 +81,10 @@ func (builder *NodeBuilderBase) AddNode(node *Node) {
 
 // add an image to copy
 func (builder *NodeBuilderBase) AddImage(img *models.Image, kind string) string {
-	return builder.Site().AddImage(img, kind)
+	return builder.SiteBuilder().AddImage(img, kind)
 }
 
 // add a node generation error
 func (builder *NodeBuilderBase) addGenError(err error) {
-	builder.Site().addGenError(builder.NodeKind, err)
+	builder.SiteBuilder().addGenError(builder.NodeKind, err)
 }
