@@ -9,6 +9,11 @@ import (
 	"github.com/russross/blackfriday"
 )
 
+// Builder for posts pages
+type PostsBuilder struct {
+	*NodeBuilderBase
+}
+
 // Post content for template
 type PostContent struct {
 	Date  time.Time     // CreatedAt
@@ -18,13 +23,8 @@ type PostContent struct {
 	Url   string        // Absolute URL
 }
 
-// Builder for posts pages
-type PostsBuilder struct {
-	*NodeBuilderBase
-}
-
 func init() {
-	RegisterBuilderInitializer(KIND_POSTS, NewPostsBuilder)
+	RegisterNodeBuilder(KIND_POSTS, NewPostsBuilder)
 }
 
 // Instanciate a new builder
@@ -48,13 +48,8 @@ func (builder *PostsBuilder) buildPostsLists() {
 	node := builder.NewNodeForKind(KIND_POSTS)
 
 	node.Title = "Posts"
-
-	node.Meta = &NodeMeta{
-		Description: "Posts test node",
-	}
-
+	node.Meta = &NodeMeta{Description: "Posts test node"}
 	node.Content = "Soon"
-
 	node.InNavBar = true
 
 	builder.AddNode(node)

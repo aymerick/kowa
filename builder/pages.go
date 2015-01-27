@@ -10,6 +10,11 @@ import (
 	"github.com/russross/blackfriday"
 )
 
+// Builder for pages
+type PagesBuilder struct {
+	*NodeBuilderBase
+}
+
 // Page content for template
 type PageContent struct {
 	Date    time.Time     // CreatedAt
@@ -20,13 +25,8 @@ type PageContent struct {
 	Url     string        // Absolute URL
 }
 
-// Builder for pages
-type PagesBuilder struct {
-	*NodeBuilderBase
-}
-
 func init() {
-	RegisterBuilderInitializer(KIND_PAGE, NewPagesBuilder)
+	RegisterNodeBuilder(KIND_PAGE, NewPagesBuilder)
 }
 
 func NewPagesBuilder(site *Site) NodeBuilder {
@@ -50,12 +50,8 @@ func (builder *PagesBuilder) buildPage(page *models.Page) {
 	node := builder.NewNode()
 
 	node.slug = utils.Urlify(page.Title)
-
 	node.Title = page.Title
-	node.Meta = &NodeMeta{
-		Description: page.Tagline,
-	}
-
+	node.Meta = &NodeMeta{Description: page.Tagline}
 	node.Content = builder.NewPageContent(page, node)
 
 	builder.AddNode(node)

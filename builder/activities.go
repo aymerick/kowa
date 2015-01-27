@@ -6,7 +6,7 @@ type ActivitiesBuilder struct {
 }
 
 func init() {
-	RegisterBuilderInitializer(KIND_ACTIVITIES, NewActivitiesBuilder)
+	RegisterNodeBuilder(KIND_ACTIVITIES, NewActivitiesBuilder)
 }
 
 func NewActivitiesBuilder(site *Site) NodeBuilder {
@@ -23,13 +23,8 @@ func (builder *ActivitiesBuilder) Load() {
 	node := builder.NewNode()
 
 	node.Title = "Activities"
-
-	node.Meta = &NodeMeta{
-		Description: "Activities test page",
-	}
-
+	node.Meta = &NodeMeta{Description: "Activities test page"}
 	node.Content = "Soon"
-
 	node.InNavBar = true
 
 	builder.AddNode(node)

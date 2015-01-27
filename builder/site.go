@@ -22,15 +22,15 @@ const (
 	ASSETS_DIR   = "assets"
 )
 
-var builderInitializers = make(map[string]func(*Site) NodeBuilder)
+var nodeBuilders = make(map[string]func(*Site) NodeBuilder)
 
-// Registers a builder
-func RegisterBuilderInitializer(name string, initializer func(*Site) NodeBuilder) {
-	if _, exists := builderInitializers[name]; exists {
+// Registers a node builder
+func RegisterNodeBuilder(name string, initializer func(*Site) NodeBuilder) {
+	if _, exists := nodeBuilders[name]; exists {
 		panic(fmt.Sprintf("Builder initializer already registered: %s", name))
 	}
 
-	builderInitializers[name] = initializer
+	nodeBuilders[name] = initializer
 }
 
 type Site struct {
@@ -78,13 +78,6 @@ func NewSite(siteId string) *Site {
 	return result
 }
 
-// Initialize builders
-func (site *Site) initBuilders() {
-	for name, initializer := range builderInitializers {
-		site.builders[name] = initializer(site)
-	}
-}
-
 // Build site
 func (site *Site) Build() {
 	// load nodes
@@ -101,6 +94,13 @@ func (site *Site) Build() {
 
 	// dump errors
 	site.errorCollector.Dump()
+}
+
+// Initialize builders
+func (site *Site) initBuilders() {
+	for name, initializer := range nodeBuilders {
+		site.builders[name] = initializer(site)
+	}
 }
 
 // Load nodes

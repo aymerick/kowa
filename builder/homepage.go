@@ -9,6 +9,11 @@ import (
 	"github.com/russross/blackfriday"
 )
 
+// Builder for homepage
+type HomepageBuilder struct {
+	*NodeBuilderBase
+}
+
 // Homepage content for template
 type HomepageContent struct {
 	Name        string        // Site name
@@ -20,13 +25,8 @@ type HomepageContent struct {
 	Cover       string        // Site cover
 }
 
-// Builder for homepage
-type HomepageBuilder struct {
-	*NodeBuilderBase
-}
-
 func init() {
-	RegisterBuilderInitializer(KIND_HOMEPAGE, NewHomepageBuilder)
+	RegisterNodeBuilder(KIND_HOMEPAGE, NewHomepageBuilder)
 }
 
 func NewHomepageBuilder(site *Site) NodeBuilder {
@@ -43,11 +43,7 @@ func (builder *HomepageBuilder) Load() {
 	node := builder.NewNode()
 
 	node.Title = "Homepage"
-
-	node.Meta = &NodeMeta{
-		Description: "Homepage test node",
-	}
-
+	node.Meta = &NodeMeta{Description: "Homepage test node"}
 	node.Content = builder.NewHomepageContent()
 
 	builder.AddNode(node)
