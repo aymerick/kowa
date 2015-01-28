@@ -253,6 +253,10 @@ func (site *Site) FindActivities(skip int, limit int) *ActivitiesList {
 	return &result
 }
 
+func (site *Site) FindAllActivities() *ActivitiesList {
+	return site.FindActivities(0, 0)
+}
+
 func (site *Site) imagesBaseQuery() *mgo.Query {
 	return site.dbSession.ImagesCol().Find(bson.M{"site_id": site.Id})
 }

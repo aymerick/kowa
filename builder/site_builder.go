@@ -107,6 +107,11 @@ func (builder *SiteBuilder) initBuilders() {
 	}
 }
 
+// Get given node builder
+func (builder *SiteBuilder) nodeBuilder(name string) NodeBuilder {
+	return builder.nodeBuilders[name]
+}
+
 // Load nodes
 func (builder *SiteBuilder) loadNodes() {
 	for _, nodeBuilder := range builder.nodeBuilders {
@@ -114,6 +119,7 @@ func (builder *SiteBuilder) loadNodes() {
 	}
 }
 
+// Returns nodes to display in navigation bar
 func (builder *SiteBuilder) navBarNodes() []*Node {
 	result := []*Node{}
 
@@ -125,6 +131,18 @@ func (builder *SiteBuilder) navBarNodes() []*Node {
 	}
 
 	return result
+}
+
+// Returns all activities contents (to display in template)
+func (builder *SiteBuilder) activitiesContents() []*ActivityContent {
+	nodeBuilder := builder.nodeBuilder(KIND_ACTIVITIES)
+
+	activities, ok := nodeBuilder.Data("activities").([]*ActivityContent)
+	if !ok {
+		panic("This should never happen")
+	}
+
+	return activities
 }
 
 // Fill site variables

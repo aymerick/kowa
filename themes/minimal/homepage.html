@@ -8,6 +8,13 @@
 
 {{.Description}}
 
+<h2>Some of our activities</h2>
+<ul>
+{{range .Activities}}
+    <li><img src="{{.Cover}}" /> {{.Title}}</li>
+{{end}}
+</ul>
+
 {{.MoreDesc}}
 
 {{.JoinText}}

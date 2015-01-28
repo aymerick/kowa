@@ -23,6 +23,8 @@ type HomepageContent struct {
 	JoinText    template.HTML // Site join text
 	Logo        string        // Site logo
 	Cover       string        // Site cover
+
+	Activities []*ActivityContent // Activities
 }
 
 func init() {
@@ -78,6 +80,11 @@ func (builder *HomepageBuilder) NewHomepageContent() *HomepageContent {
 	cover := site.FindCover()
 	if cover != nil {
 		result.Cover = builder.addImage(cover, models.MEDIUM_KIND)
+	}
+
+	result.Activities = builder.SiteBuilder().activitiesContents()
+	if len(result.Activities) > 6 {
+		result.Activities = result.Activities[0:6]
 	}
 
 	return result

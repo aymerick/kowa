@@ -19,6 +19,9 @@ type NodeBuilder interface {
 
 	// Returns loaded nodes that must be placed in navigation bar
 	NavBarNodes() []*Node
+
+	// Returns given data
+	Data(string) interface{}
 }
 
 // Node builder base
@@ -43,7 +46,7 @@ func (builder *NodeBuilderBase) SiteBuilder() *SiteBuilder {
 
 // NodeBuilder
 func (builder *NodeBuilderBase) Load() {
-	panic("Should be implemented by includer")
+	panic("Must be implemented by includer")
 }
 
 // NodeBuilder
@@ -59,6 +62,12 @@ func (builder *NodeBuilderBase) Generate() {
 // NodeBuilder
 func (builder *NodeBuilderBase) NavBarNodes() []*Node {
 	return builder.navBarNodes
+}
+
+// NodeBuilder
+func (builder *NodeBuilderBase) Data(name string) interface{} {
+	// Should be implemented by includer
+	return nil
 }
 
 // Generate given node
