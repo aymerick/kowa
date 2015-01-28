@@ -115,7 +115,7 @@ func (builder *SiteBuilder) loadNodes() {
 }
 
 func (builder *SiteBuilder) navBarNodes() []*Node {
-	result := make([]*Node, 0)
+	result := []*Node{}
 
 	for _, nodeBuilder := range builder.nodeBuilders {
 		nodes := nodeBuilder.NavBarNodes()

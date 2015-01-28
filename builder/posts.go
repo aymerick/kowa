@@ -12,6 +12,8 @@ import (
 // Builder for posts pages
 type PostsBuilder struct {
 	*NodeBuilderBase
+
+	posts []*PostNodeContent
 }
 
 // Post content for template
@@ -23,6 +25,19 @@ type PostContent struct {
 	Url   string        // Absolute URL
 }
 
+// Post with associated Node Content
+type PostNodeContent struct {
+	post        *models.Post
+	nodeContent *PostContent
+}
+
+// Post list content for template
+type PostListContent struct {
+	Posts    []*PostContent
+	PrevPage string
+	NextPage string
+}
+
 func init() {
 	RegisterNodeBuilder(KIND_POSTS, NewPostsBuilder)
 }
@@ -30,10 +45,17 @@ func init() {
 // Instanciate a new builder
 func NewPostsBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 	return &PostsBuilder{
-		&NodeBuilderBase{
+		NodeBuilderBase: &NodeBuilderBase{
 			nodeKind:    KIND_POST,
 			siteBuilder: siteBuilder,
 		},
+	}
+}
+
+func NewPostNodeContent(post *models.Post, nodeContent *PostContent) *PostNodeContent {
+	return &PostNodeContent{
+		post:        post,
+		nodeContent: nodeContent,
 	}
 }
 
@@ -60,9 +82,13 @@ func (builder *PostsBuilder) loadPost(post *models.Post) {
 		Description: "@todo",
 	}
 
-	node.Content = builder.NewPostContent(post, node)
+	postContent := builder.NewPostContent(post, node)
+
+	node.Content = postContent
 
 	builder.addNode(node)
+
+	builder.posts = append(builder.posts, NewPostNodeContent(post, postContent))
 }
 
 /// Instanciate a new post content
@@ -86,13 +112,29 @@ func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *Post
 
 // Build posts list pages
 func (builder *PostsBuilder) loadPostsLists() {
+	// @todo pagination
 	node := builder.newNodeForKind(KIND_POSTS)
 	node.fillUrl(KIND_POSTS)
 
 	node.Title = "Posts"
 	node.Meta = &NodeMeta{Description: "Posts test node"}
-	node.Content = "Soon"
+	node.Content = NewPostListContent(builder.posts, node)
 	node.InNavBar = true
 
 	builder.addNode(node)
+}
+
+func NewPostListContent(posts []*PostNodeContent, node *Node) *PostListContent {
+	postContents := []*PostContent{}
+
+	for _, postNodeContent := range posts {
+		postContents = append(postContents, postNodeContent.nodeContent)
+	}
+
+	// @todo pagination
+	result := &PostListContent{
+		Posts: postContents,
+	}
+
+	return result
 }

@@ -44,7 +44,7 @@ func (vars *SiteVars) fill() {
 }
 
 func computeNavBarItems(builder *SiteBuilder) []*SiteNavBarItem {
-	result := make([]*SiteNavBarItem, 0)
+	result := []*SiteNavBarItem{}
 
 	nodes := builder.navBarNodes()
 	for _, node := range nodes {
