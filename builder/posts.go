@@ -13,7 +13,7 @@ import (
 type PostsBuilder struct {
 	*NodeBuilderBase
 
-	posts []*PostNodeContent
+	posts []*PostNodeContentPair
 }
 
 // Post content for template
@@ -26,7 +26,7 @@ type PostContent struct {
 }
 
 // Post with associated Node Content
-type PostNodeContent struct {
+type PostNodeContentPair struct {
 	post        *models.Post
 	nodeContent *PostContent
 }
@@ -52,8 +52,8 @@ func NewPostsBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 	}
 }
 
-func NewPostNodeContent(post *models.Post, nodeContent *PostContent) *PostNodeContent {
-	return &PostNodeContent{
+func NewPostNodeContentPair(post *models.Post, nodeContent *PostContent) *PostNodeContentPair {
+	return &PostNodeContentPair{
 		post:        post,
 		nodeContent: nodeContent,
 	}
@@ -88,7 +88,7 @@ func (builder *PostsBuilder) loadPost(post *models.Post) {
 
 	builder.addNode(node)
 
-	builder.posts = append(builder.posts, NewPostNodeContent(post, postContent))
+	builder.posts = append(builder.posts, NewPostNodeContentPair(post, postContent))
 }
 
 /// Instanciate a new post content
@@ -124,7 +124,7 @@ func (builder *PostsBuilder) loadPostsLists() {
 	builder.addNode(node)
 }
 
-func NewPostListContent(posts []*PostNodeContent, node *Node) *PostListContent {
+func NewPostListContent(posts []*PostNodeContentPair, node *Node) *PostListContent {
 	postContents := []*PostContent{}
 
 	for _, postNodeContent := range posts {
