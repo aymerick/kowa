@@ -91,6 +91,7 @@ func (node *Node) template(layout *template.Template) (*template.Template, error
 	} else {
 		result := template.Must(layout.Clone())
 
+		// add "content" template to main layout
 		binData, err := ioutil.ReadFile(node.builder.SiteBuilder().templatePath(node.Kind))
 		if err == nil {
 			_, err = result.New("content").Parse(string(binData))

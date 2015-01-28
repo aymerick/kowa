@@ -4,15 +4,18 @@ import (
 	"fmt"
 	"html/template"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/spf13/afero"
 	"github.com/spf13/fsync"
 	"github.com/spf13/viper"
 
 	"github.com/aymerick/kowa/models"
+	"github.com/aymerick/kowa/utils"
 )
 
 const (
@@ -96,8 +99,11 @@ func (builder *SiteBuilder) Build() {
 	// copy assets
 	builder.copyAssets()
 
-	// dump errors
-	builder.errorCollector.dump()
+	// check errors
+	if builder.haveError() {
+		builder.dumpErrors()
+		builder.dumpLayout()
+	}
 }
 
 // Initialize builders
@@ -199,6 +205,11 @@ func (builder *SiteBuilder) addImage(img *models.Image, kind string) string {
 	return "/" + path.Join(IMAGES_DIR, path.Base(img.DerivativeURL(models.DerivativeForKind(kind))))
 }
 
+// Check if builder have error
+func (builder *SiteBuilder) haveError() bool {
+	return builder.errorCollector.ErrorsNb > 0
+}
+
 // Add an error to collector
 func (builder *SiteBuilder) addError(step string, err error) {
 	builder.errorCollector.addError(step, err)
@@ -208,6 +219,11 @@ func (builder *SiteBuilder) addError(step string, err error) {
 func (builder *SiteBuilder) addGenError(nodeKind string, err error) {
 	step := fmt.Sprintf("Generating %s", nodeKind)
 	builder.addError(step, err)
+}
+
+// Dump errors
+func (builder *SiteBuilder) dumpErrors() {
+	builder.errorCollector.dump()
 }
 
 // Computes theme directory
@@ -240,27 +256,67 @@ func (builder *SiteBuilder) templatePath(tplName string) string {
 	return path.Join(builder.themeDir(), fmt.Sprintf("%s.html", tplName))
 }
 
+// Returns partials directory path
+func (builder *SiteBuilder) partialsPath() string {
+	return path.Join(builder.themeDir(), PARTIALS_DIR)
+}
+
 // Get master layout template
 func (builder *SiteBuilder) layout() *template.Template {
 	if builder.masterLayout != nil {
 		return builder.masterLayout
 	} else {
-		builder.masterLayout = template.Must(template.ParseFiles(builder.templatePath("layout")))
+		errStep := "template init"
 
-		// Load partials
-		template.Must(builder.masterLayout.ParseGlob(path.Join(builder.partialsPath(), "*.html")))
+		// parse layout
+		layout, err := template.ParseFiles(builder.templatePath("layout"))
+		if err != nil {
+			builder.addError(errStep, err)
+			return nil
+		}
 
-		// for _, tpl := range builder.masterLayout.Templates() {
-		// 	log.Printf("Template: %s", tpl.Name())
-		// }
+		builder.masterLayout = layout
+
+		// load partials
+		partialDir := builder.partialsPath()
+
+		files, err := ioutil.ReadDir(partialDir)
+		if err != nil && err != os.ErrExist {
+			builder.addError(errStep, err)
+		} else {
+			for _, file := range files {
+				fileName := file.Name()
+
+				if !file.IsDir() && strings.HasSuffix(fileName, ".html") {
+					filePath := path.Join(partialDir, fileName)
+
+					// read partial
+					binData, err := ioutil.ReadFile(filePath)
+					if err != nil {
+						builder.addError(errStep, err)
+					} else {
+						tplName := "partials/" + utils.FileBase(fileName)
+
+						// add partial to layout
+						_, err := builder.masterLayout.New(tplName).Parse(string(binData))
+						if err != nil {
+							builder.addError(errStep, err)
+						}
+					}
+				}
+			}
+		}
 
 		return builder.masterLayout
 	}
 }
 
-// Returns partials directory path
-func (builder *SiteBuilder) partialsPath() string {
-	return path.Join(builder.themeDir(), PARTIALS_DIR)
+// Dump templates
+func (builder *SiteBuilder) dumpLayout() {
+	log.Printf("Layout templates:")
+	for _, tpl := range builder.masterLayout.Templates() {
+		log.Printf("  -> %s", tpl.Name())
+	}
 }
 
 // Prune directories for given absolute dir path
