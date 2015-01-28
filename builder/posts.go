@@ -39,19 +39,19 @@ func NewPostsBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 
 // NodeBuilder
 func (builder *PostsBuilder) Load() {
-	builder.buildPosts()
-	builder.buildPostsLists()
+	builder.loadPosts()
+	builder.loadPostsLists()
 }
 
 // Build all posts
-func (builder *PostsBuilder) buildPosts() {
+func (builder *PostsBuilder) loadPosts() {
 	for _, post := range *builder.SiteBuilder().site.FindAllPosts() {
-		builder.buildPost(post)
+		builder.loadPost(post)
 	}
 }
 
 // Build post page
-func (builder *PostsBuilder) buildPost(post *models.Post) {
+func (builder *PostsBuilder) loadPost(post *models.Post) {
 	node := builder.newNode()
 
 	node.slug = post.Slug()
@@ -86,7 +86,7 @@ func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *Post
 }
 
 // Build posts list pages
-func (builder *PostsBuilder) buildPostsLists() {
+func (builder *PostsBuilder) loadPostsLists() {
 	node := builder.newNodeForKind(KIND_POSTS)
 
 	node.Title = "Posts"

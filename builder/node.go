@@ -9,11 +9,6 @@ import (
 	"path"
 )
 
-// Node metadata
-type NodeMeta struct {
-	Description string
-}
-
 // Node
 type Node struct {
 	// template vars
@@ -29,6 +24,11 @@ type Node struct {
 	builder  NodeBuilder
 	slug     string
 	template *template.Template
+}
+
+// Node metadata
+type NodeMeta struct {
+	Description string
 }
 
 // All node kinds

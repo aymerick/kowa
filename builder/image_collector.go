@@ -6,13 +6,13 @@ import (
 	"github.com/aymerick/kowa/models"
 )
 
+type ImageCollector struct {
+	Images map[string]*ImageKind
+}
+
 type ImageKind struct {
 	Image *models.Image
 	Kind  string
-}
-
-type ImageCollector struct {
-	Images map[string]*ImageKind
 }
 
 func NewImageCollector() *ImageCollector {
