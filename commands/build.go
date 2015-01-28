@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	DEFAULT_THEME      = "minimal"
+	DEFAULT_THEME      = "test"
 	DEFAULT_OUTPUT_DIR = "_site"
 	DEFAULT_UGLY_URL   = false
 	DEFAULT_SERVE      = false
