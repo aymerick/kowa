@@ -24,8 +24,7 @@ type Node struct {
 	Url       string
 	FullUrl   string
 
-	builder  NodeBuilder
-	template *template.Template
+	builder NodeBuilder
 }
 
 // Node metadata
@@ -54,6 +53,7 @@ func NewNode(builder NodeBuilder, kind string) *Node {
 	}
 }
 
+// Fill node Url
 func (node *Node) fillUrl(slug string) {
 	// Slug
 	node.Slug = slug
@@ -84,11 +84,9 @@ func (node *Node) fillUrl(slug string) {
 	}
 }
 
-// Get node template
-func (node *Node) Template(layout *template.Template) (*template.Template, error) {
-	if node.template != nil {
-		return node.template, nil
-	} else if layout == nil {
+// Compute node template
+func (node *Node) template(layout *template.Template) (*template.Template, error) {
+	if layout == nil {
 		return nil, errors.New("Can't generate node without a layout template")
 	} else {
 		result := template.Must(layout.Clone())
@@ -96,9 +94,6 @@ func (node *Node) Template(layout *template.Template) (*template.Template, error
 		binData, err := ioutil.ReadFile(node.builder.SiteBuilder().templatePath(node.Kind))
 		if err == nil {
 			_, err = result.New("content").Parse(string(binData))
-			if err != nil {
-				node.template = result
-			}
 		}
 
 		return result, err
@@ -106,8 +101,8 @@ func (node *Node) Template(layout *template.Template) (*template.Template, error
 }
 
 // Generate node
-func (node *Node) Generate(wr io.Writer, layout *template.Template) error {
-	tpl := template.Must(node.Template(layout))
+func (node *Node) generate(wr io.Writer, layout *template.Template) error {
+	tpl := template.Must(node.template(layout))
 
 	return tpl.Execute(wr, node)
 }

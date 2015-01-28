@@ -81,7 +81,7 @@ func (builder *NodeBuilderBase) generateNode(node *Node) {
 
 	// write to file
 	// log.Printf("[DBG] Writing file: %s", osFilePath)
-	if err := node.Generate(outputFile, builder.siteBuilder.layout()); err != nil {
+	if err := node.generate(outputFile, builder.siteBuilder.layout()); err != nil {
 		builder.addGenError(err)
 	}
 }
