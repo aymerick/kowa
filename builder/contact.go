@@ -21,6 +21,7 @@ func NewContactBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 // NodeBuilder
 func (builder *ContactBuilder) Load() {
 	node := builder.newNode()
+	node.fillUrl(node.Kind)
 
 	node.Title = "Contact"
 	node.Meta = &NodeMeta{Description: "Contact test node"}

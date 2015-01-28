@@ -21,6 +21,7 @@ func NewActivitiesBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 // NodeBuilder
 func (builder *ActivitiesBuilder) Load() {
 	node := builder.newNode()
+	node.fillUrl(node.Kind)
 
 	node.Title = "Activities"
 	node.Meta = &NodeMeta{Description: "Activities test page"}

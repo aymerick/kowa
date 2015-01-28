@@ -53,8 +53,7 @@ func (builder *PostsBuilder) loadPosts() {
 // Build post page
 func (builder *PostsBuilder) loadPost(post *models.Post) {
 	node := builder.newNode()
-
-	node.slug = post.Slug()
+	node.fillUrl(post.Slug())
 
 	node.Title = post.Title
 	node.Meta = &NodeMeta{
@@ -71,7 +70,7 @@ func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *Post
 	result := &PostContent{
 		Date:  post.CreatedAt,
 		Title: post.Title,
-		Url:   node.Url(),
+		Url:   node.Url,
 	}
 
 	cover := post.FindCover()
@@ -88,6 +87,7 @@ func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *Post
 // Build posts list pages
 func (builder *PostsBuilder) loadPostsLists() {
 	node := builder.newNodeForKind(KIND_POSTS)
+	node.fillUrl(KIND_POSTS)
 
 	node.Title = "Posts"
 	node.Meta = &NodeMeta{Description: "Posts test node"}

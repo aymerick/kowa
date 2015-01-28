@@ -48,8 +48,8 @@ func (builder *PagesBuilder) Load() {
 // Build page
 func (builder *PagesBuilder) loadPage(page *models.Page) {
 	node := builder.newNode()
+	node.fillUrl(utils.Urlify(page.Title))
 
-	node.slug = utils.Urlify(page.Title)
 	node.Title = page.Title
 	node.Meta = &NodeMeta{Description: page.Tagline}
 	node.Content = builder.NewPageContent(page, node)
@@ -63,7 +63,7 @@ func (builder *PagesBuilder) NewPageContent(page *models.Page, node *Node) *Page
 		Date:    page.CreatedAt,
 		Title:   page.Title,
 		Tagline: page.Tagline,
-		Url:     node.Url(),
+		Url:     node.Url,
 	}
 
 	cover := page.FindCover()

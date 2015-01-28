@@ -20,9 +20,11 @@ type Node struct {
 	BodyClass string
 	Content   interface{}
 	InNavBar  bool
+	Slug      string
+	Url       string
+	FullUrl   string
 
 	builder  NodeBuilder
-	slug     string
 	template *template.Template
 }
 
@@ -52,36 +54,33 @@ func NewNode(builder NodeBuilder, kind string) *Node {
 	}
 }
 
-func (node *Node) Slug() string {
-	if node.slug == "" {
-		if node.Kind == KIND_HOMEPAGE {
-			return "index"
-		} else {
-			return node.Kind
+func (node *Node) fillUrl(slug string) {
+	// Slug
+	node.Slug = slug
+
+	// FullUrl
+	if node.builder.SiteBuilder().uglyURL || (node.Slug == "") || (node.Slug == "/") || (node.Slug == "index") {
+		name := node.Slug
+		switch name {
+		case "", "/":
+			name = "index"
 		}
+
+		// ugly URL (or homepage)
+		node.FullUrl = path.Join("/", fmt.Sprintf("%s.html", name))
 	} else {
-		return node.slug
+		// pretty URL
+		node.FullUrl = path.Join("/", node.Slug, "index.html")
 	}
-}
 
-func (node *Node) FullUrl() string {
-	slug := node.Slug()
-
-	if node.builder.SiteBuilder().uglyURL || (slug == "index") {
-		return path.Join("/", fmt.Sprintf("%s.html", slug))
-	} else {
-		return path.Join("/", slug, "index.html")
-	}
-}
-
-func (node *Node) Url() string {
-	fullUrl := node.FullUrl()
-
-	dir, fileName := path.Split(fullUrl)
+	// Url
+	dir, fileName := path.Split(node.FullUrl)
 	if fileName == "index.html" {
-		return dir
+		// pretty URL
+		node.Url = dir
 	} else {
-		return fullUrl
+		// ugly URL
+		node.Url = node.FullUrl
 	}
 }
 

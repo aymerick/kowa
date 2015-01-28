@@ -63,7 +63,7 @@ func (builder *NodeBuilderBase) NavBarNodes() []*Node {
 
 // Generate given node
 func (builder *NodeBuilderBase) generateNode(node *Node) {
-	osFilePath := builder.siteBuilder.filePath(node.FullUrl())
+	osFilePath := builder.siteBuilder.filePath(node.FullUrl)
 
 	// ensure dir
 	if err := builder.siteBuilder.ensureFileDir(osFilePath); err != nil {

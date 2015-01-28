@@ -48,7 +48,7 @@ func computeNavBarItems(builder *SiteBuilder) []*SiteNavBarItem {
 
 	nodes := builder.navBarNodes()
 	for _, node := range nodes {
-		result = append(result, NewSiteNavBarItem(node.Url(), node.Title))
+		result = append(result, NewSiteNavBarItem(node.Url, node.Title))
 	}
 
 	return result

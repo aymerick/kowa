@@ -41,6 +41,7 @@ func NewHomepageBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 // NodeBuilder
 func (builder *HomepageBuilder) Load() {
 	node := builder.newNode()
+	node.fillUrl("")
 
 	node.Title = "Homepage"
 	node.Meta = &NodeMeta{Description: "Homepage test node"}
