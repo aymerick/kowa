@@ -295,7 +295,8 @@ func (builder *SiteBuilder) layout() *template.Template {
 					if err != nil {
 						builder.addError(errStep, err)
 					} else {
-						tplName := "partials/" + utils.FileBase(fileName)
+						// eg: partials/navbar
+						tplName := fmt.Sprintf("%s/%s", PARTIALS_DIR, utils.FileBase(fileName))
 
 						// add partial to layout
 						_, err := builder.masterLayout.New(tplName).Parse(string(binData))
