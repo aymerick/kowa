@@ -26,6 +26,10 @@
   <div class="container">
     <div class="row">
       {{ range $index, $activity := .Activities }}
+        {{ if modBool $index 2 }}
+          <div class="clearfix visible-sm-block"></div>
+        {{ end }}
+
         <div class="col-md-4 col-sm-6 activity">
           <h3>{{ $activity.Title }}</h3>
           {{ $activity.Summary }}

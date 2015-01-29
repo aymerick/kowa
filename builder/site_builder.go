@@ -275,6 +275,9 @@ func (builder *SiteBuilder) layout() *template.Template {
 			return nil
 		}
 
+		// setup FuncMap
+		layout.Funcs(templateFuncMap)
+
 		builder.masterLayout = layout
 
 		// load partials
