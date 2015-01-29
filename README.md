@@ -27,4 +27,4 @@ Test:
 
 ## Sublime Text
 
-Search Where: -*/bower_components/*,-*/node_modules/*,-*/client/dist/*,-*/client/tmp/*,-*.min.js,-*.min.css,-*.css.map,-*.svg,-*hugo/test_site/public/*
+Search Where: -*/bower_components/*,-*/node_modules/*,-*/client/dist/*,-*/client/tmp/*,-*.min.js,-*.min.css,-*.css.map,-*.min.map,-*.svg,-*hugo/test_site/public/*
