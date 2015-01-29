@@ -91,7 +91,7 @@ func (builder *PostsBuilder) loadPost(post *models.Post) {
 	builder.posts = append(builder.posts, NewPostNodeContentPair(post, postContent))
 }
 
-/// Instanciate a new post content
+// Instanciate a new post content
 func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *PostContent {
 	result := &PostContent{
 		Date:  post.CreatedAt,
