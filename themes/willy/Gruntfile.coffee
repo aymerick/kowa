@@ -24,20 +24,20 @@ module.exports = (grunt) ->
         files: [{
           expand: true
           cwd: "bower_components/jquery/dist/"
-          src: "jquery.min.js"
+          src: [ "jquery.min.js", "jquery.min.map" ]
           dest: "assets/vendor/"
         }]
       bootstrap:
         files: [{
           expand: true
           cwd: "bower_components/bootstrap/dist/css/"
-          src: "bootstrap.min.css"
+          src: [ "bootstrap.min.css", "bootstrap.css.map" ]
           dest: "assets/vendor/"
         },
         {
           expand: true
           cwd: "bower_components/bootstrap/dist/js/"
-          src: "bootstrap.min.js"
+          src: [ "bootstrap.min.js", "bootstrap.min.js" ]
           dest: "assets/vendor/"
         }]
 
