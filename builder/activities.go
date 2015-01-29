@@ -19,10 +19,11 @@ type ActivitiesBuilder struct {
 
 // Activity content for template
 type ActivityContent struct {
-	Date  time.Time     // CreatedAt
-	Cover string        // Cover URL
-	Title string        // Title
-	Body  template.HTML // Body
+	Date    time.Time     // CreatedAt
+	Cover   string        // Cover URL
+	Title   string        // Title
+	Summary template.HTML // Summary
+	Body    template.HTML // Body
 }
 
 // Activities content for template
@@ -95,8 +96,11 @@ func (builder *ActivitiesBuilder) NewActivityContent(activity *models.Activity) 
 		result.Cover = builder.addImage(cover, models.MEDIUM_KIND)
 	}
 
-	html := blackfriday.MarkdownCommon([]byte(activity.Body))
-	result.Body = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
+	htmlSummary := blackfriday.MarkdownCommon([]byte(activity.Summary))
+	result.Summary = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(htmlSummary))
+
+	htmlBody := blackfriday.MarkdownCommon([]byte(activity.Body))
+	result.Body = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(htmlBody))
 
 	return result
 }

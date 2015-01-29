@@ -19,8 +19,9 @@ type Activity struct {
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
 	SiteId    string        `bson:"site_id"       json:"site"`
 
-	Title string `bson:"title" json:"title"`
-	Body  string `bson:"body"  json:"body"`
+	Title   string `bson:"title" json:"title"`
+	Summary string `bson:"summary"  json:"summary"`
+	Body    string `bson:"body"  json:"body"`
 
 	Cover bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
 
@@ -137,6 +138,16 @@ func (activity *Activity) Update(newActivity *Activity) error {
 			unset = append(unset, bson.DocElem{"title", 1})
 		} else {
 			set = append(set, bson.DocElem{"title", activity.Title})
+		}
+	}
+
+	if activity.Summary != newActivity.Summary {
+		activity.Summary = newActivity.Summary
+
+		if activity.Summary == "" {
+			unset = append(unset, bson.DocElem{"summary", 1})
+		} else {
+			set = append(set, bson.DocElem{"summary", activity.Summary})
 		}
 	}
 

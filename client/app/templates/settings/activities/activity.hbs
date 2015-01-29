@@ -11,7 +11,15 @@
         <label for="activity-title">Activity Name</label>
         {{input id="activity-title" name="activity[title]" type="text" class="form-control" value=model.title}}
         <p>
-            A title for this activity
+            A title for your activity
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="activity-summary">Activity Summary</label>
+        {{textarea rows=5 id="activity-summary" name="activity[summary]" class="form-control" value=model.summary}}
+        <p>
+            A summary of what your activity is about
         </p>
     </div>
 
@@ -19,7 +27,7 @@
         <label for="activity-body">Activity Description</label>
         {{textarea rows=10 id="activity-body" name="activity[body]" class="form-control" value=model.body}}
         <p>
-            Describe what this activity is about
+            A description for your activity
         </p>
     </div>
 
@@ -34,7 +42,7 @@
             <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "cover"}}>Choose Image</button>
         {{/if}}
         <p>
-            Set a cover image for this activity
+            Set a cover image for your activity
         </p>
     </div>
 </form>

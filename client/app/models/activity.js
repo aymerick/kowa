@@ -6,6 +6,7 @@ var Activity = DS.Model.extend({
   updatedAt: DS.attr('date'),
 
   title: DS.attr(''),
+  summary: DS.attr(''),
   body: DS.attr(''),
 
   cover: DS.belongsTo('image', { inverse: 'coverActivities', async: true }),
@@ -21,6 +22,7 @@ Activity.reopenClass({
       createdAt: now,
       updatedAt: now,
       title: "",
+      summary: "",
       body: ""
     }, moreAttrs || { });
   }

@@ -1,6 +1,6 @@
 import DS from 'ember-data';
 
-var ACTIVITY_SERIALIZER_FIELDS = [ 'title', 'body', 'site', 'cover' ];
+var ACTIVITY_SERIALIZER_FIELDS = [ 'title', 'summary', 'body', 'site', 'cover' ];
 
 var ActivitySerializer = DS.RESTSerializer.extend({
   serialize: function(activity, options) {
