@@ -52,7 +52,7 @@ func (builder *HomepageBuilder) Load() {
 	builder.addNode(node)
 }
 
-/// Instanciate a new homepage content
+// Instanciate a new homepage content
 func (builder *HomepageBuilder) NewHomepageContent() *HomepageContent {
 	site := builder.SiteBuilder().site
 
