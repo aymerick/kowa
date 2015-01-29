@@ -1,0 +1,11 @@
+{
+  "name": "willy",
+  "version": "1.0.0",
+  "description": "Willy theme for kowa",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Aymerick <aymerick@jehanne.org>",
+  "license": "MIT"
+}
