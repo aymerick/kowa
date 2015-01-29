@@ -57,7 +57,7 @@ func (builder *PagesBuilder) loadPage(page *models.Page) {
 	builder.addNode(node)
 }
 
-/// Instanciate a new page content
+// Instanciate a new page content
 func (builder *PagesBuilder) NewPageContent(page *models.Page, node *Node) *PageContent {
 	result := &PageContent{
 		Date:    page.CreatedAt,
