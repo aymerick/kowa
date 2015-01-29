@@ -1,0 +1,23 @@
+.jumbotron {
+    margin-bottom: 0px;
+
+    color: $jumbotron-color;
+    background-color: $jumbotron-background-color;
+
+    h1 {
+      @media (max-width: $screen-xs-max) {
+        font-size: 30px;
+      }
+    }
+
+    .description {
+      color: $jumbotron-description-color;
+
+      @media (max-width: $screen-xs-max) {
+        font-size: 16px;
+      }
+      @media (min-width: $screen-sm-min) {
+        font-size: 24px;
+      }
+    }
+}

@@ -1,0 +1,63 @@
+<div class="jumbotron">
+  <div class="container">
+    <h1>{{ .Name }}</h1>
+    <p class="description">
+        {{ .Tagline }}
+    </p>
+  </div>
+</div>
+
+<section class="presentation">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 photo">
+        {{ if .Cover }}
+            <img src="{{ .Cover }}" alt="Cover" class="img-responsive img-thumbnail center-block"/>
+        {{ end }}
+      </div>
+      <div class="col-md-8 intro">
+        {{.Description}}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="activities">
+  <div class="container">
+    <div class="row">
+      {{ range $index, $activity := .Activities }}
+        <div class="col-md-4 col-sm-6 activity">
+          <h3>{{ $activity.Title }}</h3>
+          {{ $activity.Summary }}
+          <p class='more'>
+            <a href="#" class="btn btn-purple">En savoir plus</a>
+          </p>
+        </div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+{{ if .MoreDesc }}
+<section class="more-desription">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        {{ .MoreDesc }}
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}
+
+{{ if .JoinText }}
+<section class="join-us">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        {{ .JoinText }}
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}

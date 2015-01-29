@@ -1,0 +1,24 @@
+// @todo Check deprecated vars
+
+/* Screen size */
+$screen-xs-max: 767px;
+$screen-sm-min: 768px;
+$screen-md-min: 992px;
+$screen-lg-min: 1200px;
+
+/* Layout */
+$footer-height: 60px;
+
+/* Main colors */
+$color-purple: #92278F;
+$color-purple-dark: #781373;
+$color-purple-darkest: #62045E;
+
+$color-light-background: #f5f5f5;
+
+$color-orange: #F99420;
+$color-green: #87C234;
+
+$jumbotron-color: #fff;
+$jumbotron-background-color: $color-purple;
+$jumbotron-description-color: #ddd;
