@@ -40,7 +40,7 @@ func NewPagesBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 
 // NodeBuilder
 func (builder *PagesBuilder) Load() {
-	for _, page := range *builder.SiteBuilder().site.FindAllPages() {
+	for _, page := range *builder.site().FindAllPages() {
 		builder.loadPage(page)
 	}
 }

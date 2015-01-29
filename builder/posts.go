@@ -67,7 +67,7 @@ func (builder *PostsBuilder) Load() {
 
 // Build all posts
 func (builder *PostsBuilder) loadPosts() {
-	for _, post := range *builder.SiteBuilder().site.FindAllPosts() {
+	for _, post := range *builder.site().FindAllPosts() {
 		builder.loadPost(post)
 	}
 }
@@ -79,7 +79,7 @@ func (builder *PostsBuilder) loadPost(post *models.Post) {
 
 	node.Title = post.Title
 	node.Meta = &NodeMeta{
-		Description: "@todo",
+		Description: "", // @todo !!!
 	}
 
 	postContent := builder.NewPostContent(post, node)
@@ -117,7 +117,7 @@ func (builder *PostsBuilder) loadPostsLists() {
 	node.fillUrl(KIND_POSTS)
 
 	node.Title = "Posts"
-	node.Meta = &NodeMeta{Description: "Posts test node"}
+	node.Meta = &NodeMeta{Description: ""} // @todo !!!
 	node.Content = NewPostListContent(builder.posts, node)
 	node.InNavBar = true
 

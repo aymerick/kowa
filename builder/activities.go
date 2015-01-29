@@ -54,7 +54,7 @@ func (builder *ActivitiesBuilder) Load() {
 	node.fillUrl(node.Kind)
 
 	node.Title = "Activities"
-	node.Meta = &NodeMeta{Description: "Activities test page"}
+	node.Meta = &NodeMeta{Description: ""} // @todo !!!
 	node.Content = NewActivitiesContent(activitiesContents)
 	node.InNavBar = true
 
@@ -75,7 +75,7 @@ func (builder *ActivitiesBuilder) Data(name string) interface{} {
 func (builder *ActivitiesBuilder) activities() []*ActivityContent {
 	if len(builder.activitiesContents) == 0 {
 		// fetch activities
-		for _, activity := range *builder.SiteBuilder().site.FindAllActivities() {
+		for _, activity := range *builder.site().FindAllActivities() {
 			activityContent := builder.NewActivityContent(activity)
 
 			builder.activitiesContents = append(builder.activitiesContents, activityContent)

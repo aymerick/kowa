@@ -45,8 +45,13 @@ func (builder *HomepageBuilder) Load() {
 	node := builder.newNode()
 	node.fillUrl("")
 
-	node.Title = "Homepage"
-	node.Meta = &NodeMeta{Description: "Homepage test node"}
+	site := builder.site()
+
+	node.Title = site.Name
+	node.Meta = &NodeMeta{
+		Title:       site.Name,
+		Description: site.Tagline,
+	}
 	node.Content = builder.NewHomepageContent()
 
 	builder.addNode(node)
@@ -54,7 +59,7 @@ func (builder *HomepageBuilder) Load() {
 
 // Instanciate a new homepage content
 func (builder *HomepageBuilder) NewHomepageContent() *HomepageContent {
-	site := builder.SiteBuilder().site
+	site := builder.site()
 
 	result := &HomepageContent{
 		Name:    site.Name,

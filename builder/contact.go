@@ -24,7 +24,7 @@ func (builder *ContactBuilder) Load() {
 	node.fillUrl(node.Kind)
 
 	node.Title = "Contact"
-	node.Meta = &NodeMeta{Description: "Contact test node"}
+	node.Meta = &NodeMeta{Description: ""} // @todo !!!
 	node.Content = "Soon"
 	node.InNavBar = true
 

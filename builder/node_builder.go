@@ -1,6 +1,7 @@
 package builder
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/aymerick/kowa/models"
@@ -53,7 +54,7 @@ func (builder *NodeBuilderBase) Load() {
 func (builder *NodeBuilderBase) Generate() {
 	for _, node := range builder.nodes {
 		// fill node with more data
-		node.Site = builder.siteBuilder.siteVars
+		builder.fillNodeBeforeGeneration(node)
 
 		builder.generateNode(node)
 	}
@@ -68,6 +69,22 @@ func (builder *NodeBuilderBase) NavBarNodes() []*Node {
 func (builder *NodeBuilderBase) Data(name string) interface{} {
 	// Should be implemented by includer
 	return nil
+}
+
+// Get site model
+func (builder *NodeBuilderBase) site() *models.Site {
+	return builder.SiteBuilder().site
+}
+
+// Fill node with more data
+func (builder *NodeBuilderBase) fillNodeBeforeGeneration(node *Node) {
+	node.Site = builder.siteBuilder.siteVars
+
+	// defaults
+	if node.Meta.Title == "" {
+		// @todo Filter characters
+		node.Meta.Title = fmt.Sprintf("%s - %s", node.Title, builder.site().Name)
+	}
 }
 
 // Generate given node

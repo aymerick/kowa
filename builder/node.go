@@ -29,6 +29,7 @@ type Node struct {
 
 // Node metadata
 type NodeMeta struct {
+	Title       string
 	Description string
 }
 
