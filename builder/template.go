@@ -10,7 +10,7 @@ import (
 // Func Map
 //
 
-// build FuncMap for template
+// Build FuncMap for template
 func (builder *SiteBuilder) FuncMap() template.FuncMap {
 	return template.FuncMap{
 		"urlFor":  builder.UrlFor,
@@ -19,7 +19,7 @@ func (builder *SiteBuilder) FuncMap() template.FuncMap {
 	}
 }
 
-// returns an URL to an internal page
+// Returns an URL to an internal page
 func (builder *SiteBuilder) UrlFor(dest interface{}) (string, error) {
 	destValue := reflect.ValueOf(dest)
 
@@ -66,7 +66,7 @@ func (builder *SiteBuilder) UrlFor(dest interface{}) (string, error) {
 	return result, err
 }
 
-// borrowed from https://github.com/spf13/hugo/blob/master/tpl/template.go
+// Borrowed from https://github.com/spf13/hugo/blob/master/tpl/template.go
 func (builder *SiteBuilder) Mod(a, b interface{}) (int64, error) {
 	av := reflect.ValueOf(a)
 	bv := reflect.ValueOf(b)
@@ -93,7 +93,7 @@ func (builder *SiteBuilder) Mod(a, b interface{}) (int64, error) {
 	return ai % bi, nil
 }
 
-// borrowed from https://github.com/spf13/hugo/blob/master/tpl/template.go
+// Borrowed from https://github.com/spf13/hugo/blob/master/tpl/template.go
 func (builder *SiteBuilder) ModBool(a, b interface{}) (bool, error) {
 	res, err := builder.Mod(a, b)
 	if err != nil {
