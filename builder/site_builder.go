@@ -19,10 +19,11 @@ import (
 )
 
 const (
-	IMAGES_DIR   = "img"
-	THEMES_DIR   = "themes"
-	PARTIALS_DIR = "partials"
-	ASSETS_DIR   = "assets"
+	IMAGES_DIR    = "img"
+	THEMES_DIR    = "themes"
+	TEMPLATES_DIR = "templates"
+	PARTIALS_DIR  = "partials"
+	ASSETS_DIR    = "assets"
 )
 
 var registeredNodeBuilders = make(map[string]func(*SiteBuilder) NodeBuilder)
@@ -53,6 +54,7 @@ type SiteBuilder struct {
 	site         *models.Site
 	siteVars     *SiteVars
 	nodeBuilders map[string]NodeBuilder
+	tplDir       string
 }
 
 func NewSiteBuilder(siteId string) *SiteBuilder {
@@ -78,6 +80,7 @@ func NewSiteBuilder(siteId string) *SiteBuilder {
 	}
 
 	result.initBuilders()
+	result.setTemplatesDir()
 
 	return result
 }
@@ -110,6 +113,17 @@ func (builder *SiteBuilder) Build() {
 func (builder *SiteBuilder) initBuilders() {
 	for name, initializer := range registeredNodeBuilders {
 		builder.nodeBuilders[name] = initializer(builder)
+	}
+}
+
+// Find templates dir
+func (builder *SiteBuilder) setTemplatesDir() {
+	dirPath := path.Join(builder.themeDir(), TEMPLATES_DIR)
+	if _, err := os.Stat(dirPath); os.IsNotExist(err) {
+		// no /templates subdir found
+		builder.tplDir = builder.themeDir()
+	} else {
+		builder.tplDir = dirPath
 	}
 }
 
@@ -231,6 +245,15 @@ func (builder *SiteBuilder) themeDir() string {
 	return path.Join(builder.workingDir, THEMES_DIR, builder.theme)
 }
 
+// Computes theme templates directory
+func (builder *SiteBuilder) themeTemplatesDir() string {
+	if builder.tplDir == "" {
+		panic("Templates directory not set")
+	}
+
+	return builder.tplDir
+}
+
 // Computes theme assets directory
 func (builder *SiteBuilder) themeAssetsDir() string {
 	return path.Join(builder.themeDir(), ASSETS_DIR)
@@ -253,12 +276,12 @@ func (builder *SiteBuilder) genAssetsDir() string {
 
 // Compute template path for given template name
 func (builder *SiteBuilder) templatePath(tplName string) string {
-	return path.Join(builder.themeDir(), fmt.Sprintf("%s.html", tplName))
+	return path.Join(builder.themeTemplatesDir(), fmt.Sprintf("%s.html", tplName))
 }
 
 // Returns partials directory path
 func (builder *SiteBuilder) partialsPath() string {
-	return path.Join(builder.themeDir(), PARTIALS_DIR)
+	return path.Join(builder.themeTemplatesDir(), PARTIALS_DIR)
 }
 
 // Get master layout template
