@@ -2,7 +2,6 @@ package builder
 
 import (
 	"html/template"
-	"time"
 
 	"github.com/aymerick/kowa/models"
 	"github.com/microcosm-cc/bluemonday"
@@ -18,7 +17,7 @@ type PostsBuilder struct {
 
 // Post content for template
 type PostContent struct {
-	Date  time.Time     // CreatedAt
+	Date  string        // CreatedAt
 	Cover string        // Cover
 	Title string        // Title
 	Body  template.HTML // Body
@@ -97,7 +96,7 @@ func (builder *PostsBuilder) loadPost(post *models.Post) {
 // Instanciate a new post content
 func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *PostContent {
 	result := &PostContent{
-		Date:  post.CreatedAt,
+		Date:  post.CreatedAt.Format("02/01/06"),
 		Title: post.Title,
 		Url:   node.Url,
 	}
