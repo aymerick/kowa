@@ -18,6 +18,9 @@ type NodeBuilder interface {
 	// Generate all nodes
 	Generate()
 
+	// Returns all loaded nodes
+	Nodes() []*Node
+
 	// Returns loaded nodes that must be placed in navigation bar
 	NavBarNodes() []*Node
 
@@ -58,6 +61,11 @@ func (builder *NodeBuilderBase) Generate() {
 
 		builder.generateNode(node)
 	}
+}
+
+// NodeBuilder
+func (builder *NodeBuilderBase) Nodes() []*Node {
+	return builder.nodes
 }
 
 // NodeBuilder

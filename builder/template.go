@@ -2,22 +2,72 @@ package builder
 
 import (
 	"errors"
-	"reflect"
-
 	"html/template"
+	"reflect"
 )
 
-var templateFuncMap template.FuncMap
+//
+// Func Map
+//
 
-func init() {
-	templateFuncMap = template.FuncMap{
-		"mod":     Mod,
-		"modBool": ModBool,
+// build FuncMap for template
+func (builder *SiteBuilder) FuncMap() template.FuncMap {
+	return template.FuncMap{
+		"urlFor":  builder.UrlFor,
+		"mod":     builder.Mod,
+		"modBool": builder.ModBool,
 	}
 }
 
+// returns an URL to an internal page
+func (builder *SiteBuilder) UrlFor(dest interface{}) (string, error) {
+	destValue := reflect.ValueOf(dest)
+
+	var destStr string
+
+	switch destValue.Kind() {
+	case reflect.String:
+		destStr = destValue.String()
+	default:
+		return "", errors.New("LinkTo operator needs a string argument")
+	}
+
+	var result string
+	var err error
+
+	switch destStr {
+	case KIND_ACTIVITIES, KIND_CONTACT, KIND_HOMEPAGE:
+		// find uniq node
+		nodes := builder.nodeBuilder(destStr).Nodes()
+		if len(nodes) == 0 {
+			err = errors.New("No node loaded yet")
+		} else if len(nodes) > 1 {
+			err = errors.New("That method logic is broken, fix it!")
+		} else {
+			result = nodes[0].Url
+		}
+
+	case KIND_POSTS:
+		// find correct node
+		nodes := builder.nodeBuilder(destStr).Nodes()
+
+		for _, node := range nodes {
+			if node.Slug == KIND_POSTS {
+				result = node.Url
+				break
+			}
+		}
+
+	default:
+		// KIND_PAGE, KIND_POST
+		err = errors.New("Internal link kind not supported yet")
+	}
+
+	return result, err
+}
+
 // borrowed from https://github.com/spf13/hugo/blob/master/tpl/template.go
-func Mod(a, b interface{}) (int64, error) {
+func (builder *SiteBuilder) Mod(a, b interface{}) (int64, error) {
 	av := reflect.ValueOf(a)
 	bv := reflect.ValueOf(b)
 	var ai, bi int64
@@ -44,8 +94,8 @@ func Mod(a, b interface{}) (int64, error) {
 }
 
 // borrowed from https://github.com/spf13/hugo/blob/master/tpl/template.go
-func ModBool(a, b interface{}) (bool, error) {
-	res, err := Mod(a, b)
+func (builder *SiteBuilder) ModBool(a, b interface{}) (bool, error) {
+	res, err := builder.Mod(a, b)
 	if err != nil {
 		return false, err
 	}

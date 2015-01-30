@@ -299,7 +299,7 @@ func (builder *SiteBuilder) layout() *template.Template {
 		}
 
 		// setup FuncMap
-		layout.Funcs(templateFuncMap)
+		layout.Funcs(builder.FuncMap())
 
 		builder.masterLayout = layout
 
