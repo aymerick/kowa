@@ -16,8 +16,9 @@ type HomepageBuilder struct {
 
 // Homepage content for template
 type HomepageContent struct {
-	Name        string        // Site name
-	Tagline     string        // Site tagline
+	Title   string
+	Tagline string
+
 	Description template.HTML // Site description
 	MoreDesc    template.HTML // Site additional description
 	JoinText    template.HTML // Site join text
@@ -62,7 +63,7 @@ func (builder *HomepageBuilder) NewHomepageContent() *HomepageContent {
 	site := builder.site()
 
 	result := &HomepageContent{
-		Name:    site.Name,
+		Title:   site.Name,
 		Tagline: site.Tagline,
 	}
 

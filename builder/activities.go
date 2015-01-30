@@ -28,7 +28,10 @@ type ActivityContent struct {
 
 // Activities content for template
 type ActivitiesContent struct {
-	Activities []*ActivityContent
+	Title   string
+	Tagline string
+
+	Activities []*ActivityContent // Activities
 }
 
 func init() {
@@ -53,9 +56,16 @@ func (builder *ActivitiesBuilder) Load() {
 	node := builder.newNode()
 	node.fillUrl(node.Kind)
 
-	node.Title = "Activities"
-	node.Meta = &NodeMeta{Description: ""} // @todo !!!
-	node.Content = NewActivitiesContent(activitiesContents)
+	title := "Activities"
+	tagline := "" // @todo
+
+	node.Title = title
+	node.Meta = &NodeMeta{Description: tagline}
+	node.Content = &ActivitiesContent{
+		Title:      title,
+		Tagline:    tagline,
+		Activities: activitiesContents,
+	}
 	node.InNavBar = true
 
 	builder.addNode(node)
@@ -103,10 +113,4 @@ func (builder *ActivitiesBuilder) NewActivityContent(activity *models.Activity) 
 	result.Body = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(htmlBody))
 
 	return result
-}
-
-func NewActivitiesContent(activities []*ActivityContent) *ActivitiesContent {
-	return &ActivitiesContent{
-		Activities: activities,
-	}
 }

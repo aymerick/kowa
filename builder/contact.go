@@ -5,6 +5,12 @@ type ContactBuilder struct {
 	*NodeBuilderBase
 }
 
+// Contact content for template
+type ContactContent struct {
+	Title   string
+	Tagline string
+}
+
 func init() {
 	RegisterNodeBuilder(KIND_CONTACT, NewContactBuilder)
 }
@@ -23,9 +29,15 @@ func (builder *ContactBuilder) Load() {
 	node := builder.newNode()
 	node.fillUrl(node.Kind)
 
-	node.Title = "Contact"
-	node.Meta = &NodeMeta{Description: ""} // @todo !!!
-	node.Content = "Soon"
+	title := "Contact"
+	tagline := "" // @todo
+
+	node.Title = title
+	node.Meta = &NodeMeta{Description: tagline} // @todo !!!
+	node.Content = &ContactContent{
+		Title:   title,
+		Tagline: tagline,
+	}
 	node.InNavBar = true
 
 	builder.addNode(node)

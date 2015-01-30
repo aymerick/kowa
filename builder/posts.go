@@ -33,6 +33,9 @@ type PostNodeContentPair struct {
 
 // Post list content for template
 type PostListContent struct {
+	Title   string
+	Tagline string
+
 	Posts    []*PostContent
 	PrevPage string
 	NextPage string
@@ -116,25 +119,27 @@ func (builder *PostsBuilder) loadPostsLists() {
 	node := builder.newNodeForKind(KIND_POSTS)
 	node.fillUrl(KIND_POSTS)
 
-	node.Title = "Posts"
-	node.Meta = &NodeMeta{Description: ""} // @todo !!!
-	node.Content = NewPostListContent(builder.posts, node)
+	title := "Posts"
+	tagline := "" // @todo
+
+	node.Title = title
+	node.Meta = &NodeMeta{Description: tagline}
+	node.Content = &PostListContent{
+		Title:   title,
+		Tagline: tagline,
+		Posts:   computesPostContents(builder.posts),
+	}
 	node.InNavBar = true
 
 	builder.addNode(node)
 }
 
-func NewPostListContent(posts []*PostNodeContentPair, node *Node) *PostListContent {
+func computesPostContents(posts []*PostNodeContentPair) []*PostContent {
 	postContents := []*PostContent{}
 
 	for _, postNodeContent := range posts {
 		postContents = append(postContents, postNodeContent.nodeContent)
 	}
 
-	// @todo pagination
-	result := &PostListContent{
-		Posts: postContents,
-	}
-
-	return result
+	return postContents
 }

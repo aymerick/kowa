@@ -17,12 +17,13 @@ type PagesBuilder struct {
 
 // Page content for template
 type PageContent struct {
-	Date    time.Time     // CreatedAt
-	Cover   string        // Cover
-	Title   string        // Title
-	Tagline string        // Tagline
-	Body    template.HTML // Body
-	Url     string        // Absolute URL
+	Title   string
+	Tagline string
+
+	Date  time.Time     // CreatedAt
+	Cover string        // Cover
+	Body  template.HTML // Body
+	Url   string        // Absolute URL
 }
 
 func init() {
@@ -60,9 +61,9 @@ func (builder *PagesBuilder) loadPage(page *models.Page) {
 // Instanciate a new page content
 func (builder *PagesBuilder) NewPageContent(page *models.Page, node *Node) *PageContent {
 	result := &PageContent{
-		Date:    page.CreatedAt,
 		Title:   page.Title,
 		Tagline: page.Tagline,
+		Date:    page.CreatedAt,
 		Url:     node.Url,
 	}
 
