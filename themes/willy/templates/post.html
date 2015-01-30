@@ -1,9 +1,30 @@
-<h1>{{.Title}}</h1>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <article>
+        <header class="post-header">
+          <h1>{{ .Title }}</h1>
+          <p class="meta">{{ .Date }}</p>
+        </header>
 
-<p>{{.Date}}<p>
+        {{ if .Cover }}
+          <section class="post-cover">
+            <img src="{{ .Cover }}" class="cover img-thumbnail" alt="cover" />
+          </section>
+        {{ end }}
 
-<p>{{.Url}}<p>
+        <section class="post-body">
+          {{ .Body }}
+        </section>
 
-<img src="{{.Cover}}" />
-
-{{.Body}}
+        <section class="post-footer">
+          <ul class="nav nav-pills pull-left">
+            <li>
+              <a href="#"><i class="fa fa-arrow-left"></i> Back to posts</a>
+            </li>
+          </ul>
+        </section>
+      </article>
+    </div>
+  </div>
+</div>
