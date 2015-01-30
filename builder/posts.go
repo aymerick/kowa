@@ -17,11 +17,11 @@ type PostsBuilder struct {
 
 // Post content for template
 type PostContent struct {
-	Date  string        // CreatedAt
-	Cover string        // Cover
-	Title string        // Title
-	Body  template.HTML // Body
-	Url   string        // Absolute URL
+	Date  string
+	Cover string
+	Title string
+	Body  template.HTML
+	Url   string
 }
 
 // Post with associated Node Content

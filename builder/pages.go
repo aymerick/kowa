@@ -20,10 +20,10 @@ type PageContent struct {
 	Title   string
 	Tagline string
 
-	Date  time.Time     // CreatedAt
-	Cover string        // Cover
-	Body  template.HTML // Body
-	Url   string        // Absolute URL
+	Date  time.Time
+	Cover string
+	Body  template.HTML
+	Url   string
 }
 
 func init() {

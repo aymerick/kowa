@@ -19,11 +19,11 @@ type ActivitiesBuilder struct {
 
 // Activity content for template
 type ActivityContent struct {
-	Date    time.Time     // CreatedAt
-	Cover   string        // Cover URL
-	Title   string        // Title
-	Summary template.HTML // Summary
-	Body    template.HTML // Body
+	Date    time.Time
+	Cover   string
+	Title   string
+	Summary template.HTML
+	Body    template.HTML
 }
 
 // Activities content for template
@@ -31,7 +31,7 @@ type ActivitiesContent struct {
 	Title   string
 	Tagline string
 
-	Activities []*ActivityContent // Activities
+	Activities []*ActivityContent
 }
 
 func init() {
