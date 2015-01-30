@@ -20,6 +20,11 @@ a {
   }
 }
 
+// overwrites a bootstrap rule
+ul ul {
+  margin-bottom: 10px;
+}
+
 .btn-purple {
   color: #fff;
   background-color: $color-purple;
