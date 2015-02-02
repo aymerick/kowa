@@ -75,7 +75,7 @@ var ContentEditionController = Ember.Mixin.create({
     var self  = this;
 
     return this.get('editionFields').any(function(field) {
-      return self.previousField(field) !== model.get(field);
+      return self.previousField(field).get('id') !== model.get(field).get('id');
     });
   },
 
