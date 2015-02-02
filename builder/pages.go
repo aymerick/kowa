@@ -51,13 +51,15 @@ func (builder *PagesBuilder) loadPage(page *models.Page) {
 	node := builder.newNode()
 	node.fillUrl(utils.Urlify(page.Title))
 
-	node.Title = page.Title
-	node.Meta = &NodeMeta{Description: page.Tagline}
-	node.Content = builder.NewPageContent(page, node)
+	pageContent := builder.NewPageContent(page, node)
+	if pageContent.Body != "" {
+		node.Title = page.Title
+		node.Meta = &NodeMeta{Description: page.Tagline}
+		node.Content = pageContent
+		node.InNavBar = page.InNavBar
 
-	node.InNavBar = page.InNavBar
-
-	builder.addNode(node)
+		builder.addNode(node)
+	}
 }
 
 // Instanciate a new page content

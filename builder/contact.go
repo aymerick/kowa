@@ -40,19 +40,22 @@ func NewContactBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 
 // NodeBuilder
 func (builder *ContactBuilder) Load() {
-	node := builder.newNode()
-	node.fillUrl(node.Kind)
-
 	title := "Contact"
 	tagline := "" // @todo
 
-	node.Title = title
-	node.Meta = &NodeMeta{Description: tagline} // @todo !!!
-	node.Content = builder.NewContactContent(title, tagline)
-	node.InNavBar = true
-	node.NavBarOrder = 10
+	contactContent := builder.NewContactContent(title, tagline)
+	if contactContent.HaveContact || contactContent.HaveSocial {
+		node := builder.newNode()
+		node.fillUrl(node.Kind)
 
-	builder.addNode(node)
+		node.Title = title
+		node.Meta = &NodeMeta{Description: tagline} // @todo !!!
+		node.Content = contactContent
+		node.InNavBar = true
+		node.NavBarOrder = 10
+
+		builder.addNode(node)
+	}
 }
 
 func (builder *ContactBuilder) NewContactContent(title string, tagline string) *ContactContent {

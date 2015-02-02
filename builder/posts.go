@@ -114,24 +114,26 @@ func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *Post
 
 // Build posts list pages
 func (builder *PostsBuilder) loadPostsLists() {
-	// @todo pagination
-	node := builder.newNodeForKind(KIND_POSTS)
-	node.fillUrl(KIND_POSTS)
+	if len(builder.posts) > 0 {
+		// @todo pagination
+		node := builder.newNodeForKind(KIND_POSTS)
+		node.fillUrl(KIND_POSTS)
 
-	title := "Posts"
-	tagline := "" // @todo
+		title := "Posts"
+		tagline := "" // @todo
 
-	node.Title = title
-	node.Meta = &NodeMeta{Description: tagline}
-	node.Content = &PostListContent{
-		Title:   title,
-		Tagline: tagline,
-		Posts:   computesPostContents(builder.posts),
+		node.Title = title
+		node.Meta = &NodeMeta{Description: tagline}
+		node.Content = &PostListContent{
+			Title:   title,
+			Tagline: tagline,
+			Posts:   computesPostContents(builder.posts),
+		}
+		node.InNavBar = true
+		node.NavBarOrder = 5
+
+		builder.addNode(node)
 	}
-	node.InNavBar = true
-	node.NavBarOrder = 5
-
-	builder.addNode(node)
 }
 
 func computesPostContents(posts []*PostNodeContentPair) []*PostContent {

@@ -51,25 +51,26 @@ func NewActivitiesBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 func (builder *ActivitiesBuilder) Load() {
 	// fetch activities
 	activitiesContents := builder.activities()
+	if len(activitiesContents) > 0 {
+		// build activities page
+		node := builder.newNode()
+		node.fillUrl(node.Kind)
 
-	// build activities page
-	node := builder.newNode()
-	node.fillUrl(node.Kind)
+		title := "Activities"
+		tagline := "" // @todo
 
-	title := "Activities"
-	tagline := "" // @todo
+		node.Title = title
+		node.Meta = &NodeMeta{Description: tagline}
+		node.Content = &ActivitiesContent{
+			Title:      title,
+			Tagline:    tagline,
+			Activities: activitiesContents,
+		}
+		node.InNavBar = true
+		node.NavBarOrder = 1
 
-	node.Title = title
-	node.Meta = &NodeMeta{Description: tagline}
-	node.Content = &ActivitiesContent{
-		Title:      title,
-		Tagline:    tagline,
-		Activities: activitiesContents,
+		builder.addNode(node)
 	}
-	node.InNavBar = true
-	node.NavBarOrder = 1
-
-	builder.addNode(node)
 }
 
 // NodeBuilder
