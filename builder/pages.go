@@ -55,6 +55,8 @@ func (builder *PagesBuilder) loadPage(page *models.Page) {
 	node.Meta = &NodeMeta{Description: page.Tagline}
 	node.Content = builder.NewPageContent(page, node)
 
+	node.InNavBar = page.InNavBar
+
 	builder.addNode(node)
 }
 
