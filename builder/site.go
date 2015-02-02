@@ -8,8 +8,13 @@ import (
 
 // Site vars for templates
 type SiteVars struct {
-	Name string // Site name
-	Logo string // Site logo
+	Name    string
+	Logo    string
+	Tagline string
+
+	Facebook   string
+	Twitter    string
+	GooglePlus string
 
 	NavBar []*SiteNavBarItem // Navigation bar
 
@@ -35,6 +40,10 @@ func (vars *SiteVars) fill() {
 	site := vars.builder.site
 
 	vars.Name = site.Name
+	vars.Tagline = site.Tagline
+	vars.Facebook = site.Facebook
+	vars.Twitter = site.Twitter
+	vars.GooglePlus = site.GooglePlus
 
 	if logo := site.FindLogo(); logo != nil {
 		vars.Logo = vars.builder.addImage(logo, models.MEDIUM_KIND)

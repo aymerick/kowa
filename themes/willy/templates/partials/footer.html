@@ -1,3 +1,10 @@
 <footer>
-    This is the footer
+    <div class="container">
+        <p>{{ .Site.Tagline }}</p>
+        <p>
+            {{ if .Site.Facebook }}<i class="fa fa-facebook"></i> <a href="{{ .Site.Facebook }}" target="_blank">Facebook</a> | {{ end }}
+            {{ if .Site.Twitter }}<i class="fa fa-twitter"></i> <a href="{{ .Site.Twitter }}" target="_blank">Twitter</a> | {{ end }}
+            {{ if .Site.GooglePlus }}<i class="fa fa-google-plus"></i> <a href="{{ .Site.GooglePlus }}" rel="publisher" target="_blank">Google+</a>{{ end }}
+        </p>
+    </div>
 </footer>
