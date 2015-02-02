@@ -24,6 +24,8 @@ type Page struct {
 	Body    string        `bson:"body"            json:"body"`
 	Cover   bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
 
+	InNavBar bool `bson:"in_nav_bar" json:"inNavBar"`
+
 	// @todo Format (markdown|html)
 }
 
@@ -167,6 +169,16 @@ func (page *Page) Update(newPage *Page) error {
 			unset = append(unset, bson.DocElem{"cover", 1})
 		} else {
 			set = append(set, bson.DocElem{"cover", page.Cover})
+		}
+	}
+
+	if page.InNavBar != newPage.InNavBar {
+		page.InNavBar = newPage.InNavBar
+
+		if page.InNavBar == false {
+			unset = append(unset, bson.DocElem{"in_nav_bar", 1})
+		} else {
+			set = append(set, bson.DocElem{"in_nav_bar", page.InNavBar})
 		}
 	}
 

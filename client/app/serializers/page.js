@@ -1,6 +1,6 @@
 import DS from 'ember-data';
 
-var PAGE_SERIALIZER_FIELDS = [ 'title', 'tagline', 'body', 'site', 'cover' ];
+var PAGE_SERIALIZER_FIELDS = [ 'title', 'tagline', 'body', 'site', 'cover', 'inNavBar' ];
 
 var PageSerializer = DS.RESTSerializer.extend({
   serialize: function(page, options) {

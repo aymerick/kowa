@@ -1,9 +1,12 @@
 import Ember from 'ember';
 import AuthenticatedRoute from 'kowa/routes/authenticated';
+import StyleBodyMixin from 'kowa/mixins/style-body';
 
 var initialPaginationParams = { 'page': 1, 'perPage': 15 };
 
-var PagesRoute = AuthenticatedRoute.extend({
+var PagesRoute = AuthenticatedRoute.extend(StyleBodyMixin, {
+  classNames: ['pages'],
+
   paginationParams: null,
 
   model: function() {

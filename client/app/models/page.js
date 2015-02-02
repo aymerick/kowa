@@ -9,6 +9,8 @@ var Page = DS.Model.extend({
   tagline: DS.attr(''),
   body: DS.attr(''),
 
+  inNavBar: DS.attr('boolean'),
+
   cover: DS.belongsTo('image', { inverse: 'coverPages', async: true }),
 
   site: DS.belongsTo('site', { async: true })
@@ -23,7 +25,8 @@ Page.reopenClass({
       updatedAt: now,
       title: "",
       tagline: "",
-      body: ""
+      body: "",
+      inNavBar: false
     }, moreAttrs || { });
   }
 });

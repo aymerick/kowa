@@ -12,9 +12,15 @@
         </div>
 
         <div class="content-fields">
-            {{autofocus-input class="content-title" name="page[title]" type="text" placeholder="Page title" value=model.title}}
+            {{autofocus-input class="content-title" type="text" placeholder="Page title" value=model.title}}
 
-             {{input id='page-tagline' class="form-control content-tagline" type="text" placeholder='Page tagline' value=model.tagline}}
+            {{input id='page-tagline' class="form-control content-tagline" type="text" placeholder='Page tagline' value=model.tagline}}
+
+            <form class="form-inline content-innavbar">
+                <div class="checkbox">
+                    <label>{{input type="checkbox" name="inNavBar" checked=model.inNavBar}} Display in navigation bar</label>
+                </div>
+            </form>
         </div>
 
         <div class="content-actions">
