@@ -67,6 +67,7 @@ func (builder *ActivitiesBuilder) Load() {
 		Activities: activitiesContents,
 	}
 	node.InNavBar = true
+	node.NavBarOrder = 1
 
 	builder.addNode(node)
 }

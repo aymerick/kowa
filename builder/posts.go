@@ -129,6 +129,7 @@ func (builder *PostsBuilder) loadPostsLists() {
 		Posts:   computesPostContents(builder.posts),
 	}
 	node.InNavBar = true
+	node.NavBarOrder = 5
 
 	builder.addNode(node)
 }

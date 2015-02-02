@@ -15,14 +15,15 @@ type Node struct {
 	Kind string
 	Site *SiteVars
 
-	Title     string
-	Meta      *NodeMeta
-	BodyClass string
-	Content   interface{}
-	InNavBar  bool
-	Slug      string
-	Url       string
-	FullUrl   string
+	Title       string
+	Meta        *NodeMeta
+	BodyClass   string
+	Content     interface{}
+	InNavBar    bool
+	NavBarOrder int
+	Slug        string
+	Url         string
+	FullUrl     string
 
 	builder NodeBuilder
 }
@@ -46,9 +47,9 @@ const (
 // Create a new node
 func NewNode(builder NodeBuilder, kind string) *Node {
 	return &Node{
-		Kind:      kind,
-		BodyClass: kind,
-		InNavBar:  false,
+		Kind:        kind,
+		BodyClass:   kind,
+		NavBarOrder: 100,
 
 		builder: builder,
 	}
