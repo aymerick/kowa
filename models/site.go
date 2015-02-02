@@ -188,7 +188,7 @@ func (site *Site) PagesNb() int {
 func (site *Site) FindPages(skip int, limit int) *PagesList {
 	result := PagesList{}
 
-	query := site.pagesBaseQuery().Sort("-created_at")
+	query := site.pagesBaseQuery().Sort("created_at")
 
 	if skip > 0 {
 		query = query.Skip(skip)
