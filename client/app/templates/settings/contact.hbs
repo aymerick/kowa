@@ -1,0 +1,47 @@
+<header class="settings-header">
+    <h2 class="settings-item-title">Contact</h2>
+
+    <button class="btn btn-primary action-save" {{action "save"}}>Save</button>
+</header>
+
+<form class="settings-body" role="form" {{action 'save' on='submit'}}>
+    <div class="form-group">
+        <label for="contact-email">Email</label>
+        {{input id="contact-email" name="contact[email]" type="text" class="form-control" value=email}}
+        <p>
+            A public email to contact you
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="contact-address">Address</label>
+        {{textarea rows=10 id="contact-address" name="contact[address]" type="text" class="form-control" value=address}}
+        <p>
+            Your postal address
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="contact-facebook-page">Facebook</label>
+        {{input id="contact-facebook-page" name="contact[facebook]" type="text" class="form-control" value=facebook}}
+        <p>
+            Your facebook page
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="contact-twitter">Twitter</label>
+        {{input id="contact-twitter" name="contact[twitter]" type="text" class="form-control" value=twitter}}
+        <p>
+            Your twitter account
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="contact-google-plus">Google+ account</label>
+        {{input id="contact-google-plus" name="contact[googlePlus]" type="text" class="form-control" value=googlePlus}}
+        <p>
+            Your google+ account
+        </p>
+    </div>
+</form>

@@ -9,6 +9,13 @@ var Site = DS.Model.extend({
   moreDesc: DS.attr(),
   joinText: DS.attr(),
 
+  email: DS.attr(),
+  address: DS.attr(),
+
+  facebook: DS.attr(),
+  twitter: DS.attr(),
+  googlePlus: DS.attr(),
+
   logo: DS.belongsTo('image', { inverse: 'logoSites', async: true }),
   cover: DS.belongsTo('image', { inverse: 'coverSites', async: true }),
 

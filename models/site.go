@@ -34,16 +34,17 @@ type Site struct {
 	MoreDesc    string `bson:"more_desc"   json:"moreDesc"`
 	JoinText    string `bson:"join_text"   json:"joinText"`
 
+	Email   string `bson:"email"   json:"email"`
+	Address string `bson:"address" json:"address"`
+
+	Facebook   string `bson:"facebook"    json:"facebook"`
+	Twitter    string `bson:"twitter"     json:"twitter"`
+	GooglePlus string `bson:"google_plus" json:"googlePlus"`
+
 	Logo  bson.ObjectId `bson:"logo,omitempty"  json:"logo,omitempty"`
 	Cover bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
 
 	PageSettings []SitePageSettings `bson:"page_settings" json:"pageSettings"`
-
-	// @todo Address
-	// @todo Email
-	// @todo Facebook
-	// @todo Twitter
-	// @todo GooglePlus
 }
 
 type SiteJson struct {
@@ -415,6 +416,56 @@ func (site *Site) Update(newSite *Site) error {
 			unset = append(unset, bson.DocElem{"join_text", 1})
 		} else {
 			set = append(set, bson.DocElem{"join_text", site.JoinText})
+		}
+	}
+
+	if site.Email != newSite.Email {
+		site.Email = newSite.Email
+
+		if site.Email == "" {
+			unset = append(unset, bson.DocElem{"email", 1})
+		} else {
+			set = append(set, bson.DocElem{"email", site.Email})
+		}
+	}
+
+	if site.Address != newSite.Address {
+		site.Address = newSite.Address
+
+		if site.Address == "" {
+			unset = append(unset, bson.DocElem{"address", 1})
+		} else {
+			set = append(set, bson.DocElem{"address", site.Address})
+		}
+	}
+
+	if site.Facebook != newSite.Facebook {
+		site.Facebook = newSite.Facebook
+
+		if site.Facebook == "" {
+			unset = append(unset, bson.DocElem{"facebook", 1})
+		} else {
+			set = append(set, bson.DocElem{"facebook", site.Facebook})
+		}
+	}
+
+	if site.Twitter != newSite.Twitter {
+		site.Twitter = newSite.Twitter
+
+		if site.Twitter == "" {
+			unset = append(unset, bson.DocElem{"twitter", 1})
+		} else {
+			set = append(set, bson.DocElem{"twitter", site.Twitter})
+		}
+	}
+
+	if site.GooglePlus != newSite.GooglePlus {
+		site.GooglePlus = newSite.GooglePlus
+
+		if site.GooglePlus == "" {
+			unset = append(unset, bson.DocElem{"google_plus", 1})
+		} else {
+			set = append(set, bson.DocElem{"google_plus", site.GooglePlus})
 		}
 	}
 

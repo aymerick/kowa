@@ -47,6 +47,8 @@ Router.map(function() {
         //   this.route('member', {path: ':member_id'});
         // });
 
+        this.route('contact');
+
         this.route('images');
       });
     });
