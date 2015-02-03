@@ -26,6 +26,8 @@ type Site struct {
 
 	Id        string    `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time `bson:"created_at"    json:"createdAt"`
+	UpdatedAt time.Time `bson:"updated_at"    json:"updatedAt"`
+	BuiltAt   time.Time `bson:"built_at"      json:"builtAt"`
 	UserId    string    `bson:"user_id"       json:"user"`
 
 	Name        string `bson:"name"        json:"name"`
@@ -366,7 +368,7 @@ func (site *Site) RemoveImageReferences(image *Image) error {
 }
 
 // Update site in database
-func (site *Site) Update(newSite *Site) error {
+func (site *Site) Update(newSite *Site) (bool, error) {
 	var set, unset, modifier bson.D
 
 	if site.Name != newSite.Name {
@@ -498,9 +500,9 @@ func (site *Site) Update(newSite *Site) error {
 	}
 
 	if len(modifier) > 0 {
-		return site.dbSession.SitesCol().UpdateId(site.Id, modifier)
+		return true, site.dbSession.SitesCol().UpdateId(site.Id, modifier)
 	} else {
-		return nil
+		return false, nil
 	}
 }
 

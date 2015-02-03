@@ -16,9 +16,9 @@ type siteJson struct {
 func (app *Application) handleGetSite(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("[handler]: handleGetSite\n")
 
-	currentSite := app.getCurrentSite(req)
-	if currentSite != nil {
-		app.render.JSON(rw, http.StatusOK, renderMap{"site": currentSite})
+	site := app.getCurrentSite(req)
+	if site != nil {
+		app.render.JSON(rw, http.StatusOK, renderMap{"site": site})
 	} else {
 		http.NotFound(rw, req)
 	}
@@ -28,8 +28,8 @@ func (app *Application) handleGetSite(rw http.ResponseWriter, req *http.Request)
 func (app *Application) handleUpdateSite(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("[handler]: handleUpdateSite\n")
 
-	currentSite := app.getCurrentSite(req)
-	if currentSite != nil {
+	site := app.getCurrentSite(req)
+	if site != nil {
 		var respJson siteJson
 
 		if err := json.NewDecoder(req.Body).Decode(&respJson); err != nil {
@@ -38,13 +38,19 @@ func (app *Application) handleUpdateSite(rw http.ResponseWriter, req *http.Reque
 			return
 		}
 
-		if err := currentSite.Update(&respJson.Site); err != nil {
+		updated, err := site.Update(&respJson.Site)
+		if err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to update site", http.StatusInternalServerError)
 			return
 		}
 
-		app.render.JSON(rw, http.StatusOK, renderMap{"site": currentSite})
+		if updated {
+			// site content has changed
+			app.onSiteChange(site)
+		}
+
+		app.render.JSON(rw, http.StatusOK, renderMap{"site": site})
 	} else {
 		http.NotFound(rw, req)
 	}

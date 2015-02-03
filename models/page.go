@@ -129,7 +129,7 @@ func (page *Page) Delete() error {
 }
 
 // Update page in database
-func (page *Page) Update(newPage *Page) error {
+func (page *Page) Update(newPage *Page) (bool, error) {
 	var set, unset, modifier bson.D
 
 	if page.Title != newPage.Title {
@@ -194,8 +194,8 @@ func (page *Page) Update(newPage *Page) error {
 		page.UpdatedAt = time.Now()
 		set = append(set, bson.DocElem{"updated_at", page.UpdatedAt})
 
-		return page.dbSession.PagesCol().UpdateId(page.Id, modifier)
+		return true, page.dbSession.PagesCol().UpdateId(page.Id, modifier)
 	} else {
-		return nil
+		return false, nil
 	}
 }

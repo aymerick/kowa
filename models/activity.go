@@ -128,7 +128,7 @@ func (activity *Activity) Delete() error {
 }
 
 // Update activity in database
-func (activity *Activity) Update(newActivity *Activity) error {
+func (activity *Activity) Update(newActivity *Activity) (bool, error) {
 	var set, unset, modifier bson.D
 
 	if activity.Title != newActivity.Title {
@@ -183,8 +183,8 @@ func (activity *Activity) Update(newActivity *Activity) error {
 		activity.UpdatedAt = time.Now()
 		set = append(set, bson.DocElem{"updated_at", activity.UpdatedAt})
 
-		return activity.dbSession.ActivitiesCol().UpdateId(activity.Id, modifier)
+		return true, activity.dbSession.ActivitiesCol().UpdateId(activity.Id, modifier)
 	} else {
-		return nil
+		return false, nil
 	}
 }

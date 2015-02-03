@@ -137,7 +137,7 @@ func (post *Post) Delete() error {
 }
 
 // Update post in database
-func (post *Post) Update(newPost *Post) error {
+func (post *Post) Update(newPost *Post) (bool, error) {
 	var set, unset, modifier bson.D
 
 	if post.Title != newPost.Title {
@@ -182,8 +182,8 @@ func (post *Post) Update(newPost *Post) error {
 		post.UpdatedAt = time.Now()
 		set = append(set, bson.DocElem{"updated_at", post.UpdatedAt})
 
-		return post.dbSession.PostsCol().UpdateId(post.Id, modifier)
+		return true, post.dbSession.PostsCol().UpdateId(post.Id, modifier)
 	} else {
-		return nil
+		return false, nil
 	}
 }

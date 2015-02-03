@@ -84,6 +84,9 @@ func (app *Application) handlePostPosts(rw http.ResponseWriter, req *http.Reques
 		return
 	}
 
+	// site content has changed
+	app.onSiteChange(site)
+
 	app.render.JSON(rw, http.StatusCreated, renderMap{"post": post})
 }
 
@@ -113,10 +116,18 @@ func (app *Application) handleUpdatePost(rw http.ResponseWriter, req *http.Reque
 			return
 		}
 
-		if err := post.Update(&reqJson.Post); err != nil {
+		updated, err := post.Update(&reqJson.Post)
+		if err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to update post", http.StatusInternalServerError)
 			return
+		}
+
+		if updated {
+			site := app.getCurrentSite(req)
+
+			// site content has changed
+			app.onSiteChange(site)
 		}
 
 		app.render.JSON(rw, http.StatusOK, renderMap{"post": post})
@@ -134,6 +145,11 @@ func (app *Application) handleDeletePost(rw http.ResponseWriter, req *http.Reque
 		if err := post.Delete(); err != nil {
 			http.Error(rw, "Failed to delete post", http.StatusInternalServerError)
 		} else {
+			site := app.getCurrentSite(req)
+
+			// site content has changed
+			app.onSiteChange(site)
+
 			// returns deleted post
 			app.render.JSON(rw, http.StatusOK, renderMap{"post": post})
 		}

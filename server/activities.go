@@ -84,6 +84,9 @@ func (app *Application) handlePostActivities(rw http.ResponseWriter, req *http.R
 		return
 	}
 
+	// site content has changed
+	app.onSiteChange(site)
+
 	app.render.JSON(rw, http.StatusCreated, renderMap{"activity": activity})
 }
 
@@ -113,10 +116,18 @@ func (app *Application) handleUpdateActivity(rw http.ResponseWriter, req *http.R
 			return
 		}
 
-		if err := activity.Update(&reqJson.Activity); err != nil {
+		updated, err := activity.Update(&reqJson.Activity)
+		if err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to update activity", http.StatusInternalServerError)
 			return
+		}
+
+		if updated {
+			site := app.getCurrentSite(req)
+
+			// site content has changed
+			app.onSiteChange(site)
 		}
 
 		app.render.JSON(rw, http.StatusOK, renderMap{"activity": activity})
@@ -134,6 +145,11 @@ func (app *Application) handleDeleteActivity(rw http.ResponseWriter, req *http.R
 		if err := activity.Delete(); err != nil {
 			http.Error(rw, "Failed to delete activity", http.StatusInternalServerError)
 		} else {
+			site := app.getCurrentSite(req)
+
+			// site content has changed
+			app.onSiteChange(site)
+
 			// returns deleted activity
 			app.render.JSON(rw, http.StatusOK, renderMap{"activity": activity})
 		}

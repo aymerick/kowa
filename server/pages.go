@@ -84,6 +84,9 @@ func (app *Application) handlePostPages(rw http.ResponseWriter, req *http.Reques
 		return
 	}
 
+	// site content has changed
+	app.onSiteChange(site)
+
 	app.render.JSON(rw, http.StatusCreated, renderMap{"page": page})
 }
 
@@ -113,10 +116,18 @@ func (app *Application) handleUpdatePage(rw http.ResponseWriter, req *http.Reque
 			return
 		}
 
-		if err := page.Update(&reqJson.Page); err != nil {
+		updated, err := page.Update(&reqJson.Page)
+		if err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to update page", http.StatusInternalServerError)
 			return
+		}
+
+		if updated {
+			site := app.getCurrentSite(req)
+
+			// site content has changed
+			app.onSiteChange(site)
 		}
 
 		app.render.JSON(rw, http.StatusOK, renderMap{"page": page})
@@ -134,6 +145,11 @@ func (app *Application) handleDeletePage(rw http.ResponseWriter, req *http.Reque
 		if err := page.Delete(); err != nil {
 			http.Error(rw, "Failed to delete page", http.StatusInternalServerError)
 		} else {
+			site := app.getCurrentSite(req)
+
+			// site content has changed
+			app.onSiteChange(site)
+
 			// returns deleted page
 			app.render.JSON(rw, http.StatusOK, renderMap{"page": page})
 		}

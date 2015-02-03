@@ -60,6 +60,9 @@ func (app *Application) handleDeleteImage(rw http.ResponseWriter, req *http.Requ
 				return
 			}
 
+			// site content has changed
+			app.onSiteChange(site)
+
 			// returns deleted image
 			app.render.JSON(rw, http.StatusOK, renderMap{"image": image})
 		}

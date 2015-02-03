@@ -16,6 +16,7 @@ type Application struct {
 	render      *render.Render
 	dbSession   *models.DBSession
 	oauthServer *osin.Server
+	buildMaster *BuildMaster
 }
 
 func NewApplication() *Application {
@@ -31,12 +32,29 @@ func NewApplication() *Application {
 
 	oauthServer := osin.NewServer(osinConfig, NewOAuthStorage())
 
+	// start build master
+	buildMaster := NewBuildMaster()
+	buildMaster.run()
+
 	return &Application{
 		port:        viper.GetString("port"),
 		render:      render.New(render.Options{}),
 		dbSession:   dbSession,
 		oauthServer: oauthServer,
+		buildMaster: buildMaster,
 	}
+}
+
+func (app *Application) buildSite(site *models.Site) {
+	app.buildMaster.launchSiteBuild(site)
+}
+
+// called when some content changed on given site
+func (app *Application) onSiteChange(site *models.Site) {
+	// @todo Update "UpdateAt" field on site
+
+	// rebuild changed site
+	app.buildSite(site)
 }
 
 //
