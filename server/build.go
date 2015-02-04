@@ -1,7 +1,10 @@
 package server
 
 import (
+	"fmt"
 	"log"
+	"net/http"
+	"path"
 	"sync"
 	"time"
 
@@ -136,10 +139,19 @@ func (master *BuildMaster) run() {
 			}
 		}
 
-		log.Printf("[build] Master ends")
+		log.Printf("[build] Master is shutdowning")
 	}()
 
-	log.Printf("[build] Master starts")
+	log.Printf("[build] Master launched")
+}
+
+// Serve built sites
+func (master *BuildMaster) serveSites() {
+	dir := path.Join(viper.GetString("working_dir"), viper.GetString("output_dir"))
+	port := viper.GetInt("serve_output_port")
+
+	log.Println("[build] Serving built sites on port:", port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), http.FileServer(http.Dir(dir))))
 }
 
 // Initialize and start all workers
@@ -148,6 +160,8 @@ func (master *BuildMaster) startWorkers() {
 		master.workers[i] = master.NewBuildWorker(i)
 		master.workers[i].run(master.workersWG)
 	}
+
+	log.Printf("[build] Started %d workers", WORKERS_NB)
 }
 
 // Stop all workers
@@ -156,8 +170,12 @@ func (master *BuildMaster) stopWorkers() {
 		go worker.stop()
 	}
 
+	log.Printf("[build] Waiting for all workers to stop")
+
 	// wait for all workers to stop
 	master.workersWG.Wait()
+
+	log.Printf("[build] All workers stopped")
 
 	master.workers = nil
 }
@@ -239,11 +257,7 @@ func (worker *BuildWorker) run(wg *sync.WaitGroup) {
 				ended = true
 			}
 		}
-
-		log.Printf("[build] Worker %d ends", worker.id)
 	}()
-
-	log.Printf("[build] Worker %d starts", worker.id)
 }
 
 // Execute Job

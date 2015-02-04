@@ -1,10 +1,8 @@
 package server
 
 import (
-	"fmt"
 	"log"
 	"net/http"
-	"path"
 	"time"
 
 	"github.com/RangelReale/osin"
@@ -55,7 +53,7 @@ func (app *Application) Run() {
 
 	// TODO: only for dev
 	if viper.GetBool("serve_output") {
-		go app.serveBuiltSites()
+		go app.buildMaster.serveSites()
 	}
 
 	// start web server
@@ -81,15 +79,6 @@ func (app *Application) onSiteChange(site *models.Site) {
 
 	// rebuild changed site
 	app.buildSite(site)
-}
-
-// DEBUG: Serve built sites
-func (app *Application) serveBuiltSites() {
-	dir := path.Join(viper.GetString("working_dir"), viper.GetString("output_dir"))
-	port := viper.GetInt("serve_output_port")
-
-	log.Println("Serving built sites on port:", port)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), http.FileServer(http.Dir(dir))))
 }
 
 //
