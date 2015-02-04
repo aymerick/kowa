@@ -59,7 +59,7 @@ func (app *Application) Run() {
 	}
 
 	// start web server
-	log.Println("Running on port:", app.port)
+	log.Println("Running Web Server on port:", app.port)
 	http.ListenAndServe(":"+app.port, app.newWebRouter())
 }
 
