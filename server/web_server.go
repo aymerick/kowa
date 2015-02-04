@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gorilla/context"
@@ -12,10 +11,7 @@ import (
 // sugar helper
 type renderMap map[string]interface{}
 
-func Run() {
-	// setup app
-	app := NewApplication()
-
+func (app *Application) newWebRouter() *mux.Router {
 	// setup middlewares
 	baseChain := alice.New(context.ClearHandler, app.dbSessionMiddleware, app.loggingMiddleware, app.recoveryMiddleware, app.corsMiddleware())
 
@@ -87,8 +83,7 @@ func Run() {
 	// upload image
 	apiRouter.Methods("POST").Path("/images/upload").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleUploadImage))
 
-	fmt.Println("Running on port:", app.port)
-	http.ListenAndServe(":"+app.port, router)
+	return router
 }
 
 func unauthorized(rw http.ResponseWriter) {

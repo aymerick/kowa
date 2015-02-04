@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/RangelReale/osin"
@@ -32,24 +33,40 @@ func NewApplication() *Application {
 
 	oauthServer := osin.NewServer(osinConfig, NewOAuthStorage())
 
-	// start build master
-	buildMaster := NewBuildMaster()
-	buildMaster.run()
-
 	return &Application{
 		port:        viper.GetString("port"),
 		render:      render.New(render.Options{}),
 		dbSession:   dbSession,
 		oauthServer: oauthServer,
-		buildMaster: buildMaster,
+		buildMaster: NewBuildMaster(),
 	}
 }
 
+// Run application server
+func (app *Application) Run() {
+	// @todo Build pending sites on startup ?! (The ones with BuiltAt < UpdatedAt)
+	//       And add a command "kowa build_pending" too
+
+	// start build master
+	app.buildMaster.run()
+
+	// start web server
+	fmt.Println("Running on port:", app.port)
+	http.ListenAndServe(":"+app.port, app.newWebRouter())
+}
+
+// Stop application server
+func (app *Application) Stop() {
+	// stop build master
+	app.buildMaster.stop()
+}
+
+// Build site
 func (app *Application) buildSite(site *models.Site) {
 	app.buildMaster.launchSiteBuild(site)
 }
 
-// called when some content changed on given site
+// Called when some content changed on given site
 func (app *Application) onSiteChange(site *models.Site) {
 	// @todo Update "UpdateAt" field on site
 

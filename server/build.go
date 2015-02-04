@@ -3,7 +3,6 @@ package server
 import (
 	"log"
 	"sync"
-	"time"
 
 	"github.com/aymerick/kowa/models"
 )
@@ -15,16 +14,16 @@ const (
 )
 
 type BuildMaster struct {
-	stopChan chan bool
+	workers []*BuildWorker
 
-	jobsChan    chan *BuildJob
 	workersChan chan *BuildJob
-	jobDoneChan chan *BuildJob
+	jobsChan    chan *BuildJob
+	resultsChan chan *BuildJob
 
 	currentJobs   map[string]*BuildJob
 	throttledJobs map[string]*BuildJob
 
-	workers []*BuildWorker
+	stopChan chan bool
 }
 
 type BuildJob struct {
@@ -32,11 +31,11 @@ type BuildJob struct {
 }
 
 type BuildWorker struct {
-	id           int
-	incomingChan chan *BuildJob
-	doneChan     chan *BuildJob
-	stopChan     chan bool
-	running      bool
+	id int
+
+	inputChan  chan *BuildJob
+	outputChan chan *BuildJob
+	stopChan   chan bool
 }
 
 //
@@ -45,14 +44,14 @@ type BuildWorker struct {
 
 func NewBuildMaster() *BuildMaster {
 	result := &BuildMaster{
-		jobsChan:    make(chan *BuildJob, JOBS_QUEUE_LEN),
+		workers: make([]*BuildWorker, WORKERS_NB),
+
 		workersChan: make(chan *BuildJob, WORKERS_QUEUE_LEN),
-		jobDoneChan: make(chan *BuildJob, WORKERS_QUEUE_LEN),
+		jobsChan:    make(chan *BuildJob, JOBS_QUEUE_LEN),
+		resultsChan: make(chan *BuildJob, WORKERS_QUEUE_LEN),
 
 		currentJobs:   make(map[string]*BuildJob),
 		throttledJobs: make(map[string]*BuildJob),
-
-		workers: make([]*BuildWorker, WORKERS_NB),
 	}
 
 	return result
@@ -66,10 +65,10 @@ func (master *BuildMaster) NewBuildJob(siteId string) *BuildJob {
 
 func (master *BuildMaster) NewBuildWorker(workerId int) *BuildWorker {
 	return &BuildWorker{
-		id:           workerId,
-		incomingChan: master.workersChan,
-		doneChan:     master.jobDoneChan,
-		stopChan:     make(chan bool),
+		id: workerId,
+
+		inputChan:  master.workersChan,
+		outputChan: master.resultsChan,
 	}
 }
 
@@ -80,13 +79,16 @@ func (master *BuildMaster) run() {
 		return
 	}
 
-	master.stopChan = make(chan bool)
-
-	// start workers
-	master.startWorkers()
-
 	// run master
 	go func() {
+		// setup stop channel
+		master.stopChan = make(chan bool)
+		defer close(master.stopChan)
+
+		// start workers
+		master.startWorkers()
+		defer master.stopWorkers()
+
 		ended := false
 
 		for !ended {
@@ -107,7 +109,7 @@ func (master *BuildMaster) run() {
 					master.workersChan <- job
 				}
 
-			case job := <-master.jobDoneChan:
+			case job := <-master.resultsChan:
 				// build job ended
 				jobKey := job.key()
 
@@ -124,16 +126,14 @@ func (master *BuildMaster) run() {
 				}
 
 			case <-master.stopChan:
-				master.stopWorkers()
-				close(master.stopChan)
 				ended = true
 			}
 		}
 
-		log.Printf("[build] Master ended")
+		log.Printf("[build] Master ends")
 	}()
 
-	log.Printf("[build] Master started")
+	log.Printf("[build] Master starts")
 }
 
 // Initialize and start all workers
@@ -170,8 +170,6 @@ func (master *BuildMaster) stop() {
 	// wait for master to stop
 	master.stopChan <- true
 	<-master.stopChan
-
-	close(master.stopChan)
 	master.stopChan = nil
 
 	close(master.jobsChan)
@@ -203,41 +201,48 @@ func (job *BuildJob) key() string {
 
 // Starts worker
 func (worker *BuildWorker) run() {
-	if worker.running {
+	if worker.stopChan != nil {
 		// already running
 		return
 	}
 
 	// run
 	go func() {
+		// setup stop channel
+		worker.stopChan = make(chan bool)
+		defer close(worker.stopChan)
+
 		ended := false
 
 		for !ended {
 			select {
-			case job := <-worker.incomingChan:
+			case job := <-worker.inputChan:
 				log.Printf("[build] Job %s taken by worker %d", job.key(), worker.id)
 
 				// @todo Executes job
-				time.Sleep(5 * time.Second)
 
-				worker.doneChan <- job
+				// @todo Update "BuiltAt" field on site
+
+				worker.outputChan <- job
 
 			case <-worker.stopChan:
-				close(worker.stopChan)
 				ended = true
 			}
 		}
 
-		log.Printf("[build] Worker %d ended", worker.id)
+		log.Printf("[build] Worker %d ends", worker.id)
 	}()
 
-	log.Printf("[build] Worker %d started", worker.id)
-
-	worker.running = true
+	log.Printf("[build] Worker %d starts", worker.id)
 }
 
 // Stop worker
 func (worker *BuildWorker) stop(wg *sync.WaitGroup) {
+	if worker.stopChan == nil {
+		// worker is not running
+		return
+	}
+
 	defer wg.Done()
 
 	// wait for worker to stop

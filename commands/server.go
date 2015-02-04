@@ -4,9 +4,10 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/aymerick/kowa/server"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/aymerick/kowa/server"
 )
 
 const (
@@ -26,10 +27,13 @@ func initServerConf() {
 }
 
 func runServer(cmd *cobra.Command, args []string) {
-	go server.Run()
+	app := server.NewApplication()
+	go app.Run()
 
 	// wait for interuption
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt)
 	<-sigChan
+
+	app.Stop()
 }
