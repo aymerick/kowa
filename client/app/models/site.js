@@ -3,6 +3,7 @@ import DS from 'ember-data';
 var Site = DS.Model.extend({
   createdAt: DS.attr('date'),
   updatedAt: DS.attr('date'),
+  changedAt: DS.attr('date'),
   builtAt: DS.attr('date'),
 
   name: DS.attr(),
@@ -28,7 +29,11 @@ var Site = DS.Model.extend({
   activities: DS.hasMany('activity', { async: true }),
   images: DS.hasMany('image', { inverse: 'site', async: true }),
 
-  pageSettings: DS.hasMany('sitePageSetting')
+  pageSettings: DS.hasMany('sitePageSetting'),
+
+  // settings
+  theme: DS.attr(),
+  uglyUrl: DS.attr('boolean')
 });
 
 export default Site;

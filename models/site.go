@@ -27,6 +27,7 @@ type Site struct {
 	Id        string    `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time `bson:"created_at"    json:"createdAt"`
 	UpdatedAt time.Time `bson:"updated_at"    json:"updatedAt"`
+	ChangedAt time.Time `bson:"changed_at"    json:"changedAt"`
 	BuiltAt   time.Time `bson:"built_at"      json:"builtAt"`
 	UserId    string    `bson:"user_id"       json:"user"`
 
@@ -47,6 +48,10 @@ type Site struct {
 	Cover bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
 
 	PageSettings []SitePageSettings `bson:"page_settings" json:"pageSettings"`
+
+	// build settings
+	Theme   string `bson:"theme"    json:"theme"`
+	UglyURL bool   `bson:"ugly_url" json:"uglyUrl"`
 }
 
 type SiteJson struct {
@@ -491,6 +496,31 @@ func (site *Site) Update(newSite *Site) (bool, error) {
 		}
 	}
 
+	if site.Theme != newSite.Theme {
+		site.Theme = newSite.Theme
+
+		if site.Theme == "" {
+			unset = append(unset, bson.DocElem{"theme", 1})
+		} else {
+			set = append(set, bson.DocElem{"theme", site.Theme})
+		}
+	}
+
+	if site.UglyURL != newSite.UglyURL {
+		site.UglyURL = newSite.UglyURL
+
+		if site.UglyURL == false {
+			unset = append(unset, bson.DocElem{"ugly_url", 1})
+		} else {
+			set = append(set, bson.DocElem{"ugly_url", site.UglyURL})
+		}
+	}
+
+	if (len(unset) > 0) || (len(set) > 0) {
+		site.UpdatedAt = time.Now()
+		set = append(set, bson.DocElem{"updated_at", site.UpdatedAt})
+	}
+
 	if len(unset) > 0 {
 		modifier = append(modifier, bson.DocElem{"$unset", unset})
 	}
@@ -504,6 +534,30 @@ func (site *Site) Update(newSite *Site) (bool, error) {
 	} else {
 		return false, nil
 	}
+}
+
+func (site *Site) SetValues(values bson.D) error {
+	return site.dbSession.SitesCol().UpdateId(site.Id, bson.D{{"$set", values}})
+}
+
+// Set the ChangedAt value
+func (site *Site) SetChangedAt(value time.Time) error {
+	if err := site.SetValues(bson.D{{"changed_at", value}}); err != nil {
+		return err
+	}
+
+	site.ChangedAt = value
+	return nil
+}
+
+// Set the BuiltAt value
+func (site *Site) SetBuiltAt(value time.Time) error {
+	if err := site.SetValues(bson.D{{"built_at", value}}); err != nil {
+		return err
+	}
+
+	site.BuiltAt = value
+	return nil
 }
 
 // Delete site fields from database

@@ -6,16 +6,13 @@ import (
 	"net/http"
 
 	"github.com/aymerick/kowa/builder"
+	"github.com/aymerick/kowa/models"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
 const (
-	DEFAULT_THEME      = "test"
-	DEFAULT_OUTPUT_DIR = "_site"
-	DEFAULT_UGLY_URL   = false
-	DEFAULT_SERVE      = false
-	DEFAULT_SERVE_PORT = 48910
+	DEFAULT_UGLY_URL = false
 )
 
 var buildCmd = &cobra.Command{
@@ -26,20 +23,11 @@ var buildCmd = &cobra.Command{
 }
 
 func initBuilderConf() {
-	buildCmd.Flags().StringP("theme", "t", DEFAULT_THEME, "Theme to use")
+	buildCmd.Flags().StringP("theme", "t", builder.DEFAULT_THEME, "Theme to use")
 	viper.BindPFlag("theme", buildCmd.Flags().Lookup("theme"))
-
-	buildCmd.Flags().StringP("output_dir", "o", DEFAULT_OUTPUT_DIR, "Output directory")
-	viper.BindPFlag("output_dir", buildCmd.Flags().Lookup("output_dir"))
 
 	buildCmd.Flags().BoolP("ugly_url", "g", DEFAULT_UGLY_URL, "Generate ugly URLs")
 	viper.BindPFlag("ugly_url", buildCmd.Flags().Lookup("ugly_url"))
-
-	buildCmd.Flags().BoolP("serve", "s", DEFAULT_SERVE, "Start a server to test built site")
-	viper.BindPFlag("serve", buildCmd.Flags().Lookup("serve"))
-
-	serverCmd.Flags().IntP("serve_port", "t", DEFAULT_SERVE_PORT, "Port to test built site")
-	viper.BindPFlag("serve_port", serverCmd.Flags().Lookup("serve_port"))
 }
 
 func buildSite(cmd *cobra.Command, args []string) {
@@ -48,16 +36,34 @@ func buildSite(cmd *cobra.Command, args []string) {
 		log.Fatalln("No site id argument provided")
 	}
 
-	siteBuilder := builder.NewSiteBuilder(args[0])
+	// get site
+	site := models.NewDBSession().FindSite(args[0])
+	if site == nil {
+		cmd.Usage()
+		log.Fatalln("Site not found:" + args[0])
+	}
 
-	log.Printf("Building site '%s' with theme '%s' into %s", args[0], viper.GetString("theme"), siteBuilder.GenDir())
+	// builder config
+	config := &builder.SiteBuilderConfig{
+		WorkingDir: viper.GetString("working_dir"),
+		OutputDir:  viper.GetString("output_dir"),
+		Theme:      viper.GetString("theme"),
+		UglyURL:    viper.GetBool("ugly_url"),
+	}
+
+	siteBuilder := builder.NewSiteBuilder(site, config)
+
+	log.Printf("Building site '%s' with theme '%s' into %s", args[0], siteBuilder.Theme(), siteBuilder.GenDir())
 
 	// build site
-	siteBuilder.Build()
-
-	if viper.GetBool("serve") {
-		// server site
-		serve(siteBuilder, viper.GetInt("serve_port"))
+	if siteBuilder.Build(); siteBuilder.HaveError() {
+		siteBuilder.DumpErrors()
+		siteBuilder.DumpLayout()
+	} else {
+		if viper.GetBool("serve_output") {
+			// server site
+			serve(siteBuilder, viper.GetInt("serve_output_port"))
+		}
 	}
 }
 

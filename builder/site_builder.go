@@ -12,7 +12,6 @@ import (
 
 	"github.com/spf13/afero"
 	"github.com/spf13/fsync"
-	"github.com/spf13/viper"
 
 	"github.com/aymerick/kowa/models"
 	"github.com/aymerick/kowa/utils"
@@ -24,6 +23,8 @@ const (
 	TEMPLATES_DIR = "templates"
 	PARTIALS_DIR  = "partials"
 	ASSETS_DIR    = "assets"
+
+	DEFAULT_THEME = "test"
 )
 
 var registeredNodeBuilders = make(map[string]func(*SiteBuilder) NodeBuilder)
@@ -38,11 +39,8 @@ func RegisterNodeBuilder(name string, initializer func(*SiteBuilder) NodeBuilder
 }
 
 type SiteBuilder struct {
-	// settings
-	workingDir string
-	outputDir  string
-	theme      string
-	uglyURL    bool
+	site   *models.Site
+	config *SiteBuilderConfig
 
 	// collectors
 	imageCollector *ImageCollector
@@ -51,27 +49,24 @@ type SiteBuilder struct {
 	// cache for #layout method
 	masterLayout *template.Template
 
-	site         *models.Site
-	siteVars     *SiteVars
+	// internal vars
 	nodeBuilders map[string]NodeBuilder
-	tplDir       string
+
+	siteVars *SiteVars
+	tplDir   string
 }
 
-func NewSiteBuilder(siteId string) *SiteBuilder {
-	dbSession := models.NewDBSession()
+type SiteBuilderConfig struct {
+	WorkingDir string
+	OutputDir  string
+	Theme      string
+	UglyURL    bool
+}
 
-	site := dbSession.FindSite(siteId)
-	if site == nil {
-		log.Fatalln("Can't find site with provided id")
-	}
-
+func NewSiteBuilder(site *models.Site, config *SiteBuilderConfig) *SiteBuilder {
 	result := &SiteBuilder{
-		site: site,
-
-		workingDir: viper.GetString("working_dir"),
-		outputDir:  viper.GetString("output_dir"),
-		theme:      viper.GetString("theme"),
-		uglyURL:    viper.GetBool("ugly_url"),
+		site:   site,
+		config: config,
 
 		imageCollector: NewImageCollector(),
 		errorCollector: NewErrorCollector(),
@@ -85,28 +80,53 @@ func NewSiteBuilder(siteId string) *SiteBuilder {
 	return result
 }
 
+// Theme used by builder
+func (builder *SiteBuilder) Theme() string {
+	result := builder.config.Theme
+	if result == "" {
+		result = builder.site.Theme
+	}
+
+	if result == "" {
+		result = DEFAULT_THEME
+	}
+
+	return result
+}
+
+// Are we building site with ugly urls ?
+func (builder *SiteBuilder) UglyUrl() bool {
+	if builder.config.UglyURL {
+		return true
+	} else {
+		return builder.site.UglyURL
+	}
+}
+
 // Build site
 func (builder *SiteBuilder) Build() {
 	// load nodes
-	builder.loadNodes()
+	if builder.loadNodes(); builder.HaveError() {
+		return
+	}
 
 	// compute site variables
-	builder.fillSiteVars()
+	if builder.fillSiteVars(); builder.HaveError() {
+		return
+	}
 
 	// generate nodes
-	builder.generateNodes()
+	if builder.generateNodes(); builder.HaveError() {
+		return
+	}
 
 	// copy images
-	builder.copyCollectedImages()
+	if builder.copyCollectedImages(); builder.HaveError() {
+		return
+	}
 
 	// copy assets
 	builder.copyAssets()
-
-	// check errors
-	if builder.haveError() {
-		builder.dumpErrors()
-		builder.dumpLayout()
-	}
 }
 
 // Initialize builders
@@ -220,7 +240,7 @@ func (builder *SiteBuilder) addImage(img *models.Image, kind string) string {
 }
 
 // Check if builder have error
-func (builder *SiteBuilder) haveError() bool {
+func (builder *SiteBuilder) HaveError() bool {
 	return builder.errorCollector.ErrorsNb > 0
 }
 
@@ -230,19 +250,19 @@ func (builder *SiteBuilder) addError(step string, err error) {
 }
 
 // Add an error when generating a node
-func (builder *SiteBuilder) addGenError(nodeKind string, err error) {
-	step := fmt.Sprintf("Generating %s", nodeKind)
+func (builder *SiteBuilder) addNodeBuilderError(nodeKind string, err error) {
+	step := fmt.Sprintf("Building %s", nodeKind)
 	builder.addError(step, err)
 }
 
 // Dump errors
-func (builder *SiteBuilder) dumpErrors() {
+func (builder *SiteBuilder) DumpErrors() {
 	builder.errorCollector.dump()
 }
 
 // Computes theme directory
 func (builder *SiteBuilder) themeDir() string {
-	return path.Join(builder.workingDir, THEMES_DIR, builder.theme)
+	return path.Join(builder.config.WorkingDir, THEMES_DIR, builder.Theme())
 }
 
 // Computes theme templates directory
@@ -261,7 +281,7 @@ func (builder *SiteBuilder) themeAssetsDir() string {
 
 // Computes directory where site is generated
 func (builder *SiteBuilder) GenDir() string {
-	return path.Join(builder.workingDir, builder.outputDir)
+	return path.Join(builder.config.WorkingDir, builder.config.OutputDir)
 }
 
 // Computes directory where images are copied
@@ -339,7 +359,7 @@ func (builder *SiteBuilder) layout() *template.Template {
 }
 
 // Dump templates
-func (builder *SiteBuilder) dumpLayout() {
+func (builder *SiteBuilder) DumpLayout() {
 	log.Printf("Layout templates:")
 	for _, tpl := range builder.masterLayout.Templates() {
 		log.Printf("  -> %s", tpl.Name())

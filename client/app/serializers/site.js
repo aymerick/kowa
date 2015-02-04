@@ -1,6 +1,11 @@
 import DS from 'ember-data';
 
-var SITE_SERIALIZER_FIELDS = [ 'name', 'tagline', 'description', 'moreDesc', 'joinText', 'email', 'address', 'facebook', 'twitter', 'googlePlus', 'logo', 'cover' ];
+var SITE_SERIALIZER_FIELDS = [
+  'name', 'tagline', 'description',
+  'moreDesc', 'joinText', 'email', 'address',
+  'facebook', 'twitter', 'googlePlus',
+  'logo', 'cover', 'theme', 'uglyUrl'
+];
 
 var SiteSerializer = DS.RESTSerializer.extend({
   serialize: function(site, options) {

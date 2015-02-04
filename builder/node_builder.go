@@ -101,14 +101,14 @@ func (builder *NodeBuilderBase) generateNode(node *Node) {
 
 	// ensure dir
 	if err := builder.siteBuilder.ensureFileDir(osFilePath); err != nil {
-		builder.addGenError(err)
+		builder.addError(err)
 		return
 	}
 
 	// open file
 	outputFile, err := os.Create(osFilePath)
 	if err != nil {
-		builder.addGenError(err)
+		builder.addError(err)
 		return
 	}
 	defer outputFile.Close()
@@ -116,7 +116,7 @@ func (builder *NodeBuilderBase) generateNode(node *Node) {
 	// write to file
 	// log.Printf("[DBG] Writing file: %s", osFilePath)
 	if err := node.generate(outputFile, builder.siteBuilder.layout()); err != nil {
-		builder.addGenError(err)
+		builder.addError(err)
 	}
 }
 
@@ -145,6 +145,6 @@ func (builder *NodeBuilderBase) addImage(img *models.Image, kind string) string 
 }
 
 // Add a node generation error
-func (builder *NodeBuilderBase) addGenError(err error) {
-	builder.siteBuilder.addGenError(builder.nodeKind, err)
+func (builder *NodeBuilderBase) addError(err error) {
+	builder.siteBuilder.addNodeBuilderError(builder.nodeKind, err)
 }

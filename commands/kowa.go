@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/aymerick/kowa/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -11,6 +12,8 @@ import (
 const (
 	DEFAULT_MONGODB_URI    = "mongodb://localhost:27017/"
 	DEFAULT_MONGODB_DBNAME = "kowa"
+	DEFAULT_SERVE          = false
+	DEFAULT_SERVE_PORT     = 48910
 )
 
 var cfgFile string
@@ -34,9 +37,18 @@ func initKowaConf() {
 	rootCmd.PersistentFlags().StringP("mongodb_dbname", "d", DEFAULT_MONGODB_DBNAME, "MongoDB database name")
 	viper.BindPFlag("mongodb_dbname", rootCmd.PersistentFlags().Lookup("mongodb_dbname"))
 
-	// misc
-	rootCmd.PersistentFlags().StringP("working_dir", "w", defaultWorkginDir(), "Working directory")
+	// builder
+	rootCmd.PersistentFlags().StringP("working_dir", "w", utils.WorkingDir(), "Working directory")
 	viper.BindPFlag("working_dir", rootCmd.PersistentFlags().Lookup("working_dir"))
+
+	rootCmd.PersistentFlags().StringP("output_dir", "o", utils.DEFAULT_OUTPUT_DIR, "Output directory")
+	viper.BindPFlag("output_dir", rootCmd.PersistentFlags().Lookup("output_dir"))
+
+	rootCmd.PersistentFlags().BoolP("serve_output", "s", DEFAULT_SERVE, "Start a server to serve built sites")
+	viper.BindPFlag("serve_output", rootCmd.PersistentFlags().Lookup("serve_output"))
+
+	rootCmd.PersistentFlags().IntP("serve_output_port", "T", DEFAULT_SERVE_PORT, "Port to serve built sites")
+	viper.BindPFlag("serve_output_port", rootCmd.PersistentFlags().Lookup("serve_output_port"))
 }
 
 func setupConfig() {
@@ -55,13 +67,6 @@ func addCommands() {
 	rootCmd.AddCommand(serverCmd)
 	rootCmd.AddCommand(bootstrapCmd)
 	rootCmd.AddCommand(resetCmd)
-}
-
-// returns default working directory
-func defaultWorkginDir() string {
-	result, _ := os.Getwd()
-
-	return result
 }
 
 //

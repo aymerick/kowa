@@ -61,7 +61,7 @@ func (node *Node) fillUrl(slug string) {
 	node.Slug = slug
 
 	// FullUrl
-	if node.builder.SiteBuilder().uglyURL || (node.Slug == "") || (node.Slug == "/") || (node.Slug == "index") {
+	if node.builder.SiteBuilder().config.UglyURL || (node.Slug == "") || (node.Slug == "/") || (node.Slug == "index") {
 		name := node.Slug
 		switch name {
 		case "", "/":

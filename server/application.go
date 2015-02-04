@@ -2,7 +2,10 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"path"
+	"time"
 
 	"github.com/RangelReale/osin"
 	"github.com/gorilla/context"
@@ -50,8 +53,13 @@ func (app *Application) Run() {
 	// start build master
 	app.buildMaster.run()
 
+	// TODO: only for dev
+	if viper.GetBool("serve_output") {
+		go app.serveBuiltSites()
+	}
+
 	// start web server
-	fmt.Println("Running on port:", app.port)
+	log.Println("Running on port:", app.port)
 	http.ListenAndServe(":"+app.port, app.newWebRouter())
 }
 
@@ -68,10 +76,20 @@ func (app *Application) buildSite(site *models.Site) {
 
 // Called when some content changed on given site
 func (app *Application) onSiteChange(site *models.Site) {
-	// @todo Update "UpdateAt" field on site
+	// update ChangedAt anchor
+	site.SetChangedAt(time.Now())
 
 	// rebuild changed site
 	app.buildSite(site)
+}
+
+// DEBUG: Serve built sites
+func (app *Application) serveBuiltSites() {
+	dir := path.Join(viper.GetString("working_dir"), viper.GetString("output_dir"))
+	port := viper.GetInt("serve_output_port")
+
+	log.Println("Serving built sites on port:", port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), http.FileServer(http.Dir(dir))))
 }
 
 //

@@ -3,8 +3,11 @@ package server
 import (
 	"log"
 	"sync"
+	"time"
 
+	"github.com/aymerick/kowa/builder"
 	"github.com/aymerick/kowa/models"
+	"github.com/spf13/viper"
 )
 
 const (
@@ -28,6 +31,7 @@ type BuildMaster struct {
 
 type BuildJob struct {
 	siteId string
+	failed bool
 }
 
 type BuildWorker struct {
@@ -160,7 +164,6 @@ func (master *BuildMaster) stopWorkers() {
 }
 
 // Stops build master
-// @todo Use that method !
 func (master *BuildMaster) stop() {
 	if master.stopChan == nil {
 		// master is not running
@@ -219,10 +222,10 @@ func (worker *BuildWorker) run() {
 			case job := <-worker.inputChan:
 				log.Printf("[build] Job %s taken by worker %d", job.key(), worker.id)
 
-				// @todo Executes job
+				// execute job
+				worker.executeJob(job)
 
-				// @todo Update "BuiltAt" field on site
-
+				// send result
 				worker.outputChan <- job
 
 			case <-worker.stopChan:
@@ -234,6 +237,34 @@ func (worker *BuildWorker) run() {
 	}()
 
 	log.Printf("[build] Worker %d starts", worker.id)
+}
+
+// Execute Job
+func (worker *BuildWorker) executeJob(job *BuildJob) {
+	// get site
+	site := models.NewDBSession().FindSite(job.siteId)
+	if site == nil {
+		log.Printf("[build] Job %s failed with worker %d: site not found", job.key(), worker.id)
+
+		job.failed = true
+		return
+	}
+
+	// builder config
+	config := &builder.SiteBuilderConfig{
+		WorkingDir: viper.GetString("working_dir"),
+		OutputDir:  viper.GetString("output_dir"),
+	}
+
+	builder := builder.NewSiteBuilder(site, config)
+
+	if builder.Build(); builder.HaveError() {
+		// job failed
+		job.failed = true
+	} else {
+		// update BuiltAt anchor
+		site.SetBuiltAt(time.Now())
+	}
 }
 
 // Stop worker
