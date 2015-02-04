@@ -17,7 +17,8 @@ const (
 )
 
 type BuildMaster struct {
-	workers []*BuildWorker
+	workers   []*BuildWorker
+	workersWG *sync.WaitGroup
 
 	workersChan chan *BuildJob
 	jobsChan    chan *BuildJob
@@ -48,7 +49,8 @@ type BuildWorker struct {
 
 func NewBuildMaster() *BuildMaster {
 	result := &BuildMaster{
-		workers: make([]*BuildWorker, WORKERS_NB),
+		workers:   make([]*BuildWorker, WORKERS_NB),
+		workersWG: &sync.WaitGroup{},
 
 		workersChan: make(chan *BuildJob, WORKERS_QUEUE_LEN),
 		jobsChan:    make(chan *BuildJob, JOBS_QUEUE_LEN),
@@ -144,21 +146,18 @@ func (master *BuildMaster) run() {
 func (master *BuildMaster) startWorkers() {
 	for i := 0; i < WORKERS_NB; i++ {
 		master.workers[i] = master.NewBuildWorker(i)
-		master.workers[i].run()
+		master.workers[i].run(master.workersWG)
 	}
 }
 
 // Stop all workers
 func (master *BuildMaster) stopWorkers() {
-	wg := &sync.WaitGroup{}
-	wg.Add(WORKERS_NB)
-
 	for _, worker := range master.workers {
-		go worker.stop(wg)
+		go worker.stop()
 	}
 
 	// wait for all workers to stop
-	wg.Wait()
+	master.workersWG.Wait()
 
 	master.workers = nil
 }
@@ -203,7 +202,7 @@ func (job *BuildJob) key() string {
 //
 
 // Starts worker
-func (worker *BuildWorker) run() {
+func (worker *BuildWorker) run(wg *sync.WaitGroup) {
 	if worker.stopChan != nil {
 		// already running
 		return
@@ -211,6 +210,10 @@ func (worker *BuildWorker) run() {
 
 	// run
 	go func() {
+		// add oursel to workgroup and release on exit
+		wg.Add(1)
+		defer wg.Done()
+
 		// setup stop channel
 		worker.stopChan = make(chan bool)
 		defer close(worker.stopChan)
@@ -224,6 +227,10 @@ func (worker *BuildWorker) run() {
 
 				// execute job
 				worker.executeJob(job)
+
+				// @todo Benchmark execution time
+				// @todo Handle job failure
+				// @todo Rescue job crash
 
 				// send result
 				worker.outputChan <- job
@@ -268,14 +275,7 @@ func (worker *BuildWorker) executeJob(job *BuildJob) {
 }
 
 // Stop worker
-func (worker *BuildWorker) stop(wg *sync.WaitGroup) {
-	if worker.stopChan == nil {
-		// worker is not running
-		return
-	}
-
-	defer wg.Done()
-
+func (worker *BuildWorker) stop() {
 	// wait for worker to stop
 	worker.stopChan <- true
 	<-worker.stopChan
