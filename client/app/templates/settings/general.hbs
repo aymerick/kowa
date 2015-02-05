@@ -8,7 +8,7 @@
     <div class="form-group">
         <label for="site-name">Site Name</label>
         {{input id="site-name" name="general[name]" type="text" class="form-control" value=name}}
-        <p>
+        <p class="info">
             The name of your site
         </p>
     </div>
@@ -16,7 +16,7 @@
     <div class="form-group">
         <label for="site-tagline">Site Tagline</label>
         {{input id="site-tagline" name="general[tagline]" type="text" class="form-control" value=tagline}}
-        <p>
+        <p class="info">
             The tagline of your site
         </p>
     </div>
@@ -24,7 +24,7 @@
     <div class="form-group">
         <label for="site-description">Site Description</label>
         {{textarea rows=10 id="site-description" name="general[description]" class="form-control" value=description}}
-        <p>
+        <p class="info">
             Describe what your site is about
         </p>
     </div>
@@ -32,7 +32,7 @@
     <div class="form-group">
         <label for="site-more-desc">Site Additional Description</label>
         {{textarea rows=10 id="site-more-desc" name="general[moreDesc]" class="form-control" value=moreDesc}}
-        <p>
+        <p class="info">
             An additional description to display at bottom of homepage
         </p>
     </div>
@@ -40,7 +40,7 @@
     <div class="form-group">
         <label for="site-join-text">Site Join Text</label>
         {{textarea rows=10 id="site-join-text" name="general[joinText]" class="form-control" value=joinText}}
-        <p>
+        <p class="info">
             Explain to visitors why then should become a member of your site
         </p>
     </div>
@@ -55,7 +55,7 @@
         {{else}}
             <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "logo"}}>Choose Image</button>
         {{/if}}
-        <p>
+        <p class="info">
             Display a logo for your site
         </p>
     </div>
@@ -70,7 +70,7 @@
         {{else}}
             <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "cover"}}>Choose Image</button>
         {{/if}}
-        <p>
+        <p class="info">
             Display a cover image on your site
         </p>
     </div>
@@ -78,7 +78,7 @@
     <div class="form-group">
         <label for="site-theme">Site theme</label>
         {{view "select" content=allThemes selection=theme class="form-control"}}
-        <p>
+        <p class="info">
             The theme to use for your site
         </p>
     </div>
