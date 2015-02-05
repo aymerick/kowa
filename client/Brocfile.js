@@ -3,7 +3,15 @@
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 var app = new EmberApp({
-  emberCliFontAwesome: { includeFontAwesomeAssets: false }
+  emberCliFontAwesome: { includeFontAwesomeAssets: false },
+  outputPaths: {
+    app: {
+      css: {
+        'app': '/assets/kowa.css',
+        'bootstrap': '/assets/bootstrap.css'
+      }
+    }
+  }
 });
 
 // Use `app.import` to add additional libraries to the generated
@@ -44,5 +52,9 @@ app.import(app.bowerDirectory + '/codemirror/addon/display/placeholder.js');
 app.import(app.bowerDirectory + '/ember-cli-codemirror-shim/codemirror-shim.js', {
   exports: { 'codemirror': ['default'] }
 });
+
+// Summernote
+app.import(app.bowerDirectory + '/summernote/dist/summernote.css');
+app.import(app.bowerDirectory + '/summernote/dist/summernote.js');
 
 module.exports = app.toTree();
