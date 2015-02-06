@@ -13,7 +13,7 @@
     "ember-qunit-notifications": "0.0.5",
     "qunit": "~1.17.1",
     "ember-simple-auth": "0.7.3",
-    "bootstrap-sass-official": "~3.3.1",
+    "bootstrap-sass": "~3.3.3",
     "font-awesome": "~4.2.0",
     "ember-cli-moment-shim": "~0.0.2",
     "ember-uploader": "0.3.0",
