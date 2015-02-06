@@ -10,7 +10,7 @@ var SitesRoute = AuthenticatedRoute.extend({
   afterModel: function(sites, transition) {
     // redirects / to /:site_id
     if (!transition.params.site) {
-      var firstSite = sites.get('firstObject');
+      var firstSite = sites.get('lastObject');
       if (firstSite) {
         this.transitionTo('site', firstSite);
       }
