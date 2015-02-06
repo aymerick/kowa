@@ -13,10 +13,11 @@ var SummernoteEditor = Ember.TextArea.extend({
         ['style', ['style']],
         ['font', ['bold', 'italic', 'underline', 'clear']],
         ['para', ['ul', 'ol', 'paragraph']],
-        ['insert', ['link', 'picture', 'hr']]
+        ['insert', ['link', 'hr']]
       ],
       styleTags: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'blockquote'],
       disableDragAndDrop: true,
+      lang: 'fr-FR', // @todo FIXME
       onChange: Ember.run.bind(this, this.onChange)
     });
   }.on('didInsertElement'),
