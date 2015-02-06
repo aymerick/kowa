@@ -15,7 +15,7 @@
     "ember-simple-auth": "0.7.3",
     "bootstrap-sass": "~3.3.3",
     "font-awesome": "~4.3.0",
-    "ember-cli-moment-shim": "~0.0.2",
+    "ember-cli-moment-shim": "~0.0.3",
     "ember-uploader": "0.3.0",
     "spin.js": "~2.0.1",
     "ember-cli-codemirror-shim": "~0.0.1",
