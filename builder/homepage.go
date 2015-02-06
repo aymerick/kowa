@@ -6,7 +6,6 @@ import (
 	"github.com/aymerick/kowa/models"
 
 	"github.com/microcosm-cc/bluemonday"
-	"github.com/russross/blackfriday"
 )
 
 // Builder for homepage
@@ -67,16 +66,12 @@ func (builder *HomepageBuilder) NewHomepageContent() *HomepageContent {
 		Tagline: site.Tagline,
 	}
 
-	var html []byte
+	sanitizePolicy := bluemonday.UGCPolicy()
+	sanitizePolicy.AllowAttrs("style").OnElements("p", "span") // I know this is bad
 
-	html = blackfriday.MarkdownCommon([]byte(site.Description))
-	result.Description = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
-
-	html = blackfriday.MarkdownCommon([]byte(site.MoreDesc))
-	result.MoreDesc = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
-
-	html = blackfriday.MarkdownCommon([]byte(site.JoinText))
-	result.JoinText = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
+	result.Description = template.HTML(sanitizePolicy.Sanitize(site.Description))
+	result.MoreDesc = template.HTML(sanitizePolicy.Sanitize(site.MoreDesc))
+	result.JoinText = template.HTML(sanitizePolicy.Sanitize(site.JoinText))
 
 	logo := site.FindLogo()
 	if logo != nil {

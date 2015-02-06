@@ -11,3 +11,10 @@
         margin-bottom: 4px;
     }
 }
+
+// Summernote
+.note-editor {
+    .note-editable {
+        color: $input-color; // bootstrap var
+    }
+}
