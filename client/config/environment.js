@@ -23,6 +23,17 @@ module.exports = function(environment) {
     }
   };
 
+  // cf. https://github.com/rwjblue/ember-cli-content-security-policy
+  ENV.contentSecurityPolicy = {
+    'default-src': "'none'",
+    'script-src': "'self' 'unsafe-eval' 'unsafe-inline' localhost:35729 0.0.0.0:35729;",
+    'font-src': "'self'",
+    'connect-src': "'self' ws://localhost:35729 ws://0.0.0.0:35729",
+    'img-src': "'self'",
+    'style-src': "'self' 'unsafe-eval' 'unsafe-inline'",
+    'media-src': "'self'"
+  }
+
   if (environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
