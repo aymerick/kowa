@@ -55,6 +55,7 @@ app.import(app.bowerDirectory + '/ember-cli-codemirror-shim/codemirror-shim.js',
 
 // Summernote
 app.import(app.bowerDirectory + '/summernote/dist/summernote.css');
-app.import(app.bowerDirectory + '/summernote/dist/summernote.js');
+app.import(app.bowerDirectory + '/summernote/dist/summernote.min.js');
+app.import(app.bowerDirectory + '/summernote/lang/summernote-fr-FR.js');
 
 module.exports = app.toTree();
