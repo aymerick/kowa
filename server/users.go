@@ -1,7 +1,6 @@
 package server
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -11,8 +10,6 @@ import (
 
 // GET /api/me
 func (app *Application) handleGetMe(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("[handler]: handleGetMe\n")
-
 	currentDBSession := app.getCurrentDBSession(req)
 
 	currentUser := app.getCurrentUser(req)
@@ -27,8 +24,6 @@ func (app *Application) handleGetMe(rw http.ResponseWriter, req *http.Request) {
 
 // GET /api/users/{user_id}
 func (app *Application) handleGetUser(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("[handler]: handleGetUser\n")
-
 	currentDBSession := app.getCurrentDBSession(req)
 
 	vars := mux.Vars(req)
@@ -43,8 +38,6 @@ func (app *Application) handleGetUser(rw http.ResponseWriter, req *http.Request)
 
 // GET /api/users/{user_id}/sites
 func (app *Application) handleGetUserSites(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("[handler]: handleGetUserSites\n")
-
 	currentDBSession := app.getCurrentDBSession(req)
 
 	vars := mux.Vars(req)

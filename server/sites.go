@@ -14,8 +14,6 @@ type siteJson struct {
 
 // GET /api/sites/{site_id}
 func (app *Application) handleGetSite(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("[handler]: handleGetSite\n")
-
 	site := app.getCurrentSite(req)
 	if site != nil {
 		app.render.JSON(rw, http.StatusOK, renderMap{"site": site})
@@ -26,8 +24,6 @@ func (app *Application) handleGetSite(rw http.ResponseWriter, req *http.Request)
 
 // PUT /api/sites/{site_id}
 func (app *Application) handleUpdateSite(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("[handler]: handleUpdateSite\n")
-
 	site := app.getCurrentSite(req)
 	if site != nil {
 		var respJson siteJson

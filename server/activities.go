@@ -15,8 +15,6 @@ type activityJson struct {
 // GET /activities?site={site_id}
 // GET /sites/{site_id}/activities
 func (app *Application) handleGetActivities(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("[handler]: handleGetActivities\n")
-
 	site := app.getCurrentSite(req)
 	if site != nil {
 		// fetch paginated records
@@ -47,8 +45,6 @@ func (app *Application) handleGetActivities(rw http.ResponseWriter, req *http.Re
 
 // POST /activities
 func (app *Application) handlePostActivities(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("[handler]: handlePostActivities\n")
-
 	currentDBSession := app.getCurrentDBSession(req)
 
 	var reqJson activityJson
@@ -92,8 +88,6 @@ func (app *Application) handlePostActivities(rw http.ResponseWriter, req *http.R
 
 // GET /activities/{activity_id}
 func (app *Application) handleGetActivity(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("[handler]: handleGetActivity\n")
-
 	activity := app.getCurrentActivity(req)
 	if activity != nil {
 		app.render.JSON(rw, http.StatusOK, renderMap{"activity": activity})
@@ -104,8 +98,6 @@ func (app *Application) handleGetActivity(rw http.ResponseWriter, req *http.Requ
 
 // PUT /activities/{activity_id}
 func (app *Application) handleUpdateActivity(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("[handler]: handleUpdateActivity\n")
-
 	activity := app.getCurrentActivity(req)
 	if activity != nil {
 		var reqJson activityJson
@@ -138,8 +130,6 @@ func (app *Application) handleUpdateActivity(rw http.ResponseWriter, req *http.R
 
 // DELETE /activities/{activity_id}
 func (app *Application) handleDeleteActivity(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("[handler]: handleDeleteActivity\n")
-
 	activity := app.getCurrentActivity(req)
 	if activity != nil {
 		if err := activity.Delete(); err != nil {

@@ -102,7 +102,7 @@ func (app *Application) ensureAuthMiddleware(next http.Handler) http.Handler {
 		currentDBSession := app.getCurrentDBSession(req)
 
 		if currentUser := currentDBSession.FindUser(userId); currentUser != nil {
-			log.Printf("Current user is: %s [%s]\n", currentUser.Fullname(), userId)
+			// log.Printf("Current user is: %s [%s]\n", currentUser.Fullname(), userId)
 			context.Set(req, "currentUser", currentUser)
 		} else {
 			unauthorized(rw)
@@ -188,7 +188,7 @@ func (app *Application) ensureSiteMiddleware(next http.Handler) http.Handler {
 		}
 
 		if currentSite != nil {
-			log.Printf("Current site is: %s [%s]\n", currentSite.Name, siteId)
+			// log.Printf("Current site is: %s [%s]\n", currentSite.Name, siteId)
 			context.Set(req, "currentSite", currentSite)
 		} else {
 			http.NotFound(rw, req)

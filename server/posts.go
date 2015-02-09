@@ -15,8 +15,6 @@ type postJson struct {
 // GET /posts?site={site_id}
 // GET /sites/{site_id}/posts
 func (app *Application) handleGetPosts(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("[handler]: handleGetPosts\n")
-
 	site := app.getCurrentSite(req)
 	if site != nil {
 		// fetch paginated posts
@@ -47,8 +45,6 @@ func (app *Application) handleGetPosts(rw http.ResponseWriter, req *http.Request
 
 // POST /posts
 func (app *Application) handlePostPosts(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("[handler]: handlePostPosts\n")
-
 	currentDBSession := app.getCurrentDBSession(req)
 
 	var reqJson postJson
@@ -92,8 +88,6 @@ func (app *Application) handlePostPosts(rw http.ResponseWriter, req *http.Reques
 
 // GET /posts/{post_id}
 func (app *Application) handleGetPost(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("[handler]: handleGetPost\n")
-
 	post := app.getCurrentPost(req)
 	if post != nil {
 		app.render.JSON(rw, http.StatusOK, renderMap{"post": post})
@@ -104,8 +98,6 @@ func (app *Application) handleGetPost(rw http.ResponseWriter, req *http.Request)
 
 // PUT /posts/{post_id}
 func (app *Application) handleUpdatePost(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("[handler]: handleUpdatePost\n")
-
 	post := app.getCurrentPost(req)
 	if post != nil {
 		var reqJson postJson
@@ -138,8 +130,6 @@ func (app *Application) handleUpdatePost(rw http.ResponseWriter, req *http.Reque
 
 // DELETE /posts/{post_id}
 func (app *Application) handleDeletePost(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("[handler]: handleDeletePost\n")
-
 	post := app.getCurrentPost(req)
 	if post != nil {
 		if err := post.Delete(); err != nil {
