@@ -5,11 +5,11 @@ import {
 
 moduleForModel('site', 'Site', {
   // Specify the other units that are required for this test.
-  needs: []
+  needs: ['model:image', 'model:user', 'model:post', 'model:page', 'model:activity', 'model:site-page-setting']
 });
 
-// test('it exists', function() {
-//   var model = this.subject();
-//   // var store = this.store();
-//   ok(!!model);
-// });
+test('it exists', function() {
+  var model = this.subject();
+  // var store = this.store();
+  ok(!!model);
+});

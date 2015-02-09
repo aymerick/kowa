@@ -29,7 +29,7 @@ var Site = DS.Model.extend({
   activities: DS.hasMany('activity', { async: true }),
   images: DS.hasMany('image', { inverse: 'site', async: true }),
 
-  pageSettings: DS.hasMany('sitePageSetting'),
+  pageSettings: DS.hasMany('site-page-setting'),
 
   // settings
   theme: DS.attr(),
