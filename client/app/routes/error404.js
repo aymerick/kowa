@@ -3,13 +3,13 @@
 import Ember from 'ember';
 
 var Error404Route = Ember.Route.extend({
-    templateName: 'error',
+  templateName: 'error',
 
-    model: function () {
-        return {
-            status: 404
-        };
-    }
+  model: function () {
+    return {
+      status: 404
+    };
+  }
 });
 
 export default Error404Route;

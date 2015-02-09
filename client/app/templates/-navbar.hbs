@@ -1,38 +1,38 @@
 <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-1">
+            <ul class="nav navbar-nav pull-left">
+                <li class="ko-navbar-item">{{#link-to 'posts'}}<i class="fa fa-fw fa-info-circle"></i> Posts{{/link-to}}</li>
+                {{!--  <li class="ko-navbar-item">{{#link-to 'events'}}<i class="fa fa-fw fa-calendar"></i> Events{{/link-to}}</li> --}}
+                <li class="ko-navbar-item">{{#link-to 'pages'}}<i class="fa fa-fw fa-file-o"></i> Pages{{/link-to}}</li>
+                <li class="ko-navbar-item">{{#link-to 'settings'}}<i class="fa fa-fw fa-cogs"></i> Settings{{/link-to}}</li>
+            </ul>
+
+            {{#if session.isAuthenticated}}
+                {{#rl-dropdown-container class="dropdown user-menu pull-right"}}
+                    {{#rl-dropdown-toggle tagName="div" class="ko-navbar-item"}}
+                        <img src="/images/avatar.jpg" class="ko-avatar" alt="Avatar" /> {{session.currentUser.fullName}} <span class="caret"></span>
+                    {{/rl-dropdown-toggle}}
+
+                    {{#rl-dropdown tagName="ul" class="dropdown-menu dropdown-menu-right" closeOnChildClick="a:link"}}
+                        <!--
+                          <li><a href="#"><i class="fa fa-fw fa-user"></i><span class="choice-title">Your profile</span></a></li>
+                          <li><a href="#"><i class="fa fa-fw fa-life-ring"></i><span class="choice-title">Help</span></a></li>
+                          <li role="presentation" class="divider"></li>
+                        -->
+                        <li><a {{action 'invalidateSession'}}><i class="fa fa-fw fa-sign-out"></i><span class="choice-title">Logout</span></a></li>
+                    {{/rl-dropdown}}
+                {{/rl-dropdown-container}}
+            {{/if}}
+        </div>
     </div>
-
-    <div class="collapse navbar-collapse" id="navbar-collapse-1">
-      <ul class="nav navbar-nav pull-left">
-        <li class="ko-navbar-item">{{#link-to 'posts'}}<i class="fa fa-fw fa-info-circle"></i> Posts{{/link-to}}</li>
-        {{!--  <li class="ko-navbar-item">{{#link-to 'events'}}<i class="fa fa-fw fa-calendar"></i> Events{{/link-to}}</li> --}}
-        <li class="ko-navbar-item">{{#link-to 'pages'}}<i class="fa fa-fw fa-file-o"></i> Pages{{/link-to}}</li>
-        <li class="ko-navbar-item">{{#link-to 'settings'}}<i class="fa fa-fw fa-cogs"></i> Settings{{/link-to}}</li>
-      </ul>
-
-      {{#if session.isAuthenticated}}
-        {{#rl-dropdown-container class="dropdown user-menu pull-right"}}
-          {{#rl-dropdown-toggle tagName="div" class="ko-navbar-item"}}
-            <img src="/images/avatar.jpg" class="ko-avatar" alt="Avatar" /> {{session.currentUser.fullName}} <span class="caret"></span>
-          {{/rl-dropdown-toggle}}
-
-          {{#rl-dropdown tagName="ul" class="dropdown-menu dropdown-menu-right" closeOnChildClick="a:link"}}
-          <!--
-            <li><a href="#"><i class="fa fa-fw fa-user"></i><span class="choice-title">Your profile</span></a></li>
-            <li><a href="#"><i class="fa fa-fw fa-life-ring"></i><span class="choice-title">Help</span></a></li>
-            <li role="presentation" class="divider"></li>
-          -->
-            <li><a {{action 'invalidateSession'}}><i class="fa fa-fw fa-sign-out"></i><span class="choice-title">Logout</span></a></li>
-          {{/rl-dropdown}}
-        {{/rl-dropdown-container}}
-      {{/if}}
-    </div>
-  </div>
 </nav>

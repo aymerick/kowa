@@ -4,31 +4,31 @@
 import Ember from 'ember';
 
 var StyleBodyMixin = Ember.Mixin.create({
-    activate: function () {
-        this._super();
+  activate: function () {
+    this._super();
 
-        var cssClasses = this.get('classNames');
+    var cssClasses = this.get('classNames');
 
-        if (cssClasses) {
-            Ember.run.schedule('afterRender', null, function () {
-                cssClasses.forEach(function (curClass) {
-                    Ember.$('body').addClass(curClass);
-                });
-            });
-        }
-    },
-
-    deactivate: function () {
-        this._super();
-
-        var cssClasses = this.get('classNames');
-
-        Ember.run.schedule('afterRender', null, function () {
-            cssClasses.forEach(function (curClass) {
-                Ember.$('body').removeClass(curClass);
-            });
+    if (cssClasses) {
+      Ember.run.schedule('afterRender', null, function () {
+        cssClasses.forEach(function (curClass) {
+          Ember.$('body').addClass(curClass);
         });
+      });
     }
+  },
+
+  deactivate: function () {
+    this._super();
+
+    var cssClasses = this.get('classNames');
+
+    Ember.run.schedule('afterRender', null, function () {
+      cssClasses.forEach(function (curClass) {
+        Ember.$('body').removeClass(curClass);
+      });
+    });
+  }
 });
 
 export default StyleBodyMixin;
