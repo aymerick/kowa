@@ -1,6 +1,6 @@
 {
   "name": "kowa",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Static site generator with an awesome admin interface",
   "private": true,
   "directories": {
@@ -45,6 +45,7 @@
     "glob": "^4.0.5"
   },
   "dependencies": {
+    "ember-cli-app-version": "^0.3.1",
     "ember-moment": "^1.0.0"
   }
 }
