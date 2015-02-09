@@ -1,10 +1,10 @@
 body.page {
-  .content {
-    padding-top: 30px;
-    padding-bottom: 30px;
+    .content {
+        padding-top: 30px;
+        padding-bottom: 30px;
 
-    @media (min-width: $screen-sm-min) {
-      font-size: 16px;
+        @media (min-width: $screen-sm-min) {
+            font-size: 16px;
+        }
     }
-  }
 }

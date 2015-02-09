@@ -1,29 +1,29 @@
 body.post {
-  .post-header {
-    color: #999;
-    font-style: italic;
-    margin-bottom: 10px;
-  }
-
-  .post-cover {
-    img {
-      // center image
-      display: block;
-      margin-right: auto;
-      margin-left: auto;
+    .post-header {
+        color: #999;
+        font-style: italic;
+        margin-bottom: 10px;
     }
 
-    @media (min-width: $screen-sm-min) {
-      float: left;
-      margin: 0 20px 20px 0;
-    }
-  }
+    .post-cover {
+        img {
+            // center image
+            display: block;
+            margin-right: auto;
+            margin-left: auto;
+        }
 
-  .post-body {
-    margin-top: 20px;
-
-    @media (min-width: $screen-sm-min) {
-      margin-top: 0;
+        @media (min-width: $screen-sm-min) {
+            float: left;
+            margin: 0 20px 20px 0;
+        }
     }
-  }
+
+    .post-body {
+        margin-top: 20px;
+
+        @media (min-width: $screen-sm-min) {
+            margin-top: 0;
+        }
+    }
 }

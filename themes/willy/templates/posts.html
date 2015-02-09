@@ -1,34 +1,33 @@
 <div class="jumbotron">
-  <div class="container">
-    <h1>{{ .Title }}</h1>
-    <p class="description">
-        {{ .Tagline }}
-    </p>
-  </div>
+    <div class="container">
+        <h1>{{ .Title }}</h1>
+        <p class="description">
+            {{ .Tagline }}
+        </p>
+    </div>
 </div>
 
 <div class="container posts">
     <div class="row">
-      <div class="col-md-12">
+        <div class="col-md-12">
+            <ul class="posts-list">
 
-        <ul class="posts-list">
-          {{ range .Posts }}
+                {{ range .Posts }}
+                    <li class="post">
+                        <h2 class="title"><a href="{{ .Url }}">{{ .Title }}</a></h2>
+                        <div class="date">{{ .Date }}</div>
+                        <div class="cover">
+                            <a href="{{ .Url }}">
+                                {{ if .Cover }}<img src="{{ .Cover }}" alt="Post" class="img-thumbnail" />{{ end }}
+                            </a>
+                        </div>
+                        <div class="body">
+                            {{ .Body }}
+                        </div>
+                    </li>
+                {{ end }}
 
-            <li class="post">
-              <h2 class="title"><a href="{{ .Url }}">{{ .Title }}</a></h2>
-              <div class="date">{{ .Date }}</div>
-              <div class="cover">
-                <a href="{{ .Url }}">
-                  {{ if .Cover }}<img src="{{ .Cover }}" alt="Post" class="img-thumbnail" />{{ end }}
-                </a>
-              </div>
-              <div class="body">
-                {{ .Body }}
-              </div>
-            </li>
-
-          {{ end }}
-        </ul>
-      </div>
+            </ul>
+        </div>
     </div>
 </div>

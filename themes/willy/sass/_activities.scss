@@ -1,14 +1,14 @@
 body.activities {
-  section {
-    padding-top: 20px;
-    padding-bottom: 50px;
+    section {
+        padding-top: 20px;
+        padding-bottom: 50px;
 
-    @media (min-width: $screen-sm-min) {
-      font-size: 16px;
-    }
+        @media (min-width: $screen-sm-min) {
+            font-size: 16px;
+        }
 
-    &:nth-child(2n) {
-      background-color: $color-light-background;
+        &:nth-child(2n) {
+            background-color: $color-light-background;
+        }
     }
-  }
 }

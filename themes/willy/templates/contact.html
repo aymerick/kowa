@@ -1,43 +1,43 @@
 <div class="jumbotron">
-  <div class="container">
-    <h1>{{ .Title }}</h1>
-    <p class="description">
-        {{ .Tagline }}
-    </p>
-  </div>
+    <div class="container">
+        <h1>{{ .Title }}</h1>
+        <p class="description">
+            {{ .Tagline }}
+        </p>
+    </div>
 </div>
 
 <div class="container content">
     <div class="row">
-      {{ if .HaveContact }}
-        <div class="col-md-6 contact">
-          {{ if .Address }}
-            <h3><i class="fa fa-building-o"></i> Address</h3>
-            <address>
-              {{ .Address }}
-            </address>
-          {{ end }}
+        {{ if .HaveContact }}
+            <div class="col-md-6 contact">
+                {{ if .Address }}
+                    <h3><i class="fa fa-building-o"></i> Address</h3>
+                    <address>
+                        {{ .Address }}
+                    </address>
+                {{ end }}
 
-          {{ if .Email }}
-            <h3><i class="fa fa-envelope-o"></i> Email</h3>
-            <a class="email" href="mailto:{{ .Email }}">{{ .Email }}</a>
-          {{ end }}
-        </div>
-      {{ end }}
+                {{ if .Email }}
+                    <h3><i class="fa fa-envelope-o"></i> Email</h3>
+                    <a class="email" href="mailto:{{ .Email }}">{{ .Email }}</a>
+                {{ end }}
+            </div>
+        {{ end }}
 
-      {{ if .HaveSocial }}
-        <div class="col-md-6 social">
-          <h3>Follow us on social networks</h3>
-          {{ if .Facebook }}
-            <p><i class="fa fa-facebook-square"></i> <a href="{{ .Facebook }}" target="_blank">Facebook</a></p>
-          {{ end }}
-          {{ if .Twitter }}
-            <p><i class="fa fa-twitter-square"></i> <a href="{{ .Twitter }}" target="_blank">Twitter</a></p>
-          {{ end }}
-          {{ if .GooglePlus }}
-            <p><i class="fa fa-google-plus-square"></i> <a href="{{ .GooglePlus }}" target="_blank">Google+</a></p>
-          {{ end }}
-        </div>
-      {{ end }}
+        {{ if .HaveSocial }}
+            <div class="col-md-6 social">
+                <h3>Follow us on social networks</h3>
+                {{ if .Facebook }}
+                    <p><i class="fa fa-facebook-square"></i> <a href="{{ .Facebook }}" target="_blank">Facebook</a></p>
+                {{ end }}
+                {{ if .Twitter }}
+                    <p><i class="fa fa-twitter-square"></i> <a href="{{ .Twitter }}" target="_blank">Twitter</a></p>
+                {{ end }}
+                {{ if .GooglePlus }}
+                    <p><i class="fa fa-google-plus-square"></i> <a href="{{ .GooglePlus }}" target="_blank">Google+</a></p>
+                {{ end }}
+            </div>
+        {{ end }}
     </div>
 </div>
