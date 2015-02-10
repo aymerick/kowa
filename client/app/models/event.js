@@ -6,8 +6,8 @@ var EventModel = DS.Model.extend({
   createdAt: DS.attr('date', { defaultValue: function() { return new Date(); } }),
   updatedAt: DS.attr('date', { defaultValue: function() { return new Date(); } }),
 
-  startDate: DS.attr('date', { defaultValue: function() { return new Date(); } }),
-  endDate: DS.attr('date', { defaultValue: function() { return moment(new Date()).add(1, 'hours').toDate(); } }),
+  startDate: DS.attr('date', { defaultValue: function() { return moment(new Date()).add(1, 'hours').toDate(); } }),
+  endDate: DS.attr('date', { defaultValue: function() { return moment(new Date()).add(2, 'hours').toDate(); } }),
 
   title: DS.attr('string', { defaultValue: "" }),
   body: DS.attr('string', { defaultValue: "" }),
