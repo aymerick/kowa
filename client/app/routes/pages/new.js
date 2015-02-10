@@ -1,6 +1,5 @@
 import AuthenticatedRoute from 'kowa/routes/authenticated';
 import ContentEditionRoute from 'kowa/mixins/content-edition-route';
-import Page from 'kowa/models/page';
 
 var PagesNewRoute = AuthenticatedRoute.extend(ContentEditionRoute, {
   // use PageEditController
@@ -8,9 +7,7 @@ var PagesNewRoute = AuthenticatedRoute.extend(ContentEditionRoute, {
 
   // this is a fresh new model
   model: function() {
-    return this.store.createRecord('page', Page.newRecordAttrs({
-      site: this.modelFor('site')
-    }));
+    return this.store.createRecord('page', { site: this.modelFor('site') });
   },
 
   // use 'page/edit' template

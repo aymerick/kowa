@@ -1,5 +1,4 @@
 import AuthenticatedRoute from 'kowa/routes/authenticated';
-import Activity from 'kowa/models/activity';
 
 var SettingsActivitiesNewRoute = AuthenticatedRoute.extend({
   // use PostEditController
@@ -7,9 +6,7 @@ var SettingsActivitiesNewRoute = AuthenticatedRoute.extend({
 
   // this is a fresh new model
   model: function() {
-    return this.store.createRecord('activity', Activity.newRecordAttrs({
-      site: this.modelFor('site')
-    }));
+    return this.store.createRecord('activity', { site: this.modelFor('site') });
   },
 
   // use existing template
