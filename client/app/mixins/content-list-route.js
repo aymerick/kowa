@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 var initialPaginationParams = { 'page': 1, 'perPage': 15 };
 
-var ContentListRoute = Ember.Mixin.create({
+var ContentListRouteMixin = Ember.Mixin.create({
   paginationParams: null,
   contentModelType: null,
 
@@ -36,4 +36,4 @@ var ContentListRoute = Ember.Mixin.create({
   }
 });
 
-export default ContentListRoute;
+export default ContentListRouteMixin;

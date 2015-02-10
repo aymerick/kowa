@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-var ContentEditionRoute = Ember.Mixin.create({
+var ContentEditionRouteMixin = Ember.Mixin.create({
   setupController: function (controller, model) {
     this._super(controller, model);
 
@@ -20,4 +20,4 @@ var ContentEditionRoute = Ember.Mixin.create({
   }
 });
 
-export default ContentEditionRoute;
+export default ContentEditionRouteMixin;

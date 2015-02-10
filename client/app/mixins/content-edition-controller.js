@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 // All that mess simply because of that issue:
 //  https://github.com/emberjs/data/issues/1308
-var ContentEditionController = Ember.Mixin.create({
+var ContentEditionControllerMixin = Ember.Mixin.create({
   editionRelationships: Ember.A([ ]),
   editionDefaultTitle: null,
   editionSaveMsgOk: null,
@@ -147,4 +147,4 @@ var ContentEditionController = Ember.Mixin.create({
   }
 });
 
-export default ContentEditionController;
+export default ContentEditionControllerMixin;
