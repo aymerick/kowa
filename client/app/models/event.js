@@ -1,3 +1,5 @@
+/* global moment */
+
 import DS from 'ember-data';
 import Ember from 'ember';
 
@@ -13,16 +15,23 @@ var EventModel = DS.Model.extend({
 
   cover: DS.belongsTo('image', { inverse: 'coverEvents', async: true }),
 
-  site: DS.belongsTo('site', { async: true })
+  site: DS.belongsTo('site', { async: true }),
+
+  dateSentence: function() {
+    return moment(this.get('startDate')).twix(moment(this.get('endDate'))).format();
+  }.property('startDate', 'endDate')
 });
 
 EventModel.reopenClass({
   newRecordAttrs: function(moreAttrs) {
     var now = new Date();
+    var endDate = moment(now).add(1, 'hours').toDate();
 
     return Ember.merge({
       createdAt: now,
       updatedAt: now,
+      startDate: now,
+      endDate: endDate,
       title: "",
       body: "",
       place: ""

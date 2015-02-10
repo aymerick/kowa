@@ -14,6 +14,22 @@
         <div class="content-fields">
             {{autofocus-input class="content-title" name="event[title]" type="text" placeholder="Event title" value=model.title}}
             {{input class="content-place" name="event[place]" type="text" placeholder="Event place" value=model.place}}
+            <form class="form-horizontal content-dates">
+              <div class="form-group">
+                <label for="event-startDate" class="col-sm-1 control-label">Start: </label>
+                <div class="col-sm-4">
+                    <!-- @todo Fix locale -->
+                    {{bs-datetimepicker date=model.startDate format='DD-MM-YYYY HH:mm' locale='fr' id="event-startDate"}}
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="event-endDate" class="col-sm-1 control-label">End: </label>
+                <div class="col-sm-4">
+                    <!-- @todo Fix locale -->
+                    {{bs-datetimepicker date=model.endDate format='DD-MM-YYYY HH:mm' locale='fr' id="event-endDate"}}
+                </div>
+              </div>
+            </form>
         </div>
 
         <div class="content-actions">

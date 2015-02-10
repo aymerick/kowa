@@ -29,9 +29,9 @@ var app = new EmberApp({
 
 // Bootstrap
 app.import('bower_components/bootstrap-sass/assets/javascripts/bootstrap.js');
-// app.import('bower_components/bootstrap-sass/assets/fonts/bootstrap/glyphicons-halflings-regular.woff', {
-//   destDir: 'fonts'
-// });
+app.import('bower_components/bootstrap-sass/assets/fonts/bootstrap/glyphicons-halflings-regular.woff2', { destDir: 'fonts/bootstrap' });
+app.import('bower_components/bootstrap-sass/assets/fonts/bootstrap/glyphicons-halflings-regular.woff', { destDir: 'fonts/bootstrap' });
+app.import('bower_components/bootstrap-sass/assets/fonts/bootstrap/glyphicons-halflings-regular.ttf', { destDir: 'fonts/bootstrap' });
 
 // Font awesome
 app.import(app.bowerDirectory + "/font-awesome/css/font-awesome.css");
@@ -41,6 +41,13 @@ app.import(app.bowerDirectory + "/font-awesome/fonts/fontawesome-webfont.ttf", {
 app.import(app.bowerDirectory + "/font-awesome/fonts/fontawesome-webfont.woff", { destDir: "fonts" });
 app.import(app.bowerDirectory + "/font-awesome/fonts/fontawesome-webfont.woff2", { destDir: "fonts" });
 app.import(app.bowerDirectory + "/font-awesome/fonts/FontAwesome.otf", { destDir: "fonts" });
+
+// Moment locales
+app.import(app.bowerDirectory + "/moment/locale/fr.js");
+
+// Twix (moment range formatter)
+app.import(app.bowerDirectory + "/twix/bin/twix.min.js")
+app.import(app.bowerDirectory + "/twix/bin/locale.min.js")
 
 // CodeMirror
 app.import(app.bowerDirectory + '/codemirror/lib/codemirror.css');

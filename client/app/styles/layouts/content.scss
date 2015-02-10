@@ -20,6 +20,12 @@
 //
 // master view
 //
+
+$item-active-shadow-width: 7px;
+$item-height: 80px;
+$cover-size: 60px;
+$item-padding: ($item-height - $cover-size) / 2;
+
 .content-master {
     position: absolute;
     width: 33%;
@@ -58,11 +64,6 @@
         padding: 0;
 
         list-style: none;
-
-        $item-active-shadow-width: 7px;
-        $item-height: 80px;
-        $cover-size: 60px;
-        $item-padding: ($item-height - $cover-size) / 2;
 
         li {
             position: relative;
@@ -125,6 +126,14 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
+
+                .item-place {
+                    margin-bottom: 5px;
+                }
+
+                .item-date {
+                    font-style: italic;
+                }
             }
 
             &.active {
@@ -137,6 +146,12 @@
         }
     }
 } // .content-master
+
+body.events .content-master .content-body li {
+    .item-infos {
+        padding: 0px $item-padding;
+    }
+}
 
 //
 // details view
@@ -211,6 +226,16 @@ body.pages .content-details {
     }
 }
 
+body.events .content-details {
+    .content-header {
+        height: $content-details-events-header-height;
+    }
+
+    .content-body {
+        top: $content-details-events-header-height;
+    }
+}
+
 //
 // details: show content
 //
@@ -267,7 +292,10 @@ body.pages .content-details {
         .content-fields {
             right: ($content-action-button-width-with-margin + $content-action-view-width) + ($content-header-spacing * 3);
 
-            input {
+            input.content-title, input.content-tagline, input.content-place {
+                width: 100%;
+                font-family: monospace;
+
                 border: 0;
                 padding: 0;
                 background: transparent;
@@ -277,9 +305,8 @@ body.pages .content-details {
                 box-shadow: none;
             }
 
-            input[type='text'] {
-                width: 100%;
-                font-family: monospace;
+            .form-group {
+                margin-bottom: 15px;
             }
 
             .content-title {
@@ -294,6 +321,10 @@ body.pages .content-details {
             .content-innavbar {
                 margin-top: 5px;
                 color: $midgrey;
+            }
+
+            .content-dates {
+                margin-top: 10px;
             }
         }
 

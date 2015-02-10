@@ -1,16 +1,17 @@
 <section class="content-show">
     <header class="content-header">
         <div class="content-cover">
-            {{#if cover}}
-                <img {{bind-attr src=cover.smallUrl}} class="thumbnail" alt="cover image" />
+            {{#if model.cover}}
+                <img {{bind-attr src=model.cover.smallUrl}} class="thumbnail" alt="cover image" />
             {{else}}
                 <div class="thumbnail no-image text-center"></div>
             {{/if}}
         </div>
 
         <div class="content-fields">
-            <div class="content-title">{{title}}</div>
-            <div class="content-place">{{place}}</div>
+            <div class="content-title">{{model.title}}</div>
+            <div class="content-place">{{model.place}}</div>
+            <div class="content-date">{{model.dateSentence}}</div>
         </div>
 
         <div class="content-actions">
@@ -19,6 +20,6 @@
         </div>
     </header>
     <section class="content-body content-preview">
-        {{markdown-to-html markdown=body}}
+        {{markdown-to-html markdown=model.body}}
     </section>
 </section>
