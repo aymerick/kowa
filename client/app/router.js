@@ -23,9 +23,12 @@ Router.map(function() {
         });
       });
 
-      // this.resource('events', function () {
-      //   this.route('event', {path: ':event_id'});
-      // });
+      this.resource('events', function () {
+        this.route('new');
+        this.resource('event', {path: ':event_id'}, function() {
+          this.route('edit', {path: '/edit'});
+        });
+      });
 
       this.resource('pages', function () {
         this.route('new');
