@@ -1,8 +1,17 @@
 {{#modal-dialog title='Are you sure you want to delete this event?' ok='delete' okText='Delete' okClass='btn-danger' close='closeModal' closeText='Cancel'}}
     <h4>You're about to permanently delete that event:</h4>
     <h2>{{model.title}}</h2>
+    {{#if model.place}}
     <p>
-        @todo Start date / end date / location
-        Are you sure this is what you want ?
+        {{model.place}}
     </p>
+    {{/if}}
+    <p>
+        {{model.dateSentence}}
+    </p>
+    {{#if model.cover}}
+        <p>
+            <img {{bind-attr src=model.cover.mediumUrl}} class="img-responsive center-block" />
+        </p>
+    {{/if}}
 {{/modal-dialog}}

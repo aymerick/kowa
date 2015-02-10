@@ -2,6 +2,11 @@
     <h4>You're about to permanently delete this activity:</h4>
     <h2>{{model.title}}</h2>
     <p>
-        Are you sure this is what you want ?
+        {{model.summary}}
     </p>
+    {{#if model.cover}}
+        <p>
+            <img {{bind-attr src=model.cover.mediumUrl}} class="img-responsive center-block" />
+        </p>
+    {{/if}}
 {{/modal-dialog}}
