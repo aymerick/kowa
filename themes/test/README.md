@@ -1,4 +1,4 @@
-`test` theme for kowa
-========================
+test theme for kowa
+===================
 
 Theme used for test purpose.
