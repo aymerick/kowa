@@ -3,17 +3,20 @@ import Ember from 'ember';
 // All that mess simply because of that issue:
 //  https://github.com/emberjs/data/issues/1308
 var ContentEditionController = Ember.Mixin.create({
-  editionFields: Ember.A([ ]),
+  editionRelationships: Ember.A([ ]),
+  editionDefaultTitle: null,
+  editionSaveMsgOk: null,
+  editionSaveMsgErr: null,
 
   setupEdition: function(fields) {
     if (!Ember.isNone(fields)) {
-      this.set('editionFields', fields);
+      this.set('editionRelationships', fields);
     }
 
     var model = this.get('model');
     var self = this;
 
-    this.get('editionFields').forEach(function (field) {
+    this.get('editionRelationships').forEach(function (field) {
       // eg: cover => previousCover
       self.set(self.previousFieldName(field), model.get(field));
     });
@@ -35,7 +38,7 @@ var ContentEditionController = Ember.Mixin.create({
     model.save().then(function (recordSaved) {
       self.get('flashes').success(okMsg);
 
-      self.get('editionFields').forEach(function (field) {
+      self.get('editionRelationships').forEach(function (field) {
         // eg: self.set('previousCover', model.get('cover'));
         self.set(self.previousFieldName(field), model.get(field));
       });
@@ -53,7 +56,7 @@ var ContentEditionController = Ember.Mixin.create({
       model.deleteRecord();
     } else {
       var self = this;
-      this.get('editionFields').forEach(function(field) {
+      this.get('editionRelationships').forEach(function(field) {
         // eg: model.set('cover', self.get('previousCover'))
         model.set(field, self.previousField(field));
       });
@@ -74,7 +77,7 @@ var ContentEditionController = Ember.Mixin.create({
     var model = this.get('model');
     var self  = this;
 
-    return this.get('editionFields').any(function(field) {
+    return this.get('editionRelationships').any(function(field) {
       return self.previousField(field).get('id') !== model.get(field).get('id');
     });
   },
@@ -90,7 +93,7 @@ var ContentEditionController = Ember.Mixin.create({
 
     var watchProperties = Ember.A([ 'model.isDirty', 'model.isNew' ]);
 
-    this.get('editionFields').forEach(function(field) {
+    this.get('editionRelationships').forEach(function(field) {
       watchProperties.pushObject('model.' + field);
       watchProperties.pushObject(self.previousFieldName(field));
     });
@@ -117,6 +120,30 @@ var ContentEditionController = Ember.Mixin.create({
 
     // nothingChanged property
     Ember.defineProperty(this, 'nothingChanged', Ember.computed.not('isDirty'));
+  },
+
+  actions: {
+    // called by 'select-image' modal controller
+    imageSelected: function(field, image) {
+      this.set(field, image);
+    },
+
+    removeCover: function() {
+      this.get('model').set('cover', null);
+    },
+
+    saveContent: function() {
+      if (this.get('editionDefaultTitle') !== null) {
+        // set a default title
+        var model = this.get('model');
+        if (!model.get('title')) {
+            model.set('title', '(Untitled)');
+        }
+      }
+
+      // save
+      this.commitEdition(this.get('editionSaveMsgOk'), this.get('editionSaveMsgErr'));
+    }
   }
 });
 

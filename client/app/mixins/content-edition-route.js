@@ -5,7 +5,7 @@ var ContentEditionRoute = Ember.Mixin.create({
     this._super(controller, model);
 
     // setup edition
-    controller.setupEdition(controller.get('editionFields'));
+    controller.setupEdition(controller.get('editionRelationships'));
   },
 
   actions: {

@@ -29,7 +29,7 @@
             {{else}}
                 {{#link-to "page" this class="content-action-button action-view"}}<i class="fa fa-eye"></i>{{/link-to}}
             {{/if}}
-            <button {{action "savePage"}} class="btn btn-primary content-action-button action-save" {{bind-attr disabled=nothingChanged}}><i class="fa fa-floppy-o"></i> Save</button>
+            <button {{action "saveContent"}} class="btn btn-primary content-action-button action-save" {{bind-attr disabled=nothingChanged}}><i class="fa fa-floppy-o"></i> Save</button>
         </div>
     </header>
     <section class="content-body content-editor">
