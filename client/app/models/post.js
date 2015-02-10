@@ -6,8 +6,8 @@ var Post = DS.Model.extend({
   updatedAt: DS.attr('date'),
 
   publishedAt: DS.attr('date'),
-  title: DS.attr(''),
-  body: DS.attr(''),
+  title: DS.attr(),
+  body: DS.attr(),
 
   cover: DS.belongsTo('image', { inverse: 'coverPosts', async: true }),
 

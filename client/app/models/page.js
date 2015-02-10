@@ -5,9 +5,9 @@ var Page = DS.Model.extend({
   createdAt: DS.attr('date'),
   updatedAt: DS.attr('date'),
 
-  title: DS.attr(''),
-  tagline: DS.attr(''),
-  body: DS.attr(''),
+  title: DS.attr(),
+  tagline: DS.attr(),
+  body: DS.attr(),
 
   inNavBar: DS.attr('boolean'),
 

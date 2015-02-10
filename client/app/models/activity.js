@@ -5,9 +5,9 @@ var Activity = DS.Model.extend({
   createdAt: DS.attr('date'),
   updatedAt: DS.attr('date'),
 
-  title: DS.attr(''),
-  summary: DS.attr(''),
-  body: DS.attr(''),
+  title: DS.attr(),
+  summary: DS.attr(),
+  body: DS.attr(),
 
   cover: DS.belongsTo('image', { inverse: 'coverActivities', async: true }),
 
