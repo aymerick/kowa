@@ -251,6 +251,30 @@ func (app *Application) ensurePostMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(fn)
 }
 
+// middleware: ensures event exists and injects 'currentEvent' in context
+func (app *Application) ensureEventMiddleware(next http.Handler) http.Handler {
+	fn := func(rw http.ResponseWriter, req *http.Request) {
+		currentDBSession := app.getCurrentDBSession(req)
+
+		vars := mux.Vars(req)
+		eventId := vars["event_id"]
+		if eventId == "" {
+			panic("Should have event_id")
+		}
+
+		if currentEvent := currentDBSession.FindEvent(bson.ObjectIdHex(eventId)); currentEvent != nil {
+			context.Set(req, "currentEvent", currentEvent)
+		} else {
+			http.NotFound(rw, req)
+			return
+		}
+
+		next.ServeHTTP(rw, req)
+	}
+
+	return http.HandlerFunc(fn)
+}
+
 // middleware: ensures page exists and injects 'currentPage' in context
 func (app *Application) ensurePageMiddleware(next http.Handler) http.Handler {
 	fn := func(rw http.ResponseWriter, req *http.Request) {

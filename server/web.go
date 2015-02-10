@@ -38,6 +38,7 @@ func (app *Application) newWebRouter() *mux.Router {
 	// midllewares
 	curSiteOwnerChain := authChain.Append(app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
 	curPostOwnerChain := authChain.Append(app.ensurePostMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
+	curEventOwnerChain := authChain.Append(app.ensureEventMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
 	curPageOwnerChain := authChain.Append(app.ensurePageMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
 	curActivityOwnerChain := authChain.Append(app.ensureActivityMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
 	curImageOwnerChain := authChain.Append(app.ensureImageMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
@@ -60,6 +61,10 @@ func (app *Application) newWebRouter() *mux.Router {
 
 	// /api/events?site={site_id}
 	apiRouter.Methods("GET").Path("/events").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetEvents))
+	apiRouter.Methods("POST").Path("/events").Handler(authChain.ThenFunc(app.handlePostEvents))
+	apiRouter.Methods("GET").Path("/events/{event_id}").Handler(curEventOwnerChain.ThenFunc(app.handleGetEvent))
+	apiRouter.Methods("PUT").Path("/events/{event_id}").Handler(curEventOwnerChain.ThenFunc(app.handleUpdateEvent))
+	apiRouter.Methods("DELETE").Path("/events/{event_id}").Handler(curEventOwnerChain.ThenFunc(app.handleDeleteEvent))
 
 	// /api/pages?site={site_id}
 	apiRouter.Methods("GET").Path("/pages").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetPages))

@@ -113,6 +113,13 @@ func (app *Application) getCurrentPost(req *http.Request) *models.Post {
 	return nil
 }
 
+func (app *Application) getCurrentEvent(req *http.Request) *models.Event {
+	if currentEvent := context.Get(req, "currentEvent"); currentEvent != nil {
+		return currentEvent.(*models.Event)
+	}
+	return nil
+}
+
 func (app *Application) getCurrentPage(req *http.Request) *models.Page {
 	if currentPage := context.Get(req, "currentPage"); currentPage != nil {
 		return currentPage.(*models.Page)

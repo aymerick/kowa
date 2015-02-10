@@ -1,6 +1,16 @@
 package server
 
-import "net/http"
+import (
+	"encoding/json"
+	"log"
+	"net/http"
+
+	"github.com/aymerick/kowa/models"
+)
+
+type eventJson struct {
+	Event models.Event `json:"event"`
+}
 
 // GET /events?site={site_id}
 // GET /sites/{site_id}/events
@@ -8,6 +18,111 @@ func (app *Application) handleGetEvents(rw http.ResponseWriter, req *http.Reques
 	site := app.getCurrentSite(req)
 	if site != nil {
 		app.render.JSON(rw, http.StatusOK, renderMap{"events": site.FindEvents()})
+	} else {
+		http.NotFound(rw, req)
+	}
+}
+
+// POST /events
+func (app *Application) handlePostEvents(rw http.ResponseWriter, req *http.Request) {
+	currentDBSession := app.getCurrentDBSession(req)
+
+	var reqJson eventJson
+
+	if err := json.NewDecoder(req.Body).Decode(&reqJson); err != nil {
+		log.Printf("ERROR: %v", err)
+		http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
+		return
+	}
+
+	event := &reqJson.Event
+
+	if event.SiteId == "" {
+		http.Error(rw, "Missing site field in event record", http.StatusBadRequest)
+		return
+	}
+
+	site := currentDBSession.FindSite(event.SiteId)
+	if site == nil {
+		http.Error(rw, "Site not found", http.StatusBadRequest)
+		return
+	}
+
+	currentUser := app.getCurrentUser(req)
+	if site.UserId != currentUser.Id {
+		unauthorized(rw)
+		return
+	}
+
+	if err := currentDBSession.CreateEvent(event); err != nil {
+		log.Printf("ERROR: %v", err)
+		http.Error(rw, "Failed to create event", http.StatusInternalServerError)
+		return
+	}
+
+	// site content has changed
+	app.onSiteChange(site)
+
+	app.render.JSON(rw, http.StatusCreated, renderMap{"event": event})
+}
+
+// GET /events/{event_id}
+func (app *Application) handleGetEvent(rw http.ResponseWriter, req *http.Request) {
+	event := app.getCurrentEvent(req)
+	if event != nil {
+		app.render.JSON(rw, http.StatusOK, renderMap{"event": event})
+	} else {
+		http.NotFound(rw, req)
+	}
+}
+
+// PUT /events/{event_id}
+func (app *Application) handleUpdateEvent(rw http.ResponseWriter, req *http.Request) {
+	event := app.getCurrentEvent(req)
+	if event != nil {
+		var reqJson eventJson
+
+		if err := json.NewDecoder(req.Body).Decode(&reqJson); err != nil {
+			log.Printf("ERROR: %v", err)
+			http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
+			return
+		}
+
+		updated, err := event.Update(&reqJson.Event)
+		if err != nil {
+			log.Printf("ERROR: %v", err)
+			http.Error(rw, "Failed to update event", http.StatusInternalServerError)
+			return
+		}
+
+		if updated {
+			site := app.getCurrentSite(req)
+
+			// site content has changed
+			app.onSiteChange(site)
+		}
+
+		app.render.JSON(rw, http.StatusOK, renderMap{"event": event})
+	} else {
+		http.NotFound(rw, req)
+	}
+}
+
+// DELETE /events/{event_id}
+func (app *Application) handleDeleteEvent(rw http.ResponseWriter, req *http.Request) {
+	event := app.getCurrentEvent(req)
+	if event != nil {
+		if err := event.Delete(); err != nil {
+			http.Error(rw, "Failed to delete event", http.StatusInternalServerError)
+		} else {
+			site := app.getCurrentSite(req)
+
+			// site content has changed
+			app.onSiteChange(site)
+
+			// returns deleted event
+			app.render.JSON(rw, http.StatusOK, renderMap{"event": event})
+		}
 	} else {
 		http.NotFound(rw, req)
 	}
