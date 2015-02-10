@@ -92,6 +92,28 @@ func (session *DBSession) RemoveImageReferencesFromEvents(image *Image) error {
 // Event
 //
 
+// Fetch from database: site that event belongs to
+func (event *Event) FindSite() *Site {
+	return event.dbSession.FindSite(event.SiteId)
+}
+
+// Fetch Cover from database
+func (event *Event) FindCover() *Image {
+	if event.Cover != "" {
+		var result Image
+
+		if err := event.dbSession.ImagesCol().FindId(event.Cover).One(&result); err != nil {
+			return nil
+		}
+
+		result.dbSession = event.dbSession
+
+		return &result
+	}
+
+	return nil
+}
+
 // Delete event from database
 func (event *Event) Delete() error {
 	var err error

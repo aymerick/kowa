@@ -120,6 +120,10 @@ func (site *Site) MarshalJSON() ([]byte, error) {
 	return json.Marshal(siteJson)
 }
 
+//
+// Site posts
+//
+
 func (site *Site) postsBaseQuery() *mgo.Query {
 	return site.dbSession.PostsCol().Find(bson.M{"site_id": site.Id})
 }
@@ -164,18 +168,57 @@ func (site *Site) FindAllPosts() *PostsList {
 	return site.FindPosts(0, 0)
 }
 
-// Fetch from database: all events belonging to site
-func (site *Site) FindEvents() *EventsList {
-	result := EventsList{}
+//
+// Site events
+//
 
-	if err := site.dbSession.EventsCol().Find(bson.M{"site_id": site.Id}).All(&result); err != nil {
+func (site *Site) eventsBaseQuery() *mgo.Query {
+	return site.dbSession.EventsCol().Find(bson.M{"site_id": site.Id})
+}
+
+// Returns the total number of events
+func (site *Site) EventsNb() int {
+	result, err := site.eventsBaseQuery().Count()
+	if err != nil {
 		panic(err)
 	}
 
-	// @todo Inject dbSession in all result items
+	return result
+}
+
+// Fetch from database: all events belonging to site
+func (site *Site) FindEvents(skip int, limit int) *EventsList {
+	result := EventsList{}
+
+	query := site.eventsBaseQuery().Sort("-start_at")
+
+	if skip > 0 {
+		query = query.Skip(skip)
+	}
+
+	if limit > 0 {
+		query = query.Limit(limit)
+	}
+
+	if err := query.All(&result); err != nil {
+		panic(err)
+	}
+
+	// inject dbSession in all result items
+	for _, event := range result {
+		event.dbSession = site.dbSession
+	}
 
 	return &result
 }
+
+func (site *Site) FindAllEvents() *EventsList {
+	return site.FindEvents(0, 0)
+}
+
+//
+// Site pages
+//
 
 func (site *Site) pagesBaseQuery() *mgo.Query {
 	return site.dbSession.PagesCol().Find(bson.M{"site_id": site.Id})
@@ -221,6 +264,10 @@ func (site *Site) FindAllPages() *PagesList {
 	return site.FindPages(0, 0)
 }
 
+//
+// Site activities
+//
+
 func (site *Site) activitiesBaseQuery() *mgo.Query {
 	return site.dbSession.ActivitiesCol().Find(bson.M{"site_id": site.Id})
 }
@@ -265,6 +312,10 @@ func (site *Site) FindAllActivities() *ActivitiesList {
 	return site.FindActivities(0, 0)
 }
 
+//
+// Site images
+//
+
 func (site *Site) imagesBaseQuery() *mgo.Query {
 	return site.dbSession.ImagesCol().Find(bson.M{"site_id": site.Id})
 }
@@ -300,6 +351,10 @@ func (site *Site) FindImages(skip int, limit int) *ImagesList {
 
 	return &result
 }
+
+//
+// Site fields
+//
 
 // Fetch Logo from database
 func (site *Site) FindLogo() *Image {

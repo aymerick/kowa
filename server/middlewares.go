@@ -163,6 +163,14 @@ func (app *Application) ensureSiteMiddleware(next http.Handler) http.Handler {
 			}
 		}
 
+		// event
+		if currentSite == nil {
+			currentEvent := app.getCurrentEvent(req)
+			if currentEvent != nil {
+				currentSite = currentEvent.FindSite()
+			}
+		}
+
 		// page
 		if currentSite == nil {
 			currentPage := app.getCurrentPage(req)
@@ -171,7 +179,7 @@ func (app *Application) ensureSiteMiddleware(next http.Handler) http.Handler {
 			}
 		}
 
-		// page
+		// activity
 		if currentSite == nil {
 			currentActivity := app.getCurrentActivity(req)
 			if currentActivity != nil {
