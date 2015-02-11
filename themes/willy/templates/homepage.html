@@ -1,11 +1,4 @@
-<div class="jumbotron">
-    <div class="container">
-        <h1>{{ .Title }}</h1>
-        <p class="description">
-            {{ .Tagline }}
-        </p>
-    </div>
-</div>
+{{ template "partials/jumbotron" .Node }}
 
 <section class="presentation">
     <div class="container">

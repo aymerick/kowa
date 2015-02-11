@@ -1,6 +1,7 @@
 package builder
 
 import (
+	"fmt"
 	"html/template"
 	"path"
 
@@ -19,6 +20,8 @@ type EventsBuilder struct {
 
 // Event content for template
 type EventContent struct {
+	Node *Node
+
 	StartDate string
 	EndDate   string
 	Cover     string
@@ -36,8 +39,7 @@ type EventNodeContentPair struct {
 
 // Event list content for template
 type EventListContent struct {
-	Title   string
-	Tagline string
+	Node *Node
 
 	Events []*EventContent
 	// PrevPage string
@@ -83,9 +85,14 @@ func (builder *EventsBuilder) loadEvent(event *models.Event) {
 	node := builder.newNode()
 	node.fillUrl(path.Join("events", event.Slug())) // @todo i18n
 
-	node.Title = event.Title
+	title := "Events" // @todo i18n
+	tagline := ""     // @todo Fill
+
+	node.Title = title
+	node.Tagline = tagline
 	node.Meta = &NodeMeta{
-		Description: "", // @todo !!!
+		Title:       fmt.Sprintf("%s - %s", event.Title, builder.site().Name),
+		Description: tagline,
 	}
 
 	eventContent := builder.NewEventContent(event, node)
@@ -100,6 +107,7 @@ func (builder *EventsBuilder) loadEvent(event *models.Event) {
 // Instanciate a new event content
 func (builder *EventsBuilder) NewEventContent(event *models.Event, node *Node) *EventContent {
 	result := &EventContent{
+		Node:      node,
 		StartDate: event.StartDate.Format("02/01/06 15:04"),
 		EndDate:   event.EndDate.Format("02/01/06 15:04"),
 		Title:     event.Title,
@@ -125,18 +133,19 @@ func (builder *EventsBuilder) loadEventsLists() {
 		node := builder.newNodeForKind(KIND_EVENTS)
 		node.fillUrl(KIND_EVENTS)
 
-		title := "Events"
-		tagline := "" // @todo
+		title := "Events" // @todo i18n
+		tagline := ""     // @todo Fill
 
 		node.Title = title
+		node.Tagline = tagline
 		node.Meta = &NodeMeta{Description: tagline}
-		node.Content = &EventListContent{
-			Title:   title,
-			Tagline: tagline,
-			Events:  computesEventContents(builder.events),
-		}
 		node.InNavBar = true
 		node.NavBarOrder = 10
+
+		node.Content = &EventListContent{
+			Node:   node,
+			Events: computesEventContents(builder.events),
+		}
 
 		builder.addNode(node)
 	}

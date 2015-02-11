@@ -15,15 +15,18 @@ type Node struct {
 	Kind string
 	Site *SiteVars
 
-	Title       string
+	Title   string
+	Tagline string
+
 	Meta        *NodeMeta
 	BodyClass   string
-	Content     interface{}
 	InNavBar    bool
 	NavBarOrder int
 	Slug        string
 	Url         string
 	FullUrl     string
+
+	Content interface{}
 
 	builder NodeBuilder
 }

@@ -17,8 +17,7 @@ type PagesBuilder struct {
 
 // Page content for template
 type PageContent struct {
-	Title   string
-	Tagline string
+	Node *Node
 
 	Date  time.Time
 	Cover string
@@ -54,9 +53,11 @@ func (builder *PagesBuilder) loadPage(page *models.Page) {
 	pageContent := builder.NewPageContent(page, node)
 	if pageContent.Body != "" {
 		node.Title = page.Title
+		node.Tagline = page.Tagline
 		node.Meta = &NodeMeta{Description: page.Tagline}
-		node.Content = pageContent
 		node.InNavBar = page.InNavBar
+
+		node.Content = pageContent
 
 		builder.addNode(node)
 	}
@@ -65,10 +66,9 @@ func (builder *PagesBuilder) loadPage(page *models.Page) {
 // Instanciate a new page content
 func (builder *PagesBuilder) NewPageContent(page *models.Page, node *Node) *PageContent {
 	result := &PageContent{
-		Title:   page.Title,
-		Tagline: page.Tagline,
-		Date:    page.CreatedAt,
-		Url:     node.Url,
+		Node: node,
+		Date: page.CreatedAt,
+		Url:  node.Url,
 	}
 
 	cover := page.FindCover()

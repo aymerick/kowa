@@ -90,7 +90,7 @@ func (builder *NodeBuilderBase) fillNodeBeforeGeneration(node *Node) {
 
 	// defaults
 	if node.Meta.Title == "" {
-		// @todo Filter characters
+		// @todo Filter characters ?
 		node.Meta.Title = fmt.Sprintf("%s - %s", node.Title, builder.site().Name)
 	}
 }

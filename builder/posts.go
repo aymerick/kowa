@@ -1,6 +1,7 @@
 package builder
 
 import (
+	"fmt"
 	"html/template"
 	"path"
 
@@ -19,6 +20,8 @@ type PostsBuilder struct {
 
 // Post content for template
 type PostContent struct {
+	Node *Node
+
 	Date  string
 	Cover string
 	Title string
@@ -34,8 +37,7 @@ type PostNodeContentPair struct {
 
 // Post list content for template
 type PostListContent struct {
-	Title   string
-	Tagline string
+	Node *Node
 
 	Posts []*PostContent
 	// PrevPage string
@@ -81,13 +83,17 @@ func (builder *PostsBuilder) loadPost(post *models.Post) {
 	node := builder.newNode()
 	node.fillUrl(path.Join("posts", post.Slug())) // @todo i18n
 
-	node.Title = post.Title
+	title := "Posts" // @todo i18n
+	tagline := ""    // @todo fill
+
+	node.Title = title
+	node.Tagline = tagline
 	node.Meta = &NodeMeta{
-		Description: "", // @todo !!!
+		Title:       fmt.Sprintf("%s - %s", post.Title, builder.site().Name),
+		Description: tagline,
 	}
 
 	postContent := builder.NewPostContent(post, node)
-
 	node.Content = postContent
 
 	builder.addNode(node)
@@ -98,6 +104,7 @@ func (builder *PostsBuilder) loadPost(post *models.Post) {
 // Instanciate a new post content
 func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *PostContent {
 	result := &PostContent{
+		Node:  node,
 		Date:  post.CreatedAt.Format("02/01/06"),
 		Title: post.Title,
 		Url:   node.Url,
@@ -121,18 +128,19 @@ func (builder *PostsBuilder) loadPostsLists() {
 		node := builder.newNodeForKind(KIND_POSTS)
 		node.fillUrl(KIND_POSTS)
 
-		title := "Posts"
-		tagline := "" // @todo
+		title := "Posts" // @todo i18n
+		tagline := ""    // @todo fill
 
 		node.Title = title
+		node.Tagline = tagline
 		node.Meta = &NodeMeta{Description: tagline}
-		node.Content = &PostListContent{
-			Title:   title,
-			Tagline: tagline,
-			Posts:   computesPostContents(builder.posts),
-		}
 		node.InNavBar = true
 		node.NavBarOrder = 5
+
+		node.Content = &PostListContent{
+			Node:  node,
+			Posts: computesPostContents(builder.posts),
+		}
 
 		builder.addNode(node)
 	}

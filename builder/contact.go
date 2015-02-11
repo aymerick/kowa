@@ -12,8 +12,7 @@ type ContactBuilder struct {
 
 // Contact content for template
 type ContactContent struct {
-	Title   string
-	Tagline string
+	Node *Node
 
 	HaveContact bool
 	Email       string
@@ -40,29 +39,29 @@ func NewContactBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 
 // NodeBuilder
 func (builder *ContactBuilder) Load() {
-	title := "Contact"
-	tagline := "" // @todo
+	title := "Contact" // @todo i18n
+	tagline := ""      // @todo Fill
 
-	contactContent := builder.NewContactContent(title, tagline)
+	contactContent := builder.NewContactContent()
 	if contactContent.HaveContact || contactContent.HaveSocial {
 		node := builder.newNode()
 		node.fillUrl(node.Kind)
 
 		node.Title = title
+		node.Tagline = tagline
 		node.Meta = &NodeMeta{Description: tagline} // @todo !!!
-		node.Content = contactContent
 		node.InNavBar = true
 		node.NavBarOrder = 15
+
+		contactContent.Node = node
+		node.Content = contactContent
 
 		builder.addNode(node)
 	}
 }
 
-func (builder *ContactBuilder) NewContactContent(title string, tagline string) *ContactContent {
-	result := &ContactContent{
-		Title:   title,
-		Tagline: tagline,
-	}
+func (builder *ContactBuilder) NewContactContent() *ContactContent {
+	result := &ContactContent{}
 
 	site := builder.site()
 

@@ -28,8 +28,7 @@ type ActivityContent struct {
 
 // Activities content for template
 type ActivitiesContent struct {
-	Title   string
-	Tagline string
+	Node *Node
 
 	Activities []*ActivityContent
 }
@@ -56,18 +55,19 @@ func (builder *ActivitiesBuilder) Load() {
 		node := builder.newNode()
 		node.fillUrl(node.Kind)
 
-		title := "Activities"
-		tagline := "" // @todo
+		title := "Activities" // @todo i18n
+		tagline := ""         // @todo Fill
 
 		node.Title = title
+		node.Tagline = tagline
 		node.Meta = &NodeMeta{Description: tagline}
-		node.Content = &ActivitiesContent{
-			Title:      title,
-			Tagline:    tagline,
-			Activities: activitiesContents,
-		}
 		node.InNavBar = true
 		node.NavBarOrder = 1
+
+		node.Content = &ActivitiesContent{
+			Node:       node,
+			Activities: activitiesContents,
+		}
 
 		builder.addNode(node)
 	}

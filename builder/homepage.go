@@ -15,8 +15,7 @@ type HomepageBuilder struct {
 
 // Homepage content for template
 type HomepageContent struct {
-	Title   string
-	Tagline string
+	Node *Node
 
 	Description template.HTML // Site description
 	MoreDesc    template.HTML // Site additional description
@@ -48,22 +47,23 @@ func (builder *HomepageBuilder) Load() {
 	site := builder.site()
 
 	node.Title = site.Name
+	node.Tagline = site.Tagline
 	node.Meta = &NodeMeta{
 		Title:       site.Name,
 		Description: site.Tagline,
 	}
-	node.Content = builder.NewHomepageContent()
+
+	node.Content = builder.NewHomepageContent(node)
 
 	builder.addNode(node)
 }
 
 // Instanciate a new homepage content
-func (builder *HomepageBuilder) NewHomepageContent() *HomepageContent {
+func (builder *HomepageBuilder) NewHomepageContent(node *Node) *HomepageContent {
 	site := builder.site()
 
 	result := &HomepageContent{
-		Title:   site.Name,
-		Tagline: site.Tagline,
+		Node: node,
 	}
 
 	sanitizePolicy := bluemonday.UGCPolicy()
