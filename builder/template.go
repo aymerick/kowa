@@ -4,6 +4,7 @@ import (
 	"errors"
 	"html/template"
 	"reflect"
+	"strings"
 )
 
 //
@@ -13,9 +14,10 @@ import (
 // Build FuncMap for template
 func (builder *SiteBuilder) FuncMap() template.FuncMap {
 	return template.FuncMap{
-		"urlFor":  builder.UrlFor,
-		"mod":     builder.Mod,
-		"modBool": builder.ModBool,
+		"urlFor":     builder.UrlFor,
+		"startsWith": builder.StartsWith,
+		"mod":        builder.Mod,
+		"modBool":    builder.ModBool,
 	}
 }
 
@@ -52,7 +54,7 @@ func (builder *SiteBuilder) UrlFor(dest interface{}) (string, error) {
 		nodes := builder.nodeBuilder(destStr).Nodes()
 
 		for _, node := range nodes {
-			if node.Slug == KIND_POSTS {
+			if node.Slug == destStr {
 				result = node.Url
 				break
 			}
@@ -64,6 +66,31 @@ func (builder *SiteBuilder) UrlFor(dest interface{}) (string, error) {
 	}
 
 	return result, err
+}
+
+// Returns an URL to an internal page
+func (builder *SiteBuilder) StartsWith(check interface{}, prefix interface{}) (bool, error) {
+	checkValue := reflect.ValueOf(check)
+	prefixValue := reflect.ValueOf(prefix)
+
+	var checkStr string
+	var prefixStr string
+
+	switch checkValue.Kind() {
+	case reflect.String:
+		checkStr = checkValue.String()
+	default:
+		return false, errors.New("StartsWith operator needs string arguments")
+	}
+
+	switch prefixValue.Kind() {
+	case reflect.String:
+		prefixStr = prefixValue.String()
+	default:
+		return false, errors.New("StartsWith operator needs string arguments")
+	}
+
+	return strings.HasPrefix(checkStr, prefixStr), nil
 }
 
 // Borrowed from https://github.com/spf13/hugo/blob/master/tpl/template.go
