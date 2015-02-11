@@ -304,58 +304,60 @@ func (builder *SiteBuilder) partialsPath() string {
 	return path.Join(builder.themeTemplatesDir(), PARTIALS_DIR)
 }
 
-// Get master layout template
-func (builder *SiteBuilder) layout() *template.Template {
-	if builder.masterLayout != nil {
-		return builder.masterLayout
+func (builder *SiteBuilder) setupLayout() *template.Template {
+	errStep := "template init"
+
+	// parse layout
+	result, err := template.ParseFiles(builder.templatePath("layout"))
+	if err != nil {
+		builder.addError(errStep, err)
+		return nil
+	}
+
+	// setup FuncMap
+	result.Funcs(builder.FuncMap())
+
+	// load partials
+	partialDir := builder.partialsPath()
+
+	files, err := ioutil.ReadDir(partialDir)
+	if err != nil && err != os.ErrExist {
+		builder.addError(errStep, err)
 	} else {
-		errStep := "template init"
+		for _, file := range files {
+			fileName := file.Name()
 
-		// parse layout
-		layout, err := template.ParseFiles(builder.templatePath("layout"))
-		if err != nil {
-			builder.addError(errStep, err)
-			return nil
-		}
+			if !file.IsDir() && strings.HasSuffix(fileName, ".html") {
+				filePath := path.Join(partialDir, fileName)
 
-		// setup FuncMap
-		layout.Funcs(builder.FuncMap())
+				// read partial
+				binData, err := ioutil.ReadFile(filePath)
+				if err != nil {
+					builder.addError(errStep, err)
+				} else {
+					// eg: partials/navbar
+					tplName := fmt.Sprintf("%s/%s", PARTIALS_DIR, utils.FileBase(fileName))
 
-		builder.masterLayout = layout
-
-		// load partials
-		partialDir := builder.partialsPath()
-
-		files, err := ioutil.ReadDir(partialDir)
-		if err != nil && err != os.ErrExist {
-			builder.addError(errStep, err)
-		} else {
-			for _, file := range files {
-				fileName := file.Name()
-
-				if !file.IsDir() && strings.HasSuffix(fileName, ".html") {
-					filePath := path.Join(partialDir, fileName)
-
-					// read partial
-					binData, err := ioutil.ReadFile(filePath)
+					// add partial to layout
+					_, err := result.New(tplName).Parse(string(binData))
 					if err != nil {
 						builder.addError(errStep, err)
-					} else {
-						// eg: partials/navbar
-						tplName := fmt.Sprintf("%s/%s", PARTIALS_DIR, utils.FileBase(fileName))
-
-						// add partial to layout
-						_, err := builder.masterLayout.New(tplName).Parse(string(binData))
-						if err != nil {
-							builder.addError(errStep, err)
-						}
 					}
 				}
 			}
 		}
-
-		return builder.masterLayout
 	}
+
+	return result
+}
+
+// Get master layout template
+func (builder *SiteBuilder) layout() *template.Template {
+	if builder.masterLayout == nil {
+		builder.masterLayout = builder.setupLayout()
+	}
+
+	return builder.masterLayout
 }
 
 // Dump templates

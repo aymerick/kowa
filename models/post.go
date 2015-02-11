@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/aymerick/kowa/utils"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+
+	"github.com/aymerick/kowa/utils"
 )
 
 const (
