@@ -2,10 +2,12 @@ package builder
 
 import (
 	"html/template"
+	"path"
 
-	"github.com/aymerick/kowa/models"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday"
+
+	"github.com/aymerick/kowa/models"
 )
 
 // Builder for posts pages
@@ -35,9 +37,9 @@ type PostListContent struct {
 	Title   string
 	Tagline string
 
-	Posts    []*PostContent
-	PrevPage string
-	NextPage string
+	Posts []*PostContent
+	// PrevPage string
+	// NextPage string
 }
 
 func init() {
@@ -77,7 +79,7 @@ func (builder *PostsBuilder) loadPosts() {
 // Build post page
 func (builder *PostsBuilder) loadPost(post *models.Post) {
 	node := builder.newNode()
-	node.fillUrl(post.Slug())
+	node.fillUrl(path.Join("posts", post.Slug())) // @todo i18n
 
 	node.Title = post.Title
 	node.Meta = &NodeMeta{
