@@ -5,7 +5,7 @@ var SettingsGeneralController = Ember.ObjectController.extend({
   site: Ember.computed.alias('controllers.settings.model'),
 
   // @todo Get that list from the server
-  allThemes: [ 'test', 'willy' ],
+  allThemes: [ 'willy' ],
 
   actions: {
     removeLogo: function() {
