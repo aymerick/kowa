@@ -1,8 +1,11 @@
 body.post {
     .post-header {
         color: #999;
-        font-style: italic;
         margin-bottom: 10px;
+
+        .meta {
+            font-style: italic;
+        }
     }
 
     .post-cover {
