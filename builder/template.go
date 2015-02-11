@@ -49,7 +49,7 @@ func (builder *SiteBuilder) UrlFor(dest interface{}) (string, error) {
 			result = nodes[0].Url
 		}
 
-	case KIND_POSTS:
+	case KIND_POSTS, KIND_EVENTS:
 		// find correct node
 		nodes := builder.nodeBuilder(destStr).Nodes()
 

@@ -1,0 +1,32 @@
+<div class="jumbotron">
+    <div class="container">
+        <h1>{{ .Title }}</h1>
+        <p class="description">
+            {{ .Tagline }}
+        </p>
+    </div>
+</div>
+
+<div class="container events">
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="events-list">
+
+                {{ range .Events }}
+                    <li class="event">
+                        <a href="{{ .Url }}">
+                            <h2 class="title">{{ .Title }}</h2>
+                            <div class="place">{{ .Place }}</div>
+                            <div class="start-date">{{ .StartDate }}</div>
+                            <div class="end-date">{{ .EndDate }}</div>
+                            {{ if .Cover }}
+                            <img src="{{ .Cover }}" alt="Event cover" class="cover" />
+                            {{ end }}
+                        </a>
+                    </li>
+                {{ end }}
+
+            </ul>
+        </div>
+    </div>
+</div>

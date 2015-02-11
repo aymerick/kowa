@@ -52,7 +52,7 @@ func (builder *ContactBuilder) Load() {
 		node.Meta = &NodeMeta{Description: tagline} // @todo !!!
 		node.Content = contactContent
 		node.InNavBar = true
-		node.NavBarOrder = 10
+		node.NavBarOrder = 15
 
 		builder.addNode(node)
 	}

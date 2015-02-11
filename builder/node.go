@@ -42,6 +42,8 @@ const (
 	KIND_PAGE       = "page"
 	KIND_POST       = "post"
 	KIND_POSTS      = "posts"
+	KIND_EVENT      = "event"
+	KIND_EVENTS     = "events"
 )
 
 // Create a new node

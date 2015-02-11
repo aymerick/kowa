@@ -1,10 +1,13 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+
+	"github.com/aymerick/kowa/utils"
 )
 
 const (
@@ -91,6 +94,13 @@ func (session *DBSession) RemoveImageReferencesFromEvents(image *Image) error {
 //
 // Event
 //
+
+// Computes slug
+func (event *Event) Slug() string {
+	year, month, day := event.StartDate.Date()
+
+	return fmt.Sprintf("%d/%02d/%02d/%s", year, month, day, utils.Urlify(event.Title))
+}
 
 // Fetch from database: site that event belongs to
 func (event *Event) FindSite() *Site {
