@@ -53,14 +53,6 @@ body.events {
                 font-size: 24pt;
                 font-weight: 900;
             }
-
-            .year {
-
-            }
-
-            .time {
-
-            }
         }
 
         &:nth-child(even) time {
@@ -80,6 +72,12 @@ body.events {
 
                 font-size: 17pt;
                 font-weight: 700;
+            }
+
+            .title, .place, .dates {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
 
             .place, .dates {
