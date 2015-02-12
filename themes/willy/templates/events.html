@@ -2,19 +2,26 @@
 
 <div class="container events">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-xs-12 col-md-offset-2 col-md-8">
             <ul class="events-list">
 
                 {{ range .Events }}
                     <li class="event">
                         <a href="{{ .Url }}">
-                            <h2 class="title">{{ .Title }}</h2>
-                            <div class="place">{{ .Place }}</div>
-                            <div class="start-date">{{ .StartDate }}</div>
-                            <div class="end-date">{{ .EndDate }}</div>
+                            <time datetime="{{ .StartDateRFC3339 }}">
+                                <span class="day">{{ .StartDay }}</span>
+                                <span class="month">{{ .StartMonth }}</span>
+                                <span class="year">{{ .StartYear }}</span>
+                                <span class="time">{{ .StartTime }}</span>
+                            </time>
                             {{ if .Cover }}
-                            <img src="{{ .Cover }}" alt="Event cover" class="cover" />
+                                <img src="{{ .Cover }}" alt="Event cover" />
                             {{ end }}
+                            <div class="info">
+                                <h2 class="title">{{ .Title }}</h2>
+                                <p class="place">{{ .Place }}</p>
+                                <p class="dates">{{ .Dates }}</p>
+                            </div>
                         </a>
                     </li>
                 {{ end }}

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"path"
+	"time"
 
 	"github.com/aymerick/kowa/models"
 
@@ -22,13 +23,31 @@ type EventsBuilder struct {
 type EventContent struct {
 	Node *Node
 
-	StartDate string
-	EndDate   string
-	Cover     string
-	Title     string
-	Place     string
-	Body      template.HTML
-	Url       string
+	Cover string
+	Title string
+	Place string
+	Body  template.HTML
+	Url   string
+
+	Dates string
+
+	StartDateRFC3339 string
+	StartDateTime    string
+	StartDate        string
+	StartWeekday     string
+	StartDay         string
+	StartMonth       string
+	StartYear        string
+	StartTime        string
+
+	EndDateRFC3339 string
+	EndDateTime    string
+	EndDate        string
+	EndWeekday     string
+	EndDay         string
+	EndMonth       string
+	EndYear        string
+	EndTime        string
 }
 
 // Event with associated Node Content
@@ -107,12 +126,38 @@ func (builder *EventsBuilder) loadEvent(event *models.Event) {
 // Instanciate a new event content
 func (builder *EventsBuilder) NewEventContent(event *models.Event, node *Node) *EventContent {
 	result := &EventContent{
-		Node:      node,
-		StartDate: event.StartDate.Format("02/01/06 15:04"),
-		EndDate:   event.EndDate.Format("02/01/06 15:04"),
-		Title:     event.Title,
-		Place:     event.Place,
-		Url:       node.Url,
+		Node:  node,
+		Title: event.Title,
+		Place: event.Place,
+		Url:   node.Url,
+
+		StartDateRFC3339: event.StartDate.Format(time.RFC3339),
+		// @todo i18n
+		StartDateTime: event.StartDate.Format("Mon Jan 02 3:04PM"),
+		StartDate:     event.StartDate.Format("Mon Jan 02"),
+		StartWeekday:  event.StartDate.Format("Mon"),
+		StartDay:      event.StartDate.Format("02"),
+		StartMonth:    event.StartDate.Format("Jan"),
+		StartYear:     event.StartDate.Format("2006"),
+		StartTime:     event.StartDate.Format("3:04PM"),
+
+		EndDateRFC3339: event.EndDate.Format(time.RFC3339),
+		// @todo i18n
+		EndDateTime: event.EndDate.Format("Mon Jan 02 3:04PM"),
+		EndDate:     event.EndDate.Format("Mon Jan 02"),
+		EndWeekday:  event.EndDate.Format("Mon"),
+		EndDay:      event.EndDate.Format("02"),
+		EndMonth:    event.EndDate.Format("Jan"),
+		EndYear:     event.EndDate.Format("2006"),
+		EndTime:     event.EndDate.Format("3:04PM"),
+	}
+
+	if result.StartDate == result.EndDate {
+		// @todo i18n
+		result.Dates = fmt.Sprintf("%s from %s to %s", result.StartDate, result.StartTime, result.EndTime)
+	} else {
+		// @todo i18n
+		result.Dates = fmt.Sprintf("From %s to %s", result.StartDateTime, result.EndDateTime)
 	}
 
 	cover := event.FindCover()
