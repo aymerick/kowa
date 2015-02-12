@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/aymerick/kowa/models"
+	"github.com/aymerick/kowa/utils"
 
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday"
@@ -16,7 +17,8 @@ import (
 type EventsBuilder struct {
 	*NodeBuilderBase
 
-	events []*EventNodeContentPair
+	events     []*EventNodeContentPair
+	pastEvents []*EventNodeContentPair
 }
 
 // Event content for template
@@ -60,7 +62,9 @@ type EventNodeContentPair struct {
 type EventListContent struct {
 	Node *Node
 
-	Events []*EventContent
+	Events     []*EventContent
+	PastEvents []*EventContent
+
 	// PrevPage string
 	// NextPage string
 }
@@ -99,10 +103,22 @@ func (builder *EventsBuilder) loadEvents() {
 	}
 }
 
+// Computes event slug
+func eventSlug(event *models.Event) string {
+	year, month, day := event.StartDate.Date()
+
+	title := event.Title
+	if len(title) > MAX_SLUG {
+		title = title[:MAX_SLUG]
+	}
+
+	return fmt.Sprintf("%d/%02d/%02d/%s", year, month, day, utils.Urlify(title))
+}
+
 // Build event page
 func (builder *EventsBuilder) loadEvent(event *models.Event) {
 	node := builder.newNode()
-	node.fillUrl(path.Join("events", event.Slug())) // @todo i18n
+	node.fillUrl(path.Join("events", eventSlug(event))) // @todo i18n
 
 	title := "Events" // @todo i18n
 	tagline := ""     // @todo Fill
@@ -120,7 +136,11 @@ func (builder *EventsBuilder) loadEvent(event *models.Event) {
 
 	builder.addNode(node)
 
-	builder.events = append(builder.events, NewEventNodeContentPair(event, eventContent))
+	if time.Now().After(event.EndDate) {
+		builder.pastEvents = append(builder.pastEvents, NewEventNodeContentPair(event, eventContent))
+	} else {
+		builder.events = append(builder.events, NewEventNodeContentPair(event, eventContent))
+	}
 }
 
 // Instanciate a new event content
@@ -188,8 +208,9 @@ func (builder *EventsBuilder) loadEventsLists() {
 		node.NavBarOrder = 10
 
 		node.Content = &EventListContent{
-			Node:   node,
-			Events: computesEventContents(builder.events),
+			Node:       node,
+			Events:     computesEventContents(builder.events),
+			PastEvents: computesEventContents(builder.pastEvents),
 		}
 
 		builder.addNode(node)

@@ -25,6 +25,8 @@ const (
 	ASSETS_DIR    = "assets"
 
 	DEFAULT_THEME = "test"
+
+	MAX_SLUG = 50
 )
 
 var registeredNodeBuilders = make(map[string]func(*SiteBuilder) NodeBuilder)

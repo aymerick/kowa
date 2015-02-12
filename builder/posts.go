@@ -9,6 +9,7 @@ import (
 	"github.com/russross/blackfriday"
 
 	"github.com/aymerick/kowa/models"
+	"github.com/aymerick/kowa/utils"
 )
 
 // Builder for posts pages
@@ -78,10 +79,23 @@ func (builder *PostsBuilder) loadPosts() {
 	}
 }
 
+// Computes slug
+func postSlug(post *models.Post) string {
+	// @todo Should use PublishedAt
+	year, month, day := post.CreatedAt.Date()
+
+	title := post.Title
+	if len(title) > MAX_SLUG {
+		title = title[:MAX_SLUG]
+	}
+
+	return fmt.Sprintf("%d/%02d/%02d/%s", year, month, day, utils.Urlify(title))
+}
+
 // Build post page
 func (builder *PostsBuilder) loadPost(post *models.Post) {
 	node := builder.newNode()
-	node.fillUrl(path.Join("posts", post.Slug())) // @todo i18n
+	node.fillUrl(path.Join("posts", postSlug(post))) // @todo i18n
 
 	title := "Posts" // @todo i18n
 	tagline := ""    // @todo fill
