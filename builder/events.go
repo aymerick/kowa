@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"path"
+	"sort"
 	"time"
 
 	"github.com/aymerick/kowa/models"
@@ -17,8 +18,8 @@ import (
 type EventsBuilder struct {
 	*NodeBuilderBase
 
-	events     []*EventNodeContentPair
-	pastEvents []*EventNodeContentPair
+	events     []*EventContentPair
+	pastEvents []*EventContentPair
 }
 
 // Event content for template
@@ -53,10 +54,12 @@ type EventContent struct {
 }
 
 // Event with associated Node Content
-type EventNodeContentPair struct {
+type EventContentPair struct {
 	event       *models.Event
 	nodeContent *EventContent
 }
+
+type EventContentPairByStartDate []*EventContentPair
 
 // Event list content for template
 type EventListContent struct {
@@ -83,8 +86,8 @@ func NewEventsBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 	}
 }
 
-func NewEventNodeContentPair(event *models.Event, nodeContent *EventContent) *EventNodeContentPair {
-	return &EventNodeContentPair{
+func NewEventContentPair(event *models.Event, nodeContent *EventContent) *EventContentPair {
+	return &EventContentPair{
 		event:       event,
 		nodeContent: nodeContent,
 	}
@@ -137,9 +140,9 @@ func (builder *EventsBuilder) loadEvent(event *models.Event) {
 	builder.addNode(node)
 
 	if time.Now().After(event.EndDate) {
-		builder.pastEvents = append(builder.pastEvents, NewEventNodeContentPair(event, eventContent))
+		builder.pastEvents = append(builder.pastEvents, NewEventContentPair(event, eventContent))
 	} else {
-		builder.events = append(builder.events, NewEventNodeContentPair(event, eventContent))
+		builder.events = append(builder.events, NewEventContentPair(event, eventContent))
 	}
 }
 
@@ -193,7 +196,7 @@ func (builder *EventsBuilder) NewEventContent(event *models.Event, node *Node) *
 
 // Build events list pages
 func (builder *EventsBuilder) loadEventsLists() {
-	if len(builder.events) > 0 {
+	if len(builder.events) > 0 || len(builder.pastEvents) > 0 {
 		// @todo pagination
 		node := builder.newNodeForKind(KIND_EVENTS)
 		node.fillUrl(KIND_EVENTS)
@@ -207,22 +210,55 @@ func (builder *EventsBuilder) loadEventsLists() {
 		node.InNavBar = true
 		node.NavBarOrder = 10
 
+		events := computesEventContents(builder.events, true)
+
+		pastEvents := computesEventContents(builder.pastEvents, false)
+		if len(pastEvents) > MAX_PAST_EVENTS {
+			pastEvents = pastEvents[:MAX_PAST_EVENTS]
+		}
+
 		node.Content = &EventListContent{
 			Node:       node,
-			Events:     computesEventContents(builder.events),
-			PastEvents: computesEventContents(builder.pastEvents),
+			Events:     events,
+			PastEvents: pastEvents,
 		}
 
 		builder.addNode(node)
 	}
 }
 
-func computesEventContents(events []*EventNodeContentPair) []*EventContent {
+func computesEventContents(events []*EventContentPair, asc bool) []*EventContent {
 	eventContents := []*EventContent{}
+
+	// sort
+	if asc {
+		sort.Sort(EventContentPairByStartDate(events))
+	} else {
+		sort.Sort(sort.Reverse(EventContentPairByStartDate(events)))
+	}
 
 	for _, eventNodeContent := range events {
 		eventContents = append(eventContents, eventNodeContent.nodeContent)
 	}
 
 	return eventContents
+}
+
+//
+// EventContentPairByStartDate
+//
+
+// Implements sort.Interface
+func (events EventContentPairByStartDate) Len() int {
+	return len(events)
+}
+
+// Implements sort.Interface
+func (events EventContentPairByStartDate) Swap(i, j int) {
+	events[i], events[j] = events[j], events[i]
+}
+
+// Implements sort.Interface
+func (events EventContentPairByStartDate) Less(i, j int) bool {
+	return events[i].event.StartDate.Before(events[j].event.StartDate)
 }

@@ -26,7 +26,8 @@ const (
 
 	DEFAULT_THEME = "test"
 
-	MAX_SLUG = 50
+	MAX_SLUG        = 50
+	MAX_PAST_EVENTS = 5
 )
 
 var registeredNodeBuilders = make(map[string]func(*SiteBuilder) NodeBuilder)

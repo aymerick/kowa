@@ -3,30 +3,16 @@
 <div class="container events">
     <div class="row">
         <div class="col-xs-12 col-md-offset-2 col-md-8">
-            <ul class="events-list">
+            {{ template "partials/events-list" .Events }}
 
-                {{ range .Events }}
-                    <li class="event">
-                        <a href="{{ .Url }}">
-                            <time datetime="{{ .StartDateRFC3339 }}">
-                                <span class="day">{{ .StartDay }}</span>
-                                <span class="month">{{ .StartMonth }}</span>
-                                <span class="year">{{ .StartYear }}</span>
-                                <span class="time">{{ .StartTime }}</span>
-                            </time>
-                            {{ if .Cover }}
-                                <img src="{{ .Cover }}" alt="Event cover" />
-                            {{ end }}
-                            <div class="info">
-                                <h2 class="title">{{ .Title }}</h2>
-                                <p class="place">{{ .Place }}</p>
-                                <p class="dates">{{ .Dates }}</p>
-                            </div>
-                        </a>
-                    </li>
+            {{ if .PastEvents }}
+                {{ if .Events}}
+                    <hr />
                 {{ end }}
 
-            </ul>
+                <h2>Past events</h2>
+                {{ template "partials/events-list" .PastEvents }}
+            {{ end }}
         </div>
     </div>
 </div>
