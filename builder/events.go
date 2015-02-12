@@ -14,7 +14,7 @@ import (
 	"github.com/russross/blackfriday"
 )
 
-// Builder for events pages
+// Event nodes builder
 type EventsBuilder struct {
 	*NodeBuilderBase
 
@@ -22,7 +22,7 @@ type EventsBuilder struct {
 	pastEvents []*EventContentPair
 }
 
-// Event content for template
+// Event node content
 type EventContent struct {
 	Node *Node
 
@@ -53,16 +53,8 @@ type EventContent struct {
 	EndTime        string
 }
 
-// Event with associated Node Content
-type EventContentPair struct {
-	event       *models.Event
-	nodeContent *EventContent
-}
-
-type EventContentPairByStartDate []*EventContentPair
-
-// Event list content for template
-type EventListContent struct {
+// Events node content
+type EventsContent struct {
 	Node *Node
 
 	Events     []*EventContent
@@ -71,6 +63,14 @@ type EventListContent struct {
 	// PrevPage string
 	// NextPage string
 }
+
+// Event with associated Node Content
+type EventContentPair struct {
+	event       *models.Event
+	nodeContent *EventContent
+}
+
+type EventContentPairByStartDate []*EventContentPair
 
 func init() {
 	RegisterNodeBuilder(KIND_EVENTS, NewEventsBuilder)
@@ -217,7 +217,7 @@ func (builder *EventsBuilder) loadEventsLists() {
 			pastEvents = pastEvents[:MAX_PAST_EVENTS]
 		}
 
-		node.Content = &EventListContent{
+		node.Content = &EventsContent{
 			Node:       node,
 			Events:     events,
 			PastEvents: pastEvents,

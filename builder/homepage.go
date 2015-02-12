@@ -8,12 +8,12 @@ import (
 	"github.com/microcosm-cc/bluemonday"
 )
 
-// Builder for homepage
+// Homepage node builder
 type HomepageBuilder struct {
 	*NodeBuilderBase
 }
 
-// Homepage content for template
+// Homepage node content
 type HomepageContent struct {
 	Node *Node
 
@@ -23,7 +23,7 @@ type HomepageContent struct {
 	Logo        string        // Site logo
 	Cover       string        // Site cover
 
-	Activities []*ActivityContent // Activities
+	Activities []*ActivityVars // Activities
 }
 
 func init() {
@@ -83,7 +83,7 @@ func (builder *HomepageBuilder) NewHomepageContent(node *Node) *HomepageContent 
 		result.Cover = builder.addImage(cover, models.MEDIUM_KIND)
 	}
 
-	result.Activities = builder.SiteBuilder().activitiesContents()
+	result.Activities = builder.SiteBuilder().activitiesVars()
 	if len(result.Activities) > 6 {
 		result.Activities = result.Activities[0:6]
 	}

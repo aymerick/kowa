@@ -10,12 +10,12 @@ import (
 	"github.com/russross/blackfriday"
 )
 
-// Builder for pages
+// Page nodes builder
 type PagesBuilder struct {
 	*NodeBuilderBase
 }
 
-// Page content for template
+// Page node content
 type PageContent struct {
 	Node *Node
 

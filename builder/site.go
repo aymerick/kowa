@@ -6,7 +6,7 @@ import (
 	"github.com/aymerick/kowa/models"
 )
 
-// Site vars for templates
+// Site vars
 type SiteVars struct {
 	Name    string
 	Logo    string

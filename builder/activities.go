@@ -9,28 +9,28 @@ import (
 	"github.com/russross/blackfriday"
 )
 
-// Builder for activities page
+// Activities node builder
 type ActivitiesBuilder struct {
 	*NodeBuilderBase
 
 	// loaded activities
-	activitiesContents []*ActivityContent
+	activitiesVars []*ActivityVars
 }
 
-// Activity content for template
-type ActivityContent struct {
+// Activities node content
+type ActivitiesContent struct {
+	Node *Node
+
+	Activities []*ActivityVars
+}
+
+// Activity vars
+type ActivityVars struct {
 	Date    time.Time
 	Cover   string
 	Title   string
 	Summary template.HTML
 	Body    template.HTML
-}
-
-// Activities content for template
-type ActivitiesContent struct {
-	Node *Node
-
-	Activities []*ActivityContent
 }
 
 func init() {
@@ -49,8 +49,8 @@ func NewActivitiesBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 // NodeBuilder
 func (builder *ActivitiesBuilder) Load() {
 	// fetch activities
-	activitiesContents := builder.activities()
-	if len(activitiesContents) > 0 {
+	activitiesVars := builder.activities()
+	if len(activitiesVars) > 0 {
 		// build activities page
 		node := builder.newNode()
 		node.fillUrl(node.Kind)
@@ -66,7 +66,7 @@ func (builder *ActivitiesBuilder) Load() {
 
 		node.Content = &ActivitiesContent{
 			Node:       node,
-			Activities: activitiesContents,
+			Activities: activitiesVars,
 		}
 
 		builder.addNode(node)
@@ -84,21 +84,21 @@ func (builder *ActivitiesBuilder) Data(name string) interface{} {
 }
 
 // returns activities contents
-func (builder *ActivitiesBuilder) activities() []*ActivityContent {
-	if len(builder.activitiesContents) == 0 {
+func (builder *ActivitiesBuilder) activities() []*ActivityVars {
+	if len(builder.activitiesVars) == 0 {
 		// fetch activities
 		for _, activity := range *builder.site().FindAllActivities() {
-			activityContent := builder.NewActivityContent(activity)
+			activityVars := builder.NewActivityVars(activity)
 
-			builder.activitiesContents = append(builder.activitiesContents, activityContent)
+			builder.activitiesVars = append(builder.activitiesVars, activityVars)
 		}
 	}
 
-	return builder.activitiesContents
+	return builder.activitiesVars
 }
 
-func (builder *ActivitiesBuilder) NewActivityContent(activity *models.Activity) *ActivityContent {
-	result := &ActivityContent{
+func (builder *ActivitiesBuilder) NewActivityVars(activity *models.Activity) *ActivityVars {
+	result := &ActivityVars{
 		Date:  activity.CreatedAt,
 		Title: activity.Title,
 	}

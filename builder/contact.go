@@ -5,12 +5,12 @@ import (
 	"strings"
 )
 
-// Builder for contact page
+// Contact node builder
 type ContactBuilder struct {
 	*NodeBuilderBase
 }
 
-// Contact content for template
+// Contact node content
 type ContactContent struct {
 	Node *Node
 

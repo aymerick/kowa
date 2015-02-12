@@ -176,11 +176,11 @@ func (builder *SiteBuilder) navBarNodes() []*Node {
 	return result
 }
 
-// Returns all activities contents (to display in template)
-func (builder *SiteBuilder) activitiesContents() []*ActivityContent {
+// Returns all activities vars (to display in template)
+func (builder *SiteBuilder) activitiesVars() []*ActivityVars {
 	nodeBuilder := builder.nodeBuilder(KIND_ACTIVITIES)
 
-	activities, ok := nodeBuilder.Data("activities").([]*ActivityContent)
+	activities, ok := nodeBuilder.Data("activities").([]*ActivityVars)
 	if !ok {
 		panic("This should never happen")
 	}

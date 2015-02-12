@@ -9,7 +9,7 @@ import (
 	"path"
 )
 
-// Node
+// Node vars
 type Node struct {
 	// template vars
 	Kind string

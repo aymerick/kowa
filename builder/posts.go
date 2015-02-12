@@ -12,14 +12,14 @@ import (
 	"github.com/aymerick/kowa/utils"
 )
 
-// Builder for posts pages
+// Post nodes builder
 type PostsBuilder struct {
 	*NodeBuilderBase
 
 	posts []*PostNodeContentPair
 }
 
-// Post content for template
+// Post node content
 type PostContent struct {
 	Node *Node
 
@@ -30,19 +30,19 @@ type PostContent struct {
 	Url   string
 }
 
-// Post with associated Node Content
-type PostNodeContentPair struct {
-	post        *models.Post
-	nodeContent *PostContent
-}
-
-// Post list content for template
-type PostListContent struct {
+// Posts node content
+type PostsContent struct {
 	Node *Node
 
 	Posts []*PostContent
 	// PrevPage string
 	// NextPage string
+}
+
+// Post with associated Node Content
+type PostNodeContentPair struct {
+	post        *models.Post
+	nodeContent *PostContent
 }
 
 func init() {
@@ -151,7 +151,7 @@ func (builder *PostsBuilder) loadPostsLists() {
 		node.InNavBar = true
 		node.NavBarOrder = 5
 
-		node.Content = &PostListContent{
+		node.Content = &PostsContent{
 			Node:  node,
 			Posts: computesPostContents(builder.posts),
 		}
