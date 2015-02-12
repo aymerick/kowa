@@ -18,13 +18,14 @@ import (
 type EventsBuilder struct {
 	*NodeBuilderBase
 
-	events     []*EventContentPair
-	pastEvents []*EventContentPair
+	events     []*EventContent
+	pastEvents []*EventContent
 }
 
 // Event node content
 type EventContent struct {
-	Node *Node
+	Node  *Node
+	Model *models.Event
 
 	Cover string
 	Title string
@@ -53,6 +54,9 @@ type EventContent struct {
 	EndTime        string
 }
 
+// Sortable event node contents
+type EventContentsByStartDate []*EventContent
+
 // Events node content
 type EventsContent struct {
 	Node *Node
@@ -63,14 +67,6 @@ type EventsContent struct {
 	// PrevPage string
 	// NextPage string
 }
-
-// Event with associated Node Content
-type EventContentPair struct {
-	event       *models.Event
-	nodeContent *EventContent
-}
-
-type EventContentPairByStartDate []*EventContentPair
 
 func init() {
 	RegisterNodeBuilder(KIND_EVENTS, NewEventsBuilder)
@@ -83,13 +79,6 @@ func NewEventsBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 			nodeKind:    KIND_EVENT,
 			siteBuilder: siteBuilder,
 		},
-	}
-}
-
-func NewEventContentPair(event *models.Event, nodeContent *EventContent) *EventContentPair {
-	return &EventContentPair{
-		event:       event,
-		nodeContent: nodeContent,
 	}
 }
 
@@ -140,9 +129,9 @@ func (builder *EventsBuilder) loadEvent(event *models.Event) {
 	builder.addNode(node)
 
 	if time.Now().After(event.EndDate) {
-		builder.pastEvents = append(builder.pastEvents, NewEventContentPair(event, eventContent))
+		builder.pastEvents = append(builder.pastEvents, eventContent)
 	} else {
-		builder.events = append(builder.events, NewEventContentPair(event, eventContent))
+		builder.events = append(builder.events, eventContent)
 	}
 }
 
@@ -150,6 +139,8 @@ func (builder *EventsBuilder) loadEvent(event *models.Event) {
 func (builder *EventsBuilder) NewEventContent(event *models.Event, node *Node) *EventContent {
 	result := &EventContent{
 		Node:  node,
+		Model: event,
+
 		Title: event.Title,
 		Place: event.Place,
 		Url:   node.Url,
@@ -210,9 +201,11 @@ func (builder *EventsBuilder) loadEventsLists() {
 		node.InNavBar = true
 		node.NavBarOrder = 10
 
-		events := computesEventContents(builder.events, true)
+		events := builder.events
+		sort.Sort(EventContentsByStartDate(events))
 
-		pastEvents := computesEventContents(builder.pastEvents, false)
+		pastEvents := builder.pastEvents
+		sort.Sort(sort.Reverse(EventContentsByStartDate(pastEvents)))
 		if len(pastEvents) > MAX_PAST_EVENTS {
 			pastEvents = pastEvents[:MAX_PAST_EVENTS]
 		}
@@ -227,38 +220,21 @@ func (builder *EventsBuilder) loadEventsLists() {
 	}
 }
 
-func computesEventContents(events []*EventContentPair, asc bool) []*EventContent {
-	eventContents := []*EventContent{}
-
-	// sort
-	if asc {
-		sort.Sort(EventContentPairByStartDate(events))
-	} else {
-		sort.Sort(sort.Reverse(EventContentPairByStartDate(events)))
-	}
-
-	for _, eventNodeContent := range events {
-		eventContents = append(eventContents, eventNodeContent.nodeContent)
-	}
-
-	return eventContents
-}
-
 //
-// EventContentPairByStartDate
+// EventContentsByStartDate
 //
 
 // Implements sort.Interface
-func (events EventContentPairByStartDate) Len() int {
+func (events EventContentsByStartDate) Len() int {
 	return len(events)
 }
 
 // Implements sort.Interface
-func (events EventContentPairByStartDate) Swap(i, j int) {
+func (events EventContentsByStartDate) Swap(i, j int) {
 	events[i], events[j] = events[j], events[i]
 }
 
 // Implements sort.Interface
-func (events EventContentPairByStartDate) Less(i, j int) bool {
-	return events[i].event.StartDate.Before(events[j].event.StartDate)
+func (events EventContentsByStartDate) Less(i, j int) bool {
+	return events[i].Model.StartDate.Before(events[j].Model.StartDate)
 }

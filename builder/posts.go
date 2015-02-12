@@ -16,12 +16,13 @@ import (
 type PostsBuilder struct {
 	*NodeBuilderBase
 
-	posts []*PostNodeContentPair
+	posts []*PostContent
 }
 
 // Post node content
 type PostContent struct {
-	Node *Node
+	Node  *Node
+	Model *models.Post
 
 	Date  string
 	Cover string
@@ -39,12 +40,6 @@ type PostsContent struct {
 	// NextPage string
 }
 
-// Post with associated Node Content
-type PostNodeContentPair struct {
-	post        *models.Post
-	nodeContent *PostContent
-}
-
 func init() {
 	RegisterNodeBuilder(KIND_POSTS, NewPostsBuilder)
 }
@@ -56,13 +51,6 @@ func NewPostsBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 			nodeKind:    KIND_POST,
 			siteBuilder: siteBuilder,
 		},
-	}
-}
-
-func NewPostNodeContentPair(post *models.Post, nodeContent *PostContent) *PostNodeContentPair {
-	return &PostNodeContentPair{
-		post:        post,
-		nodeContent: nodeContent,
 	}
 }
 
@@ -112,13 +100,15 @@ func (builder *PostsBuilder) loadPost(post *models.Post) {
 
 	builder.addNode(node)
 
-	builder.posts = append(builder.posts, NewPostNodeContentPair(post, postContent))
+	builder.posts = append(builder.posts, postContent)
 }
 
 // Instanciate a new post content
 func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *PostContent {
 	result := &PostContent{
 		Node:  node,
+		Model: post,
+
 		Date:  post.CreatedAt.Format("02/01/06"),
 		Title: post.Title,
 		Url:   node.Url,
@@ -153,19 +143,9 @@ func (builder *PostsBuilder) loadPostsLists() {
 
 		node.Content = &PostsContent{
 			Node:  node,
-			Posts: computesPostContents(builder.posts),
+			Posts: builder.posts,
 		}
 
 		builder.addNode(node)
 	}
-}
-
-func computesPostContents(posts []*PostNodeContentPair) []*PostContent {
-	postContents := []*PostContent{}
-
-	for _, postNodeContent := range posts {
-		postContents = append(postContents, postNodeContent.nodeContent)
-	}
-
-	return postContents
 }
