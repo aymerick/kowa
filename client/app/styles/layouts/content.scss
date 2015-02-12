@@ -229,6 +229,10 @@ body.pages .content-details {
 body.events .content-details {
     .content-header {
         height: $content-details-events-header-height;
+
+        .content-dates {
+            margin-top: 10px;
+        }
     }
 
     .content-body {
