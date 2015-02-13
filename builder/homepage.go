@@ -3,8 +3,6 @@ package builder
 import (
 	"html/template"
 
-	"github.com/aymerick/kowa/models"
-
 	"github.com/microcosm-cc/bluemonday"
 )
 
@@ -20,8 +18,8 @@ type HomepageContent struct {
 	Description template.HTML // Site description
 	MoreDesc    template.HTML // Site additional description
 	JoinText    template.HTML // Site join text
-	Logo        string        // Site logo
-	Cover       string        // Site cover
+	Logo        *ImageVars    // Site logo
+	Cover       *ImageVars    // Site cover
 
 	Activities []*ActivityVars // Activities
 }
@@ -75,12 +73,12 @@ func (builder *HomepageBuilder) NewHomepageContent(node *Node) *HomepageContent 
 
 	logo := site.FindLogo()
 	if logo != nil {
-		result.Logo = builder.addImage(logo, models.SMALL_KIND)
+		result.Logo = builder.addImage(logo)
 	}
 
 	cover := site.FindCover()
 	if cover != nil {
-		result.Cover = builder.addImage(cover, models.SMALL_KIND)
+		result.Cover = builder.addImage(cover)
 	}
 
 	result.Activities = builder.SiteBuilder().activitiesVars()

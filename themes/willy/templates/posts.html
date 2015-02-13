@@ -9,11 +9,13 @@
                     <li class="post">
                         <h2 class="title"><a href="{{ .Url }}">{{ .Title }}</a></h2>
                         <div class="date">{{ .Date }}</div>
-                        <div class="cover">
-                            <a href="{{ .Url }}">
-                                {{ if .Cover }}<img src="{{ .Cover }}" alt="Post" class="img-thumbnail" />{{ end }}
-                            </a>
-                        </div>
+                        {{ if .Cover }}
+                            <div class="cover">
+                                <a href="{{ .Url }}">
+                                    <img src="{{ .Cover.SmallURL }}" alt="Post" class="img-thumbnail" />
+                                </a>
+                            </div>
+                        {{ end }}
                         <div class="body">
                             {{ .Body }}
                         </div>

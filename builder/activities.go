@@ -27,7 +27,7 @@ type ActivitiesContent struct {
 // Activity vars
 type ActivityVars struct {
 	Date    time.Time
-	Cover   string
+	Cover   *ImageVars
 	Title   string
 	Summary template.HTML
 	Body    template.HTML
@@ -105,7 +105,7 @@ func (builder *ActivitiesBuilder) NewActivityVars(activity *models.Activity) *Ac
 
 	cover := activity.FindCover()
 	if cover != nil {
-		result.Cover = builder.addImage(cover, models.SMALL_KIND)
+		result.Cover = builder.addImage(cover)
 	}
 
 	htmlSummary := blackfriday.MarkdownCommon([]byte(activity.Summary))

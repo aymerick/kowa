@@ -27,7 +27,7 @@ type EventContent struct {
 	Node  *Node
 	Model *models.Event
 
-	Cover string
+	Cover *ImageVars
 	Title string
 	Place string
 	Body  template.HTML
@@ -176,7 +176,7 @@ func (builder *EventsBuilder) NewEventContent(event *models.Event, node *Node) *
 
 	cover := event.FindCover()
 	if cover != nil {
-		result.Cover = builder.addImage(cover, models.SMALL_KIND)
+		result.Cover = builder.addImage(cover)
 	}
 
 	html := blackfriday.MarkdownCommon([]byte(event.Body))

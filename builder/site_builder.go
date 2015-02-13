@@ -45,8 +45,7 @@ type SiteBuilder struct {
 	site   *models.Site
 	config *SiteBuilderConfig
 
-	// collectors
-	imageCollector *ImageCollector
+	images         []*models.Image
 	errorCollector *ErrorCollector
 
 	// cache for #layout method
@@ -71,7 +70,6 @@ func NewSiteBuilder(site *models.Site, config *SiteBuilderConfig) *SiteBuilder {
 		site:   site,
 		config: config,
 
-		imageCollector: NewImageCollector(),
 		errorCollector: NewErrorCollector(),
 
 		nodeBuilders: make(map[string]NodeBuilder),
@@ -214,12 +212,12 @@ func (builder *SiteBuilder) copyCollectedImages() {
 	}
 
 	// copy images to img dir
-	for _, imgKind := range builder.imageCollector.Images {
-		derivative := models.DerivativeForKind(imgKind.Kind)
-		srcFile := imgKind.Image.DerivativeFilePath(derivative)
-
-		if err := builder.copyFile(srcFile, imgDir); err != nil {
-			builder.addError(errStep, err)
+	for _, image := range builder.images {
+		for _, derivative := range models.Derivatives {
+			srcFile := image.DerivativeFilePath(derivative)
+			if err := builder.copyFile(srcFile, imgDir); err != nil {
+				builder.addError(errStep, err)
+			}
 		}
 	}
 }
@@ -233,13 +231,11 @@ func (builder *SiteBuilder) copyAssets() error {
 	return syncer.Sync(builder.genAssetsDir(), builder.themeAssetsDir())
 }
 
-// Add an image to collector, and returns the URL for that image
-func (builder *SiteBuilder) addImage(img *models.Image, kind string) string {
-	builder.imageCollector.addImage(img, kind)
+// Collect image, and returns the template vars for that image
+func (builder *SiteBuilder) addImage(img *models.Image) *ImageVars {
+	builder.images = append(builder.images, img)
 
-	// compute image URL
-	// eg: /site_1/image_m.jpg => /img/image_m.jpg
-	return "/" + path.Join(IMAGES_DIR, path.Base(img.DerivativeURL(models.DerivativeForKind(kind))))
+	return NewImageVars(img)
 }
 
 // Check if builder have error

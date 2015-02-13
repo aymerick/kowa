@@ -1,15 +1,11 @@
 package builder
 
-import (
-	"sort"
-
-	"github.com/aymerick/kowa/models"
-)
+import "sort"
 
 // Site vars
 type SiteVars struct {
 	Name    string
-	Logo    string
+	Logo    *ImageVars
 	Tagline string
 
 	Facebook   string
@@ -46,7 +42,7 @@ func (vars *SiteVars) fill() {
 	vars.GooglePlus = site.GooglePlus
 
 	if logo := site.FindLogo(); logo != nil {
-		vars.Logo = vars.builder.addImage(logo, models.SMALL_KIND)
+		vars.Logo = vars.builder.addImage(logo)
 	}
 
 	vars.NavBar = computeNavBarItems(vars.builder)

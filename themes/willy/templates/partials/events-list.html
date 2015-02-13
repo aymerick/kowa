@@ -9,7 +9,7 @@
                     <span class="time">{{ .StartTime }}</span>
                 </time>
                 {{ if .Cover }}
-                    <img src="{{ .Cover }}" alt="Event cover" />
+                    <img src="{{ .Cover.SquareFillURL }}" alt="Event cover" />
                 {{ end }}
                 <div class="info">
                     <h2 class="title">{{ .Title }}</h2>

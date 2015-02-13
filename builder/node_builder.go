@@ -140,8 +140,8 @@ func (builder *NodeBuilderBase) addNode(node *Node) {
 }
 
 // Add an image to copy
-func (builder *NodeBuilderBase) addImage(img *models.Image, kind string) string {
-	return builder.siteBuilder.addImage(img, kind)
+func (builder *NodeBuilderBase) addImage(img *models.Image) *ImageVars {
+	return builder.siteBuilder.addImage(img)
 }
 
 // Add a node generation error

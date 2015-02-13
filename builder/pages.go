@@ -21,7 +21,7 @@ type PageContent struct {
 	Model *models.Page
 
 	Date  time.Time
-	Cover string
+	Cover *ImageVars
 	Body  template.HTML
 	Url   string
 }
@@ -76,7 +76,7 @@ func (builder *PagesBuilder) NewPageContent(page *models.Page, node *Node) *Page
 
 	cover := page.FindCover()
 	if cover != nil {
-		result.Cover = builder.addImage(cover, models.SMALL_KIND)
+		result.Cover = builder.addImage(cover)
 	}
 
 	html := blackfriday.MarkdownCommon([]byte(page.Body))

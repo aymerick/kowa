@@ -25,7 +25,7 @@ type PostContent struct {
 	Model *models.Post
 
 	Date  string
-	Cover string
+	Cover *ImageVars
 	Title string
 	Body  template.HTML
 	Url   string
@@ -116,7 +116,7 @@ func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *Post
 
 	cover := post.FindCover()
 	if cover != nil {
-		result.Cover = builder.addImage(cover, models.SMALL_KIND)
+		result.Cover = builder.addImage(cover)
 	}
 
 	html := blackfriday.MarkdownCommon([]byte(post.Body))
