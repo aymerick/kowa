@@ -306,12 +306,14 @@ func (img *Image) DerivativeFilePath(derivative *Derivative) string {
 	return path.Join(utils.AppPublicDir(), img.derivativePath(derivative))
 }
 
-func (img *Image) generateDerivative(derivative *Derivative) error {
+func (img *Image) generateDerivative(derivative *Derivative, force bool) error {
 	derivativePath := img.DerivativeFilePath(derivative)
 
-	// check if derivative already exists
-	if _, err := os.Stat(derivativePath); !os.IsNotExist(err) {
-		return nil
+	if !force {
+		// check if derivative already exists
+		if _, err := os.Stat(derivativePath); !os.IsNotExist(err) {
+			return nil
+		}
 	}
 
 	log.Printf("Generating derivative %s: %s", derivative.kind, derivativePath)
@@ -324,7 +326,7 @@ func (img *Image) generateDerivative(derivative *Derivative) error {
 }
 
 // Generate all derivatives that were not generated yet
-func (img *Image) GenerateDerivatives() error {
+func (img *Image) GenerateDerivatives(force bool) error {
 	var err error
 
 	if img.Original() == nil {
@@ -332,7 +334,7 @@ func (img *Image) GenerateDerivatives() error {
 	}
 
 	for _, derivative := range Derivatives {
-		if errGen := img.generateDerivative(derivative); errGen != nil {
+		if errGen := img.generateDerivative(derivative, force); errGen != nil {
 			err = errGen
 		}
 	}

@@ -67,6 +67,7 @@ func addCommands() {
 	rootCmd.AddCommand(serverCmd)
 	rootCmd.AddCommand(bootstrapCmd)
 	rootCmd.AddCommand(resetCmd)
+	rootCmd.AddCommand(genDerivativesCmd)
 }
 
 //

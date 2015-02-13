@@ -145,7 +145,7 @@ func (app *Application) handleUploadImage(rw http.ResponseWriter, req *http.Requ
 		}
 
 		// @todo Async that the day it becomes problematic
-		if err := img.GenerateDerivatives(); err != nil {
+		if err := img.GenerateDerivatives(true); err != nil {
 			log.Printf("Failed to generate image derivatives: %s - %v", img.Path, err.Error())
 		}
 

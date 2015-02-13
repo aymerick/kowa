@@ -173,7 +173,7 @@ func bootstrap(cmd *cobra.Command, args []string) {
 					}
 
 					if j == 0 {
-						errThumb := img.GenerateDerivatives()
+						errThumb := img.GenerateDerivatives(false)
 						if errThumb != nil {
 							panic(errThumb)
 						}

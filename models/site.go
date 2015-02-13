@@ -352,6 +352,10 @@ func (site *Site) FindImages(skip int, limit int) *ImagesList {
 	return &result
 }
 
+func (site *Site) FindAllImages() *ImagesList {
+	return site.FindImages(0, 0)
+}
+
 //
 // Site fields
 //
