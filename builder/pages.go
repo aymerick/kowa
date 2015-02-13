@@ -76,7 +76,7 @@ func (builder *PagesBuilder) NewPageContent(page *models.Page, node *Node) *Page
 
 	cover := page.FindCover()
 	if cover != nil {
-		result.Cover = builder.addImage(cover, models.MEDIUM_KIND)
+		result.Cover = builder.addImage(cover, models.SMALL_KIND)
 	}
 
 	html := blackfriday.MarkdownCommon([]byte(page.Body))

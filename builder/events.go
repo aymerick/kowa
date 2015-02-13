@@ -176,7 +176,7 @@ func (builder *EventsBuilder) NewEventContent(event *models.Event, node *Node) *
 
 	cover := event.FindCover()
 	if cover != nil {
-		result.Cover = builder.addImage(cover, models.MEDIUM_KIND)
+		result.Cover = builder.addImage(cover, models.SMALL_KIND)
 	}
 
 	html := blackfriday.MarkdownCommon([]byte(event.Body))

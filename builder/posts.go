@@ -116,7 +116,7 @@ func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *Post
 
 	cover := post.FindCover()
 	if cover != nil {
-		result.Cover = builder.addImage(cover, models.MEDIUM_KIND)
+		result.Cover = builder.addImage(cover, models.SMALL_KIND)
 	}
 
 	html := blackfriday.MarkdownCommon([]byte(post.Body))

@@ -182,15 +182,15 @@ body.events .content-master .content-body li {
             }
 
             .no-image {
-                height: $img-small-thumbnail-height;
-                width: $img-small-thumbnail-width;
+                height: $img-thumb-thumbnail-height;
+                width: $img-thumb-thumbnail-width;
             }
         }
 
         .content-fields {
             position: absolute;
             top: $content-header-spacing;
-            left: $content-header-spacing + $img-small-thumbnail-width + $content-header-spacing;
+            left: $content-header-spacing + $img-thumb-thumbnail-width + $content-header-spacing;
         }
 
         .content-actions {

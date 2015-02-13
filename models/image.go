@@ -21,26 +21,40 @@ import (
 const (
 	IMAGES_COL_NAME = "images"
 
+	// derivatives transformations kinds
+	DERIVATIVE_FIT  = "fit"
+	DERIVATIVE_FILL = "fill"
+
 	// derivatives
+	THUMB_FILL_KIND   = "thumb_fill"
+	THUMB_FILL_SCALE  = DERIVATIVE_FILL
+	THUMB_FILL_SUFFIX = "_tf"
+	THUMB_FILL_WIDTH  = 100
+	THUMB_FILL_HEIGHT = 75
+
+	SQUARE_FILL_KIND   = "square_fill"
+	SQUARE_FILL_SCALE  = DERIVATIVE_FILL
+	SQUARE_FILL_SUFFIX = "_qf"
+	SQUARE_FILL_WIDTH  = 200
+	SQUARE_FILL_HEIGHT = 200
+
 	SMALL_KIND   = "small"
+	SMALL_SCALE  = DERIVATIVE_FIT
 	SMALL_SUFFIX = "_s"
-	SMALL_WIDTH  = 100
-	SMALL_HEIGHT = 60
+	SMALL_WIDTH  = 300
+	SMALL_HEIGHT = 225
 
-	THUMB_KIND   = "thumb"
-	THUMB_SUFFIX = "_t"
-	THUMB_WIDTH  = 100
-	THUMB_HEIGHT = 100
+	SMALL_FILL_KIND   = "small_fill"
+	SMALL_FILL_SCALE  = DERIVATIVE_FILL
+	SMALL_FILL_SUFFIX = "_sf"
+	SMALL_FILL_WIDTH  = 300
+	SMALL_FILL_HEIGHT = 225
 
-	MEDIUM_KIND   = "medium"
-	MEDIUM_SUFFIX = "_m"
-	MEDIUM_WIDTH  = 300
-	MEDIUM_HEIGHT = 225
-
-	MEDIUM_CROP_KIND   = "medium_crop"
-	MEDIUM_CROP_SUFFIX = "_mc"
-	MEDIUM_CROP_WIDTH  = 300
-	MEDIUM_CROP_HEIGHT = 225
+	LARGE_KIND   = "large"
+	LARGE_SCALE  = DERIVATIVE_FIT
+	LARGE_SUFFIX = "_l"
+	LARGE_WIDTH  = 1920
+	LARGE_HEIGHT = 1440
 )
 
 type Image struct {
@@ -62,19 +76,21 @@ type ImagesList []*Image
 
 type ImageJson struct {
 	Image
-	URL           string `json:"url"`
+	URL string `json:"url"`
+
+	ThumbFillURL  string `json:"thumbFillUrl"`
+	SquareFillURL string `json:"squareFillUrl"`
 	SmallURL      string `json:"smallUrl"`
-	ThumbURL      string `json:"thumbUrl"`
-	MediumURL     string `json:"mediumUrl"`
-	MediumCropURL string `json:"mediumCropUrl"`
+	SmallFillURL  string `json:"smallFillUrl"`
+	LargeURL      string `json:"largeUrl"`
 }
 
-type DerivativeGenFunc func(source *image.Image) *image.NRGBA
-
 type Derivative struct {
-	kind    string
-	suffix  string
-	genFunc DerivativeGenFunc
+	kind   string
+	scale  string
+	suffix string
+	width  int
+	height int
 }
 
 var Derivatives []*Derivative
@@ -82,24 +98,39 @@ var Derivatives []*Derivative
 func init() {
 	Derivatives = []*Derivative{
 		&Derivative{
-			kind:    SMALL_KIND,
-			suffix:  SMALL_SUFFIX,
-			genFunc: genSmall,
+			kind:   THUMB_FILL_KIND,
+			scale:  THUMB_FILL_SCALE,
+			suffix: THUMB_FILL_SUFFIX,
+			width:  THUMB_FILL_WIDTH,
+			height: THUMB_FILL_HEIGHT,
 		},
 		&Derivative{
-			kind:    THUMB_KIND,
-			suffix:  THUMB_SUFFIX,
-			genFunc: genThumbnail,
+			kind:   SQUARE_FILL_KIND,
+			scale:  SQUARE_FILL_SCALE,
+			suffix: SQUARE_FILL_SUFFIX,
+			width:  SQUARE_FILL_WIDTH,
+			height: SQUARE_FILL_HEIGHT,
 		},
 		&Derivative{
-			kind:    MEDIUM_KIND,
-			suffix:  MEDIUM_SUFFIX,
-			genFunc: genMedium,
+			kind:   SMALL_KIND,
+			scale:  SMALL_SCALE,
+			suffix: SMALL_SUFFIX,
+			width:  SMALL_WIDTH,
+			height: SMALL_HEIGHT,
 		},
 		&Derivative{
-			kind:    MEDIUM_CROP_KIND,
-			suffix:  MEDIUM_CROP_SUFFIX,
-			genFunc: genMediumCrop,
+			kind:   SMALL_FILL_KIND,
+			scale:  SMALL_FILL_SCALE,
+			suffix: SMALL_FILL_SUFFIX,
+			width:  SMALL_FILL_WIDTH,
+			height: SMALL_FILL_HEIGHT,
+		},
+		&Derivative{
+			kind:   LARGE_KIND,
+			scale:  LARGE_SCALE,
+			suffix: LARGE_SUFFIX,
+			width:  LARGE_WIDTH,
+			height: LARGE_HEIGHT,
 		},
 	}
 }
@@ -185,12 +216,14 @@ func (session *DBSession) CreateImage(img *Image) error {
 func (img *Image) MarshalJSON() ([]byte, error) {
 
 	imageJson := ImageJson{
-		Image:         *img,
-		URL:           img.URL(),
+		Image: *img,
+		URL:   img.URL(),
+
+		ThumbFillURL:  img.ThumbFillURL(),
+		SquareFillURL: img.SquareFillURL(),
 		SmallURL:      img.SmallURL(),
-		ThumbURL:      img.ThumbURL(),
-		MediumURL:     img.MediumURL(),
-		MediumCropURL: img.MediumCropURL(),
+		SmallFillURL:  img.SmallFillURL(),
+		LargeURL:      img.LargeURL(),
 	}
 
 	return json.Marshal(imageJson)
@@ -257,40 +290,29 @@ func (img *Image) URL() string {
 // Derivatives
 //
 
-// Returns small derivative URL
+// Returns Thumb Fill derivative URL
+func (img *Image) ThumbFillURL() string {
+	return img.DerivativeURL(DerivativeForKind(THUMB_FILL_KIND))
+}
+
+// Returns Square Fill derivative URL
+func (img *Image) SquareFillURL() string {
+	return img.DerivativeURL(DerivativeForKind(SQUARE_FILL_KIND))
+}
+
+// Returns Small derivative URL
 func (img *Image) SmallURL() string {
 	return img.DerivativeURL(DerivativeForKind(SMALL_KIND))
 }
 
-// Returns thumb derivative URL
-func (img *Image) ThumbURL() string {
-	return img.DerivativeURL(DerivativeForKind(THUMB_KIND))
+// Returns Small Fill derivative URL
+func (img *Image) SmallFillURL() string {
+	return img.DerivativeURL(DerivativeForKind(SMALL_FILL_KIND))
 }
 
-// Returns medium derivative URL
-func (img *Image) MediumURL() string {
-	return img.DerivativeURL(DerivativeForKind(MEDIUM_KIND))
-}
-
-// Returns medium derivative URL
-func (img *Image) MediumCropURL() string {
-	return img.DerivativeURL(DerivativeForKind(MEDIUM_CROP_KIND))
-}
-
-func genSmall(source *image.Image) *image.NRGBA {
-	return imaging.Thumbnail(*source, SMALL_WIDTH, SMALL_HEIGHT, imaging.Lanczos)
-}
-
-func genThumbnail(source *image.Image) *image.NRGBA {
-	return imaging.Thumbnail(*source, THUMB_WIDTH, THUMB_HEIGHT, imaging.Lanczos)
-}
-
-func genMedium(source *image.Image) *image.NRGBA {
-	return imaging.Fit(*source, MEDIUM_WIDTH, MEDIUM_HEIGHT, imaging.Lanczos)
-}
-
-func genMediumCrop(source *image.Image) *image.NRGBA {
-	return imaging.Thumbnail(*source, MEDIUM_CROP_WIDTH, MEDIUM_CROP_HEIGHT, imaging.Lanczos)
+// Returns Large derivative URL
+func (img *Image) LargeURL() string {
+	return img.DerivativeURL(DerivativeForKind(LARGE_KIND))
 }
 
 func (img *Image) derivativePath(derivative *Derivative) string {
@@ -319,7 +341,18 @@ func (img *Image) generateDerivative(derivative *Derivative, force bool) error {
 	log.Printf("Generating derivative %s: %s", derivative.kind, derivativePath)
 
 	// create derivative
-	result := derivative.genFunc(img.Original())
+	var result *image.NRGBA
+
+	switch derivative.scale {
+	case DERIVATIVE_FIT:
+		result = imaging.Fit(*img.Original(), derivative.width, derivative.height, imaging.Lanczos)
+
+	case DERIVATIVE_FILL:
+		result = imaging.Thumbnail(*img.Original(), derivative.width, derivative.height, imaging.Lanczos)
+
+	default:
+		panic("Insupported derivative scale")
+	}
 
 	// save derivative
 	return imaging.Save(result, derivativePath)

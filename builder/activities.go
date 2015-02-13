@@ -105,7 +105,7 @@ func (builder *ActivitiesBuilder) NewActivityVars(activity *models.Activity) *Ac
 
 	cover := activity.FindCover()
 	if cover != nil {
-		result.Cover = builder.addImage(cover, models.MEDIUM_KIND)
+		result.Cover = builder.addImage(cover, models.SMALL_KIND)
 	}
 
 	htmlSummary := blackfriday.MarkdownCommon([]byte(activity.Summary))

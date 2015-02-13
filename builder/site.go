@@ -46,7 +46,7 @@ func (vars *SiteVars) fill() {
 	vars.GooglePlus = site.GooglePlus
 
 	if logo := site.FindLogo(); logo != nil {
-		vars.Logo = vars.builder.addImage(logo, models.MEDIUM_KIND)
+		vars.Logo = vars.builder.addImage(logo, models.SMALL_KIND)
 	}
 
 	vars.NavBar = computeNavBarItems(vars.builder)

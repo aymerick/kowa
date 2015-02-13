@@ -7,7 +7,7 @@ $content-header-spacing: 15px;
 
 $content-master-header-height: 44px;
 
-$content-details-header-height: $img-small-thumbnail-height + ($content-header-spacing * 2);
+$content-details-header-height: $img-thumb-thumbnail-height + ($content-header-spacing * 2);
 $content-details-pages-header-height: 120px;
 $content-details-events-header-height: 185px;
 $content-details-body-padding: 5%;
@@ -23,4 +23,4 @@ $content-edit-fields-height: 70px;
 
 // Settings
 $settings-item-spacing: 15px;
-$settings-item-height: $img-small-thumbnail-height + ($settings-item-spacing * 2);
+$settings-item-height: $img-thumb-thumbnail-height + ($settings-item-spacing * 2);

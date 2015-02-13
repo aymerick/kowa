@@ -75,12 +75,12 @@ func (builder *HomepageBuilder) NewHomepageContent(node *Node) *HomepageContent 
 
 	logo := site.FindLogo()
 	if logo != nil {
-		result.Logo = builder.addImage(logo, models.MEDIUM_KIND)
+		result.Logo = builder.addImage(logo, models.SMALL_KIND)
 	}
 
 	cover := site.FindCover()
 	if cover != nil {
-		result.Cover = builder.addImage(cover, models.MEDIUM_KIND)
+		result.Cover = builder.addImage(cover, models.SMALL_KIND)
 	}
 
 	result.Activities = builder.SiteBuilder().activitiesVars()

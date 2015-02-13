@@ -49,7 +49,7 @@
         <label for="site-logo">Site Logo</label>
         {{#if logo}}
             <button type="button" class="thumbnail select-image" {{action "openModal" "select-image" controller "logo"}}>
-                <img id="site-logo" {{bind-attr src=logo.mediumUrl}} alt="logo">
+                <img id="site-logo" {{bind-attr src=logo.smallUrl}} alt="logo">
                 <span class="remove-image" {{action 'removeLogo'}}>&#10006;</span>
             </button>
         {{else}}
@@ -64,7 +64,7 @@
         <label for="site-cover">Site Cover</label>
         {{#if cover}}
             <button type="button" class="thumbnail select-image" {{action "openModal" "select-image" controller "cover"}}>
-                <img id="site-cover" {{bind-attr src=cover.mediumUrl}} alt="cover">
+                <img id="site-cover" {{bind-attr src=cover.smallUrl}} alt="cover">
                 <span class="remove-image" {{action 'removeCover'}}>&#10006;</span>
             </button>
         {{else}}

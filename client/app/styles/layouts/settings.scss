@@ -96,19 +96,19 @@
             left: $settings-item-spacing;
             top: $settings-item-spacing;
 
-            width: $img-small-thumbnail-width;
+            width: $img-thumb-thumbnail-width;
 
             .no-image {
-                height: $img-small-thumbnail-height;
-                width: $img-small-thumbnail-width;
+                height: $img-thumb-thumbnail-height;
+                width: $img-thumb-thumbnail-width;
             }
         }
 
         .settings-item-fields {
             position: absolute;
-            left: $img-small-thumbnail-width + ($settings-item-spacing * 2);
+            left: $img-thumb-thumbnail-width + ($settings-item-spacing * 2);
 
-            line-height: $img-small-thumbnail-height;
+            line-height: $img-thumb-thumbnail-height;
         }
 
         .settings-item-actions {
