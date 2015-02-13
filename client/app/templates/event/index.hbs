@@ -2,7 +2,7 @@
     <header class="content-header">
         <div class="content-cover">
             {{#if model.cover}}
-                <img {{bind-attr src=model.cover.thumbFillUrl}} class="thumbnail" alt="cover image" />
+                <img {{bind-attr src=model.cover.thumbUrl}} class="thumbnail" alt="cover image" />
             {{else}}
                 <div class="thumbnail no-image text-center"></div>
             {{/if}}

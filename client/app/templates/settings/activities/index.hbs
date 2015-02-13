@@ -10,7 +10,7 @@
             {{#link-to "settings.activities.activity" activity class="settings-item" title="Display this activity"}}
                 <div class="settings-item-cover">
                     {{#if activity.cover}}
-                        <img {{bind-attr src=activity.cover.thumbFillUrl}} class="thumbnail" alt="cover image" />
+                        <img {{bind-attr src=activity.cover.thumbUrl}} class="thumbnail" alt="cover image" />
                     {{else}}
                         <div class="thumbnail no-image text-center"></div>
                     {{/if}}

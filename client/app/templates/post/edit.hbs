@@ -3,7 +3,7 @@
         <div class="content-cover">
             {{#if model.cover}}
                 <button type="button" class="thumbnail select-image small-kind" {{action "openModal" "select-image" controller "model.cover"}}>
-                    <img {{bind-attr src=model.cover.thumbFillUrl}} alt="cover image" />
+                    <img {{bind-attr src=model.cover.thumbUrl}} alt="cover image" />
                     <span class="remove-image" {{action 'removeCover'}}>&#10006;</span>
                 </button>
             {{else}}

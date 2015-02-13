@@ -26,17 +26,17 @@ const (
 	DERIVATIVE_FILL = "fill"
 
 	// derivatives
-	THUMB_FILL_KIND   = "thumb_fill"
-	THUMB_FILL_SCALE  = DERIVATIVE_FILL
-	THUMB_FILL_SUFFIX = "_tf"
-	THUMB_FILL_WIDTH  = 100
-	THUMB_FILL_HEIGHT = 75
+	THUMB_KIND   = "thumb"
+	THUMB_SCALE  = DERIVATIVE_FILL
+	THUMB_SUFFIX = "_t"
+	THUMB_WIDTH  = 100
+	THUMB_HEIGHT = 75
 
-	SQUARE_FILL_KIND   = "square_fill"
-	SQUARE_FILL_SCALE  = DERIVATIVE_FILL
-	SQUARE_FILL_SUFFIX = "_qf"
-	SQUARE_FILL_WIDTH  = 200
-	SQUARE_FILL_HEIGHT = 200
+	SQUARE_KIND   = "square"
+	SQUARE_SCALE  = DERIVATIVE_FILL
+	SQUARE_SUFFIX = "_q"
+	SQUARE_WIDTH  = 200
+	SQUARE_HEIGHT = 200
 
 	SMALL_KIND   = "small"
 	SMALL_SCALE  = DERIVATIVE_FIT
@@ -78,11 +78,11 @@ type ImageJson struct {
 	Image
 	URL string `json:"url"`
 
-	ThumbFillURL  string `json:"thumbFillUrl"`
-	SquareFillURL string `json:"squareFillUrl"`
-	SmallURL      string `json:"smallUrl"`
-	SmallFillURL  string `json:"smallFillUrl"`
-	LargeURL      string `json:"largeUrl"`
+	ThumbURL     string `json:"thumbUrl"`
+	SquareURL    string `json:"squareUrl"`
+	SmallURL     string `json:"smallUrl"`
+	SmallFillURL string `json:"smallFillUrl"`
+	LargeURL     string `json:"largeUrl"`
 }
 
 type Derivative struct {
@@ -98,18 +98,18 @@ var Derivatives []*Derivative
 func init() {
 	Derivatives = []*Derivative{
 		&Derivative{
-			kind:   THUMB_FILL_KIND,
-			scale:  THUMB_FILL_SCALE,
-			suffix: THUMB_FILL_SUFFIX,
-			width:  THUMB_FILL_WIDTH,
-			height: THUMB_FILL_HEIGHT,
+			kind:   THUMB_KIND,
+			scale:  THUMB_SCALE,
+			suffix: THUMB_SUFFIX,
+			width:  THUMB_WIDTH,
+			height: THUMB_HEIGHT,
 		},
 		&Derivative{
-			kind:   SQUARE_FILL_KIND,
-			scale:  SQUARE_FILL_SCALE,
-			suffix: SQUARE_FILL_SUFFIX,
-			width:  SQUARE_FILL_WIDTH,
-			height: SQUARE_FILL_HEIGHT,
+			kind:   SQUARE_KIND,
+			scale:  SQUARE_SCALE,
+			suffix: SQUARE_SUFFIX,
+			width:  SQUARE_WIDTH,
+			height: SQUARE_HEIGHT,
 		},
 		&Derivative{
 			kind:   SMALL_KIND,
@@ -219,11 +219,11 @@ func (img *Image) MarshalJSON() ([]byte, error) {
 		Image: *img,
 		URL:   img.URL(),
 
-		ThumbFillURL:  img.ThumbFillURL(),
-		SquareFillURL: img.SquareFillURL(),
-		SmallURL:      img.SmallURL(),
-		SmallFillURL:  img.SmallFillURL(),
-		LargeURL:      img.LargeURL(),
+		ThumbURL:     img.ThumbURL(),
+		SquareURL:    img.SquareURL(),
+		SmallURL:     img.SmallURL(),
+		SmallFillURL: img.SmallFillURL(),
+		LargeURL:     img.LargeURL(),
 	}
 
 	return json.Marshal(imageJson)
@@ -290,14 +290,14 @@ func (img *Image) URL() string {
 // Derivatives
 //
 
-// Returns Thumb Fill derivative URL
-func (img *Image) ThumbFillURL() string {
-	return img.DerivativeURL(DerivativeForKind(THUMB_FILL_KIND))
+// Returns Thumb derivative URL
+func (img *Image) ThumbURL() string {
+	return img.DerivativeURL(DerivativeForKind(THUMB_KIND))
 }
 
-// Returns Square Fill derivative URL
-func (img *Image) SquareFillURL() string {
-	return img.DerivativeURL(DerivativeForKind(SQUARE_FILL_KIND))
+// Returns Square derivative URL
+func (img *Image) SquareURL() string {
+	return img.DerivativeURL(DerivativeForKind(SQUARE_KIND))
 }
 
 // Returns Small derivative URL

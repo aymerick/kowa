@@ -8,8 +8,8 @@ var ImageModel = DS.Model.extend({
   type: DS.attr(),
 
   url: DS.attr(),
-  thumbFillUrl: DS.attr(),
-  squareFillUrl: DS.attr(),
+  thumbUrl: DS.attr(),
+  squareUrl: DS.attr(),
   smallUrl: DS.attr(),
   smallFillUrl: DS.attr(),
   largeUrl: DS.attr(),
