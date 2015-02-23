@@ -9,16 +9,20 @@ Association website generation
 Start server:
 
     $ go build
-    $ ./kowa server
+    $ ./kowa server -s
 
 Start client:
 
     $ cd client
     $ ember server --proxy http://127.0.0.1:35830
 
-Start without live reload:
+Start client without live reload:
 
     $ ember server --proxy http://127.0.0.1:35830 --live-reload=false
+
+Browse generated site:
+
+    <http://127.0.0.1:48910/>
 
 Test:
 
