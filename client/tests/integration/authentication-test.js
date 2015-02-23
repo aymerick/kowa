@@ -1,13 +1,13 @@
 import Ember from "ember";
-import { test } from 'ember-qunit';
+import { test, moduleFor } from 'ember-qunit';
 import startApp from '../helpers/start-app';
 import Pretender from 'pretender';
 
 var App;
 var server;
 
-module('Authentication tests', {
-  setup: function() {
+moduleFor('route:sites', {
+  beforeEach: function() {
     App = startApp();
     invalidateSession();
 
@@ -90,29 +90,29 @@ module('Authentication tests', {
     });
   },
 
-  teardown: function() {
+  afterEach: function() {
     Ember.run(App, App.destroy);
     server.shutdown();
   }
 });
 
-test('Homepage redirects to login page if not authenticated yet', function() {
-  expect(1);
+test('Homepage redirects to login page if not authenticated yet', function(assert) {
+  assert.expect(1);
 
   visit('/');
 
   andThen(function() {
-    equal(currentRouteName(), 'login');
+    assert.equal(currentRouteName(), 'login');
   });
 });
 
-test('Homepage displays first post of first site if authenticated', function() {
-  expect(1);
+test('Homepage displays first post of first site if authenticated', function(assert) {
+  assert.expect(1);
 
   authenticateSession();
   visit('/');
 
   andThen(function() {
-    equal(currentRouteName(), 'post.index');
+    assert.equal(currentRouteName(), 'post.index');
   });
 });

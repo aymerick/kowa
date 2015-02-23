@@ -8,8 +8,8 @@ moduleForModel('site', 'Site', {
   needs: ['model:image', 'model:user', 'model:post', 'model:page', 'model:activity', 'model:site-page-setting']
 });
 
-test('it exists', function() {
+test('it exists', function(assert) {
   var model = this.subject();
   // var store = this.store();
-  ok(!!model);
+  assert.ok(!!model);
 });
