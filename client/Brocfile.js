@@ -3,6 +3,11 @@
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 var app = new EmberApp({
+  // needed since ember 1.10.0
+  // cf. https://github.com/rwjblue/components-in-subdirs/commit/78e7ed2d072f42d9cf0fd3d9fc2376f106ab762e
+  vendorFiles: {
+    'handlebars.js': null
+  },
   emberCliFontAwesome: { includeFontAwesomeAssets: false },
   outputPaths: {
     app: {
