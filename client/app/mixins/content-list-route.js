@@ -32,7 +32,7 @@ var ContentListRouteMixin = Ember.Mixin.create({
     this._super(controller, model);
 
     // setup pagination controller mixin
-    controller.setupPagination(this.get('contentModelType', this.paginationParams));
+    controller.setupPagination(this.get('contentModelType'), this.get('paginationParams'));
   }
 });
 
