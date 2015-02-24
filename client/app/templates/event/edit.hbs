@@ -33,11 +33,7 @@
         </div>
 
         <div class="content-actions">
-            {{#if isDirty}}
-                <div class="content-action-button action-view disabled" title="Save to view event"><i class="fa fa-eye-slash"></i></div>
-            {{else}}
-                {{#link-to "event" this class="content-action-button action-view"}}<i class="fa fa-eye"></i>{{/link-to}}
-            {{/if}}
+            <button {{action "openModal" "delete-event" controller 'events.index'}} class="btn btn-danger content-action-button action-delete">Delete</button>
             <button {{action "saveContent"}} class="btn btn-primary content-action-button action-save" {{bind-attr disabled=nothingChanged}}><i class="fa fa-floppy-o"></i> Save</button>
         </div>
     </header>

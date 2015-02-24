@@ -294,7 +294,7 @@ body.events .content-details {
 .content-edit {
     .content-header {
         .content-fields {
-            right: ($content-action-button-width-with-margin + $content-action-view-width) + ($content-header-spacing * 3);
+            right: ($content-action-button-width-with-margin * 2) + ($content-header-spacing * 3);
 
             input.content-title, input.content-tagline, input.content-place {
                 width: 100%;
@@ -337,17 +337,8 @@ body.events .content-details {
                 right: $content-header-spacing;
             }
 
-            &.action-view {
+            &.action-delete {
                 right: $content-action-button-width-with-margin + $content-header-spacing;
-
-                font-size: 2em;
-                line-height: 32px;
-                color: #333;
-                width: $content-action-view-width;
-
-                &.disabled {
-                    color: #bbb;
-                }
             }
         }
     }
