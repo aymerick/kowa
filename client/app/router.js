@@ -18,9 +18,7 @@ Router.map(function() {
       // content
       this.resource('posts', function () {
         this.route('new');
-        this.resource('post', {path: ':post_id'}, function() {
-          this.route('edit', {path: '/edit'});
-        });
+        this.route('post', {path: ':post_id'});
       });
 
       this.resource('events', function () {

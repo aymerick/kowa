@@ -3,12 +3,20 @@ import Ember from 'ember';
 // All that mess simply because of that issue:
 //  https://github.com/emberjs/data/issues/1308
 var ContentEditionControllerMixin = Ember.Mixin.create({
+  isDirty: false,
+  nothingChanged: Ember.computed.not('isDirty'),
+
+  watchProperties: Ember.A([ ]),
+
+  // properties setup in controller
   editionRelationships: Ember.A([ ]),
   editionDefaultTitle: null,
   editionSaveMsgOk: null,
   editionSaveMsgErr: null,
 
   setupEdition: function(fields) {
+    this.resetEdition();
+
     if (!Ember.isNone(fields)) {
       this.set('editionRelationships', fields);
     }
@@ -21,8 +29,16 @@ var ContentEditionControllerMixin = Ember.Mixin.create({
       self.set(self.previousFieldName(field), model.get(field));
     });
 
-    this.defineIsDirtyProperty();
-    this.defineNothingChangedProperty();
+    this.setWatchProperties();
+    this.addDirtinessObserving();
+    this.synchronizeIsDirtyProperty();
+  },
+
+  resetEdition: function() {
+    this.removeDirtinessObserving();
+
+    this.set('watchProperties', Ember.A([ ]));
+    this.set('isDirty', false);
   },
 
   commitEdition: function(okMsg, errorMsg) {
@@ -78,19 +94,24 @@ var ContentEditionControllerMixin = Ember.Mixin.create({
     var self  = this;
 
     return this.get('editionRelationships').any(function(field) {
-      return self.previousField(field).get('id') !== model.get(field).get('id');
+      var previousValue = self.previousField(field);
+      var value = model.get(field);
+
+      return ((Ember.isNone(previousValue) && !Ember.isNone(value)) ||
+              (!Ember.isNone(previousValue) && Ember.isNone(value)) ||
+              (!Ember.isNone(previousValue) && !Ember.isNone(value) && (previousValue.get('id') !== value.get('id'))));
     });
   },
 
-  // define isDirty property
-  defineIsDirtyProperty: function() {
-    // check if property was already defined
-    if (this.hasOwnProperty('isDirty')) {
-      return;
-    }
+  synchronizeIsDirtyProperty: function() {
+    var model = this.get('model');
+    var currentDirtinessValue = model.get('isDirty') || model.get('isNew') || this.editionFieldChanged();
 
+    this.set('isDirty', currentDirtinessValue);
+  },
+
+  setWatchProperties: function() {
     var self = this;
-
     var watchProperties = Ember.A([ 'model.isDirty', 'model.isNew' ]);
 
     this.get('editionRelationships').forEach(function(field) {
@@ -98,28 +119,23 @@ var ContentEditionControllerMixin = Ember.Mixin.create({
       watchProperties.pushObject(self.previousFieldName(field));
     });
 
-    var prop = Ember.computed(function() {
-      var model = self.get('model');
-
-      return (model.get('isDirty') || model.get('isNew') || self.editionFieldChanged());
-    });
-
-    // javackish way of calling a method with a variable number of parameters. It would be easier that way:
-    //    prop.property(watchProperties)
-    prop = Ember.apply(prop, Ember.ComputedProperty.prototype.property, watchProperties);
-
-    Ember.defineProperty(this, 'isDirty', prop);
+    this.set('watchProperties', watchProperties);
   },
 
-  // define nothingChanged property
-  defineNothingChangedProperty: function() {
-    // check if property was already defined
-    if (this.hasOwnProperty('nothingChanged')) {
-      return;
-    }
+  addDirtinessObserving: function() {
+    var self = this;
 
-    // nothingChanged property
-    Ember.defineProperty(this, 'nothingChanged', Ember.computed.not('isDirty'));
+    this.get('watchProperties').forEach(function(watchProp) {
+      self.addObserver(watchProp, self, 'synchronizeIsDirtyProperty');
+    });
+  },
+
+  removeDirtinessObserving: function() {
+    var self = this;
+
+    this.get('watchProperties').forEach(function(watchProp) {
+      self.removeObserver(watchProp, self, 'synchronizeIsDirtyProperty');
+    });
   },
 
   actions: {

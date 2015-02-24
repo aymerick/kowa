@@ -19,12 +19,12 @@
             {{#if isDirty}}
                 <div class="content-action-button action-view disabled" title="Save to view post"><i class="fa fa-eye-slash"></i></div>
             {{else}}
-                {{#link-to "post" this class="content-action-button action-view"}}<i class="fa fa-eye"></i>{{/link-to}}
+                {{#link-to "posts.post" this class="content-action-button action-view"}}<i class="fa fa-eye"></i>{{/link-to}}
             {{/if}}
             <button {{action "saveContent"}} class="btn btn-primary content-action-button action-save" {{bind-attr disabled=nothingChanged}}><i class="fa fa-floppy-o"></i> Save</button>
         </div>
     </header>
     <section class="content-body content-editor">
-        {{summernote-editor content=model.body fillHeight=true placeholder="Post body"}}
+        {{summernote-editor value=model.body fillHeight=true placeholder="Post body"}}
     </section>
 </section>

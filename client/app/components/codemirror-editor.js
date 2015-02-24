@@ -31,8 +31,9 @@ var CodemirrorEditor = Ember.TextArea.extend({
     this.addObserver('value', this, 'valueDidChange');
 
     // remove observer when destroyed
+    var self = this;
     this.on('willDestroyElement', this, function() {
-      this.removeObserver('value', this, 'valueDidChange');
+      self.removeObserver('value', self, 'valueDidChange');
     });
   },
 
@@ -43,8 +44,9 @@ var CodemirrorEditor = Ember.TextArea.extend({
     this.get('codeMirror').on('change', callback);
 
     // remove callback when destroyed
+    var self = this;
     this.on('willDestroyElement', this, function() {
-      this.get('codeMirror').off('change', callback);
+      self.get('codeMirror').off('change', callback);
     });
   },
 

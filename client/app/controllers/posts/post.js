@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import ContentEditionController from 'kowa/mixins/content-edition-controller';
 
-var PostEditController = Ember.ObjectController.extend(ContentEditionController, {
+var PostsPostController = Ember.ObjectController.extend(ContentEditionController, {
   editionRelationships: Ember.A([ 'cover' ]),
   editionDefaultTitle: '(Untitled)',
 
@@ -9,4 +9,4 @@ var PostEditController = Ember.ObjectController.extend(ContentEditionController,
   editionSaveMsgErr: 'Failed to save post.'
 });
 
-export default PostEditController;
+export default PostsPostController;

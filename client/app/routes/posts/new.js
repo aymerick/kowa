@@ -2,17 +2,17 @@ import AuthenticatedRoute from 'kowa/routes/authenticated';
 import ContentEditionRoute from 'kowa/mixins/content-edition-route';
 
 var PostsNewRoute = AuthenticatedRoute.extend(ContentEditionRoute, {
-  // use PostEditController
-  controllerName: 'post.edit',
+  // use PostsPostController
+  controllerName: 'posts.post',
 
   // this is a fresh new model
   model: function() {
     return this.store.createRecord('post', { site: this.modelFor('site') });
   },
 
-  // use 'post/edit' template
+  // use 'posts/post' template
   renderTemplate: function() {
-    this.render('post/edit');
+    this.render('posts/post');
   }
 });
 
