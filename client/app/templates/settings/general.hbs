@@ -23,7 +23,7 @@
 
     <div class="form-group">
         <label for="site-description">Site Description</label>
-        {{summernote-editor id="site-description" placeholder="Description" value=description}}
+        {{summernote-editor content=description height=300 placeholder="Description" id="site-description"}}
         <p class="info">
             Describe what your site is about
         </p>
@@ -31,7 +31,7 @@
 
     <div class="form-group">
         <label for="site-more-desc">Site Additional Description</label>
-        {{summernote-editor id="site-more-desc" placeholder="Additional description" value=moreDesc}}
+        {{summernote-editor content=moreDesc height=300 placeholder="Additional description" id="site-more-desc"}}
         <p class="info">
             An additional description to display at bottom of homepage
         </p>
@@ -39,7 +39,7 @@
 
     <div class="form-group">
         <label for="site-join-text">Site Join Text</label>
-        {{summernote-editor id="site-join-text" placeholder="Join text" value=joinText}}
+        {{summernote-editor content=joinText height=300 placeholder="Join text" id="site-join-text"}}
         <p class="info">
             If relevant, explain to visitors why then should become a member of your organisation
         </p>
