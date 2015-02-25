@@ -103,11 +103,18 @@ var ContentEditionControllerMixin = Ember.Mixin.create({
     });
   },
 
-  synchronizeIsDirtyProperty: function() {
+  _syncIsDirty: function() {
     var model = this.get('model');
     var currentDirtinessValue = model.get('isDirty') || model.get('isNew') || this.editionFieldChanged();
 
+    // debugger;
+    // model.changedAttributes();
+
     this.set('isDirty', currentDirtinessValue);
+  },
+
+  synchronizeIsDirtyProperty: function() {
+    Ember.run.once(this, this._syncIsDirty);
   },
 
   setWatchProperties: function() {
