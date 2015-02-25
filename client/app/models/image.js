@@ -1,8 +1,9 @@
+/* global moment */
 import DS from 'ember-data';
 
 var ImageModel = DS.Model.extend({
-  createdAt: DS.attr('date'),
-  updatedAt: DS.attr('date'),
+  createdAt: DS.attr('moment-date'),
+  updatedAt: DS.attr('moment-date'),
   name: DS.attr(),
   size: DS.attr('number'),
   type: DS.attr(),

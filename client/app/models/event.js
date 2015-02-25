@@ -1,13 +1,13 @@
 /* global moment */
-
 import DS from 'ember-data';
+import Ember from 'ember';
 
 var EventModel = DS.Model.extend({
-  createdAt: DS.attr('date', { defaultValue: function() { return new Date(); } }),
-  updatedAt: DS.attr('date', { defaultValue: function() { return new Date(); } }),
+  createdAt: DS.attr('moment-date', { defaultValue: function() { return moment(new Date()); } }),
+  updatedAt: DS.attr('moment-date', { defaultValue: function() { return moment(new Date()); } }),
 
-  startDate: DS.attr('date', { defaultValue: function() { return moment(new Date()).add(1, 'hours').toDate(); } }),
-  endDate: DS.attr('date', { defaultValue: function() { return moment(new Date()).add(2, 'hours').toDate(); } }),
+  startDate: DS.attr('moment-date', { defaultValue: function() { return moment(new Date()).add(1, 'hours'); } }),
+  endDate: DS.attr('moment-date', { defaultValue: function() { return moment(new Date()).add(2, 'hours'); } }),
 
   title: DS.attr('string', { defaultValue: "" }),
   body: DS.attr('string', { defaultValue: "" }),

@@ -1,8 +1,10 @@
+/* global moment */
 import DS from 'ember-data';
+import Ember from 'ember';
 
 var Page = DS.Model.extend({
-  createdAt: DS.attr('date', { defaultValue: function() { return new Date(); } }),
-  updatedAt: DS.attr('date', { defaultValue: function() { return new Date(); } }),
+  createdAt: DS.attr('moment-date', { defaultValue: function() { return moment(new Date()); } }),
+  updatedAt: DS.attr('moment-date', { defaultValue: function() { return moment(new Date()); } }),
 
   title: DS.attr('string', { defaultValue: "" }),
   tagline: DS.attr('string', { defaultValue: "" }),

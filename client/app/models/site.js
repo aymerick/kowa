@@ -1,10 +1,11 @@
+/* global moment */
 import DS from 'ember-data';
 
 var Site = DS.Model.extend({
-  createdAt: DS.attr('date'),
-  updatedAt: DS.attr('date'),
-  changedAt: DS.attr('date'),
-  builtAt: DS.attr('date'),
+  createdAt: DS.attr('moment-date'),
+  updatedAt: DS.attr('moment-date'),
+  changedAt: DS.attr('moment-date'),
+  builtAt: DS.attr('moment-date'),
 
   name: DS.attr(),
   tagline: DS.attr(),
