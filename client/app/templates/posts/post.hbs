@@ -14,7 +14,7 @@
         <div class="content-fields">
             {{autofocus-input class="content-title" name="post[title]" type="text" placeholder="Post title" value=model.title}}
 
-            {{#if controller.showContentFormat}}
+            {{#if features.showContentFormat}}
                 <form class="form-inline content-format">
                     {{view "select" content=allFormats optionValuePath="content.id" optionLabelPath="content.name" value=model.format class="form-control"}}
                 </form>

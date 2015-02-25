@@ -17,7 +17,10 @@ module.exports = function(environment) {
       // Here you can pass flags/options to your application instance
       // when it is created
 
-      SHOW_CONTENT_FORMAT: false,
+      // thanks to ember-feature-flags addon
+      FEATURES: {
+        'show-content-format': false,
+      },
 
       // oauth client id/secret (not used for now)
       api_client_id: 'kowa',
