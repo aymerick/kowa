@@ -30,9 +30,12 @@
                 </div>
               </div>
             </form>
-            <form class="form-inline content-format">
-                {{view "select" content=allFormats optionValuePath="content.id" optionLabelPath="content.name" value=model.format class="form-control"}}
-            </form>
+
+            {{#if controller.showContentFormat}}
+                <form class="form-inline content-format">
+                    {{view "select" content=allFormats optionValuePath="content.id" optionLabelPath="content.name" value=model.format class="form-control"}}
+                </form>
+            {{/if}}
         </div>
 
         <div class="content-actions">

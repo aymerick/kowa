@@ -17,6 +17,8 @@ module.exports = function(environment) {
       // Here you can pass flags/options to your application instance
       // when it is created
 
+      SHOW_CONTENT_FORMAT: false,
+
       // oauth client id/secret (not used for now)
       api_client_id: 'kowa',
       api_client_secret: 'none'
