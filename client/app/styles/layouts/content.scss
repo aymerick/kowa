@@ -241,54 +241,6 @@ body.events .content-details {
 }
 
 //
-// details: show content
-//
-.content-show {
-    .content-header {
-        .content-fields {
-            right: ($content-action-button-width-with-margin * 2) + ($content-header-spacing * 3);
-
-            .content-title {
-                font-weight: bold;
-                font-size: 1.6em;
-                line-height: 1.6em;
-                height: 1.6em;
-
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-
-            .content-tagline {
-                font-size: 1.3em;
-                line-height: 1.3em;
-                height: 1.3em;
-
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-
-            .content-innavbar {
-                margin-top: 10px;
-                font-style: italic;
-                color: $midgrey;
-            }
-        }
-
-        .content-action-button {
-            &.action-edit {
-                right: $content-header-spacing;
-            }
-
-            &.action-delete {
-                right: $content-action-button-width-with-margin + $content-header-spacing;
-            }
-        }
-    }
-} // .content-show
-
-//
 // details: edit content
 //
 .content-edit {
