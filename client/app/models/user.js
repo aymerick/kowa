@@ -1,7 +1,7 @@
 import DS from 'ember-data';
 
 var User = DS.Model.extend({
-  createdAt: DS.attr('moment-date'),
+  createdAt: DS.attr('date'),
 
   email: DS.attr(),
   firstName: DS.attr(),
