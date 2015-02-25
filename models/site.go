@@ -190,7 +190,7 @@ func (site *Site) EventsNb() int {
 func (site *Site) FindEvents(skip int, limit int) *EventsList {
 	result := EventsList{}
 
-	query := site.eventsBaseQuery().Sort("-start_at")
+	query := site.eventsBaseQuery().Sort("-start_date")
 
 	if skip > 0 {
 		query = query.Skip(skip)
