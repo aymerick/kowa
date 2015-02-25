@@ -1,6 +1,6 @@
 import DS from 'ember-data';
 
-var POST_SERIALIZER_FIELDS = [ 'title', 'body', 'site', 'cover' ];
+var POST_SERIALIZER_FIELDS = [ 'title', 'body', 'format', 'site', 'cover' ];
 
 var PostSerializer = DS.RESTSerializer.extend({
   serialize: function(post, options) {

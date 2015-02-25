@@ -22,9 +22,8 @@ type Post struct {
 	PublishedAt *time.Time    `bson:"published_at"    json:"publishedAt,omitempty"`
 	Title       string        `bson:"title"           json:"title"`
 	Body        string        `bson:"body"            json:"body"`
+	Format      string        `bson:"format"          json:"format"`
 	Cover       bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
-
-	// @todo Format (markdown|html)
 }
 
 type PostsList []*Post
@@ -130,6 +129,7 @@ func (post *Post) Delete() error {
 func (post *Post) Update(newPost *Post) (bool, error) {
 	var set, unset, modifier bson.D
 
+	// Title
 	if post.Title != newPost.Title {
 		post.Title = newPost.Title
 
@@ -140,6 +140,7 @@ func (post *Post) Update(newPost *Post) (bool, error) {
 		}
 	}
 
+	// Body
 	if post.Body != newPost.Body {
 		post.Body = newPost.Body
 
@@ -150,6 +151,19 @@ func (post *Post) Update(newPost *Post) (bool, error) {
 		}
 	}
 
+	// Format
+	newFormat := newPost.Format
+	if newFormat == "" {
+		newFormat = DEFAULT_FORMAT
+	}
+
+	if post.Format != newFormat {
+		post.Format = newFormat
+
+		set = append(set, bson.DocElem{"format", post.Format})
+	}
+
+	// Cover
 	if post.Cover != newPost.Cover {
 		post.Cover = newPost.Cover
 

@@ -13,6 +13,10 @@
 
         <div class="content-fields">
             {{autofocus-input class="content-title" name="post[title]" type="text" placeholder="Post title" value=model.title}}
+
+            <form class="form-inline content-format">
+                {{view "select" content=allFormats optionValuePath="content.id" optionLabelPath="content.name" value=model.format class="form-control"}}
+            </form>
         </div>
 
         <div class="content-actions">
@@ -21,6 +25,10 @@
         </div>
     </header>
     <section class="content-body content-editor">
-        {{summernote-editor value=model.body fillHeight=true placeholder="Post body"}}
+        {{#if model.isMarkdown}}
+            {{codemirror-editor value=model.body placeholder="Page body"}}
+        {{else}}
+            {{summernote-editor value=model.body placeholder="Post body" fillHeight=true}}
+        {{/if}}
     </section>
 </section>

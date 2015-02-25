@@ -7,10 +7,13 @@ var Post = DS.Model.extend({
   publishedAt: DS.attr('date'),
   title: DS.attr('string', { defaultValue: "" }),
   body: DS.attr('string', { defaultValue: "" }),
+  format: DS.attr('string', { defaultValue: "html" }), // Keep in sync with models.DEFAULT_FORMAT
 
   cover: DS.belongsTo('image', { inverse: 'coverPosts', async: true }),
 
-  site: DS.belongsTo('site', { async: true })
+  site: DS.belongsTo('site', { async: true }),
+
+  isMarkdown: Ember.computed.equal('format', 'md') // Keep in sync with models.FORMAT_MARKDOWN
 });
 
 export default Post;

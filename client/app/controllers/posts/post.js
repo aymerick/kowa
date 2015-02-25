@@ -6,7 +6,13 @@ var PostsPostController = Ember.ObjectController.extend(ContentEditionController
   editionDefaultTitle: '(Untitled)',
 
   editionSaveMsgOk: 'Post saved.',
-  editionSaveMsgErr: 'Failed to save post.'
+  editionSaveMsgErr: 'Failed to save post.',
+
+  // @todo Get that list from the server
+  allFormats: [
+    { name: "Rich Text", id: 'html' },
+    { name: "Markdown", id: 'md' }
+  ]
 });
 
 export default PostsPostController;
