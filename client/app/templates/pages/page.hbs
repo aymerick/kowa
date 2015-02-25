@@ -21,6 +21,10 @@
                     <label>{{input type="checkbox" name="inNavBar" checked=model.inNavBar}} Display in navigation bar</label>
                 </div>
             </form>
+
+            <form class="form-inline content-format">
+                {{view "select" content=allFormats optionValuePath="content.id" optionLabelPath="content.name" value=model.format class="form-control"}}
+            </form>
         </div>
 
         <div class="content-actions">
@@ -29,6 +33,10 @@
         </div>
     </header>
     <section class="content-body content-editor">
-        {{codemirror-editor value=model.body placeholder="Page body"}}
+        {{#if model.isMarkdown}}
+            {{codemirror-editor value=model.body placeholder="Page body"}}
+        {{else}}
+            {{summernote-editor value=model.body placeholder="Page body" fillHeight=true}}
+        {{/if}}
     </section>
 </section>

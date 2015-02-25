@@ -1,14 +1,14 @@
 import AuthenticatedRoute from 'kowa/routes/authenticated';
 
-var EventIndexRoute = AuthenticatedRoute.extend({
+var EventsIndexRoute = AuthenticatedRoute.extend({
   // redirects /:site_id/events to /:site_id/events/:event_id
   beforeModel: function () {
     var events = this.modelFor('events');
     var firstEvent = events.get('firstObject');
     if (firstEvent) {
-      this.transitionTo('event', firstEvent);
+      this.transitionTo('events.event', firstEvent);
     }
   }
 });
 
-export default EventIndexRoute;
+export default EventsIndexRoute;

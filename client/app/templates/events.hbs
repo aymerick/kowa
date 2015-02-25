@@ -5,7 +5,7 @@
     </header>
     {{#view "paginated-scroll-box" tagName="ol" classNames="content-body"}}
         {{#each item in controller itemView="list-item-view" itemTagName="li"}}
-            {{#link-to "event" item title="Display this event"}}
+            {{#link-to "events.event" item title="Edit this event"}}
                 {{#if item.cover}}
                     <div class="item-cover">
                         <img {{bind-attr src=item.cover.squareUrl}} alt="cover image" />

@@ -23,16 +23,12 @@ Router.map(function() {
 
       this.resource('events', function () {
         this.route('new');
-        this.resource('event', {path: ':event_id'}, function() {
-          this.route('edit', {path: '/edit'});
-        });
+        this.route('event', {path: ':event_id'});
       });
 
       this.resource('pages', function () {
         this.route('new');
-        this.resource('page', {path: ':page_id'}, function() {
-          this.route('edit', {path: '/edit'});
-        });
+        this.route('page', {path: ':page_id'});
       });
 
       // settings
