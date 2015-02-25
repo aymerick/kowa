@@ -12,7 +12,16 @@ var PostsPostController = Ember.ObjectController.extend(ContentEditionController
   allFormats: [
     { name: "Rich Text", id: 'html' },
     { name: "Markdown", id: 'md' }
-  ]
+  ],
+
+  // i18n for attributes values components parameters
+  i18n: function() {
+    return {
+      coverImage: this.t('coverImage'),
+      postBody: this.t('postBody'),
+      postTitle: this.t('postTitle')
+    }
+  }.property() // @todo Watch current language
 });
 
 export default PostsPostController;

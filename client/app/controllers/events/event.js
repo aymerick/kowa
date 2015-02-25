@@ -12,7 +12,17 @@ var EventsEventController = Ember.ObjectController.extend(ContentEditionControll
   allFormats: [
     { name: "Rich Text", id: 'html' },
     { name: "Markdown", id: 'md' }
-  ]
+  ],
+
+  // i18n for attributes values components parameters
+  i18n: function() {
+    return {
+      coverImage: this.t('coverImage'),
+      eventDescription: this.t('eventDescription'),
+      eventPlace: this.t('eventPlace'),
+      eventTitle: this.t('eventTitle')
+    }
+  }.property() // @todo Watch current language
 });
 
 export default EventsEventController;

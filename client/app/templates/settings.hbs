@@ -1,19 +1,19 @@
 <nav class="settings-nav">
     <ul>
         {{#view "active-item" tagName="li"}}
-            {{#link-to "settings.general"}}<i class="fa fa-fw fa-cog"></i> General{{/link-to}}
+            {{#link-to "settings.general"}}<i class="fa fa-fw fa-cog"></i> {{t 'general'}}{{/link-to}}
         {{/view}}
         {{#view "active-item" tagName="li"}}
-            {{#link-to "settings.contact"}}<i class="fa fa-fw fa-envelope-o"></i> Contact{{/link-to}}
+            {{#link-to "settings.contact"}}<i class="fa fa-fw fa-envelope-o"></i> {{t 'contact'}}{{/link-to}}
         {{/view}}
         {{#view "active-item" tagName="li"}}
-            {{#link-to "settings.activities"}}<i class="fa fa-fw fa-bullhorn"></i> Activities{{/link-to}}
+            {{#link-to "settings.activities"}}<i class="fa fa-fw fa-bullhorn"></i> {{t 'activities'}}{{/link-to}}
         {{/view}}
         {{!-- {{#view "active-item" tagName="li"}}
             {{#link-to "settings.members"}}<i class="fa fa-fw fa-users"></i> Members{{/link-to}}
         {{/view}} --}}
         {{#view "active-item" tagName="li"}}
-            {{#link-to "settings.images"}}<i class="fa fa-fw fa-file-image-o"></i> Images{{/link-to}}
+            {{#link-to "settings.images"}}<i class="fa fa-fw fa-file-image-o"></i> {{t 'images'}}{{/link-to}}
         {{/view}}
     </ul>
 </nav>

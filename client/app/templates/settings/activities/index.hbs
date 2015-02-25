@@ -1,7 +1,7 @@
 <header class="settings-header">
-    <h2 class="settings-item-title">Activities</h2>
+    <h2 class="settings-item-title">{{t 'activities'}}</h2>
 
-    {{#link-to "settings.activities.new" class="btn btn-success action-add" title="New activity"}}<i class="fa fa-plus"></i> New activity{{/link-to}}
+    {{#link-to "settings.activities.new" class="btn btn-success action-add" title="New activity"}}<i class="fa fa-plus"></i> {{t 'newActivity'}}{{/link-to}}
 </header>
 
 <section class="settings-body">
@@ -21,7 +21,7 @@
                 </div>
 
                 <div class="settings-item-actions">
-                    <button {{action "openModal" "delete-activity" controller activity bubbles=false}} class="btn btn-danger action-delete">Delete</button>
+                    <button {{action "openModal" "delete-activity" controller activity bubbles=false}} class="btn btn-danger action-delete">{{t 'delete'}}</button>
                 </div>
             {{/link-to}}
         {{/each}}

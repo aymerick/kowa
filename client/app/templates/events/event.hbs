@@ -3,27 +3,29 @@
         <div class="content-cover">
             {{#if model.cover}}
                 <button type="button" class="thumbnail select-image small-kind" {{action "openModal" "select-image" controller "model.cover"}}>
-                    <img {{bind-attr src=model.cover.thumbUrl}} alt="cover image" />
+                    <img {{bind-attr src=model.cover.thumbUrl alt=i18n.coverImage}} />
                     <span class="remove-image" {{action 'removeCover'}}>&#10006;</span>
                 </button>
             {{else}}
-                <button type="button" class="btn btn-default select-image small-kind no-image" {{action "openModal" "select-image" controller "model.cover"}}>Select Cover</button>
+                <button type="button" class="btn btn-default select-image small-kind no-image" {{action "openModal" "select-image" controller "model.cover"}}>{{t 'selectCover'}}</button>
             {{/if}}
         </div>
 
         <div class="content-fields">
-            {{autofocus-input class="content-title" name="event[title]" type="text" placeholder="Event title" value=model.title}}
-            {{input class="content-place" name="event[place]" type="text" placeholder="Event place" value=model.place}}
+            {{autofocus-input class="content-title" name="event[title]" type="text" placeholder=i18n.eventTitle value=model.title}}
+
+            {{input class="content-place" name="event[place]" type="text" placeholder=i18n.eventPlace value=model.place}}
+
             <form class="form-horizontal content-dates">
               <div class="form-group">
-                <label for="event-startDate" class="col-sm-1 control-label">Start: </label>
+                <label for="event-startDate" class="col-sm-1 control-label">{{t 'start'}} </label>
                 <div class="col-sm-4">
                     <!-- @todo Fix locale -->
                     {{bs-datetimepicker date=model.startDate format='DD-MM-YYYY HH:mm' forceDateOutput=true locale='fr' id="event-startDate"}}
                 </div>
               </div>
               <div class="form-group">
-                <label for="event-endDate" class="col-sm-1 control-label">End: </label>
+                <label for="event-endDate" class="col-sm-1 control-label">{{t 'end'}} </label>
                 <div class="col-sm-4">
                     <!-- @todo Fix locale -->
                     {{bs-datetimepicker date=model.endDate format='DD-MM-YYYY HH:mm' forceDateOutput=true locale='fr' id="event-endDate"}}
@@ -39,15 +41,15 @@
         </div>
 
         <div class="content-actions">
-            <button {{action "openModal" "delete-event" controller 'events.index'}} class="btn btn-danger content-action-button action-delete">Delete</button>
-            <button {{action "saveContent"}} class="btn btn-primary content-action-button action-save" {{bind-attr disabled=nothingChanged}}><i class="fa fa-floppy-o"></i> Save</button>
+            <button {{action "openModal" "delete-event" controller 'events.index'}} class="btn btn-danger content-action-button action-delete">{{t 'delete'}}</button>
+            <button {{action "saveContent"}} class="btn btn-primary content-action-button action-save" {{bind-attr disabled=nothingChanged}}><i class="fa fa-floppy-o"></i> {{t 'save'}}</button>
         </div>
     </header>
     <section class="content-body content-editor">
         {{#if model.isMarkdown}}
-            {{codemirror-editor value=model.body placeholder="Event description"}}
+            {{codemirror-editor value=model.body placeholder=i18n.eventDescription}}
         {{else}}
-            {{summernote-editor value=model.body placeholder="Event description" fillHeight=true}}
+            {{summernote-editor value=model.body placeholder=i18n.eventDescription fillHeight=true}}
         {{/if}}
     </section>
 </section>

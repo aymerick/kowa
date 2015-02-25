@@ -1,5 +1,5 @@
 <header class="settings-header">
-    <h2>Images</h2>
+    <h2>{{t 'images'}}</h2>
 </header>
 
 <section class="settings-body">
@@ -15,9 +15,9 @@
                 <img {{bind-attr src=image.smallFillUrl}} class="img-responsive" />
                 <div class="caption">
                     <p>
-                        Added: {{ago image.createdAt}}
+                        {{t 'added'}} {{ago image.createdAt}}
                     </p>
-                    <button type="button" class="btn btn-sm btn-danger delete-button" {{action "openModal" "delete-image" controller image}}>Delete</button>
+                    <button type="button" class="btn btn-sm btn-danger delete-button" {{action "openModal" "delete-image" controller image}}>{{t 'delete'}}</button>
                 </div>
             {{/if}}
         {{/each}}

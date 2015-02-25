@@ -1,7 +1,7 @@
 <section class="content-master">
     <header class="content-header">
-        <div class="content-kind-title">Posts</div>
-        {{#link-to "posts.new" class="content-add btn btn-success btn-xs" title="New Post"}}<i class="fa fa-plus"></i> New post{{/link-to}}
+        <div class="content-kind-title">{{t 'posts'}}</div>
+        {{#link-to "posts.new" class="content-add btn btn-success btn-xs" title="New Post"}}<i class="fa fa-plus"></i> {{t 'newPost'}}{{/link-to}}
     </header>
     {{#view "paginated-scroll-box" tagName="ol" classNames="content-body"}}
         {{#each item in controller itemView="list-item-view" itemTagName="li"}}
@@ -14,7 +14,7 @@
                 <div class="item-infos">
                     <h3 class="item-title">{{item.title}}</h3>
                     <section class="item-meta">
-                        Created: {{ago item.createdAt}}
+                        {{t 'added'}} {{ago item.createdAt}}
                     </section>
                 </div>
             {{/link-to}}

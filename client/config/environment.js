@@ -24,7 +24,10 @@ module.exports = function(environment) {
 
       // oauth client id/secret (not used for now)
       api_client_id: 'kowa',
-      api_client_secret: 'none'
+      api_client_secret: 'none',
+
+      // ember-cli-i18n addon
+      defaultLocale: 'fr' // @todo 'en'
     }
   };
 

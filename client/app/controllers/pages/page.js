@@ -12,7 +12,17 @@ var PagesPageController = Ember.ObjectController.extend(ContentEditionController
   allFormats: [
     { name: "Rich Text", id: 'html' },
     { name: "Markdown", id: 'md' }
-  ]
+  ],
+
+  // i18n for attributes values components parameters
+  i18n: function() {
+    return {
+      coverImage: this.t('coverImage'),
+      pageBody: this.t('pageBody'),
+      pageTagline: this.t('pageTagline'),
+      pageTitle: this.t('pageTitle')
+    }
+  }.property() // @todo Watch current language
 });
 
 export default PagesPageController;
