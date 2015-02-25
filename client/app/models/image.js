@@ -1,4 +1,3 @@
-/* global moment */
 import DS from 'ember-data';
 
 var ImageModel = DS.Model.extend({
