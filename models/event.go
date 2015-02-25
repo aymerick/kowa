@@ -23,6 +23,7 @@ type Event struct {
 	EndDate   time.Time     `bson:"end_date"        json:"endDate,omitempty"`
 	Title     string        `bson:"title"           json:"title"`
 	Body      string        `bson:"body"            json:"body"`
+	Format    string        `bson:"format"          json:"format"`
 	Place     string        `bson:"place"           json:"place"`
 	Cover     bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
 }
@@ -130,6 +131,7 @@ func (event *Event) Delete() error {
 func (event *Event) Update(newEvent *Event) (bool, error) {
 	var set, unset, modifier bson.D
 
+	// Startdate
 	if event.StartDate != newEvent.StartDate {
 		event.StartDate = newEvent.StartDate
 
@@ -140,6 +142,7 @@ func (event *Event) Update(newEvent *Event) (bool, error) {
 		}
 	}
 
+	// Enddate
 	if event.EndDate != newEvent.EndDate {
 		event.EndDate = newEvent.EndDate
 
@@ -150,6 +153,7 @@ func (event *Event) Update(newEvent *Event) (bool, error) {
 		}
 	}
 
+	// Title
 	if event.Title != newEvent.Title {
 		event.Title = newEvent.Title
 
@@ -160,6 +164,7 @@ func (event *Event) Update(newEvent *Event) (bool, error) {
 		}
 	}
 
+	// Body
 	if event.Body != newEvent.Body {
 		event.Body = newEvent.Body
 
@@ -170,6 +175,19 @@ func (event *Event) Update(newEvent *Event) (bool, error) {
 		}
 	}
 
+	// Format
+	newFormat := newEvent.Format
+	if newFormat == "" {
+		newFormat = DEFAULT_FORMAT
+	}
+
+	if event.Format != newFormat {
+		event.Format = newFormat
+
+		set = append(set, bson.DocElem{"format", event.Format})
+	}
+
+	// Place
 	if event.Place != newEvent.Place {
 		event.Place = newEvent.Place
 
@@ -180,6 +198,7 @@ func (event *Event) Update(newEvent *Event) (bool, error) {
 		}
 	}
 
+	// Cover
 	if event.Cover != newEvent.Cover {
 		event.Cover = newEvent.Cover
 

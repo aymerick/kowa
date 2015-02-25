@@ -22,11 +22,10 @@ type Page struct {
 	Title   string        `bson:"title"           json:"title"`
 	Tagline string        `bson:"tagline"         json:"tagline"`
 	Body    string        `bson:"body"            json:"body"`
+	Format  string        `bson:"format"          json:"format"`
 	Cover   bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
 
 	InNavBar bool `bson:"in_nav_bar" json:"inNavBar"`
-
-	// @todo Format (markdown|html)
 }
 
 type PagesList []*Page
@@ -132,6 +131,7 @@ func (page *Page) Delete() error {
 func (page *Page) Update(newPage *Page) (bool, error) {
 	var set, unset, modifier bson.D
 
+	// Title
 	if page.Title != newPage.Title {
 		page.Title = newPage.Title
 
@@ -142,6 +142,7 @@ func (page *Page) Update(newPage *Page) (bool, error) {
 		}
 	}
 
+	// Tagline
 	if page.Tagline != newPage.Tagline {
 		page.Tagline = newPage.Tagline
 
@@ -152,6 +153,7 @@ func (page *Page) Update(newPage *Page) (bool, error) {
 		}
 	}
 
+	// Body
 	if page.Body != newPage.Body {
 		page.Body = newPage.Body
 
@@ -162,6 +164,19 @@ func (page *Page) Update(newPage *Page) (bool, error) {
 		}
 	}
 
+	// Format
+	newFormat := newPage.Format
+	if newFormat == "" {
+		newFormat = DEFAULT_FORMAT
+	}
+
+	if page.Format != newFormat {
+		page.Format = newFormat
+
+		set = append(set, bson.DocElem{"format", page.Format})
+	}
+
+	// Cover
 	if page.Cover != newPage.Cover {
 		page.Cover = newPage.Cover
 
@@ -172,6 +187,7 @@ func (page *Page) Update(newPage *Page) (bool, error) {
 		}
 	}
 
+	// InNavBar
 	if page.InNavBar != newPage.InNavBar {
 		page.InNavBar = newPage.InNavBar
 

@@ -79,8 +79,16 @@ func (builder *PagesBuilder) NewPageContent(page *models.Page, node *Node) *Page
 		result.Cover = builder.addImage(cover)
 	}
 
-	html := blackfriday.MarkdownCommon([]byte(page.Body))
-	result.Body = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
+	if page.Format == models.FORMAT_MARKDOWN {
+		html := blackfriday.MarkdownCommon([]byte(page.Body))
+
+		result.Body = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
+	} else {
+		sanitizePolicy := bluemonday.UGCPolicy()
+		sanitizePolicy.AllowAttrs("style").OnElements("p", "span") // I know this is bad
+
+		result.Body = template.HTML(sanitizePolicy.Sanitize(page.Body))
+	}
 
 	return result
 }

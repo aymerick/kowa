@@ -1,6 +1,6 @@
 import DS from 'ember-data';
 
-var EVENT_SERIALIZER_FIELDS = [ 'startDate', 'endDate', 'title', 'body', 'place', 'site', 'cover' ];
+var EVENT_SERIALIZER_FIELDS = [ 'startDate', 'endDate', 'title', 'body', 'format', 'place', 'site', 'cover' ];
 
 var EventSerializer = DS.RESTSerializer.extend({
   serialize: function(eventModel, options) {

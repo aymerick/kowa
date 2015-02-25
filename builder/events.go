@@ -179,8 +179,16 @@ func (builder *EventsBuilder) NewEventContent(event *models.Event, node *Node) *
 		result.Cover = builder.addImage(cover)
 	}
 
-	html := blackfriday.MarkdownCommon([]byte(event.Body))
-	result.Body = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
+	if event.Format == models.FORMAT_MARKDOWN {
+		html := blackfriday.MarkdownCommon([]byte(event.Body))
+
+		result.Body = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
+	} else {
+		sanitizePolicy := bluemonday.UGCPolicy()
+		sanitizePolicy.AllowAttrs("style").OnElements("p", "span") // I know this is bad
+
+		result.Body = template.HTML(sanitizePolicy.Sanitize(event.Body))
+	}
 
 	return result
 }
