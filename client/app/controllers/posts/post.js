@@ -20,7 +20,7 @@ var PostsPostController = Ember.ObjectController.extend(ContentEditionController
       coverImage: this.t('coverImage'),
       postBody: this.t('postBody'),
       postTitle: this.t('postTitle')
-    }
+    };
   }.property() // @todo Watch current language
 });
 

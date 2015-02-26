@@ -21,7 +21,7 @@ var PagesPageController = Ember.ObjectController.extend(ContentEditionController
       pageBody: this.t('pageBody'),
       pageTagline: this.t('pageTagline'),
       pageTitle: this.t('pageTitle')
-    }
+    };
   }.property() // @todo Watch current language
 });
 

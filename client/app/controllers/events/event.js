@@ -21,7 +21,7 @@ var EventsEventController = Ember.ObjectController.extend(ContentEditionControll
       eventDescription: this.t('eventDescription'),
       eventPlace: this.t('eventPlace'),
       eventTitle: this.t('eventTitle')
-    }
+    };
   }.property() // @todo Watch current language
 });
 
