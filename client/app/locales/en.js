@@ -6,8 +6,18 @@ export default {
   'delete': 'Delete',
   logout: 'Logout',
   save: 'Save',
+  select: 'Select',
   selectCover: 'Select Cover',
   toogleNavigation: 'Toggle navigation',
+
+  // common edition
+  edition: {
+    leaveAction: "It looks like you're in the middle of writing something and you haven't saved all of your content.",
+    leaveSave: "Save before you go!",
+    leaveQuestion: "Are you sure you want to leave this page?",
+    leave: "Leave",
+    stay: "Stay"
+  },
 
   // activities
   Activities: 'Activities',

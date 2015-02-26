@@ -1,5 +1,5 @@
-{{#modal-dialog title='Are you sure you want to leave this page?' ok='confirm' okText='Leave' okClass='btn-danger' close='closeModal' closeText='Stay'}}
-    <p>It looks like you're in the middle of writing something and you haven't saved all of your content.</p>
+{{#modal-dialog title=i18n.leaveQuestion ok='confirm' okText=i18n.leave okClass='btn-danger' close='closeModal' closeText=i18n.stay}}
+    <p>{{t 'edition.leaveAction'}}</p>
 
-    <p>Save before you go!</p>
+    <p>{{t 'edition.leaveSave'}}</p>
 {{/modal-dialog}}

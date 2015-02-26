@@ -5,9 +5,19 @@ export default {
   coverImage: 'image principale',
   'delete': 'Supprimer',
   logout: 'Déconnexion',
-  save: 'Sauvergarder',
+  save: 'Sauvegarder',
+  select: 'Selectionner',
   selectCover: 'Choisir Image',
   toogleNavigation: 'Menu',
+
+  // common edition
+  edition: {
+    leaveAction: "Vous êtes en train de modifier du contenu, et vous n'avez pas sauvegardé. Vous allez perdre vos modifications.",
+    leaveSave: "Vous devriez sauvegarder avant de quitter !",
+    leaveQuestion: "Etes-vous certain de vouloir quitter cette page ?",
+    leave: "Quitter",
+    stay: "Rester"
+  },
 
   // activities
   Activities: 'Activités',
