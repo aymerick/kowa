@@ -3,6 +3,8 @@ package builder
 import (
 	"html/template"
 	"strings"
+
+	"github.com/nicksnyder/go-i18n/i18n"
 )
 
 // Contact node builder
@@ -39,8 +41,10 @@ func NewContactBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 
 // NodeBuilder
 func (builder *ContactBuilder) Load() {
-	title := "Contact" // @todo i18n
-	tagline := ""      // @todo Fill
+	T := i18n.MustTfunc("fr") // @todo i18n
+
+	title := T("Contact")
+	tagline := "" // @todo Fill
 
 	contactContent := builder.NewContactContent()
 	if contactContent.HaveContact || contactContent.HaveSocial {

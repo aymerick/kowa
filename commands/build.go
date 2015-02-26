@@ -5,10 +5,11 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/aymerick/kowa/builder"
-	"github.com/aymerick/kowa/models"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/aymerick/kowa/builder"
+	"github.com/aymerick/kowa/models"
 )
 
 const (

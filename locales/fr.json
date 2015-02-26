@@ -1,0 +1,26 @@
+[
+  {
+    "id": "Activities",
+    "translation": "Activités"
+  },
+  {
+    "id": "Contact",
+    "translation": "Contact"
+  },
+  {
+    "id": "Events",
+    "translation": "Évènements"
+  },
+  {
+    "id": "events",
+    "translation": "evenements"
+  },
+  {
+    "id": "Posts",
+    "translation": "Actualités"
+  },
+  {
+    "id": "posts",
+    "translation": "actualites"
+  }
+]

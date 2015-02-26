@@ -6,6 +6,7 @@ import (
 	"path"
 
 	"github.com/microcosm-cc/bluemonday"
+	"github.com/nicksnyder/go-i18n/i18n"
 	"github.com/russross/blackfriday"
 
 	"github.com/aymerick/kowa/models"
@@ -82,11 +83,13 @@ func postSlug(post *models.Post) string {
 
 // Build post page
 func (builder *PostsBuilder) loadPost(post *models.Post) {
-	node := builder.newNode()
-	node.fillUrl(path.Join("posts", postSlug(post))) // @todo i18n
+	T := i18n.MustTfunc("fr") // @todo i18n
 
-	title := "Posts" // @todo i18n
-	tagline := ""    // @todo fill
+	node := builder.newNode()
+	node.fillUrl(path.Join(T("posts"), postSlug(post)))
+
+	title := T("Posts")
+	tagline := "" // @todo fill
 
 	node.Title = title
 	node.Tagline = tagline
@@ -109,7 +112,7 @@ func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *Post
 		Node:  node,
 		Model: post,
 
-		Date:  post.CreatedAt.Format("02/01/06"),
+		Date:  post.CreatedAt.Format("02/01/06"), // @todo i18n
 		Title: post.Title,
 		Url:   node.Url,
 	}
@@ -135,13 +138,15 @@ func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *Post
 
 // Build posts list pages
 func (builder *PostsBuilder) loadPostsLists() {
+	T := i18n.MustTfunc("fr") // @todo i18n
+
 	if len(builder.posts) > 0 {
 		// @todo pagination
 		node := builder.newNodeForKind(KIND_POSTS)
-		node.fillUrl(KIND_POSTS)
+		node.fillUrl(T("posts"))
 
-		title := "Posts" // @todo i18n
-		tagline := ""    // @todo fill
+		title := T("Posts")
+		tagline := "" // @todo fill
 
 		node.Title = title
 		node.Tagline = tagline

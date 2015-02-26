@@ -4,9 +4,11 @@ import (
 	"html/template"
 	"time"
 
-	"github.com/aymerick/kowa/models"
 	"github.com/microcosm-cc/bluemonday"
+	"github.com/nicksnyder/go-i18n/i18n"
 	"github.com/russross/blackfriday"
+
+	"github.com/aymerick/kowa/models"
 )
 
 // Activities node builder
@@ -48,6 +50,8 @@ func NewActivitiesBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 
 // NodeBuilder
 func (builder *ActivitiesBuilder) Load() {
+	T := i18n.MustTfunc("fr") // @todo i18n
+
 	// fetch activities
 	activitiesVars := builder.activities()
 	if len(activitiesVars) > 0 {
@@ -55,8 +59,8 @@ func (builder *ActivitiesBuilder) Load() {
 		node := builder.newNode()
 		node.fillUrl(node.Kind)
 
-		title := "Activities" // @todo i18n
-		tagline := ""         // @todo Fill
+		title := T("Activities")
+		tagline := "" // @todo Fill
 
 		node.Title = title
 		node.Tagline = tagline

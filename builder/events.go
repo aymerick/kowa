@@ -7,11 +7,12 @@ import (
 	"sort"
 	"time"
 
+	"github.com/microcosm-cc/bluemonday"
+	"github.com/nicksnyder/go-i18n/i18n"
+	"github.com/russross/blackfriday"
+
 	"github.com/aymerick/kowa/models"
 	"github.com/aymerick/kowa/utils"
-
-	"github.com/microcosm-cc/bluemonday"
-	"github.com/russross/blackfriday"
 )
 
 // Event nodes builder
@@ -109,11 +110,13 @@ func eventSlug(event *models.Event) string {
 
 // Build event page
 func (builder *EventsBuilder) loadEvent(event *models.Event) {
-	node := builder.newNode()
-	node.fillUrl(path.Join("events", eventSlug(event))) // @todo i18n
+	T := i18n.MustTfunc("fr") // @todo i18n
 
-	title := "Events" // @todo i18n
-	tagline := ""     // @todo Fill
+	node := builder.newNode()
+	node.fillUrl(path.Join(T("events"), eventSlug(event)))
+
+	title := T("Events")
+	tagline := "" // @todo Fill
 
 	node.Title = title
 	node.Tagline = tagline
@@ -195,13 +198,15 @@ func (builder *EventsBuilder) NewEventContent(event *models.Event, node *Node) *
 
 // Build events list pages
 func (builder *EventsBuilder) loadEventsLists() {
+	T := i18n.MustTfunc("fr") // @todo i18n
+
 	if len(builder.events) > 0 || len(builder.pastEvents) > 0 {
 		// @todo pagination
 		node := builder.newNodeForKind(KIND_EVENTS)
-		node.fillUrl(KIND_EVENTS)
+		node.fillUrl(T("events"))
 
-		title := "Events" // @todo i18n
-		tagline := ""     // @todo Fill
+		title := T("Events")
+		tagline := "" // @todo Fill
 
 		node.Title = title
 		node.Tagline = tagline
