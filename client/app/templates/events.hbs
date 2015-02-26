@@ -1,7 +1,7 @@
 <section class="content-master">
     <header class="content-header">
-        <div class="content-kind-title">{{t 'events'}}</div>
-        {{#link-to "events.new" class="content-add btn btn-success btn-xs" title="New Event"}}<i class="fa fa-plus"></i> {{t 'newEvent'}}{{/link-to}}
+        <div class="content-kind-title">{{t 'Events'}}</div>
+        {{#link-to "events.new" class="content-add btn btn-success btn-xs" title="New Event"}}<i class="fa fa-plus"></i> {{t 'event.new'}}{{/link-to}}
     </header>
     {{#view "paginated-scroll-box" tagName="ol" classNames="content-body"}}
         {{#each item in controller itemView="list-item-view" itemTagName="li"}}

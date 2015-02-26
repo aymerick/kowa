@@ -1,52 +1,52 @@
 <header class="settings-header">
-    <h2 class="settings-item-title">{{t 'general'}}</h2>
+    <h2 class="settings-item-title">{{t 'General'}}</h2>
 
     <button class="btn btn-primary action-save" {{action "save"}}>{{t 'save'}}</button>
 </header>
 
 <form class="settings-body" role="form" {{action 'save' on='submit'}}>
     <div class="form-group">
-        <label for="site-name">{{t 'siteName'}}</label>
+        <label for="site-name">{{t 'site.name'}}</label>
         {{input id="site-name" name="general[name]" type="text" class="form-control" value=name}}
         <p class="info">
-            {{t 'siteNameInfos'}}
+            {{t 'site.nameInfos'}}
         </p>
     </div>
 
     <div class="form-group">
-        <label for="site-tagline">{{t 'siteTagline'}}</label>
+        <label for="site-tagline">{{t 'site.tagline'}}</label>
         {{input id="site-tagline" name="general[tagline]" type="text" class="form-control" value=tagline}}
         <p class="info">
-            {{t 'siteTaglineInfos'}}
+            {{t 'site.taglineInfos'}}
         </p>
     </div>
 
     <div class="form-group">
-        <label for="site-description">{{t 'siteDescription'}}</label>
+        <label for="site-description">{{t 'site.description'}}</label>
         {{summernote-editor value=description height=300 placeholder="Description" id="site-description"}}
         <p class="info">
-            {{t 'siteDescriptionInfos'}}
+            {{t 'site.descriptionInfos'}}
         </p>
     </div>
 
     <div class="form-group">
-        <label for="site-more-desc">{{t 'siteAdditionalDescription'}}</label>
+        <label for="site-more-desc">{{t 'site.additionalDescription'}}</label>
         {{summernote-editor value=moreDesc height=300 placeholder="Additional description" id="site-more-desc"}}
         <p class="info">
-            {{t 'siteAdditionalDescriptionInfos'}}
+            {{t 'site.additionalDescriptionInfos'}}
         </p>
     </div>
 
     <div class="form-group">
-        <label for="site-join-text">{{t 'siteJoinText'}}</label>
+        <label for="site-join-text">{{t 'site.joinText'}}</label>
         {{summernote-editor value=joinText height=300 placeholder="Join text" id="site-join-text"}}
         <p class="info">
-            {{t 'siteJoinTextInfos'}}
+            {{t 'site.joinTextInfos'}}
         </p>
     </div>
 
     <div class="form-group">
-        <label for="site-logo">{{t 'siteLogo'}}</label>
+        <label for="site-logo">{{t 'site.logo'}}</label>
         {{#if logo}}
             <button type="button" class="thumbnail select-image" {{action "openModal" "select-image" controller "logo"}}>
                 <img id="site-logo" {{bind-attr src=logo.smallUrl}} alt="logo">
@@ -56,12 +56,12 @@
             <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "logo"}}>{{t 'chooseImage'}}</button>
         {{/if}}
         <p class="info">
-            {{t 'siteLogoInfos'}}
+            {{t 'site.logoInfos'}}
         </p>
     </div>
 
     <div class="form-group">
-        <label for="site-cover">{{t 'siteCover'}}</label>
+        <label for="site-cover">{{t 'site.cover'}}</label>
         {{#if cover}}
             <button type="button" class="thumbnail select-image" {{action "openModal" "select-image" controller "cover"}}>
                 <img id="site-cover" {{bind-attr src=cover.smallUrl}} alt="cover">
@@ -71,15 +71,15 @@
             <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "cover"}}>{{t 'chooseImage'}}</button>
         {{/if}}
         <p class="info">
-            {{t 'siteCoverInfos'}}
+            {{t 'site.coverInfos'}}
         </p>
     </div>
 
     <div class="form-group">
-        <label for="site-theme">{{t 'siteTheme'}}</label>
+        <label for="site-theme">{{t 'site.theme'}}</label>
         {{view "select" content=allThemes selection=theme class="form-control"}}
         <p class="info">
-            {{t 'siteThemeInfos'}}
+            {{t 'site.themeInfos'}}
         </p>
     </div>
 </form>

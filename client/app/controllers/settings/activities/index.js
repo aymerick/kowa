@@ -8,7 +8,7 @@ var SettingsActivitiesController = Ember.ArrayController.extend({
   i18n: function() {
     return {
       coverImage: this.t('coverImage'),
-      activityEdit: this.t('activityEdit')
+      activityEdit: this.t('activity.edit')
     };
   }.property() // @todo Watch current language
 });

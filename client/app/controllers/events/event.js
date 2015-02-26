@@ -3,10 +3,10 @@ import ContentEditionController from 'kowa/mixins/content-edition-controller';
 
 var EventsEventController = Ember.ObjectController.extend(ContentEditionController, {
   editionRelationships: Ember.A([ 'cover' ]),
-  editionDefaultTitle: '(Untitled)',
+  editionDefaultTitle: 'event.untitled', // This is a i18n key
 
-  editionSaveMsgOk: 'Event saved.',
-  editionSaveMsgErr: 'Failed to save event.',
+  editionSaveMsgOk: 'event.saved', // This is a i18n key
+  editionSaveMsgErr: 'event.saveFailed', // This is a i18n key
 
   // @todo Get that list from the server
   allFormats: [
@@ -18,9 +18,9 @@ var EventsEventController = Ember.ObjectController.extend(ContentEditionControll
   i18n: function() {
     return {
       coverImage: this.t('coverImage'),
-      eventDescription: this.t('eventDescription'),
-      eventPlace: this.t('eventPlace'),
-      eventTitle: this.t('eventTitle')
+      eventDescription: this.t('event.description'),
+      eventPlace: this.t('event.place'),
+      eventTitle: this.t('event.title')
     };
   }.property() // @todo Watch current language
 });

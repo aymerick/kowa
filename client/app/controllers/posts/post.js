@@ -3,10 +3,10 @@ import ContentEditionController from 'kowa/mixins/content-edition-controller';
 
 var PostsPostController = Ember.ObjectController.extend(ContentEditionController, {
   editionRelationships: Ember.A([ 'cover' ]),
-  editionDefaultTitle: '(Untitled)',
+  editionDefaultTitle: 'post.untitled', // This is a i18n key
 
-  editionSaveMsgOk: 'Post saved.',
-  editionSaveMsgErr: 'Failed to save post.',
+  editionSaveMsgOk: 'post.saved', // This is a i18n key
+  editionSaveMsgErr: 'post.saveFailed', // This is a i18n key
 
   // @todo Get that list from the server
   allFormats: [
@@ -18,8 +18,8 @@ var PostsPostController = Ember.ObjectController.extend(ContentEditionController
   i18n: function() {
     return {
       coverImage: this.t('coverImage'),
-      postBody: this.t('postBody'),
-      postTitle: this.t('postTitle')
+      postBody: this.t('post.body'),
+      postTitle: this.t('post.title')
     };
   }.property() // @todo Watch current language
 });

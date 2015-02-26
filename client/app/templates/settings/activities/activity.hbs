@@ -1,5 +1,5 @@
 <header class="settings-header settings-item-show">
-    {{#link-to "settings.activities.index" class="btn btn-default action-back"}}<i class="fa fa-angle-left"></i> {{t 'activities'}}{{/link-to}}
+    {{#link-to "settings.activities.index" class="btn btn-default action-back"}}<i class="fa fa-angle-left"></i> {{t 'Activities'}}{{/link-to}}
 
     <h2 class="settings-item-title">{{model.title}}</h2>
 
@@ -8,31 +8,31 @@
 
 <form class="settings-body" id="settings-activity" role="form" {{action 'save' on='submit'}}>
     <div class="form-group">
-        <label for="activity-title">{{t 'activityName'}}</label>
+        <label for="activity-title">{{t 'activity.name'}}</label>
         {{input id="activity-title" name="activity[title]" type="text" class="form-control" value=model.title}}
         <p class="info">
-            {{t 'activityNameInfos'}}
+            {{t 'activity.nameInfos'}}
         </p>
     </div>
 
     <div class="form-group">
-        <label for="activity-summary">{{t 'activitySummary'}}</label>
+        <label for="activity-summary">{{t 'activity.summary'}}</label>
         {{textarea rows=5 id="activity-summary" name="activity[summary]" class="form-control" value=model.summary}}
         <p class="info">
-            {{t 'activitySummaryInfos'}}
+            {{t 'activity.summaryInfos'}}
         </p>
     </div>
 
     <div class="form-group">
-        <label for="activity-body">{{t 'activityDescription'}}</label>
+        <label for="activity-body">{{t 'activity.description'}}</label>
         {{textarea rows=10 id="activity-body" name="activity[body]" class="form-control" value=model.body}}
         <p class="info">
-            {{t 'activityDescriptionInfos'}}
+            {{t 'activity.descriptionInfos'}}
         </p>
     </div>
 
     <div class="form-group">
-        <label for="activity-cover">{{t 'activityCover'}}</label>
+        <label for="activity-cover">{{t 'activity.cover'}}</label>
         {{#if model.cover}}
             <button type="button" class="thumbnail select-image" {{action "openModal" "select-image" controller "cover"}}>
                 <img id="activity-cover" {{bind-attr src=cover.smallUrl}} alt="cover">
@@ -42,7 +42,7 @@
             <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "cover"}}>{{t 'chooseImage'}}</button>
         {{/if}}
         <p class="info">
-            {{t 'activityCoverInfos'}}
+            {{t 'activity.coverInfos'}}
         </p>
     </div>
 </form>
