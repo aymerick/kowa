@@ -8,41 +8,41 @@
 
 <form class="settings-body" id="settings-activity" role="form" {{action 'save' on='submit'}}>
     <div class="form-group">
-        <label for="activity-title">Activity Name</label>
+        <label for="activity-title">{{t 'activityName'}}</label>
         {{input id="activity-title" name="activity[title]" type="text" class="form-control" value=model.title}}
         <p class="info">
-            A title for your activity
+            {{t 'activityNameInfos'}}
         </p>
     </div>
 
     <div class="form-group">
-        <label for="activity-summary">Activity Summary</label>
+        <label for="activity-summary">{{t 'activitySummary'}}</label>
         {{textarea rows=5 id="activity-summary" name="activity[summary]" class="form-control" value=model.summary}}
         <p class="info">
-            A summary of what your activity is about
+            {{t 'activitySummaryInfos'}}
         </p>
     </div>
 
     <div class="form-group">
-        <label for="activity-body">Activity Description</label>
+        <label for="activity-body">{{t 'activityDescription'}}</label>
         {{textarea rows=10 id="activity-body" name="activity[body]" class="form-control" value=model.body}}
         <p class="info">
-            A description for your activity
+            {{t 'activityDescriptionInfos'}}
         </p>
     </div>
 
     <div class="form-group">
-        <label for="activity-cover">Activity Cover</label>
+        <label for="activity-cover">{{t 'activityCover'}}</label>
         {{#if model.cover}}
             <button type="button" class="thumbnail select-image" {{action "openModal" "select-image" controller "cover"}}>
                 <img id="activity-cover" {{bind-attr src=cover.smallUrl}} alt="cover">
                 <span class="remove-image" {{action 'removeCover'}}>&#10006;</span>
             </button>
         {{else}}
-            <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "cover"}}>Choose Image</button>
+            <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "cover"}}>{{t 'chooseImage'}}</button>
         {{/if}}
         <p class="info">
-            Set a cover image for your activity
+            {{t 'activityCoverInfos'}}
         </p>
     </div>
 </form>

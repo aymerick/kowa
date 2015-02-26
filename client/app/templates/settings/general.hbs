@@ -6,80 +6,80 @@
 
 <form class="settings-body" role="form" {{action 'save' on='submit'}}>
     <div class="form-group">
-        <label for="site-name">Site Name</label>
+        <label for="site-name">{{t 'siteName'}}</label>
         {{input id="site-name" name="general[name]" type="text" class="form-control" value=name}}
         <p class="info">
-            The name of your site
+            {{t 'siteNameInfos'}}
         </p>
     </div>
 
     <div class="form-group">
-        <label for="site-tagline">Site Tagline</label>
+        <label for="site-tagline">{{t 'siteTagline'}}</label>
         {{input id="site-tagline" name="general[tagline]" type="text" class="form-control" value=tagline}}
         <p class="info">
-            The tagline of your site
+            {{t 'siteTaglineInfos'}}
         </p>
     </div>
 
     <div class="form-group">
-        <label for="site-description">Site Description</label>
+        <label for="site-description">{{t 'siteDescription'}}</label>
         {{summernote-editor value=description height=300 placeholder="Description" id="site-description"}}
         <p class="info">
-            Describe what your site is about
+            {{t 'siteDescriptionInfos'}}
         </p>
     </div>
 
     <div class="form-group">
-        <label for="site-more-desc">Site Additional Description</label>
+        <label for="site-more-desc">{{t 'siteAdditionalDescription'}}</label>
         {{summernote-editor value=moreDesc height=300 placeholder="Additional description" id="site-more-desc"}}
         <p class="info">
-            An additional description to display at bottom of homepage
+            {{t 'siteAdditionalDescriptionInfos'}}
         </p>
     </div>
 
     <div class="form-group">
-        <label for="site-join-text">Site Join Text</label>
+        <label for="site-join-text">{{t 'siteJoinText'}}</label>
         {{summernote-editor value=joinText height=300 placeholder="Join text" id="site-join-text"}}
         <p class="info">
-            If relevant, explain to visitors why then should become a member of your organisation
+            {{t 'siteJoinTextInfos'}}
         </p>
     </div>
 
     <div class="form-group">
-        <label for="site-logo">Site Logo</label>
+        <label for="site-logo">{{t 'siteLogo'}}</label>
         {{#if logo}}
             <button type="button" class="thumbnail select-image" {{action "openModal" "select-image" controller "logo"}}>
                 <img id="site-logo" {{bind-attr src=logo.smallUrl}} alt="logo">
                 <span class="remove-image" {{action 'removeLogo'}}>&#10006;</span>
             </button>
         {{else}}
-            <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "logo"}}>Choose Image</button>
+            <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "logo"}}>{{t 'chooseImage'}}</button>
         {{/if}}
         <p class="info">
-            Display a logo for your site
+            {{t 'siteLogoInfos'}}
         </p>
     </div>
 
     <div class="form-group">
-        <label for="site-cover">Site Cover</label>
+        <label for="site-cover">{{t 'siteCover'}}</label>
         {{#if cover}}
             <button type="button" class="thumbnail select-image" {{action "openModal" "select-image" controller "cover"}}>
                 <img id="site-cover" {{bind-attr src=cover.smallUrl}} alt="cover">
                 <span class="remove-image" {{action 'removeCover'}}>&#10006;</span>
             </button>
         {{else}}
-            <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "cover"}}>Choose Image</button>
+            <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "cover"}}>{{t 'chooseImage'}}</button>
         {{/if}}
         <p class="info">
-            Display a cover image on your site
+            {{t 'siteCoverInfos'}}
         </p>
     </div>
 
     <div class="form-group">
-        <label for="site-theme">Site theme</label>
+        <label for="site-theme">{{t 'siteTheme'}}</label>
         {{view "select" content=allThemes selection=theme class="form-control"}}
         <p class="info">
-            The theme to use for your site
+            {{t 'siteThemeInfos'}}
         </p>
     </div>
 </form>
