@@ -14,7 +14,7 @@ var EventsEventController = Ember.ObjectController.extend(ContentEditionControll
     { name: "Markdown", id: 'md' }
   ],
 
-  // i18n for attributes values components parameters
+  // i18n for attributes values and components parameters
   i18n: function() {
     return {
       coverImage: this.t('coverImage'),

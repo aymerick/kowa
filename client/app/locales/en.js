@@ -1,14 +1,13 @@
 export default {
   // common
   added: 'Added:',
+  cancel: 'Cancel',
   chooseImage: 'Choose image',
   coverImage: 'cover image',
   'delete': 'Delete',
-  end: 'End:',
   logout: 'Logout',
   save: 'Save',
   selectCover: 'Select Cover',
-  start: 'Start:',
   toogleNavigation: 'Toggle navigation',
 
   // activities
@@ -16,12 +15,18 @@ export default {
   activity: {
     cover: 'Activity cover',
     coverInfos: 'Set a cover image for your activity',
+    deleteAction: "You're about to permanently delete this activity:",
+    deleteQuestion: "Are you sure you want to delete this activity?",
+    deleted: 'Activity deleted',
+    deleteFailed: 'Failed to delete activity',
     description: 'Activity description',
     descriptionInfos: 'A description for your activity',
     edit: 'Edit this activity',
     name: 'Activity name',
     nameInfos: 'A title for your activity',
     'new': 'New activity',
+    saved: 'Activity saved',
+    saveFailed: 'Failed to save activity',
     summary: 'Activity summary',
     summaryInfos: 'A summary of what your activity is about'
   },
@@ -44,11 +49,17 @@ export default {
   // events
   Events: 'Events',
   'event': {
+    deleteAction: "You're about to permanently delete that event:",
+    deleteQuestion: "Are you sure you want to delete this event?",
+    deleted: 'Event deleted',
+    deleteFailed: 'Failed to delete event',
     description: 'Event description',
+    end: 'End:',
     'new': 'New event',
     place: 'Event place',
     saved: 'Event saved',
     saveFailed: 'Failed to save event',
+    start: 'Start:',
     title: 'Event title',
     untitled: '(Untitled)'
   },
@@ -57,6 +68,10 @@ export default {
   Pages: 'Pages',
   page: {
     body: 'Page body',
+    deleteAction: "You're about to permanently delete that page:",
+    deleteQuestion: "Are you sure you want to delete this page?",
+    deleted: 'Page deleted',
+    deleteFailed: 'Failed to delete page',
     displayInNavBar: 'Display in navigation bar',
     'new': 'New page',
     saved: 'Page saved',
@@ -70,6 +85,10 @@ export default {
   Posts: 'Posts',
   post: {
     body: 'Post body',
+    deleteAction: "You're about to permanently delete that post:",
+    deleteQuestion: "Are you sure you want to delete this post?",
+    deleted: 'Post deleted',
+    deleteFailed: 'Failed to delete post',
     'new': 'New post',
     saved: 'Post saved',
     saveFailed: 'Failed to save post',
@@ -102,5 +121,11 @@ export default {
   },
 
   // images settings
-  Images: 'Images'
+  Images: 'Images',
+  image: {
+    deleteAction: "You're about to permanently delete this image:",
+    deleteQuestion: "Are you sure you want to delete this image?",
+    deleted: 'Image deleted',
+    deleteFailed: 'Failed to delete image'
+  }
 };

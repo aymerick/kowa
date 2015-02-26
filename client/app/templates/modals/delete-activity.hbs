@@ -1,5 +1,5 @@
-{{#modal-dialog title='Are you sure you want to delete this activity?' ok='delete' okText='Delete' okClass='btn-danger' close='closeModal' closeText='Cancel'}}
-    <h4>You're about to permanently delete this activity:</h4>
+{{#modal-dialog title=i18n.deleteQuestion ok='delete' okText=i18n.delete okClass='btn-danger' close='closeModal' closeText=i18n.cancel}}
+    <h4>{{t 'activity.deleteAction'}}</h4>
     <h2>{{model.title}}</h2>
     <p>
         {{model.summary}}

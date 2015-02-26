@@ -16,11 +16,11 @@ var SettingsActivitiesActivityController = Ember.ObjectController.extend({
       var self = this;
 
       return this.get('model').save().then(function (model) {
-        self.get('flashes').success('Activity saved.');
+        self.get('flashes').success(self.t('activity.saved'));
 
         return model;
       }).catch(function (/* errors */) {
-        self.get('flashes').danger('Failed to save activity.');
+        self.get('flashes').danger(self.t('activity.saveFailed'));
       });
     }
   }

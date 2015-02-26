@@ -1,14 +1,13 @@
 export default {
   // common
   added: 'Ajouté:',
+  cancel: 'Annuler',
   chooseImage: 'Choisir image',
   coverImage: 'image principale',
   'delete': 'Supprimer',
-  end: 'Fin:',
   logout: 'Déconnexion',
   save: 'Sauvergarder',
   selectCover: 'Choisir Image',
-  start: 'Début:',
   toogleNavigation: 'Menu',
 
   // activities
@@ -16,12 +15,18 @@ export default {
   activity: {
     cover: 'Image principale',
     coverInfos: 'Une image représentant votre activité',
+    deleteAction: "Vous êtes sur le point de supprimer cette activité:",
+    deleteQuestion: "Etes-vous certain de vouloir supprimer cette activité ?",
+    deleted: 'Activité supprimée',
+    deleteFailed: "Erreur lors de la suppression de l'actualité",
     description: 'Description',
     descriptionInfos: 'Un descriptif détaillé de votre activité',
     edit: 'Modifier cette activité',
     name: 'Titre',
     nameInfos: 'Un titre pour votre activité',
     'new': 'Nouvelle activité',
+    saved: 'Activité sauvegardé',
+    saveFailed: "Erreur lors de la sauvegarde de l'activité",
     summary: 'Résumé',
     summaryInfos: "Un résumé de votre activité qui sera affiché sur la page d'accueil"
   },
@@ -44,11 +49,17 @@ export default {
   // events
   Events: 'Évènements',
   'event': {
+    deleteAction: "Vous êtes sur le point de supprimer cet évènement:",
+    deleteQuestion: "Etes-vous certain de vouloir supprimer cet évènement ?",
+    deleted: 'Évènement supprimé',
+    deleteFailed: "Erreur lors de la suppression de l'évènement",
     description: "Description de l'évènement",
+    end: 'Fin:',
     'new': 'Nouvel évènement',
     place: 'Lieu',
     saved: 'Évènement sauvegardé',
     saveFailed: "Erreur lors de la sauvegarde de l'évènement",
+    start: 'Début:',
     title: "Titre de l'évènement",
     untitled: '(Sans titre)'
   },
@@ -57,6 +68,10 @@ export default {
   Pages: 'Pages',
   page: {
     body: 'Contenu de la page',
+    deleteAction: "Vous êtes sur le point de supprimer cette page:",
+    deleteQuestion: "Etes-vous certain de vouloir supprimer cette page ?",
+    deleted: 'Page supprimée',
+    deleteFailed: "Erreur lors de la suppression de la page",
     displayInNavBar: 'Afficher dans la barre de navigation',
     'new': 'Nouvelle page',
     saved: 'Page sauvegardée',
@@ -70,6 +85,10 @@ export default {
   Posts: 'Actualités',
   post: {
     body: 'Texte...',
+    deleteAction: "Vous êtes sur le point de supprimer cette actualité:",
+    deleteQuestion: "Etes-vous certain de vouloir supprimer cette actualité ?",
+    deleted: 'Actualité supprimée',
+    deleteFailed: "Erreur lors de la suppression de l'actualité",
     'new': 'Nouvelle actualité',
     saved: 'Actualité sauvegardée',
     saveFailed: "Erreur lors de la sauvegarde de l'actualité",
@@ -103,4 +122,10 @@ export default {
 
   // images settings
   Images: 'Images',
+  image: {
+    deleteAction: "Vous êtes sur le point de supprimer cette image:",
+    deleteQuestion: "Etes-vous certain de vouloir supprimer cette image ?",
+    deleted: 'Image supprimée',
+    deleteFailed: "Erreur lors de la suppression de l'image"
+  }
 };
