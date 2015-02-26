@@ -1,6 +1,5 @@
 export default {
   // common
-  added: 'Added:',
   cancel: 'Cancel',
   chooseImage: 'Choose image',
   coverImage: 'cover image',
@@ -84,6 +83,7 @@ export default {
   // posts
   Posts: 'Posts',
   post: {
+    added: 'Added:',
     body: 'Post body',
     deleteAction: "You're about to permanently delete that post:",
     deleteQuestion: "Are you sure you want to delete this post?",
@@ -123,6 +123,7 @@ export default {
   // images settings
   Images: 'Images',
   image: {
+    added: 'Added:',
     deleteAction: "You're about to permanently delete this image:",
     deleteQuestion: "Are you sure you want to delete this image?",
     deleted: 'Image deleted',

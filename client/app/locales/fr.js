@@ -1,6 +1,5 @@
 export default {
   // common
-  added: 'Ajouté:',
   cancel: 'Annuler',
   chooseImage: 'Choisir image',
   coverImage: 'image principale',
@@ -84,6 +83,7 @@ export default {
   // posts
   Posts: 'Actualités',
   post: {
+    added: 'Ajoutée:',
     body: 'Texte...',
     deleteAction: "Vous êtes sur le point de supprimer cette actualité:",
     deleteQuestion: "Etes-vous certain de vouloir supprimer cette actualité ?",
@@ -123,6 +123,7 @@ export default {
   // images settings
   Images: 'Images',
   image: {
+    added: 'Ajoutée:',
     deleteAction: "Vous êtes sur le point de supprimer cette image:",
     deleteQuestion: "Etes-vous certain de vouloir supprimer cette image ?",
     deleted: 'Image supprimée',

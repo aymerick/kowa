@@ -15,7 +15,7 @@
                 <img {{bind-attr src=image.smallFillUrl}} class="img-responsive" />
                 <div class="caption">
                     <p>
-                        {{t 'added'}} {{ago image.createdAt}}
+                        {{t 'image.added'}} {{ago image.createdAt}}
                     </p>
                     <button type="button" class="btn btn-sm btn-danger delete-button" {{action "openModal" "delete-image" controller image}}>{{t 'delete'}}</button>
                 </div>
