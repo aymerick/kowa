@@ -5,9 +5,7 @@ import (
 	"html/template"
 	"path"
 
-	"github.com/microcosm-cc/bluemonday"
 	"github.com/nicksnyder/go-i18n/i18n"
-	"github.com/russross/blackfriday"
 
 	"github.com/aymerick/kowa/models"
 	"github.com/aymerick/kowa/utils"
@@ -122,16 +120,7 @@ func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *Post
 		result.Cover = builder.addImage(cover)
 	}
 
-	if post.Format == models.FORMAT_MARKDOWN {
-		html := blackfriday.MarkdownCommon([]byte(post.Body))
-
-		result.Body = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
-	} else {
-		sanitizePolicy := bluemonday.UGCPolicy()
-		sanitizePolicy.AllowAttrs("style").OnElements("p", "span", "div") // I know this is bad
-
-		result.Body = template.HTML(sanitizePolicy.Sanitize(post.Body))
-	}
+	result.Body = generateHTML(post.Format, post.Body)
 
 	return result
 }

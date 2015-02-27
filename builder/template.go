@@ -5,7 +5,29 @@ import (
 	"html/template"
 	"reflect"
 	"strings"
+
+	"github.com/microcosm-cc/bluemonday"
+	"github.com/russross/blackfriday"
+
+	"github.com/aymerick/kowa/models"
 )
+
+func generateHTML(inputFormat string, input string) template.HTML {
+	var result template.HTML
+
+	if inputFormat == models.FORMAT_MARKDOWN {
+		html := blackfriday.MarkdownCommon([]byte(input))
+
+		result = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
+	} else {
+		sanitizePolicy := bluemonday.UGCPolicy()
+		sanitizePolicy.AllowAttrs("style").OnElements("p", "span", "div") // I know this is bad
+
+		result = template.HTML(sanitizePolicy.Sanitize(input))
+	}
+
+	return result
+}
 
 //
 // Func Map

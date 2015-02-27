@@ -6,8 +6,6 @@ import (
 
 	"github.com/aymerick/kowa/models"
 	"github.com/aymerick/kowa/utils"
-	"github.com/microcosm-cc/bluemonday"
-	"github.com/russross/blackfriday"
 )
 
 // Page nodes builder
@@ -79,16 +77,7 @@ func (builder *PagesBuilder) NewPageContent(page *models.Page, node *Node) *Page
 		result.Cover = builder.addImage(cover)
 	}
 
-	if page.Format == models.FORMAT_MARKDOWN {
-		html := blackfriday.MarkdownCommon([]byte(page.Body))
-
-		result.Body = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
-	} else {
-		sanitizePolicy := bluemonday.UGCPolicy()
-		sanitizePolicy.AllowAttrs("style").OnElements("p", "span", "div") // I know this is bad
-
-		result.Body = template.HTML(sanitizePolicy.Sanitize(page.Body))
-	}
+	result.Body = generateHTML(page.Format, page.Body)
 
 	return result
 }

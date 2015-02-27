@@ -3,7 +3,7 @@ package builder
 import (
 	"html/template"
 
-	"github.com/microcosm-cc/bluemonday"
+	"github.com/aymerick/kowa/models"
 )
 
 // Homepage node builder
@@ -64,12 +64,9 @@ func (builder *HomepageBuilder) NewHomepageContent(node *Node) *HomepageContent 
 		Node: node,
 	}
 
-	sanitizePolicy := bluemonday.UGCPolicy()
-	sanitizePolicy.AllowAttrs("style").OnElements("p", "span") // I know this is bad
-
-	result.Description = template.HTML(sanitizePolicy.Sanitize(site.Description))
-	result.MoreDesc = template.HTML(sanitizePolicy.Sanitize(site.MoreDesc))
-	result.JoinText = template.HTML(sanitizePolicy.Sanitize(site.JoinText))
+	result.Description = generateHTML(models.FORMAT_HTML, site.Description)
+	result.MoreDesc = generateHTML(models.FORMAT_HTML, site.MoreDesc)
+	result.JoinText = generateHTML(models.FORMAT_HTML, site.JoinText)
 
 	logo := site.FindLogo()
 	if logo != nil {

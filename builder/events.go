@@ -7,9 +7,7 @@ import (
 	"sort"
 	"time"
 
-	"github.com/microcosm-cc/bluemonday"
 	"github.com/nicksnyder/go-i18n/i18n"
-	"github.com/russross/blackfriday"
 
 	"github.com/aymerick/kowa/models"
 	"github.com/aymerick/kowa/utils"
@@ -182,16 +180,7 @@ func (builder *EventsBuilder) NewEventContent(event *models.Event, node *Node) *
 		result.Cover = builder.addImage(cover)
 	}
 
-	if event.Format == models.FORMAT_MARKDOWN {
-		html := blackfriday.MarkdownCommon([]byte(event.Body))
-
-		result.Body = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
-	} else {
-		sanitizePolicy := bluemonday.UGCPolicy()
-		sanitizePolicy.AllowAttrs("style").OnElements("p", "span", "div") // I know this is bad
-
-		result.Body = template.HTML(sanitizePolicy.Sanitize(event.Body))
-	}
+	result.Body = generateHTML(event.Format, event.Body)
 
 	return result
 }
