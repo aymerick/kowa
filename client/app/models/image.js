@@ -21,7 +21,8 @@ var ImageModel = DS.Model.extend({
   coverPosts: DS.hasMany('post', { inverse: 'cover', async: true }),
   coverEvents: DS.hasMany('event', { inverse: 'cover', async: true }),
   coverPages: DS.hasMany('page', { inverse: 'cover', async: true }),
-  coverActivities: DS.hasMany('activity', { inverse: 'cover', async: true })
+  coverActivities: DS.hasMany('activity', { inverse: 'cover', async: true }),
+  photoMembers: DS.hasMany('member', { inverse: 'photo', async: true })
 });
 
 export default ImageModel;

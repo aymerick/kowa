@@ -1,7 +1,7 @@
 import AuthenticatedRoute from 'kowa/routes/authenticated';
 
 var SettingsActivitiesNewRoute = AuthenticatedRoute.extend({
-  // use PostEditController
+  // use SettingsActivitiesActivityRoute
   controllerName: 'settings.activities.activity',
 
   // this is a fresh new model

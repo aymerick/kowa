@@ -1,0 +1,48 @@
+<header class="settings-header settings-item-show">
+    {{#link-to "settings.members.index" class="btn btn-default action-back"}}<i class="fa fa-angle-left"></i> {{t 'Members'}}{{/link-to}}
+
+    <h2 class="settings-item-title">{{model.fullname}}</h2>
+
+    <button class="btn btn-primary action-save" {{action "save"}}>{{t 'save'}}</button>
+</header>
+
+<form class="settings-body" id="settings-member" role="form" {{action 'save' on='submit'}}>
+    <div class="form-group">
+        <label for="member-fullname">{{t 'member.fullname'}}</label>
+        {{input id="member-fullname" name="member[fullname]" type="text" class="form-control" value=model.fullname}}
+        <p class="info">
+            {{t 'member.fullnameInfos'}}
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="member-role">{{t 'member.role'}}</label>
+        {{textarea rows=5 id="member-role" name="member[role]" class="form-control" value=model.role}}
+        <p class="info">
+            {{t 'member.roleInfos'}}
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="member-description">{{t 'member.description'}}</label>
+        {{textarea rows=10 id="member-description" name="member[description]" class="form-control" value=model.description}}
+        <p class="info">
+            {{t 'member.descriptionInfos'}}
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="member-photo">{{t 'member.photo'}}</label>
+        {{#if model.photo}}
+            <button type="button" class="thumbnail select-image" {{action "openModal" "select-image" controller "photo"}}>
+                <img id="member-photo" {{bind-attr src=photo.smallUrl}} alt="photo">
+                <span class="remove-image" {{action 'removePhoto'}}>&#10006;</span>
+            </button>
+        {{else}}
+            <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "photo"}}>{{t 'chooseImage'}}</button>
+        {{/if}}
+        <p class="info">
+            {{t 'member.photoInfos'}}
+        </p>
+    </div>
+</form>

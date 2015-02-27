@@ -5,6 +5,7 @@ export default {
   coverImage: 'image principale',
   'delete': 'Supprimer',
   logout: 'Déconnexion',
+  photo: 'Photo',
   save: 'Sauvegarder',
   select: 'Selectionner',
   selectCover: 'Choisir Image',
@@ -71,6 +72,27 @@ export default {
     start: 'Début:',
     title: "Titre de l'évènement",
     untitled: '(Sans titre)'
+  },
+
+  // members
+  Members: 'Équipe',
+  member: {
+    deleteAction: "Vous êtes sur le point de supprimer cette personne de l'équipe:",
+    deleteQuestion: "Etes-vous certain de vouloir supprimer cette personne ?",
+    deleted: 'Personne supprimé',
+    deleteFailed: "Erreur lors de la suppression de cette personne",
+    description: 'Description',
+    descriptionInfos: "Indiquez plus d'informations concernant cette personne",
+    edit: 'Modifier cette personne',
+    fullname: 'Nom',
+    fullnameInfos: 'Indiquez le nom de cette personne',
+    'new': 'Nouvelle personne',
+    photo: 'Photo',
+    photoInfos: 'Ajoutez une photo pour cette personne',
+    role: 'Role',
+    roleInfos: 'Le role de cette personne dans votre organisation',
+    saved: 'Personne sauvegardée',
+    saveFailed: 'Erreur lors de la sauvegarde de cette personne'
   },
 
   // pages

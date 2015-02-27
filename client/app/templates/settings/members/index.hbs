@@ -1,0 +1,29 @@
+<header class="settings-header">
+    <h2 class="settings-item-title">{{t 'Members'}}</h2>
+
+    {{#link-to "settings.members.new" class="btn btn-success action-add" title="New member"}}<i class="fa fa-plus"></i> {{t 'member.new'}}{{/link-to}}
+</header>
+
+<section class="settings-body">
+    <div class="settings-list">
+        {{#each member in controller}}
+            {{#link-to "settings.members.member" member class="settings-item" title=i18n.memberEdit}}
+                <div class="settings-item-cover">
+                    {{#if member.photo}}
+                        <img {{bind-attr src=member.photo.thumbUrl alt=i18n.photo}} class="thumbnail" />
+                    {{else}}
+                        <div class="thumbnail no-image text-center"></div>
+                    {{/if}}
+                </div>
+
+                <div class="settings-item-fields">
+                    <div class="settings-item-title">{{member.fullname}}</div>
+                </div>
+
+                <div class="settings-item-actions">
+                    <button {{action "openModal" "delete-member" controller member bubbles=false}} class="btn btn-danger action-delete">{{t 'delete'}}</button>
+                </div>
+            {{/link-to}}
+        {{/each}}
+    </div>
+</section>

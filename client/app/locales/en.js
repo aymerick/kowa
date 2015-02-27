@@ -5,6 +5,7 @@ export default {
   coverImage: 'cover image',
   'delete': 'Delete',
   logout: 'Logout',
+  photo: 'Photo',
   save: 'Save',
   select: 'Select',
   selectCover: 'Select Cover',
@@ -71,6 +72,27 @@ export default {
     start: 'Start:',
     title: 'Event title',
     untitled: '(Untitled)'
+  },
+
+  // members
+  Members: 'Members',
+  member: {
+    deleteAction: "You're about to permanently delete this member:",
+    deleteQuestion: "Are you sure you want to delete this member?",
+    deleted: 'Member deleted',
+    deleteFailed: 'Failed to delete member',
+    description: 'Member description',
+    descriptionInfos: 'Set a description for this member',
+    edit: 'Edit this member',
+    fullname: 'Fullname',
+    fullnameInfos: 'Fullname for this member',
+    'new': 'New member',
+    photo: 'Member photo',
+    photoInfos: 'Set a photo for this member',
+    role: 'Member role',
+    roleInfos: 'The role of this member in your organization',
+    saved: 'Member saved',
+    saveFailed: 'Failed to save member'
   },
 
   // pages
