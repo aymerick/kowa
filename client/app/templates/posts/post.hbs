@@ -22,7 +22,7 @@
         </div>
 
         <div class="content-actions">
-            <button {{action "openModal" "delete-post" controller 'posts.index'}} class="btn btn-danger content-action-button action-delete">{{t 'delete'}}</button>
+            <button {{action "openModal" "delete-post" controller 'posts.index'}} class="btn btn-danger content-action-button action-delete" {{bind-attr disabled=model.isNew}}>{{t 'delete'}}</button>
             <button {{action "saveContent"}} class="btn btn-primary content-action-button action-save" {{bind-attr disabled=nothingChanged}}><i class="fa fa-floppy-o"></i> {{t 'save'}}</button>
         </div>
     </header>
