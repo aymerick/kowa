@@ -76,7 +76,7 @@ func (builder *SiteBuilder) UrlFor(dest interface{}) (string, error) {
 		nodes := builder.nodeBuilder(destStr).Nodes()
 
 		for _, node := range nodes {
-			if node.Slug == destStr {
+			if node.Kind == destStr {
 				result = node.Url
 				break
 			}
