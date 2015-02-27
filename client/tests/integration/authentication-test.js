@@ -113,6 +113,6 @@ test('Homepage displays first post of first site if authenticated', function(ass
   visit('/');
 
   andThen(function() {
-    assert.equal(currentRouteName(), 'post.index');
+    assert.equal(currentRouteName(), 'posts.post');
   });
 });

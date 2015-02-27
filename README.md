@@ -28,6 +28,9 @@ Test:
 
     $ go test ./... -v
 
+    $ cd client
+    $ ember test
+
 
 ## Sublime Text
 
