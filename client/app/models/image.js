@@ -12,6 +12,7 @@ var ImageModel = DS.Model.extend({
   squareUrl: DS.attr(),
   smallUrl: DS.attr(),
   smallFillUrl: DS.attr(),
+  portraitFillUrl: DS.attr(),
   largeUrl: DS.attr(),
 
   site: DS.belongsTo('site', { inverse: 'images', async: true }),

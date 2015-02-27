@@ -11,7 +11,7 @@
                 <div class="col-md-4 col-sm-6 member">
                     <h3>{{ $member.Fullname }}</h3>
                     {{ if .Photo }}
-                        <img class="img-responsive img-thumbnail avatar" src="{{ $member.Photo.SmallFill }}" alt="{{ $member.Fullname }}" />
+                        <img class="img-responsive img-thumbnail avatar" src="{{ $member.Photo.PortraitFill }}" alt="{{ $member.Fullname }}" />
                     {{ else }}
                         <img class="img-responsive img-thumbnail avatar no-photo" src="/assets/img/avatar.jpg" alt="{{ $member.Fullname }}" />
                     {{ end }}

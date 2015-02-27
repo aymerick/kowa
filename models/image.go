@@ -50,6 +50,12 @@ const (
 	SMALL_FILL_WIDTH  = 300
 	SMALL_FILL_HEIGHT = 225
 
+	PORTRAIT_FILL_KIND   = "portrait_fill"
+	PORTRAIT_FILL_SCALE  = DERIVATIVE_FILL
+	PORTRAIT_FILL_SUFFIX = "_pf"
+	PORTRAIT_FILL_WIDTH  = 225
+	PORTRAIT_FILL_HEIGHT = 300
+
 	LARGE_KIND   = "large"
 	LARGE_SCALE  = DERIVATIVE_FIT
 	LARGE_SUFFIX = "_l"
@@ -78,11 +84,12 @@ type ImageJson struct {
 	Image
 	URL string `json:"url"`
 
-	ThumbURL     string `json:"thumbUrl"`
-	SquareURL    string `json:"squareUrl"`
-	SmallURL     string `json:"smallUrl"`
-	SmallFillURL string `json:"smallFillUrl"`
-	LargeURL     string `json:"largeUrl"`
+	ThumbURL        string `json:"thumbUrl"`
+	SquareURL       string `json:"squareUrl"`
+	SmallURL        string `json:"smallUrl"`
+	SmallFillURL    string `json:"smallFillUrl"`
+	PortraitFillURL string `json:"portraitFillUrl"`
+	LargeURL        string `json:"largeUrl"`
 }
 
 type Derivative struct {
@@ -124,6 +131,13 @@ func init() {
 			suffix: SMALL_FILL_SUFFIX,
 			width:  SMALL_FILL_WIDTH,
 			height: SMALL_FILL_HEIGHT,
+		},
+		&Derivative{
+			kind:   PORTRAIT_FILL_KIND,
+			scale:  PORTRAIT_FILL_SCALE,
+			suffix: PORTRAIT_FILL_SUFFIX,
+			width:  PORTRAIT_FILL_WIDTH,
+			height: PORTRAIT_FILL_HEIGHT,
 		},
 		&Derivative{
 			kind:   LARGE_KIND,
@@ -219,11 +233,12 @@ func (img *Image) MarshalJSON() ([]byte, error) {
 		Image: *img,
 		URL:   img.URL(),
 
-		ThumbURL:     img.ThumbURL(),
-		SquareURL:    img.SquareURL(),
-		SmallURL:     img.SmallURL(),
-		SmallFillURL: img.SmallFillURL(),
-		LargeURL:     img.LargeURL(),
+		ThumbURL:        img.ThumbURL(),
+		SquareURL:       img.SquareURL(),
+		SmallURL:        img.SmallURL(),
+		SmallFillURL:    img.SmallFillURL(),
+		PortraitFillURL: img.PortraitFillURL(),
+		LargeURL:        img.LargeURL(),
 	}
 
 	return json.Marshal(imageJson)
@@ -308,6 +323,11 @@ func (img *Image) SmallURL() string {
 // Returns Small Fill derivative URL
 func (img *Image) SmallFillURL() string {
 	return img.DerivativeURL(DerivativeForKind(SMALL_FILL_KIND))
+}
+
+// Returns Portrait Fill derivative URL
+func (img *Image) PortraitFillURL() string {
+	return img.DerivativeURL(DerivativeForKind(PORTRAIT_FILL_KIND))
 }
 
 // Returns Large derivative URL
