@@ -3,7 +3,7 @@
 
     <h2 class="settings-item-title">{{model.fullname}}</h2>
 
-    <button class="btn btn-primary action-save" {{action "save"}}>{{t 'save'}}</button>
+    <button class="btn btn-primary action-save" {{action "save"}}><i class="fa fa-floppy-o"></i> {{t 'save'}}</button>
 </header>
 
 <form class="settings-body" id="settings-member" role="form" {{action 'save' on='submit'}}>
