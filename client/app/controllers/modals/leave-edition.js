@@ -25,6 +25,9 @@ var LeaveEditionModal = Ember.ObjectController.extend({
 
       masterController.rollbackEdition();
 
+      // this is necessary so that transition retry works
+      masterController.set('isDirty', false);
+
       haltedTransition.retry();
     }
   },
