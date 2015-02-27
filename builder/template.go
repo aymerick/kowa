@@ -60,7 +60,7 @@ func (builder *SiteBuilder) UrlFor(dest interface{}) (string, error) {
 	var err error
 
 	switch destStr {
-	case KIND_ACTIVITIES, KIND_CONTACT, KIND_HOMEPAGE:
+	case KIND_ACTIVITIES, KIND_MEMBERS, KIND_CONTACT, KIND_HOMEPAGE:
 		// find uniq node
 		nodes := builder.nodeBuilder(destStr).Nodes()
 		if len(nodes) == 0 {

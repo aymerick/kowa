@@ -49,13 +49,13 @@ func (builder *ContactBuilder) Load() {
 	contactContent := builder.NewContactContent()
 	if contactContent.HaveContact || contactContent.HaveSocial {
 		node := builder.newNode()
-		node.fillUrl(node.Kind)
+		node.fillUrl(T(node.Kind))
 
 		node.Title = title
 		node.Tagline = tagline
 		node.Meta = &NodeMeta{Description: tagline} // @todo !!!
 		node.InNavBar = true
-		node.NavBarOrder = 15
+		node.NavBarOrder = 20
 
 		contactContent.Node = node
 		node.Content = contactContent

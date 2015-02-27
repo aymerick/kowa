@@ -57,7 +57,7 @@ func (builder *ActivitiesBuilder) Load() {
 	if len(activitiesVars) > 0 {
 		// build activities page
 		node := builder.newNode()
-		node.fillUrl(node.Kind)
+		node.fillUrl(T(node.Kind))
 
 		title := T("Activities")
 		tagline := "" // @todo Fill

@@ -1,0 +1,22 @@
+{{ template "partials/jumbotron" .Node }}
+
+{{ range .Members }}
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>{{ .Fullname }}</h2>
+                <p>{{ .Role }}</p>
+                <p>{{ .Description }}</p>
+            </div>
+        </div>
+        {{ if .Photo }}
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="{{ .Photo.Small }}" alt="Photo" class="img-responsive img-thumbnail center-block"/>
+                </div>
+            </div>
+        {{ end }}
+    </div>
+</section>
+{{ end }}

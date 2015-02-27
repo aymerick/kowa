@@ -4,8 +4,16 @@
     "translation": "Activités"
   },
   {
+    "id": "activities",
+    "translation": "activites"
+  },
+  {
     "id": "Contact",
     "translation": "Contact"
+  },
+  {
+    "id": "contact",
+    "translation": "contact"
   },
   {
     "id": "Events",
@@ -14,6 +22,14 @@
   {
     "id": "events",
     "translation": "evenements"
+  },
+  {
+    "id": "Members",
+    "translation": "Équipe"
+  },
+  {
+    "id": "members",
+    "translation": "equipe"
   },
   {
     "id": "Posts",

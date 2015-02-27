@@ -40,6 +40,7 @@ type NodeMeta struct {
 // All node kinds
 const (
 	KIND_ACTIVITIES = "activities"
+	KIND_MEMBERS    = "members"
 	KIND_CONTACT    = "contact"
 	KIND_HOMEPAGE   = "homepage"
 	KIND_PAGE       = "page"
