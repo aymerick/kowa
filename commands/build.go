@@ -18,7 +18,7 @@ const (
 
 var buildCmd = &cobra.Command{
 	Use:   "build [site_id]",
-	Short: "Site builder",
+	Short: "Build site",
 	Long:  `Build a static site.`,
 	Run:   buildSite,
 }

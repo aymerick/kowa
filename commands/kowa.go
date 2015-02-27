@@ -65,8 +65,7 @@ func setupConfig() {
 func addCommands() {
 	rootCmd.AddCommand(buildCmd)
 	rootCmd.AddCommand(serverCmd)
-	rootCmd.AddCommand(bootstrapCmd)
-	rootCmd.AddCommand(resetCmd)
+	rootCmd.AddCommand(setupCmd)
 	rootCmd.AddCommand(genDerivativesCmd)
 }
 

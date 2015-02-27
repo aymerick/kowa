@@ -16,7 +16,7 @@ const (
 
 var serverCmd = &cobra.Command{
 	Use:   "server",
-	Short: "Server for admin API",
+	Short: "Start server",
 	Long:  `Kowa will starts an HTTP server to handle API requests from the web client.`,
 	Run:   runServer,
 }
