@@ -2,11 +2,20 @@ import Ember from 'ember';
 import ContentEditionController from 'kowa/mixins/content-edition-controller';
 
 var PagesPageController = Ember.ObjectController.extend(ContentEditionController, {
+  needs: ['application'],
+
   editionRelationships: Ember.A([ 'cover' ]),
   editionDefaultTitle: 'page.untitled', // This is a i18n key
 
   editionSaveMsgOk: 'page.saved', // This is a i18n key
   editionSaveMsgErr: 'page.saveFailed', // This is a i18n key
+
+  contentEditionDidCommit: function(pageSaved) {
+    var currentRoute = this.get('controllers.application.currentRouteName');
+    if (currentRoute == 'pages.new') {
+      this.transitionToRoute('pages.page', pageSaved);
+    }
+  },
 
   // @todo Get that list from the server
   allFormats: [

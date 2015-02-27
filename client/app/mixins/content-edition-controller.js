@@ -59,6 +59,11 @@ var ContentEditionControllerMixin = Ember.Mixin.create({
         self.set(self.previousFieldName(field), model.get(field));
       });
 
+      if (Ember.typeOf(self.contentEditionDidCommit) == 'function') {
+        // call hook
+        self.contentEditionDidCommit(recordSaved);
+      }
+
       return recordSaved;
     }).catch(function () {
       self.get('flashes').danger(errorMsg);
@@ -103,7 +108,7 @@ var ContentEditionControllerMixin = Ember.Mixin.create({
     });
   },
 
-  _syncIsDirty: function() {
+  synchronizeIsDirtyProperty: function() {
     var model = this.get('model');
     var currentDirtinessValue = model.get('isDirty') || model.get('isNew') || this.editionFieldChanged();
 
@@ -111,10 +116,6 @@ var ContentEditionControllerMixin = Ember.Mixin.create({
     // model.changedAttributes();
 
     this.set('isDirty', currentDirtinessValue);
-  },
-
-  synchronizeIsDirtyProperty: function() {
-    Ember.run.once(this, this._syncIsDirty);
   },
 
   setWatchProperties: function() {
