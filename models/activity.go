@@ -19,13 +19,10 @@ type Activity struct {
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
 	SiteId    string        `bson:"site_id"       json:"site"`
 
-	Title   string `bson:"title"   json:"title"`
-	Summary string `bson:"summary" json:"summary"`
-	Body    string `bson:"body"    json:"body"`
-
-	Cover bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
-
-	// @todo Format (markdown|html)
+	Title   string        `bson:"title"           json:"title"`
+	Summary string        `bson:"summary"         json:"summary"`
+	Body    string        `bson:"body"            json:"body"`
+	Cover   bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
 }
 
 type ActivitiesList []*Activity
