@@ -19,8 +19,8 @@ type Member struct {
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
 	SiteId    string        `bson:"site_id"       json:"site"`
 
-	Fullname    string        `bson:"fullname"       json:"fullname"`
-	Role        string        `bson:"role"            json:"role"`
+	Fullname    string        `bson:"fullname"        json:"fullname"`
+	Role        string        `bson:"role"            json:"role"`
 	Description string        `bson:"description"     json:"description"`
 	Photo       bson.ObjectId `bson:"photo,omitempty" json:"photo,omitempty"`
 }
