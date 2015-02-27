@@ -85,7 +85,7 @@ func (builder *PagesBuilder) NewPageContent(page *models.Page, node *Node) *Page
 		result.Body = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(html))
 	} else {
 		sanitizePolicy := bluemonday.UGCPolicy()
-		sanitizePolicy.AllowAttrs("style").OnElements("p", "span") // I know this is bad
+		sanitizePolicy.AllowAttrs("style").OnElements("p", "span", "div") // I know this is bad
 
 		result.Body = template.HTML(sanitizePolicy.Sanitize(page.Body))
 	}
