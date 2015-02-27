@@ -4,9 +4,7 @@ import (
 	"html/template"
 	"time"
 
-	"github.com/microcosm-cc/bluemonday"
 	"github.com/nicksnyder/go-i18n/i18n"
-	"github.com/russross/blackfriday"
 
 	"github.com/aymerick/kowa/models"
 )
@@ -112,11 +110,8 @@ func (builder *ActivitiesBuilder) NewActivityVars(activity *models.Activity) *Ac
 		result.Cover = builder.addImage(cover)
 	}
 
-	htmlSummary := blackfriday.MarkdownCommon([]byte(activity.Summary))
-	result.Summary = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(htmlSummary))
-
-	htmlBody := blackfriday.MarkdownCommon([]byte(activity.Body))
-	result.Body = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(htmlBody))
+	result.Summary = generateHTML(models.FORMAT_HTML, activity.Summary)
+	result.Body = generateHTML(models.FORMAT_HTML, activity.Body)
 
 	return result
 }

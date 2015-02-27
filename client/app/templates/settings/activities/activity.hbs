@@ -17,7 +17,7 @@
 
     <div class="form-group">
         <label for="activity-summary">{{t 'activity.summary'}}</label>
-        {{textarea rows=5 id="activity-summary" name="activity[summary]" class="form-control" value=model.summary}}
+        {{summernote-editor value=model.summary height=150 id="activity-summary"}}
         <p class="info">
             {{t 'activity.summaryInfos'}}
         </p>
@@ -25,7 +25,7 @@
 
     <div class="form-group">
         <label for="activity-body">{{t 'activity.description'}}</label>
-        {{textarea rows=10 id="activity-body" name="activity[body]" class="form-control" value=model.body}}
+        {{summernote-editor value=model.body height=300 id="activity-body"}}
         <p class="info">
             {{t 'activity.descriptionInfos'}}
         </p>
