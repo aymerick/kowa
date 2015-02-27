@@ -187,6 +187,14 @@ func (app *Application) ensureSiteMiddleware(next http.Handler) http.Handler {
 			}
 		}
 
+		// member
+		if currentSite == nil {
+			currentMember := app.getCurrentMember(req)
+			if currentMember != nil {
+				currentSite = currentMember.FindSite()
+			}
+		}
+
 		// image
 		if currentSite == nil {
 			currentImage := app.getCurrentImage(req)
@@ -320,6 +328,30 @@ func (app *Application) ensureActivityMiddleware(next http.Handler) http.Handler
 
 		if currentActivity := currentDBSession.FindActivity(bson.ObjectIdHex(activityId)); currentActivity != nil {
 			context.Set(req, "currentActivity", currentActivity)
+		} else {
+			http.NotFound(rw, req)
+			return
+		}
+
+		next.ServeHTTP(rw, req)
+	}
+
+	return http.HandlerFunc(fn)
+}
+
+// middleware: ensures member exists and injects 'currentMember' in context
+func (app *Application) ensureMemberMiddleware(next http.Handler) http.Handler {
+	fn := func(rw http.ResponseWriter, req *http.Request) {
+		currentDBSession := app.getCurrentDBSession(req)
+
+		vars := mux.Vars(req)
+		memberId := vars["member_id"]
+		if memberId == "" {
+			panic("Should have member_id")
+		}
+
+		if currentMember := currentDBSession.FindMember(bson.ObjectIdHex(memberId)); currentMember != nil {
+			context.Set(req, "currentMember", currentMember)
 		} else {
 			http.NotFound(rw, req)
 			return

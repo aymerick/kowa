@@ -15,7 +15,7 @@ const (
 
 type SitePageSettings struct {
 	Id      string `bson:"_id,omitempty" json:"id"`
-	Kind    string `bson:"kind"    json:"kind"` // 'contact' || 'activities' || 'posts' || 'events' || 'staff'
+	Kind    string `bson:"kind"    json:"kind"` // 'contact' || 'activities' || 'posts' || 'events' || 'members'
 	Title   string `bson:"title"   json:"title"`
 	Tagline string `bson:"tagline" json:"tagline"`
 	// @todo Photo
@@ -109,6 +109,7 @@ func (site *Site) MarshalJSON() ([]byte, error) {
 		"events":     fmt.Sprintf("/api/sites/%s/events", site.Id),
 		"pages":      fmt.Sprintf("/api/sites/%s/pages", site.Id),
 		"activities": fmt.Sprintf("/api/sites/%s/activities", site.Id),
+		"members":    fmt.Sprintf("/api/sites/%s/members", site.Id),
 		"images":     fmt.Sprintf("/api/sites/%s/images", site.Id),
 	}
 
@@ -313,6 +314,54 @@ func (site *Site) FindAllActivities() *ActivitiesList {
 }
 
 //
+// Site members
+//
+
+func (site *Site) membersBaseQuery() *mgo.Query {
+	return site.dbSession.MembersCol().Find(bson.M{"site_id": site.Id})
+}
+
+// Returns the total number of members
+func (site *Site) MembersNb() int {
+	result, err := site.membersBaseQuery().Count()
+	if err != nil {
+		panic(err)
+	}
+
+	return result
+}
+
+// Fetch from database: all members belonging to site
+func (site *Site) FindMembers(skip int, limit int) *MembersList {
+	result := MembersList{}
+
+	query := site.membersBaseQuery().Sort("-created_at")
+
+	if skip > 0 {
+		query = query.Skip(skip)
+	}
+
+	if limit > 0 {
+		query = query.Limit(limit)
+	}
+
+	if err := query.All(&result); err != nil {
+		panic(err)
+	}
+
+	// inject dbSession in all result items
+	for _, member := range result {
+		member.dbSession = site.dbSession
+	}
+
+	return &result
+}
+
+func (site *Site) FindAllMembers() *MembersList {
+	return site.FindMembers(0, 0)
+}
+
+//
 // Site images
 //
 
@@ -431,7 +480,10 @@ func (site *Site) RemoveImageReferences(image *Image) error {
 		return err
 	}
 
-	// @todo remove image references from members
+	// remove image references from activities
+	if err := site.dbSession.RemoveImageReferencesFromMembers(image); err != nil {
+		return err
+	}
 
 	return nil
 }

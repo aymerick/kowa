@@ -41,6 +41,7 @@ func (app *Application) newWebRouter() *mux.Router {
 	curEventOwnerChain := authChain.Append(app.ensureEventMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
 	curPageOwnerChain := authChain.Append(app.ensurePageMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
 	curActivityOwnerChain := authChain.Append(app.ensureActivityMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
+	curMemberOwnerChain := authChain.Append(app.ensureMemberMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
 	curImageOwnerChain := authChain.Append(app.ensureImageMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
 
 	// /api/sites/{site_id}
@@ -79,6 +80,13 @@ func (app *Application) newWebRouter() *mux.Router {
 	apiRouter.Methods("GET").Path("/activities/{activity_id}").Handler(curActivityOwnerChain.ThenFunc(app.handleGetActivity))
 	apiRouter.Methods("PUT").Path("/activities/{activity_id}").Handler(curActivityOwnerChain.ThenFunc(app.handleUpdateActivity))
 	apiRouter.Methods("DELETE").Path("/activities/{activity_id}").Handler(curActivityOwnerChain.ThenFunc(app.handleDeleteActivity))
+
+	// /api/members?site={site_id}
+	apiRouter.Methods("GET").Path("/members").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetMembers))
+	apiRouter.Methods("POST").Path("/members").Handler(authChain.ThenFunc(app.handlePostMembers))
+	apiRouter.Methods("GET").Path("/members/{member_id}").Handler(curMemberOwnerChain.ThenFunc(app.handleGetMember))
+	apiRouter.Methods("PUT").Path("/members/{member_id}").Handler(curMemberOwnerChain.ThenFunc(app.handleUpdateMember))
+	apiRouter.Methods("DELETE").Path("/members/{member_id}").Handler(curMemberOwnerChain.ThenFunc(app.handleDeleteMember))
 
 	// /api/images?site={site_id}
 	apiRouter.Methods("GET").Path("/images").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetImages))

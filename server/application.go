@@ -134,6 +134,13 @@ func (app *Application) getCurrentActivity(req *http.Request) *models.Activity {
 	return nil
 }
 
+func (app *Application) getCurrentMember(req *http.Request) *models.Member {
+	if currentMember := context.Get(req, "currentMember"); currentMember != nil {
+		return currentMember.(*models.Member)
+	}
+	return nil
+}
+
 func (app *Application) getCurrentImage(req *http.Request) *models.Image {
 	if currentImage := context.Get(req, "currentImage"); currentImage != nil {
 		return currentImage.(*models.Image)
