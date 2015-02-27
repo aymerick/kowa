@@ -20,8 +20,8 @@ var cfgFile string
 
 var rootCmd = &cobra.Command{
 	Use:   "kowa",
-	Short: "Kowa generadtes a website for your association",
-	Long:  `Koaw is a website generator that targets associations. It powers the asso.ninja web service.`,
+	Short: "Kowa generates a static website for your organization",
+	Long:  `Koaw is a static website manager. It powers the asso.ninja web service.`,
 }
 
 func initKowaConf() {

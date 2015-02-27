@@ -1,7 +1,7 @@
 kowa
 ====
 
-Association website generation
+Static website management
 
 
 ## Development
