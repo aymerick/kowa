@@ -194,10 +194,11 @@ body.events .content-master .content-body li {
         }
 
         .content-actions {
+            position: absolute;
+            top: $content-header-spacing;
+            right: $content-header-spacing;
+
             .content-action-button {
-                position: absolute;
-                top: $content-header-spacing;
-                width: $content-action-button-width;
                 z-index: $content-cover-z-index + 1;
 
                 .fa {
@@ -246,7 +247,8 @@ body.events .content-details {
 .content-edit {
     .content-header {
         .content-fields {
-            right: ($content-action-button-width-with-margin * 2) + ($content-header-spacing * 3);
+            // @todo This is the space for buttons
+            right: 250px;
 
             input.content-title, input.content-tagline, input.content-place {
                 width: 100%;
@@ -281,16 +283,6 @@ body.events .content-details {
 
             .content-dates {
                 margin-top: 10px;
-            }
-        }
-
-        .content-action-button {
-            &.action-save {
-                right: $content-header-spacing;
-            }
-
-            &.action-delete {
-                right: $content-action-button-width-with-margin + $content-header-spacing;
             }
         }
     }
