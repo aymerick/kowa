@@ -335,7 +335,7 @@ func (site *Site) MembersNb() int {
 func (site *Site) FindMembers(skip int, limit int) *MembersList {
 	result := MembersList{}
 
-	query := site.membersBaseQuery().Sort("-created_at")
+	query := site.membersBaseQuery().Sort("fullname")
 
 	if skip > 0 {
 		query = query.Skip(skip)

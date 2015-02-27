@@ -1,22 +1,26 @@
 {{ template "partials/jumbotron" .Node }}
 
-{{ range .Members }}
 <section>
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
-                <h2>{{ .Fullname }}</h2>
-                <p>{{ .Role }}</p>
-                <p>{{ .Description }}</p>
-            </div>
-        </div>
-        {{ if .Photo }}
-            <div class="row">
-                <div class="col-md-4">
-                    <img src="{{ .Photo.Small }}" alt="Photo" class="img-responsive img-thumbnail center-block"/>
+            {{ range $index, $member := .Members }}
+                {{ if modBool $index 2 }}
+                    <div class="clearfix visible-sm-block"></div>
+                {{ end }}
+
+                <div class="col-md-4 col-sm-6 member">
+                    <h3>{{ $member.Fullname }}</h3>
+                    {{ if .Photo }}
+                        <img class="img-responsive img-thumbnail avatar" src="{{ $member.Photo.SmallFill }}" alt="{{ $member.Fullname }}" />
+                    {{ else }}
+                        <img class="img-responsive img-thumbnail avatar no-photo" src="/assets/img/avatar.jpg" alt="{{ $member.Fullname }}" />
+                    {{ end }}
+                    <p class="role">{{ $member.Role }}</p>
+                    <div class="description">
+                        {{ $member.Description }}
+                    </div>
                 </div>
-            </div>
-        {{ end }}
+            {{ end }}
+        </div>
     </div>
 </section>
-{{ end }}

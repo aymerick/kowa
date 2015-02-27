@@ -1,8 +1,7 @@
 import Ember from 'ember';
 
 var SettingsMembersController = Ember.ArrayController.extend({
-  sortProperties: ['createdAt'],
-  sortAscending: false,
+  sortProperties: ['fullname'],
 
   // i18n for attributes values and components parameters
   i18n: function() {
