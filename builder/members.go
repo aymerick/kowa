@@ -1,12 +1,9 @@
 package builder
 
 import (
-	"html/template"
 	"time"
 
-	"github.com/microcosm-cc/bluemonday"
 	"github.com/nicksnyder/go-i18n/i18n"
-	"github.com/russross/blackfriday"
 
 	"github.com/aymerick/kowa/models"
 )
@@ -32,7 +29,7 @@ type MemberVars struct {
 	Photo       *ImageVars
 	Fullname    string
 	Role        string
-	Description template.HTML
+	Description string
 }
 
 func init() {
@@ -113,8 +110,7 @@ func (builder *MembersBuilder) NewMemberVars(member *models.Member) *MemberVars 
 		result.Photo = builder.addImage(photo)
 	}
 
-	htmlDescription := blackfriday.MarkdownCommon([]byte(member.Description))
-	result.Description = template.HTML(bluemonday.UGCPolicy().SanitizeBytes(htmlDescription))
+	result.Description = member.Description
 
 	return result
 }
