@@ -1,7 +1,7 @@
 kowa
 ====
 
-Static website management
+Static website manager
 
 
 ## Development
