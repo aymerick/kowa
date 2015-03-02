@@ -1,6 +1,10 @@
 package builder
 
-import "sort"
+import (
+	"sort"
+
+	"github.com/nicksnyder/go-i18n/i18n"
+)
 
 // Site vars
 type SiteVars struct {
@@ -33,9 +37,16 @@ func NewSiteVars(siteBuilder *SiteBuilder) *SiteVars {
 
 // Fill site variables
 func (vars *SiteVars) fill() {
+	T := i18n.MustTfunc("fr") // @todo i18n
+
 	site := vars.builder.site
 
-	vars.Name = site.Name
+	name := site.Name
+	if name == "" {
+		name = T("empty_site_name")
+	}
+
+	vars.Name = name
 	vars.Tagline = site.Tagline
 	vars.Facebook = site.Facebook
 	vars.Twitter = site.Twitter

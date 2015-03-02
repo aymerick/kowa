@@ -41,12 +41,19 @@ func NewHomepageBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 
 // NodeBuilder
 func (builder *HomepageBuilder) Load() {
+	T := i18n.MustTfunc("fr") // @todo i18n
+
 	node := builder.newNode()
 	node.fillUrl("")
 
 	site := builder.site()
 
-	node.Title = site.Name
+	name := site.Name
+	if name == "" {
+		name = T("empty_site_name")
+	}
+
+	node.Title = name
 	node.Tagline = site.Tagline
 	node.Meta = &NodeMeta{
 		Title:       site.Name,
@@ -70,7 +77,7 @@ func (builder *HomepageBuilder) NewHomepageContent(node *Node) *HomepageContent 
 
 	description := site.Description
 	if description == "" {
-		description = T("empty_description")
+		description = T("empty_site_description")
 	}
 
 	result.Description = generateHTML(models.FORMAT_HTML, description)
