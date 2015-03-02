@@ -6,7 +6,9 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/aymerick/kowa/builder"
 	"github.com/aymerick/kowa/models"
+	"github.com/aymerick/kowa/utils"
 )
 
 var addSiteCmd = &cobra.Command{
@@ -31,9 +33,12 @@ func addSite(cmd *cobra.Command, args []string) {
 	site := &models.Site{
 		Id:     args[0],
 		UserId: args[1],
+		Theme:  builder.DEFAULT_THEME,
 	}
 
 	if err := dbSession.CreateSite(site); err != nil {
 		log.Fatalln(fmt.Sprintf("Failed to create site: %v", err))
 	}
+
+	utils.AppEnsureSiteUploadDir(site.Id)
 }
