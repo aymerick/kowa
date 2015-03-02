@@ -10,5 +10,9 @@ body.activities {
         &:nth-child(2n) {
             background-color: $color-light-background;
         }
+
+        img {
+            margin-top: 20px;
+        }
     }
 }
