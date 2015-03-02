@@ -24,7 +24,7 @@ const (
 	PARTIALS_DIR  = "partials"
 	ASSETS_DIR    = "assets"
 
-	DEFAULT_THEME = "test"
+	DEFAULT_THEME = "willy" // @todo FIXME !
 
 	MAX_SLUG        = 50
 	MAX_PAST_EVENTS = 5
