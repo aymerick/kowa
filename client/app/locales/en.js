@@ -4,14 +4,21 @@ export default {
   chooseImage: 'Choose image',
   coverImage: 'cover image',
   'delete': 'Delete',
-  gotoImagesSettings: 'Go to Images Settings first and upload some images.',
   logout: 'Logout',
-  noImage: 'You have no image yet.',
   photo: 'Photo',
   save: 'Save',
   select: 'Select',
   selectCover: 'Select Cover',
   toogleNavigation: 'Toggle navigation',
+
+  // auth pages
+  auth: {
+    enterPassword: "Your password",
+    enterUsername: "Your username",
+    login: "Login",
+    password: "Password",
+    usernameOrEmail: "Username or Email address"
+  },
 
   // common edition
   edition: {
@@ -27,7 +34,6 @@ export default {
   activity: {
     cover: 'Activity cover',
     coverInfos: 'Set a cover image for your activity',
-    deleteAction: "You're about to permanently delete this activity:",
     deleteQuestion: "Are you sure you want to delete this activity?",
     deleted: 'Activity deleted',
     deleteFailed: 'Failed to delete activity',
@@ -37,6 +43,7 @@ export default {
     name: 'Activity name',
     nameInfos: 'A title for your activity',
     'new': 'New activity',
+    none: 'You have no activity yet.',
     saved: 'Activity saved',
     saveFailed: 'Failed to save activity',
     summary: 'Activity summary',
@@ -61,13 +68,13 @@ export default {
   // events
   Events: 'Events',
   'event': {
-    deleteAction: "You're about to permanently delete that event:",
     deleteQuestion: "Are you sure you want to delete this event?",
     deleted: 'Event deleted',
     deleteFailed: 'Failed to delete event',
     description: 'Event description',
     end: 'End:',
     'new': 'New event',
+    none: 'No event yet.',
     place: 'Event place',
     saved: 'Event saved',
     saveFailed: 'Failed to save event',
@@ -79,7 +86,6 @@ export default {
   // members
   Members: 'Members',
   member: {
-    deleteAction: "You're about to permanently delete this member:",
     deleteQuestion: "Are you sure you want to delete this member?",
     deleted: 'Member deleted',
     deleteFailed: 'Failed to delete member',
@@ -89,6 +95,7 @@ export default {
     fullname: 'Fullname',
     fullnameInfos: 'Fullname for this member',
     'new': 'New member',
+    none: 'You have no members yet.',
     photo: 'Member photo',
     photoInfos: 'Set a photo for this member',
     role: 'Member role',
@@ -101,12 +108,12 @@ export default {
   Pages: 'Pages',
   page: {
     body: 'Page body',
-    deleteAction: "You're about to permanently delete that page:",
     deleteQuestion: "Are you sure you want to delete this page?",
     deleted: 'Page deleted',
     deleteFailed: 'Failed to delete page',
     displayInNavBar: 'Display in navigation bar',
     'new': 'New page',
+    none: 'No page yet.',
     saved: 'Page saved',
     saveFailed: 'Failed to save page',
     tagline: 'Page tagline',
@@ -119,11 +126,11 @@ export default {
   post: {
     added: 'Added:',
     body: 'Post body',
-    deleteAction: "You're about to permanently delete that post:",
     deleteQuestion: "Are you sure you want to delete this post?",
     deleted: 'Post deleted',
     deleteFailed: 'Failed to delete post',
     'new': 'New post',
+    none: 'No post yet.',
     saved: 'Post saved',
     saveFailed: 'Failed to save post',
     title: 'Post title',
@@ -158,9 +165,10 @@ export default {
   Images: 'Images',
   image: {
     added: 'Added:',
-    deleteAction: "You're about to permanently delete this image:",
     deleteQuestion: "Are you sure you want to delete this image?",
     deleted: 'Image deleted',
-    deleteFailed: 'Failed to delete image'
+    deleteFailed: 'Failed to delete image',
+    gotoSettings: 'Go to Images Settings first and upload some images.',
+    none: 'You have no image yet.'
   }
 };

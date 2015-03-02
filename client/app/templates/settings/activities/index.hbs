@@ -24,6 +24,10 @@
                     <button {{action "openModal" "delete-activity" controller activity bubbles=false}} class="btn btn-danger action-delete">{{t 'delete'}}</button>
                 </div>
             {{/link-to}}
+        {{else}}
+            <p>
+                {{t 'activity.none'}}
+            </p>
         {{/each}}
     </div>
 </section>

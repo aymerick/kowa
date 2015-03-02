@@ -211,6 +211,11 @@ body.events .content-master .content-body li {
             padding: $content-details-body-padding;
         }
     }
+
+    .no-content {
+        margin: 30px;
+        font-size: 20px;
+    }
 } // .content-details
 
 body.pages .content-details {

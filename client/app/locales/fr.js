@@ -4,14 +4,21 @@ export default {
   chooseImage: 'Choisir image',
   coverImage: 'image principale',
   'delete': 'Supprimer',
-  gotoImagesSettings: "Allez dans la section Images des paramètres pour ajouter des images.",
-  logout: 'Déconnexion',
-  noImage: "Vous n'avez aucune image pour le moment.",
   photo: 'Photo',
   save: 'Sauvegarder',
   select: 'Selectionner',
   selectCover: 'Choisir Image',
   toogleNavigation: 'Menu',
+
+  // auth pages
+  auth: {
+    enterPassword: "Votre mot de passe",
+    enterUsername: "Votre identifiant",
+    login: "Connexion",
+    logout: 'Déconnexion',
+    password: "Mot de passe",
+    usernameOrEmail: "Identifiant ou addresse mail"
+  },
 
   // common edition
   edition: {
@@ -27,7 +34,6 @@ export default {
   activity: {
     cover: 'Image principale',
     coverInfos: 'Une image représentant votre activité',
-    deleteAction: "Vous êtes sur le point de supprimer cette activité:",
     deleteQuestion: "Etes-vous certain de vouloir supprimer cette activité ?",
     deleted: 'Activité supprimée',
     deleteFailed: "Erreur lors de la suppression de l'actualité",
@@ -37,6 +43,7 @@ export default {
     name: 'Titre',
     nameInfos: 'Un titre pour votre activité',
     'new': 'Nouvelle activité',
+    none: "Vous n'avez créé aucune activité pour le moment.",
     saved: 'Activité sauvegardé',
     saveFailed: "Erreur lors de la sauvegarde de l'activité",
     summary: 'Résumé',
@@ -61,13 +68,13 @@ export default {
   // events
   Events: 'Évènements',
   'event': {
-    deleteAction: "Vous êtes sur le point de supprimer cet évènement:",
     deleteQuestion: "Etes-vous certain de vouloir supprimer cet évènement ?",
     deleted: 'Évènement supprimé',
     deleteFailed: "Erreur lors de la suppression de l'évènement",
     description: "Description de l'évènement",
     end: 'Fin:',
     'new': 'Nouvel évènement',
+    none: "Vous n'avez créé aucun évènement pour le moment.",
     place: 'Lieu',
     saved: 'Évènement sauvegardé',
     saveFailed: "Erreur lors de la sauvegarde de l'évènement",
@@ -79,7 +86,6 @@ export default {
   // members
   Members: 'Équipe',
   member: {
-    deleteAction: "Vous êtes sur le point de supprimer cette personne de l'équipe:",
     deleteQuestion: "Etes-vous certain de vouloir supprimer cette personne ?",
     deleted: 'Personne supprimé',
     deleteFailed: "Erreur lors de la suppression de cette personne",
@@ -89,6 +95,7 @@ export default {
     fullname: 'Nom',
     fullnameInfos: 'Indiquez le nom de cette personne',
     'new': 'Nouvelle personne',
+    none: "Vous n'avez ajouté aucune personne à votre équipe pour le moment.",
     photo: 'Photo',
     photoInfos: 'Ajoutez une photo pour cette personne',
     role: 'Role',
@@ -101,12 +108,12 @@ export default {
   Pages: 'Pages',
   page: {
     body: 'Contenu de la page',
-    deleteAction: "Vous êtes sur le point de supprimer cette page:",
     deleteQuestion: "Etes-vous certain de vouloir supprimer cette page ?",
     deleted: 'Page supprimée',
     deleteFailed: "Erreur lors de la suppression de la page",
     displayInNavBar: 'Afficher dans la barre de navigation',
     'new': 'Nouvelle page',
+    none: "Vous n'avez créé aucune page pour le moment.",
     saved: 'Page sauvegardée',
     saveFailed: 'Erreur lors de la sauvegarde de la page',
     tagline: 'Accroche',
@@ -119,11 +126,11 @@ export default {
   post: {
     added: 'Ajoutée:',
     body: 'Texte...',
-    deleteAction: "Vous êtes sur le point de supprimer cette actualité:",
     deleteQuestion: "Etes-vous certain de vouloir supprimer cette actualité ?",
     deleted: 'Actualité supprimée',
     deleteFailed: "Erreur lors de la suppression de l'actualité",
     'new': 'Nouvelle actualité',
+    none: "Vous n'avez créé aucune actualité pour le moment.",
     saved: 'Actualité sauvegardée',
     saveFailed: "Erreur lors de la sauvegarde de l'actualité",
     title: 'Titre',
@@ -158,9 +165,10 @@ export default {
   Images: 'Images',
   image: {
     added: 'Ajoutée:',
-    deleteAction: "Vous êtes sur le point de supprimer cette image:",
     deleteQuestion: "Etes-vous certain de vouloir supprimer cette image ?",
     deleted: 'Image supprimée',
-    deleteFailed: "Erreur lors de la suppression de l'image"
+    deleteFailed: "Erreur lors de la suppression de l'image",
+    gotoSettings: "Allez dans la section Images des paramètres pour ajouter des images.",
+    none: "Vous n'avez aucune image pour le moment."
   }
 };
