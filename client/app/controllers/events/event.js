@@ -12,7 +12,7 @@ var EventsEventController = Ember.ObjectController.extend(ContentEditionControll
 
   contentEditionDidCommit: function(eventSaved) {
     var currentRoute = this.get('controllers.application.currentRouteName');
-    if (currentRoute == 'events.new') {
+    if (currentRoute === 'events.new') {
       this.transitionToRoute('events.event', eventSaved);
     }
   },

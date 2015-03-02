@@ -12,7 +12,7 @@ var PostsPostController = Ember.ObjectController.extend(ContentEditionController
 
   contentEditionDidCommit: function(postSaved) {
     var currentRoute = this.get('controllers.application.currentRouteName');
-    if (currentRoute == 'posts.new') {
+    if (currentRoute === 'posts.new') {
       this.transitionToRoute('posts.post', postSaved);
     }
   },

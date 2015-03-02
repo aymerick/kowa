@@ -12,7 +12,7 @@ var PagesPageController = Ember.ObjectController.extend(ContentEditionController
 
   contentEditionDidCommit: function(pageSaved) {
     var currentRoute = this.get('controllers.application.currentRouteName');
-    if (currentRoute == 'pages.new') {
+    if (currentRoute === 'pages.new') {
       this.transitionToRoute('pages.page', pageSaved);
     }
   },

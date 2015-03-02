@@ -59,7 +59,7 @@ var ContentEditionControllerMixin = Ember.Mixin.create({
         self.set(self.previousFieldName(field), model.get(field));
       });
 
-      if (Ember.typeOf(self.contentEditionDidCommit) == 'function') {
+      if (Ember.typeOf(self.contentEditionDidCommit) === 'function') {
         // call hook
         self.contentEditionDidCommit(recordSaved);
       }
