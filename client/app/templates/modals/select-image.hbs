@@ -7,6 +7,13 @@
                 {{else}}
                     <img {{bind-attr src=image.squareUrl}} class="img-responsive" />
                 {{/if}}
+            {{else}}
+                <p>
+                    {{t 'noImage'}}
+                </p>
+                <p>
+                    {{t 'gotoImagesSettings'}}
+                </p>
             {{/each}}
         </ol>
     {{/view}}
