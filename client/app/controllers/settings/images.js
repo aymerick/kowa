@@ -19,11 +19,15 @@ var SettingsImagesController = Ember.ArrayController.extend(PaginationController
   // compute a dummy date to preserve images order when upload is finished and correct date is sent by the server
   // index is the file index when uploading multiple files at once
   computeTmpImageDate: function(index) {
-    var lastDate = this.get('firstObject').get('createdAt');
-    if (lastDate) {
-      return moment(lastDate).add(index + 1, 'hours').toDate();
-    }
-    else {
+    var firstImage = this.get('firstObject');
+    if (firstImage) {
+      var lastDate = firstImage.get('createdAt');
+      if (lastDate) {
+        return moment(lastDate).add(index + 1, 'hours').toDate();
+      } else {
+        return new Date();
+      }
+    } else {
       return new Date();
     }
   },
