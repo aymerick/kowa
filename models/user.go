@@ -18,6 +18,7 @@ type User struct {
 
 	Id        string    `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time `bson:"created_at"    json:"createdAt"`
+	UpdatedAt time.Time `bson:"updated_at"    json:"updatedAt"`
 
 	Email     string `bson:"email"      json:"email"`
 	FirstName string `bson:"first_name" json:"firstName"`
@@ -79,6 +80,22 @@ func (session *DBSession) FindUserByEmail(email string) *User {
 	result.dbSession = session
 
 	return &result
+}
+
+// Persists a new user in database
+// Side effect: 'CreatedAt' and 'UpdatedAt' fields are set on user record
+func (session *DBSession) CreateUser(user *User) error {
+	now := time.Now()
+	user.CreatedAt = now
+	user.UpdatedAt = now
+
+	if err := session.UsersCol().Insert(user); err != nil {
+		return err
+	}
+
+	user.dbSession = session
+
+	return nil
 }
 
 //

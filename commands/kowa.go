@@ -67,6 +67,8 @@ func addCommands() {
 	rootCmd.AddCommand(serverCmd)
 	rootCmd.AddCommand(setupCmd)
 	rootCmd.AddCommand(genDerivativesCmd)
+	rootCmd.AddCommand(addUserCmd)
+	rootCmd.AddCommand(addSiteCmd)
 }
 
 //

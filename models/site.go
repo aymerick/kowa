@@ -24,12 +24,12 @@ type SitePageSettings struct {
 type Site struct {
 	dbSession *DBSession `bson:"-" json:"-"`
 
-	Id        string    `bson:"_id,omitempty" json:"id"`
-	CreatedAt time.Time `bson:"created_at"    json:"createdAt"`
-	UpdatedAt time.Time `bson:"updated_at"    json:"updatedAt"`
-	ChangedAt time.Time `bson:"changed_at"    json:"changedAt"`
-	BuiltAt   time.Time `bson:"built_at"      json:"builtAt"`
-	UserId    string    `bson:"user_id"       json:"user"`
+	Id        string    `bson:"_id,omitempty"         json:"id"`
+	CreatedAt time.Time `bson:"created_at"            json:"createdAt"`
+	UpdatedAt time.Time `bson:"updated_at"            json:"updatedAt"`
+	ChangedAt time.Time `bson:"changed_at,omitempty"  json:"changedAt,omitempty"`
+	BuiltAt   time.Time `bson:"built_at,omitempty"    json:"builtAt,omitempty"`
+	UserId    string    `bson:"user_id"               json:"user"`
 
 	Name        string `bson:"name"        json:"name"`
 	Tagline     string `bson:"tagline"     json:"tagline"`
@@ -94,6 +94,22 @@ func (session *DBSession) FindSite(siteId string) *Site {
 	result.dbSession = session
 
 	return &result
+}
+
+// Persists a new site in database
+// Side effect: 'CreatedAt' and 'UpdatedAt' fields are set on site record
+func (session *DBSession) CreateSite(site *Site) error {
+	now := time.Now()
+	site.CreatedAt = now
+	site.UpdatedAt = now
+
+	if err := session.SitesCol().Insert(site); err != nil {
+		return err
+	}
+
+	site.dbSession = session
+
+	return nil
 }
 
 //
