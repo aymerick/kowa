@@ -3,6 +3,8 @@ package builder
 import (
 	"html/template"
 
+	"github.com/nicksnyder/go-i18n/i18n"
+
 	"github.com/aymerick/kowa/models"
 )
 
@@ -58,13 +60,20 @@ func (builder *HomepageBuilder) Load() {
 
 // Instanciate a new homepage content
 func (builder *HomepageBuilder) NewHomepageContent(node *Node) *HomepageContent {
+	T := i18n.MustTfunc("fr") // @todo i18n
+
 	site := builder.site()
 
 	result := &HomepageContent{
 		Node: node,
 	}
 
-	result.Description = generateHTML(models.FORMAT_HTML, site.Description)
+	description := site.Description
+	if description == "" {
+		description = T("empty_description")
+	}
+
+	result.Description = generateHTML(models.FORMAT_HTML, description)
 	result.MoreDesc = generateHTML(models.FORMAT_HTML, site.MoreDesc)
 	result.JoinText = generateHTML(models.FORMAT_HTML, site.JoinText)
 

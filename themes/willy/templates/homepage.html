@@ -3,14 +3,18 @@
 <section class="presentation">
     <div class="container">
         <div class="row">
-            <div class="col-md-4 photo">
-                {{ if .Cover }}
+            {{ if .Cover }}
+                <div class="col-md-4 photo">
                     <img src="{{ .Cover.Small }}" alt="Cover" class="img-responsive img-thumbnail center-block"/>
-                {{ end }}
-            </div>
-            <div class="col-md-8 intro">
-                {{ .Description }}
-            </div>
+                </div>
+                <div class="col-md-8 intro">
+                    {{ .Description }}
+                </div>
+            {{ else }}
+                <div class="col-md-12 intro">
+                    {{ .Description }}
+                </div>
+            {{ end }}
         </div>
     </div>
 </section>

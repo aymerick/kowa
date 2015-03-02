@@ -38,5 +38,9 @@
   {
     "id": "posts",
     "translation": "posts"
+  },
+  {
+    "id": "empty_description",
+    "translation": "Welcome to your new site. Please take time to describe what your site is about in the administration."
   }
 ]

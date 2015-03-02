@@ -38,5 +38,9 @@
   {
     "id": "posts",
     "translation": "actualites"
+  },
+  {
+    "id": "empty_description",
+    "translation": "Bienvenue sur votre nouveau site web. Veuillez ajouter une description de votre site dans l'administration."
   }
 ]
