@@ -8,13 +8,11 @@
         position: relative;
 
         .logo {
-            position: absolute;
-            left: 0px;
-            top: 3px;
+            display: inline-block;
         }
 
         .navbar-brand {
-            margin-left: 60px;
+            padding-top: 3px;
             color: $color-purple-darkest;
         }
     }
