@@ -6,6 +6,8 @@ Static website management
 
 ## Development
 
+You need a running mongodb server.
+
 Start server:
 
     $ go build
