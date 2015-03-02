@@ -8,8 +8,18 @@
     }
 
     i.fa {
-        font-size: 0.9em;
+        font-size: 1.3em;
         margin-right: 5px;
+    }
+
+    .navbar-nav > li > a.view-site {
+        padding-top: 15px;
+        padding-bottom: 15px;
+
+        i.fa {
+            font-size: 2em;
+            margin-right: 0px;
+        }
     }
 
     a {

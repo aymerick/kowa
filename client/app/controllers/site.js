@@ -15,7 +15,19 @@ var SiteController = Ember.ObjectController.extend({
       // this.transitionToRoute('site', this.get('selectedSite'));
       // this.unloadModels();
     }
-  }.observes('selectedSite')
+  }.observes('selectedSite'),
+
+  viewSiteUrl: function() {
+    // @todo FIXME !
+    return "http://127.0.0.1:48910";
+  }.property(),
+
+  // i18n for attributes values and components parameters
+  i18n: function() {
+    return {
+      visitSite: this.t('visitSite'),
+    };
+  }.property() // @todo Watch current language
 });
 
 export default SiteController;

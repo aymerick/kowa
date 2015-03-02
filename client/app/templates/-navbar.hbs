@@ -10,13 +10,15 @@
         </div>
 
         <div class="collapse navbar-collapse" id="navbar-collapse-1">
-            <form role="search" class="navbar-form navbar-left">
-                <div class="form-group">
-                    {{view "select" content=userSites optionValuePath="content.id" optionLabelPath="content.name" selection=selectedSite class="form-control"}}
-                </div>
-            </form>
-
             <ul class="nav navbar-nav pull-left">
+                <li><a {{bind-attr href=viewSiteUrl title=i18n.visitSite}} target="_kowa_view" class="view-site"><i class="fa fa-rocket"></i></a></li>
+
+                <li><form role="search" class="navbar-form navbar-left">
+                    <div class="form-group">
+                        {{view "select" content=userSites optionValuePath="content.id" optionLabelPath="content.name" selection=selectedSite class="form-control"}}
+                    </div>
+                </form></li>
+
                 <li class="ko-navbar-item">{{#link-to 'posts'}}<i class="fa fa-fw fa-info-circle"></i> {{t 'Posts'}}{{/link-to}}</li>
                 <li class="ko-navbar-item">{{#link-to 'events'}}<i class="fa fa-fw fa-calendar"></i> {{t 'Events'}}{{/link-to}}</li>
                 <li class="ko-navbar-item">{{#link-to 'pages'}}<i class="fa fa-fw fa-file-o"></i> {{t 'Pages'}}{{/link-to}}</li>

@@ -10,6 +10,7 @@ export default {
   select: 'Select',
   selectCover: 'Select Cover',
   toogleNavigation: 'Toggle navigation',
+  visitSite: 'Visit Site',
 
   // auth pages
   auth: {

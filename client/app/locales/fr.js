@@ -9,6 +9,7 @@ export default {
   select: 'Selectionner',
   selectCover: 'Choisir Image',
   toogleNavigation: 'Menu',
+  visitSite: 'Voir le site',
 
   // auth pages
   auth: {
