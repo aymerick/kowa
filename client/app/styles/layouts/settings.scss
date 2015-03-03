@@ -111,8 +111,18 @@
         .settings-item-fields {
             position: absolute;
             left: $img-thumb-thumbnail-width + ($settings-item-spacing * 2);
+            right: 200px;
+            margin-top: 15px;
 
-            line-height: $img-thumb-thumbnail-height;
+            .settings-item-desc {
+                font-size: 15px;
+                font-style: italic;
+                color: $midgrey;
+
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+            }
         }
 
         .settings-item-actions {
