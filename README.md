@@ -8,14 +8,14 @@ Static website manager
 
 First, you need a running mongodb server running on standard port.
 
-Checkout the project:
+Then checkout the project:
 
     $ git clone git@github.com:aymerick/kowa.git
 
 Build kowa:
 
     $ cd kowa
-    $ go build
+    $ go build -i
 
 Setup the database:
 
@@ -28,7 +28,7 @@ Add a user with two sites:
     $ ./kowa add_site site1 'My First Site' mike
     $ ./kowa add_site site2 'My Second Site' mike
 
-Setup theme depencencies:
+Setup theme building depencencies:
 
     $ npm install -g grunt-cli
     $ npm install -g bower
@@ -56,11 +56,33 @@ Start client:
     $ cd client
     $ ember server --proxy http://127.0.0.1:35830
 
-The admin app is now running here: <http://127.0.0.1:4200> and you can login with credentials: `mike` / `pizzaword`.
+The admin app is now running <http://127.0.0.1:4200> and you can login with credentials: `mike` / `pizzaword`.
 
-If you want to disable live reload (when testing image upload for example), starts the client with the `--live-reload` flag like that:
+If you want to disable live reload (when testing image upload for example), starts the client with the `--live-reload=false` flag like that:
 
     $ ember server --proxy http://127.0.0.1:35830 --live-reload=false
+
+
+## Development workflow
+
+When you change client code, the app is rebuilt automatically, and the browser reloads it (unless `--live-reload=false` flag was set).
+
+When you change server code, you have to rebuild it with `go build` and restart it.
+
+When you change a `SASS` file in `willy` theme you don't have to rebuild the server, by you have to rebuild the theme with:
+
+    $ cd themes/willy
+    $ grunt build
+
+Every time you make a change on a site thanks to the admin app, the corresponding static site is rebuilt in the background.
+
+You can still trigger a manual rebuild of a static site with this command:
+
+    $ ./kowa build site1
+
+If you modify the code that handle images, you can regenerate all derivatives for a given site with this command:
+
+    $ ./kowa gen_derivatives site1
 
 
 ## Test
