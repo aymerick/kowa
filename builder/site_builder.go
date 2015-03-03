@@ -63,6 +63,7 @@ type SiteBuilderConfig struct {
 	OutputDir  string
 	Theme      string
 	UglyURL    bool
+	BaseURL    string
 }
 
 func NewSiteBuilder(site *models.Site, config *SiteBuilderConfig) *SiteBuilder {

@@ -12,6 +12,8 @@ type SiteVars struct {
 	Logo    *ImageVars
 	Tagline string
 
+	BaseURL string
+
 	Facebook   string
 	Twitter    string
 	GooglePlus string
@@ -47,6 +49,7 @@ func (vars *SiteVars) fill() {
 	}
 
 	vars.Name = name
+	vars.BaseURL = vars.builder.config.BaseURL
 	vars.Tagline = site.Tagline
 	vars.Facebook = site.Facebook
 	vars.Twitter = site.Twitter

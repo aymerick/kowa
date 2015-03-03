@@ -274,7 +274,8 @@ func (worker *BuildWorker) executeJob(job *BuildJob) {
 	// builder config
 	config := &builder.SiteBuilderConfig{
 		WorkingDir: viper.GetString("working_dir"),
-		OutputDir:  viper.GetString("output_dir"),
+		OutputDir:  path.Join(viper.GetString("output_dir"), site.Id),
+		BaseURL:    path.Join("/", site.Id),
 	}
 
 	builder := builder.NewSiteBuilder(site, config)

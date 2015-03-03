@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"path"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -47,9 +48,10 @@ func buildSite(cmd *cobra.Command, args []string) {
 	// builder config
 	config := &builder.SiteBuilderConfig{
 		WorkingDir: viper.GetString("working_dir"),
-		OutputDir:  viper.GetString("output_dir"),
+		OutputDir:  path.Join(viper.GetString("output_dir"), site.Id),
 		Theme:      viper.GetString("theme"),
 		UglyURL:    viper.GetBool("ugly_url"),
+		BaseURL:    path.Join("/", site.Id),
 	}
 
 	siteBuilder := builder.NewSiteBuilder(site, config)

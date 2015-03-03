@@ -23,6 +23,7 @@ type Node struct {
 	InNavBar    bool
 	NavBarOrder int
 	Slug        string
+	FilePath    string
 	Url         string
 	FullUrl     string
 
@@ -63,11 +64,13 @@ func NewNode(builder NodeBuilder, kind string) *Node {
 
 // Fill node Url
 func (node *Node) fillUrl(slug string) {
+	config := node.builder.SiteBuilder().config
+
 	// Slug
 	node.Slug = slug
 
-	// FullUrl
-	if node.builder.SiteBuilder().config.UglyURL || (node.Slug == "") || (node.Slug == "/") || (node.Slug == "index") {
+	// FilePath
+	if config.UglyURL || (node.Slug == "") || (node.Slug == "/") || (node.Slug == "index") {
 		name := node.Slug
 		switch name {
 		case "", "/":
@@ -75,11 +78,14 @@ func (node *Node) fillUrl(slug string) {
 		}
 
 		// ugly URL (or homepage)
-		node.FullUrl = path.Join("/", fmt.Sprintf("%s.html", name))
+		node.FilePath = path.Join("/", fmt.Sprintf("%s.html", name))
 	} else {
 		// pretty URL
-		node.FullUrl = path.Join("/", node.Slug, "index.html")
+		node.FilePath = path.Join("/", node.Slug, "index.html")
 	}
+
+	// FillUrl
+	node.FullUrl = path.Join(config.BaseURL, node.FilePath)
 
 	// Url
 	dir, fileName := path.Split(node.FullUrl)

@@ -97,7 +97,7 @@ func (builder *NodeBuilderBase) fillNodeBeforeGeneration(node *Node) {
 
 // Generate given node
 func (builder *NodeBuilderBase) generateNode(node *Node) {
-	osFilePath := builder.siteBuilder.filePath(node.FullUrl)
+	osFilePath := builder.siteBuilder.filePath(node.FilePath)
 
 	// ensure dir
 	if err := builder.siteBuilder.ensureFileDir(osFilePath); err != nil {
