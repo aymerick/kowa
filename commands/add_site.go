@@ -42,4 +42,7 @@ func addSite(cmd *cobra.Command, args []string) {
 	}
 
 	utils.AppEnsureSiteUploadDir(site.Id)
+
+	// build site
+	buildSite(site)
 }

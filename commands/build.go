@@ -21,7 +21,7 @@ var buildCmd = &cobra.Command{
 	Use:   "build [site_id]",
 	Short: "Build site",
 	Long:  `Build a static site.`,
-	Run:   buildSite,
+	Run:   buildSiteCmd,
 }
 
 func initBuilderConf() {
@@ -32,7 +32,7 @@ func initBuilderConf() {
 	viper.BindPFlag("ugly_url", buildCmd.Flags().Lookup("ugly_url"))
 }
 
-func buildSite(cmd *cobra.Command, args []string) {
+func buildSiteCmd(cmd *cobra.Command, args []string) {
 	if len(args) < 1 {
 		cmd.Usage()
 		log.Fatalln("No site id argument provided")
@@ -45,6 +45,20 @@ func buildSite(cmd *cobra.Command, args []string) {
 		log.Fatalln("Site not found:" + args[0])
 	}
 
+	// build site
+	siteBuilder := buildSite(site)
+	if siteBuilder.HaveError() {
+		siteBuilder.DumpErrors()
+		siteBuilder.DumpLayout()
+	} else {
+		if viper.GetBool("serve_output") {
+			// server site
+			serve(siteBuilder, viper.GetInt("serve_output_port"))
+		}
+	}
+}
+
+func buildSite(site *models.Site) *builder.SiteBuilder {
 	// builder config
 	config := &builder.SiteBuilderConfig{
 		WorkingDir: viper.GetString("working_dir"),
@@ -56,18 +70,12 @@ func buildSite(cmd *cobra.Command, args []string) {
 
 	siteBuilder := builder.NewSiteBuilder(site, config)
 
-	log.Printf("Building site '%s' with theme '%s' into %s", args[0], siteBuilder.Theme(), siteBuilder.GenDir())
+	log.Printf("Building site '%s' with theme '%s' into %s", site.Id, siteBuilder.Theme(), siteBuilder.GenDir())
 
-	// build site
-	if siteBuilder.Build(); siteBuilder.HaveError() {
-		siteBuilder.DumpErrors()
-		siteBuilder.DumpLayout()
-	} else {
-		if viper.GetBool("serve_output") {
-			// server site
-			serve(siteBuilder, viper.GetInt("serve_output_port"))
-		}
-	}
+	// build
+	siteBuilder.Build()
+
+	return siteBuilder
 }
 
 func serve(siteBuilder *builder.SiteBuilder, port int) {
