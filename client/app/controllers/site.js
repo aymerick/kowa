@@ -19,8 +19,8 @@ var SiteController = Ember.ObjectController.extend({
 
   viewSiteUrl: function() {
     // @todo FIXME !
-    return "http://127.0.0.1:48910";
-  }.property(),
+    return "http://127.0.0.1:48910/" + this.get('selectedSite').get('id');
+  }.property('selectedSite'),
 
   // i18n for attributes values and components parameters
   i18n: function() {
