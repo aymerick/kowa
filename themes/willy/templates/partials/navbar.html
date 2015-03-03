@@ -8,14 +8,18 @@
                 <span class="icon-bar"></span>
             </button>
 
-            <a href="{{ .Site.BaseURL }}" class='navbar-brand'>{{ if .Site.Logo }}<img class="logo" src="{{ .Site.Logo.Small }}" alt="{{ .Site.Name }}" height="44px" /> {{ end }}{{ .Site.Name }}</a>
+            {{ if .Site.Logo }}
+                <a href="{{ .Site.BaseURL }}" class='navbar-brand with-logo'>{{ if .Site.Logo }}<img class="logo" src="{{ .Site.Logo.Small }}" alt="{{ .Site.Name }}" /> {{ end }}{{ .Site.Name }}</a>
+            {{ else }}
+                <a href="{{ .Site.BaseURL }}" class='navbar-brand'>{{ .Site.Name }}</a>
+            {{ end }}
         </div>
 
         <nav class="collapse navbar-collapse navbar-right" id="navbar-collapse-1" role="navigation">
             <ul class="nav navbar-nav">
                 {{ range $navItem := .Site.NavBar }}
                     <li class="{{ if startsWith $.Url $navItem.Url }}active{{ end }}"><a href="{{ $navItem.Url }}">{{ $navItem.Title }}</a></li>
-                {{ end}}
+                {{ end }}
             </ul>
         </nav>
     </div>

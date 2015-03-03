@@ -12,8 +12,11 @@
         }
 
         .navbar-brand {
-            // padding-top: 3px;
             color: $color-purple-darkest;
+
+            &.with-logo {
+                padding-top: 3px;
+            }
         }
     }
 }
