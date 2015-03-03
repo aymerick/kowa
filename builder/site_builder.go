@@ -236,7 +236,7 @@ func (builder *SiteBuilder) copyAssets() error {
 func (builder *SiteBuilder) addImage(img *models.Image) *ImageVars {
 	builder.images = append(builder.images, img)
 
-	return NewImageVars(img)
+	return NewImageVars(img, builder.config.BaseURL)
 }
 
 // Check if builder have error
