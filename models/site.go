@@ -303,7 +303,7 @@ func (site *Site) ActivitiesNb() int {
 func (site *Site) FindActivities(skip int, limit int) *ActivitiesList {
 	result := ActivitiesList{}
 
-	query := site.activitiesBaseQuery().Sort("-created_at")
+	query := site.activitiesBaseQuery().Sort("created_at")
 
 	if skip > 0 {
 		query = query.Skip(skip)
@@ -351,7 +351,7 @@ func (site *Site) MembersNb() int {
 func (site *Site) FindMembers(skip int, limit int) *MembersList {
 	result := MembersList{}
 
-	query := site.membersBaseQuery().Sort("fullname")
+	query := site.membersBaseQuery().Sort("role")
 
 	if skip > 0 {
 		query = query.Skip(skip)

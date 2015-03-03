@@ -2,7 +2,6 @@ import Ember from 'ember';
 
 var SettingsActivitiesController = Ember.ArrayController.extend({
   sortProperties: ['createdAt'],
-  sortAscending: false,
 
   // i18n for attributes values and components parameters
   i18n: function() {
