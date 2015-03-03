@@ -1,5 +1,6 @@
 {{ template "partials/jumbotron" .Node }}
 
+{{ if .Description }}
 <section class="presentation">
     <div class="container">
         <div class="row">
@@ -18,7 +19,9 @@
         </div>
     </div>
 </section>
+{{ end }}
 
+{{ if .Activities }}
 <section class="activities">
     <div class="container">
         <div class="row">
@@ -38,6 +41,7 @@
         </div>
     </div>
 </section>
+{{ end }}
 
 {{ if .MoreDesc }}
 <section class="more-desription">
