@@ -44,7 +44,7 @@
     "translation": "Votre site"
   },
   {
-    "id": "empty_site_description",
+    "id": "empty_site_tagline",
     "translation": "Bienvenue sur votre nouveau site web. Veuillez ajouter une description de votre site dans l'administration."
   }
 ]

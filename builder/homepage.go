@@ -53,8 +53,13 @@ func (builder *HomepageBuilder) Load() {
 		name = T("empty_site_name")
 	}
 
+	tagline := site.Tagline
+	if tagline == "" {
+		tagline = T("empty_site_tagline")
+	}
+
 	node.Title = name
-	node.Tagline = site.Tagline
+	node.Tagline = tagline
 	node.Meta = &NodeMeta{
 		Title:       site.Name,
 		Description: site.Tagline,
@@ -67,20 +72,13 @@ func (builder *HomepageBuilder) Load() {
 
 // Instanciate a new homepage content
 func (builder *HomepageBuilder) NewHomepageContent(node *Node) *HomepageContent {
-	T := i18n.MustTfunc("fr") // @todo i18n
-
 	site := builder.site()
 
 	result := &HomepageContent{
 		Node: node,
 	}
 
-	description := site.Description
-	if description == "" {
-		description = T("empty_site_description")
-	}
-
-	result.Description = generateHTML(models.FORMAT_HTML, description)
+	result.Description = generateHTML(models.FORMAT_HTML, site.Description)
 	result.MoreDesc = generateHTML(models.FORMAT_HTML, site.MoreDesc)
 	result.JoinText = generateHTML(models.FORMAT_HTML, site.JoinText)
 

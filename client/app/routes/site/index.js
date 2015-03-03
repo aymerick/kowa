@@ -4,7 +4,7 @@ import AuthenticatedRoute from 'kowa/routes/authenticated';
 var SiteIndexRoute = AuthenticatedRoute.extend({
   afterModel: function () {
     var site = this.modelFor('site');
-    if (Ember.isBlank(site.get('description'))) {
+    if (Ember.isBlank(site.get('tagline'))) {
       // redirects /:site_id/ to /:site_id/settings
       this.transitionTo('settings');
     } else {
