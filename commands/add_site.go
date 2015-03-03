@@ -12,14 +12,14 @@ import (
 )
 
 var addSiteCmd = &cobra.Command{
-	Use:   "add_site [id] [user_id]",
+	Use:   "add_site [id] [site name] [user id]",
 	Short: "Add a new site",
 	Long:  `Insert a new site in database.`,
 	Run:   addSite,
 }
 
 func addSite(cmd *cobra.Command, args []string) {
-	if len(args) < 2 {
+	if len(args) < 3 {
 		cmd.Usage()
 		log.Fatalln("Missing arguments")
 	}
@@ -32,7 +32,8 @@ func addSite(cmd *cobra.Command, args []string) {
 
 	site := &models.Site{
 		Id:     args[0],
-		UserId: args[1],
+		Name:   args[1],
+		UserId: args[2],
 		Theme:  builder.DEFAULT_THEME,
 	}
 
