@@ -1,16 +1,6 @@
 import Ember from 'ember';
 
 var SettingsActivitiesActivityController = Ember.ObjectController.extend({
-  // used by 'tinymce-editor' component
-  unboundSummary: function() {
-    return this.get('summary');
-  }.property(),
-
-  // used by 'tinymce-editor' component
-  unboundBody: function() {
-    return this.get('body');
-  }.property(),
-
   actions: {
     removeCover: function() {
       this.get('model').set('cover', null);

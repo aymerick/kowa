@@ -17,7 +17,7 @@
 
     <div class="form-group">
         <label for="activity-summary">{{t 'activity.summary'}}</label>
-        {{tinymce-editor value=unboundSummary onChange="summaryChanged" height=150 id="activity-summary"}}
+        {{tinymce-editor value=model.summary onChange="summaryChanged" height=150 id="activity-summary"}}
         <p class="info">
             {{t 'activity.summaryInfos'}}
         </p>
@@ -25,7 +25,7 @@
 
     <div class="form-group">
         <label for="activity-body">{{t 'activity.description'}}</label>
-        {{tinymce-editor value=unboundBody onChange="bodyChanged" height=300 id="activity-body"}}
+        {{tinymce-editor value=model.body onChange="bodyChanged" height=300 id="activity-body"}}
         <p class="info">
             {{t 'activity.descriptionInfos'}}
         </p>

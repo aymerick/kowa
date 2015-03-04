@@ -65,6 +65,9 @@ var TinyMCEEditor = Ember.Component.extend({
       });
     }
 
+    // NOTE: Textarea value is set here instead of in the template because I don't want
+    //       to use a bound value that causes edition hiccups.
+    this.$('textarea').val(this.get('value'));
     this.$('textarea').tinymce(settings);
   }.on('didInsertElement'),
 

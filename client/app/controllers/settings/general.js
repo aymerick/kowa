@@ -4,21 +4,6 @@ var SettingsGeneralController = Ember.ObjectController.extend({
   needs: ['settings'],
   site: Ember.computed.alias('controllers.settings.model'),
 
-  // used by 'tinymce-editor' component
-  unboundDescription: function() {
-    return this.get('description');
-  }.property(),
-
-  // used by 'tinymce-editor' component
-  unboundMoreDesc: function() {
-    return this.get('moreDesc');
-  }.property(),
-
-  // used by 'tinymce-editor' component
-  unboundJoinText: function() {
-    return this.get('joinText');
-  }.property(),
-
   // @todo Get that list from the server
   allThemes: [ 'willy' ],
 

@@ -30,7 +30,7 @@
         {{#if model.isMarkdown}}
             {{codemirror-editor value=model.body placeholder=i18n.postBody}}
         {{else}}
-            {{tinymce-editor value=controller.unboundBody onChange="bodyChanged" fillHeight=true placeholder=i18n.postBody}}
+            {{tinymce-editor value=model.body onChange="bodyChanged" fillHeight=true placeholder=i18n.postBody}}
         {{/if}}
     </section>
 </section>
