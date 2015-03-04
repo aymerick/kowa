@@ -78,8 +78,8 @@ var TinyMCEEditor = Ember.Component.extend({
   }.on('willDestroyElement'),
 
   // callback when value changed in editor
-  editorValueDidChange: function(editedValue) {
-    this.set('value', editedValue);
+  editorValueDidChange: function(newValue) {
+    this.sendAction('onChange', newValue)
   },
 
   // callback when window size changed

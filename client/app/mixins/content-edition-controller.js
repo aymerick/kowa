@@ -8,6 +8,10 @@ var ContentEditionControllerMixin = Ember.Mixin.create({
 
   watchProperties: Ember.A([ ]),
 
+  unboundBody: function() {
+    return this.get('body');
+  }.property(),
+
   // properties setup in controller
   editionRelationships: Ember.A([ ]),
   editionDefaultTitle: null,
@@ -154,6 +158,10 @@ var ContentEditionControllerMixin = Ember.Mixin.create({
 
     removeCover: function() {
       this.get('model').set('cover', null);
+    },
+
+    bodyChanged: function(newValue) {
+      this.get('model').set('body', newValue);
     },
 
     saveContent: function() {

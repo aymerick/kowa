@@ -49,7 +49,7 @@
         {{#if model.isMarkdown}}
             {{codemirror-editor value=model.body placeholder=i18n.eventDescription}}
         {{else}}
-            {{summernote-editor value=model.body placeholder=i18n.eventDescription fillHeight=true}}
+            {{tinymce-editor value=controller.unboundBody onChange="bodyChanged" fillHeight=true placeholder=i18n.eventDescription}}
         {{/if}}
     </section>
 </section>

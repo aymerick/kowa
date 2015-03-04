@@ -1,6 +1,16 @@
 import Ember from 'ember';
 
 var SettingsActivitiesActivityController = Ember.ObjectController.extend({
+  // used by 'tinymce-editor' component
+  unboundSummary: function() {
+    return this.get('summary');
+  }.property(),
+
+  // used by 'tinymce-editor' component
+  unboundBody: function() {
+    return this.get('body');
+  }.property(),
+
   actions: {
     removeCover: function() {
       this.get('model').set('cover', null);
@@ -10,6 +20,16 @@ var SettingsActivitiesActivityController = Ember.ObjectController.extend({
     imageSelected: function(field, image) {
       var model = this.get('model');
       model.set(field, image);
+    },
+
+    // called by 'tinymce-editor' component
+    summaryChanged: function(newValue) {
+      this.get('model').set('summary', newValue);
+    },
+
+    // called by 'tinymce-editor' component
+    bodyChanged: function(newValue) {
+      this.get('model').set('body', newValue);
     },
 
     save: function () {

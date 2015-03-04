@@ -23,7 +23,7 @@
 
     <div class="form-group">
         <label for="site-description">{{t 'site.description'}}</label>
-        {{summernote-editor value=description height=300 id="site-description"}}
+        {{tinymce-editor value=unboundDescription onChange="descriptionChanged" height=300 id="site-description"}}
         <p class="info">
             {{t 'site.descriptionInfos'}}
         </p>
@@ -31,7 +31,7 @@
 
     <div class="form-group">
         <label for="site-more-desc">{{t 'site.additionalDescription'}}</label>
-        {{summernote-editor value=moreDesc height=300 id="site-more-desc"}}
+        {{tinymce-editor value=unboundMoreDesc onChange="moreDescChanged" height=300 id="site-more-desc"}}
         <p class="info">
             {{t 'site.additionalDescriptionInfos'}}
         </p>
@@ -39,7 +39,7 @@
 
     <div class="form-group">
         <label for="site-join-text">{{t 'site.joinText'}}</label>
-        {{summernote-editor value=joinText height=300 id="site-join-text"}}
+        {{tinymce-editor value=unboundJoinText onChange="joinTextChanged" height=300 id="site-join-text"}}
         <p class="info">
             {{t 'site.joinTextInfos'}}
         </p>

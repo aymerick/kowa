@@ -4,6 +4,21 @@ var SettingsGeneralController = Ember.ObjectController.extend({
   needs: ['settings'],
   site: Ember.computed.alias('controllers.settings.model'),
 
+  // used by 'tinymce-editor' component
+  unboundDescription: function() {
+    return this.get('description');
+  }.property(),
+
+  // used by 'tinymce-editor' component
+  unboundMoreDesc: function() {
+    return this.get('moreDesc');
+  }.property(),
+
+  // used by 'tinymce-editor' component
+  unboundJoinText: function() {
+    return this.get('joinText');
+  }.property(),
+
   // @todo Get that list from the server
   allThemes: [ 'willy' ],
 
@@ -20,6 +35,21 @@ var SettingsGeneralController = Ember.ObjectController.extend({
     imageSelected: function(field, image) {
       var model = this.get('model');
       model.set(field, image);
+    },
+
+    // called by 'tinymce-editor' component
+    descriptionChanged: function(newValue) {
+      this.get('model').set('description', newValue);
+    },
+
+    // called by 'tinymce-editor' component
+    moreDescChanged: function(newValue) {
+      this.get('model').set('moreDesc', newValue);
+    },
+
+    // called by 'tinymce-editor' component
+    joinTextChanged: function(newValue) {
+      this.get('model').set('joinText', newValue);
     },
 
     save: function () {
