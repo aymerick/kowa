@@ -7,8 +7,8 @@ export default Ember.Handlebars.makeBoundHelper(function(value, options) {
   var len = opts.max;
 
   // replace new lines with spaces
-  value = value.replace(/\n/g, " ")
-  value = value.replace(/<br\s*[\/]?>/gi, " ")
+  value = value.replace(/\n/g, " ");
+  value = value.replace(/<br\s*[\/]?>/gi, " ");
 
   // strip html tags
   var tmp = document.createElement("DIV");
