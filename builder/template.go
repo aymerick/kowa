@@ -22,6 +22,7 @@ func generateHTML(inputFormat string, input string) template.HTML {
 	} else {
 		sanitizePolicy := bluemonday.UGCPolicy()
 		sanitizePolicy.AllowAttrs("style").OnElements("p", "span", "div") // I know this is bad
+		sanitizePolicy.AllowAttrs("target").OnElements("a")
 
 		result = template.HTML(sanitizePolicy.Sanitize(input))
 	}
