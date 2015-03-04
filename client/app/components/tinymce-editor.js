@@ -38,8 +38,10 @@ var TinyMCEEditor = Ember.Component.extend({
       skin_url: '/tinymce/skins/lightgray',
       external_plugins: {
         hr: '/tinymce/plugins/hr/plugin.min.js',
-        link: '/tinymce/plugins/link/plugin.min.js'
+        link: '/tinymce/plugins/link/plugin.min.js',
+        paste: '/tinymce/plugins/paste/plugin.min.js'
       },
+      paste_as_text: true,
       menubar: false,
       statusbar : false,
       resize: false,

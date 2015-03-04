@@ -68,7 +68,7 @@ app.import(app.bowerDirectory + '/ember-cli-codemirror-shim/codemirror-shim.js',
 });
 
 // TinyMCE
-var tinymceDirs = importTinymce(app, pickFiles, [ 'hr', 'link' ]);
+var tinymceDirs = importTinymce(app, pickFiles, [ 'hr', 'link', 'paste' ]);
 
 function importTinymce(app, pickFiles, plugins) {
   var result = [ ];
