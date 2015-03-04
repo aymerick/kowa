@@ -15,8 +15,8 @@ var SummernoteEditor = Ember.Component.extend({
   $window: null,
   resizeHandler: null,
 
-  // initialize summernote when inserted
-  initSummernote: function() {
+  // initialize editor when inserted
+  initEditor: function() {
     var settings = {
       placeholder: this.get('placeholder'),
       toolbar: [
@@ -52,8 +52,8 @@ var SummernoteEditor = Ember.Component.extend({
     this.setupValueDidChange();
   }.on('didInsertElement'),
 
-  // remove summernote when destroyed
-  removeSummernote: function(){
+  // remove editor when destroyed
+  removeEditor: function(){
     if (this.resizeHandler !== null) {
       this.$window.off("resize", this.resizeHandler);
     }

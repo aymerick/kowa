@@ -2,28 +2,29 @@ import Ember from "ember";
 import CodeMirror from "codemirror";
 
 var CodemirrorEditor = Ember.TextArea.extend({
+  editor: null,
   value: null,
 
-  // initialize codemirror when inserted
-  initCodemirror: function() {
-    var codeMirror = CodeMirror.fromTextArea(this.get('element'), {
+  // initialize editor when inserted
+  initEditor: function() {
+    var editor = CodeMirror.fromTextArea(this.get('element'), {
       mode:'gfm',
       lineWrapping: true,
       dragDrop: false
     });
 
-    this.set('codeMirror', codeMirror);
+    this.set('editor', editor);
 
     // setup callbacks
     this.setupValueDidChange();
-    this.setupCodeMirrorValueDidChange();
+    this.setupEditorValueDidChange();
 
     this.valueDidChange();
   }.on('didInsertElement'),
 
-  // refresh codemirror when visible
+  // refresh editor when visible
   refresh: function() {
-    this.get('codeMirror').refresh();
+    this.get('editor').refresh();
   }.on('becameVisible'),
 
   // setup 'valueDidChange' callback
@@ -37,32 +38,32 @@ var CodemirrorEditor = Ember.TextArea.extend({
     });
   },
 
-  // setup 'codeMirrorValueDidChange' callback
-  setupCodeMirrorValueDidChange: function() {
-    var callback = Ember.run.bind(this, 'codeMirrorValueDidChange');
+  // setup 'editorValueDidChange' callback
+  setupEditorValueDidChange: function() {
+    var callback = Ember.run.bind(this, 'editorValueDidChange');
 
-    this.get('codeMirror').on('change', callback);
+    this.get('editor').on('change', callback);
 
     // remove callback when destroyed
     var self = this;
     this.on('willDestroyElement', this, function() {
-      self.get('codeMirror').off('change', callback);
+      self.get('editor').off('change', callback);
     });
   },
 
   // callback when value changed
   valueDidChange: function() {
-    var codeMirror = this.get('codeMirror');
-    var value      = this.get('value');
+    var editor = this.get('editor');
+    var value  = this.get('value');
 
-    if (value !== codeMirror.getValue()) {
-      codeMirror.setValue(value || '');
+    if (value !== editor.getValue()) {
+      editor.setValue(value || '');
     }
   },
 
-  // callback when codemirror value changed
-  codeMirrorValueDidChange: function(codeMirror) {
-    this.set('value', codeMirror.getValue());
+  // callback when value changed in editor
+  editorValueDidChange: function(editor) {
+    this.set('value', editor.getValue());
   }
 });
 
