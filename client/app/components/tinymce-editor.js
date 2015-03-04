@@ -24,6 +24,11 @@ var TinyMCEEditor = Ember.Component.extend({
     editor.on('change', function() {
       self.editorValueDidChange(editor.getContent());
     });
+
+    // bind keyup event
+    editor.on('keyup', function() {
+      self.editorValueDidChange(editor.getContent());
+    });
   },
 
   // initialize editor when inserted
@@ -38,7 +43,7 @@ var TinyMCEEditor = Ember.Component.extend({
       menubar: false,
       statusbar : false,
       resize: false,
-      toolbar: 'styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link | hr',
+      toolbar: 'undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link | hr',
       language_url: "/tinymce-locales/fr_FR.js", // @todo i18n
       setup: Ember.run.bind(this, this.setupEditor)
     };
@@ -61,8 +66,6 @@ var TinyMCEEditor = Ember.Component.extend({
     }
 
     this.$('textarea').tinymce(settings);
-
-    this.setupValueDidChange();
   }.on('didInsertElement'),
 
   // remove editor when destroyed
@@ -74,31 +77,9 @@ var TinyMCEEditor = Ember.Component.extend({
     this.get('editor').destroy();
   }.on('willDestroyElement'),
 
-  // setup 'valueDidChange' callback
-  setupValueDidChange: function() {
-    this.addObserver('value', this, 'valueDidChange');
-
-    // remove observer when destroyed
-    var self = this;
-    this.on('willDestroyElement', this, function() {
-      self.removeObserver('value', self, 'valueDidChange');
-    });
-  },
-
   // callback when value changed in editor
   editorValueDidChange: function(editedValue) {
     this.set('value', editedValue);
-  },
-
-  // callback when value changed
-  valueDidChange: function() {
-    var value = this.get('value');
-    var editor = this.get('editor');
-
-    if (value !== editor.getContent()) {
-      debugger;
-      editor.setContent(value);
-    }
   },
 
   // callback when window size changed
