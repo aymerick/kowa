@@ -1,6 +1,7 @@
 /* global require, module */
 
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
+var pickFiles = require('broccoli-static-compiler');
 
 var app = new EmberApp({
   // needed since ember 1.10.0
@@ -71,4 +72,42 @@ app.import(app.bowerDirectory + '/summernote/dist/summernote.css');
 app.import(app.bowerDirectory + '/summernote/dist/summernote.min.js');
 app.import(app.bowerDirectory + '/summernote/lang/summernote-fr-FR.js');
 
-module.exports = app.toTree();
+// TinyMCE
+var tinymceDirs = importTinymce(app, pickFiles, [ 'hr', 'link' ]);
+
+function importTinymce(app, pickFiles, plugins) {
+  var result = [ ];
+
+  // main files
+  app.import(app.bowerDirectory + '/tinymce/tinymce.min.js');
+  app.import(app.bowerDirectory + '/tinymce/jquery.tinymce.min.js');
+
+  // themes
+  result.push(pickFiles(app.bowerDirectory + '/tinymce/', {
+    srcDir: '/themes/modern',
+    files: ['**/*.min.js'],
+    destDir: '/tinymce/themes/modern'
+  }));
+
+  // skins
+  result.push(pickFiles(app.bowerDirectory + '/tinymce/', {
+    srcDir: '/skins/lightgray',
+    files: [ '**/*.min.css', '**/*.gif', '**/*.woff', '**/*.ttf'],
+    destDir: '/tinymce/skins/lightgray'
+  }));
+
+  // plugins
+  for (var i = 0; i < plugins.length; i++) {
+    var pluginName = plugins[i];
+
+    result.push(pickFiles(app.bowerDirectory + '/tinymce/', {
+      srcDir: '/plugins/' + pluginName,
+      files: ['plugin.min.js'],
+      destDir: '/tinymce/plugins/' + pluginName
+    }));
+  }
+
+  return result;
+}
+
+module.exports = app.toTree(tinymceDirs);

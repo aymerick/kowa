@@ -1,0 +1,27 @@
+.tinymce-editor {
+    &.fill-height {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        bottom: 0px;
+        left: 0px;
+
+        // the '.mce-tinymce:first-child' rule permits to target first .mce-container-body
+        // that contains everything (and not the individuals stacked .mce-container-body)
+        .mce-tinymce, .mce-tinymce:first-child, .mce-edit-area {
+            position: absolute;
+            left: 0px;
+            right: 0px;
+            top: 0px;
+            bottom: 0px;
+
+            border: none;
+        }
+
+        .mce-edit-area {
+            // This is the height of the toolbar and it will be changed
+            // by tinymce-editor component on window resize
+            top: 34px;
+        }
+    }
+}
