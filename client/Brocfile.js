@@ -67,11 +67,6 @@ app.import(app.bowerDirectory + '/ember-cli-codemirror-shim/codemirror-shim.js',
   exports: { 'codemirror': ['default'] }
 });
 
-// Summernote
-app.import(app.bowerDirectory + '/summernote/dist/summernote.css');
-app.import(app.bowerDirectory + '/summernote/dist/summernote.min.js');
-app.import(app.bowerDirectory + '/summernote/lang/summernote-fr-FR.js');
-
 // TinyMCE
 var tinymceDirs = importTinymce(app, pickFiles, [ 'hr', 'link' ]);
 
