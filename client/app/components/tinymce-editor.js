@@ -44,7 +44,7 @@ var TinyMCEEditor = Ember.Component.extend({
       statusbar : false,
       resize: false,
       toolbar: 'undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link | hr',
-      language_url: "/tinymce-locales/fr_FR.js", // @todo i18n
+      language_url: "/tinymce/locales/fr_FR.js", // @todo i18n
       setup: Ember.run.bind(this, this.setupEditor)
     };
 
@@ -79,7 +79,7 @@ var TinyMCEEditor = Ember.Component.extend({
 
   // callback when value changed in editor
   editorValueDidChange: function(newValue) {
-    this.sendAction('onChange', newValue)
+    this.sendAction('onChange', newValue);
   },
 
   // callback when window size changed
