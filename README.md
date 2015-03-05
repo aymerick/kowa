@@ -3,6 +3,8 @@ kowa
 
 Static website manager
 
+** WARNING: This is a work in progress, tests are missing, language selection is missing, a lot of stuff is missing ! **
+
 
 ## Development setup
 
@@ -56,20 +58,20 @@ Start client:
     $ cd client
     $ ember server --proxy http://127.0.0.1:35830
 
-The admin app is now running <http://127.0.0.1:4200> and you can login with credentials: `mike` / `pizzaword`.
+The admin app is now running at <http://127.0.0.1:4200> and you can login with credentials: `mike` / `pizzaword`.
 
-If you want to disable live reload (when testing image upload for example), starts the client with the `--live-reload=false` flag like that:
+If you want to disable live reload (when testing image upload for example), set the `--live-reload`:
 
     $ ember server --proxy http://127.0.0.1:35830 --live-reload=false
 
 
 ## Development workflow
 
-When you change client code, the app is rebuilt automatically, and the browser reloads it (unless `--live-reload=false` flag was set).
+When you change client code, the app is rebuilt automatically, and the browser reloads it (unless `--live-reload=false` flag is set).
 
 When you change server code, you have to rebuild it with `go build` and restart it.
 
-When you change a `SASS` file in `willy` theme you don't have to rebuild the server, by you have to rebuild the theme with:
+When you change a `SASS` file in `willy` theme you don't have to rebuild the server, by you have to rebuild the theme:
 
     $ cd themes/willy
     $ grunt build
