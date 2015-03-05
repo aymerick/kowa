@@ -39,7 +39,8 @@ var TinyMCEEditor = Ember.Component.extend({
       external_plugins: {
         hr: '/tinymce/plugins/hr/plugin.min.js',
         link: '/tinymce/plugins/link/plugin.min.js',
-        paste: '/tinymce/plugins/paste/plugin.min.js'
+        paste: '/tinymce/plugins/paste/plugin.min.js',
+        placeholder: '/tinymce/plugins/placeholder/plugin.js'
       },
       content_css : [
          '/assets/bootstrap.css',

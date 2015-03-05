@@ -1,4 +1,15 @@
+$tinymce-padding: 15px;
+$tinymce-padding-full: 30px;
+
 .tinymce-editor {
+    label.placeholder {
+        position: absolute;
+        top: $tinymce-padding;
+        left: $tinymce-padding;
+
+        color: $midgrey;
+    }
+
     &.fill-height {
         position: absolute;
         top: 0px;
@@ -23,6 +34,12 @@
             // by tinymce-editor component on window resize
             top: 34px;
         }
+
+        label.placeholder {
+            position: absolute;
+            top: $tinymce-padding-full;
+            left: $tinymce-padding-full;
+        }
     }
 }
 
@@ -30,9 +47,9 @@
 body#tinymce {
     background-color: #fff;
     color: $input-color; // bootstrap var
-    padding: 15px;
+    padding: $tinymce-padding;
 
     &.full-size {
-        padding: 30px;
+        padding: $tinymce-padding-full;
     }
 }
