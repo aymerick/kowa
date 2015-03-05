@@ -12,6 +12,8 @@ const (
 	UPLOAD_DIR        = "/upload"
 
 	DEFAULT_OUTPUT_DIR = "_sites"
+
+	DEFAULT_LANG = "en" // @todo FIXME
 )
 
 func AppPublicDir() string {

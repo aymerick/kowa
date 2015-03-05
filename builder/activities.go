@@ -7,6 +7,7 @@ import (
 	"github.com/nicksnyder/go-i18n/i18n"
 
 	"github.com/aymerick/kowa/models"
+	"github.com/aymerick/kowa/utils"
 )
 
 // Activities node builder
@@ -48,7 +49,7 @@ func NewActivitiesBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 
 // NodeBuilder
 func (builder *ActivitiesBuilder) Load() {
-	T := i18n.MustTfunc("fr") // @todo i18n
+	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
 
 	// fetch activities
 	activitiesVars := builder.activities()

@@ -4,7 +4,6 @@ export default {
   chooseImage: 'Choose image',
   coverImage: 'cover image',
   'delete': 'Delete',
-  logout: 'Logout',
   photo: 'Photo',
   save: 'Save',
   select: 'Select',
@@ -17,6 +16,7 @@ export default {
     enterPassword: "Your password",
     enterUsername: "Your username",
     login: "Login",
+    logout: 'Logout',
     password: "Password",
     usernameOrEmail: "Username or Email address"
   },

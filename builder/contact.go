@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"strings"
 
+	"github.com/aymerick/kowa/utils"
 	"github.com/nicksnyder/go-i18n/i18n"
 )
 
@@ -41,7 +42,7 @@ func NewContactBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 
 // NodeBuilder
 func (builder *ContactBuilder) Load() {
-	T := i18n.MustTfunc("fr") // @todo i18n
+	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
 
 	title := T("Contact")
 	tagline := "" // @todo Fill

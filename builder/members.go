@@ -6,6 +6,7 @@ import (
 	"github.com/nicksnyder/go-i18n/i18n"
 
 	"github.com/aymerick/kowa/models"
+	"github.com/aymerick/kowa/utils"
 )
 
 // Members node builder
@@ -47,7 +48,7 @@ func NewMembersBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 
 // NodeBuilder
 func (builder *MembersBuilder) Load() {
-	T := i18n.MustTfunc("fr") // @todo i18n
+	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
 
 	// fetch members
 	membersVars := builder.members()

@@ -81,7 +81,7 @@ func postSlug(post *models.Post) string {
 
 // Build post page
 func (builder *PostsBuilder) loadPost(post *models.Post) {
-	T := i18n.MustTfunc("fr") // @todo i18n
+	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
 
 	node := builder.newNode()
 	node.fillUrl(path.Join(T("posts"), postSlug(post)))
@@ -127,7 +127,7 @@ func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *Post
 
 // Build posts list pages
 func (builder *PostsBuilder) loadPostsLists() {
-	T := i18n.MustTfunc("fr") // @todo i18n
+	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
 
 	if len(builder.posts) > 0 {
 		// @todo pagination

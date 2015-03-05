@@ -108,7 +108,7 @@ func eventSlug(event *models.Event) string {
 
 // Build event page
 func (builder *EventsBuilder) loadEvent(event *models.Event) {
-	T := i18n.MustTfunc("fr") // @todo i18n
+	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
 
 	node := builder.newNode()
 	node.fillUrl(path.Join(T("events"), eventSlug(event)))
@@ -187,7 +187,7 @@ func (builder *EventsBuilder) NewEventContent(event *models.Event, node *Node) *
 
 // Build events list pages
 func (builder *EventsBuilder) loadEventsLists() {
-	T := i18n.MustTfunc("fr") // @todo i18n
+	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
 
 	if len(builder.events) > 0 || len(builder.pastEvents) > 0 {
 		// @todo pagination

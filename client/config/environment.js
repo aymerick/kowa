@@ -27,7 +27,7 @@ module.exports = function(environment) {
       api_client_secret: 'none',
 
       // ember-cli-i18n addon
-      defaultLocale: 'fr' // @todo 'en'
+      defaultLocale: 'en' // @todo i18n
     }
   };
 
