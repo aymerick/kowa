@@ -49,6 +49,9 @@ type SiteBuilder struct {
 	images         []*models.Image
 	errorCollector *ErrorCollector
 
+	// all nodes slugs
+	nodeSlugs map[string]bool
+
 	// cache for #layout method
 	masterLayout *template.Template
 
@@ -71,6 +74,8 @@ func NewSiteBuilder(site *models.Site, config *SiteBuilderConfig) *SiteBuilder {
 	result := &SiteBuilder{
 		site:   site,
 		config: config,
+
+		nodeSlugs: make(map[string]bool),
 
 		errorCollector: NewErrorCollector(),
 
@@ -156,6 +161,21 @@ func (builder *SiteBuilder) loadNodes() {
 	for _, nodeBuilder := range builder.nodeBuilders {
 		nodeBuilder.Load()
 	}
+}
+
+// Collect node slugs, and returns a new one if provided slug is already taken
+func (builder *SiteBuilder) addNodeSlug(slug string) string {
+	result := slug
+
+	i := 1
+	for builder.nodeSlugs[result] {
+		result = fmt.Sprintf("%s-%d", slug, i)
+		i++
+	}
+
+	builder.nodeSlugs[result] = true
+
+	return result
 }
 
 // Returns nodes to display in navigation bar

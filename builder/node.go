@@ -64,10 +64,12 @@ func NewNode(builder NodeBuilder, kind string) *Node {
 
 // Fill node Url
 func (node *Node) fillUrl(slug string) {
-	config := node.builder.SiteBuilder().config
+	siteBuilder := node.builder.SiteBuilder()
+
+	config := siteBuilder.config
 
 	// Slug
-	node.Slug = slug
+	node.Slug = siteBuilder.addNodeSlug(slug)
 
 	// FilePath
 	if config.UglyURL || (node.Slug == "") || (node.Slug == "/") || (node.Slug == "index") {
