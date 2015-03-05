@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"path"
+	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -72,8 +73,12 @@ func buildSite(site *models.Site) *builder.SiteBuilder {
 
 	log.Printf("Building site '%s' with theme '%s' into %s", site.Id, siteBuilder.Theme(), siteBuilder.GenDir())
 
+	startTime := time.Now()
+
 	// build
 	siteBuilder.Build()
+
+	log.Printf("Site build in %v ms\n", int(1000*time.Since(startTime).Seconds()))
 
 	return siteBuilder
 }
