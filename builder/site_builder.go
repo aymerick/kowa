@@ -226,6 +226,8 @@ func (builder *SiteBuilder) copyCollectedImages() {
 // Copy theme assets
 func (builder *SiteBuilder) copyAssets() error {
 	syncer := fsync.NewSyncer()
+	syncer.Delete = true
+
 	syncer.SrcFs = new(afero.OsFs)
 	syncer.DestFs = new(afero.OsFs)
 
