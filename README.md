@@ -1,11 +1,27 @@
 kowa
 ====
 
-Static website manager
+Static website manager.
 
 **WARNING: This is a work in progress, tests are missing, language selection is missing, documentation is missing... a lot of stuff is missing, and it has NOT been deployed in production yet.**
 
-The server is written in Go, and the client is an Ember.js application inside `client` directory.
+Build a typical showcase website thanks to a modern admin web app. You website is generated statically everytime you make a change to it.
+
+A static website is easy to deploy, cost effective and really fast.
+
+With kowa, create a website for your organisation with:
+
+  - a customizable homepage
+  - a `contact` page
+  - an `activities` page to clearly explain what your organisation is about
+  - a `news` page: publish your latests news, and publish it automatically on social networks (not implemented yet)
+  - an `events` page: inform your audience about your ongoing events
+  - a `members` page featuring your organisation team
+  - and as many custom pages as you want
+
+All these features are optionnals: only take what your need.
+
+Technically, the server is written in Go and the client is an Ember.js application that you can find inside the `client` directory.
 
 
 ## Development setup
