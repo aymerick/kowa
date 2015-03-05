@@ -218,6 +218,7 @@ func (builder *SiteBuilder) syncNodes() {
 	allDirs := make(map[string]bool)
 
 	// generate nodes
+	// @todo Use go routines and channels
 	for _, nodeBuilder := range builder.nodeBuilders {
 		filePaths := nodeBuilder.Generate()
 		for filePath, _ := range filePaths {
