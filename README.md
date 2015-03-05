@@ -3,7 +3,9 @@ kowa
 
 Static website manager
 
-**WARNING: This is a work in progress, tests are missing, language selection is missing, document is missing... a lot of stuff is missing !**
+**WARNING: This is a work in progress, tests are missing, language selection is missing, documentation is missing... a lot of stuff is missing, and it has NOT been deployed in production yet.**
+
+The server is written in Go, and the client is an Ember.js application inside `client` directory.
 
 
 ## Development setup
