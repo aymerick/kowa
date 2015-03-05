@@ -14,7 +14,7 @@ With kowa, create a website for your organisation with:
   - a customizable `homepage`
   - a `contact` page
   - an `activities` page to clearly explain what your organisation is about
-  - a `news` page: post your latests news, and publish it automatically on social networks *(not implemented yet)*
+  - a `posts` page: post your latests news, and publish them automatically on social networks *(not implemented yet)*
   - an `events` page: inform your audience about your ongoing events
   - a `members` page featuring your organisation team
   - and as many custom pages as you want
