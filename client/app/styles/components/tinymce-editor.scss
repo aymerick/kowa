@@ -25,3 +25,14 @@
         }
     }
 }
+
+// styles the tinymce iframe
+body#tinymce {
+    background-color: #fff;
+    color: $input-color; // bootstrap var
+    padding: 15px;
+
+    &.full-size {
+        padding: 0px 30px;
+    }
+}

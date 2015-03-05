@@ -41,6 +41,11 @@ var TinyMCEEditor = Ember.Component.extend({
         link: '/tinymce/plugins/link/plugin.min.js',
         paste: '/tinymce/plugins/paste/plugin.min.js'
       },
+      content_css : [
+         '/assets/bootstrap.css',
+         '/assets/vendor.css',
+         '/assets/kowa.css'
+      ],
       paste_as_text: true,
       menubar: false,
       statusbar : false,
@@ -52,7 +57,8 @@ var TinyMCEEditor = Ember.Component.extend({
 
     if (this.get('fillHeight')) {
       settings = Ember.merge(settings, {
-        height: '100%'
+        height: '100%',
+        body_class: 'full-size'
       });
 
       this.resizeHandler = Ember.run.bind(this, this.onResize);
