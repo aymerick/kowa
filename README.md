@@ -3,7 +3,7 @@ kowa
 
 Static website manager
 
-** WARNING: This is a work in progress, tests are missing, language selection is missing, a lot of stuff is missing ! **
+**WARNING: This is a work in progress, tests are missing, language selection is missing, document is missing... a lot of stuff is missing !**
 
 
 ## Development setup
