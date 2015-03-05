@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 
 	"github.com/spf13/afero"
@@ -117,17 +118,11 @@ func (builder *SiteBuilder) Build() {
 		return
 	}
 
-	// generate nodes
-	if builder.generateNodes(); builder.HaveError() {
-		return
-	}
-
-	// @todo Delete removed nodes
+	// sync nodes
+	builder.syncNodes()
 
 	// sync images
-	if builder.syncImages(); builder.HaveError() {
-		return
-	}
+	builder.syncImages()
 
 	// sync assets
 	builder.syncAssets()
@@ -196,15 +191,67 @@ func (builder *SiteBuilder) fillSiteVars() {
 }
 
 // Generate nodes
-func (builder *SiteBuilder) generateNodes() {
+func (builder *SiteBuilder) syncNodes() {
+	errStep := "Sync nodes"
+
+	allFiles := make(map[string]bool)
+	allDirs := make(map[string]bool)
+
+	// generate nodes
 	for _, nodeBuilder := range builder.nodeBuilders {
-		nodeBuilder.Generate()
+		filePaths := nodeBuilder.Generate()
+		for filePath, _ := range filePaths {
+			log.Printf("Generated node: %s", filePath)
+			allFiles[filePath] = true
+
+			relativePath := path.Dir(strings.TrimPrefix(filePath, builder.GenDir()))
+
+			destDir := builder.GenDir()
+			for _, pathPart := range strings.Split(relativePath, "/") {
+				if pathPart != "" {
+					destDir = path.Join(destDir, pathPart)
+					allDirs[destDir] = true
+				}
+			}
+		}
+	}
+
+	// delete deprecated nodes
+	filesToDelete := make(map[string]bool)
+
+	// ignore assets and img dirs
+	ignoreDirs := []string{
+		path.Join(builder.GenDir(), "assets"),
+		path.Join(builder.GenDir(), "img"),
+	}
+
+	err := filepath.Walk(builder.GenDir(), func(path string, f os.FileInfo, err error) error {
+		if (path != builder.GenDir()) && !utils.HasOnePrefix(path, ignoreDirs) {
+			if (f.IsDir() && !allDirs[path]) || (!f.IsDir() && !allFiles[path]) {
+				filesToDelete[path] = true
+			}
+		}
+		return nil
+	})
+
+	if err != nil {
+		builder.addError(errStep, err)
+		return
+	}
+
+	destFs := new(afero.OsFs)
+	for filePath, _ := range filesToDelete {
+		log.Printf("Deleting: %s", filePath)
+
+		if err := destFs.RemoveAll(filePath); err != nil {
+			builder.addError(errStep, err)
+		}
 	}
 }
 
 // Copy images
 func (builder *SiteBuilder) syncImages() {
-	errStep := "Copy images"
+	errStep := "Sync images"
 
 	imgDir := builder.genImagesDir()
 

@@ -16,7 +16,7 @@ type NodeBuilder interface {
 	Load()
 
 	// Generate all nodes
-	Generate()
+	Generate() map[string]bool
 
 	// Returns all loaded nodes
 	Nodes() []*Node
@@ -54,13 +54,19 @@ func (builder *NodeBuilderBase) Load() {
 }
 
 // NodeBuilder
-func (builder *NodeBuilderBase) Generate() {
+func (builder *NodeBuilderBase) Generate() map[string]bool {
+	result := make(map[string]bool)
+
 	for _, node := range builder.nodes {
 		// fill node with more data
 		builder.fillNodeBeforeGeneration(node)
 
-		builder.generateNode(node)
+		if filePath := builder.generateNode(node); filePath != "" {
+			result[filePath] = true
+		}
 	}
+
+	return result
 }
 
 // NodeBuilder
@@ -96,20 +102,20 @@ func (builder *NodeBuilderBase) fillNodeBeforeGeneration(node *Node) {
 }
 
 // Generate given node
-func (builder *NodeBuilderBase) generateNode(node *Node) {
+func (builder *NodeBuilderBase) generateNode(node *Node) string {
 	osFilePath := builder.siteBuilder.filePath(node.FilePath)
 
 	// ensure dir
 	if err := builder.siteBuilder.ensureFileDir(osFilePath); err != nil {
 		builder.addError(err)
-		return
+		return ""
 	}
 
 	// open file
 	outputFile, err := os.Create(osFilePath)
 	if err != nil {
 		builder.addError(err)
-		return
+		return ""
 	}
 	defer outputFile.Close()
 
@@ -117,7 +123,10 @@ func (builder *NodeBuilderBase) generateNode(node *Node) {
 	// log.Printf("[DBG] Writing file: %s", osFilePath)
 	if err := node.generate(outputFile, builder.siteBuilder.layout()); err != nil {
 		builder.addError(err)
+		return ""
 	}
+
+	return osFilePath
 }
 
 // Init a new node with builder node kind
