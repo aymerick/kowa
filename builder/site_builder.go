@@ -122,13 +122,15 @@ func (builder *SiteBuilder) Build() {
 		return
 	}
 
-	// copy images
-	if builder.copyCollectedImages(); builder.HaveError() {
+	// @todo Delete removed nodes
+
+	// sync images
+	if builder.syncImages(); builder.HaveError() {
 		return
 	}
 
-	// copy assets
-	builder.copyAssets()
+	// sync assets
+	builder.syncAssets()
 }
 
 // Initialize builders
@@ -201,7 +203,7 @@ func (builder *SiteBuilder) generateNodes() {
 }
 
 // Copy images
-func (builder *SiteBuilder) copyCollectedImages() {
+func (builder *SiteBuilder) syncImages() {
 	errStep := "Copy images"
 
 	imgDir := builder.genImagesDir()
@@ -213,10 +215,36 @@ func (builder *SiteBuilder) copyCollectedImages() {
 	}
 
 	// copy images to img dir
+	sourceFiles := make(map[string]bool)
+
+	var files []string
 	for _, image := range builder.images {
 		for _, derivative := range models.Derivatives {
-			srcFile := image.DerivativeFilePath(derivative)
-			if err := builder.copyFile(srcFile, imgDir); err != nil {
+			filePath := image.DerivativeFilePath(derivative)
+
+			sourceFiles[path.Base(filePath)] = true
+
+			files = append(files, filePath)
+		}
+	}
+
+	if len(files) > 0 {
+		fsync.SyncTo(imgDir, files...)
+	}
+
+	// delete deprecated images
+	destFs := new(afero.OsFs)
+	destfiles, err := afero.ReadDir(imgDir, destFs)
+	if err != nil {
+		builder.addError(errStep, err)
+		return
+	}
+
+	for _, destfile := range destfiles {
+		if !sourceFiles[destfile.Name()] {
+			log.Printf("Deleting deprecated image: %s", destfile.Name())
+
+			if err := destFs.RemoveAll(path.Join(imgDir, destfile.Name())); err != nil {
 				builder.addError(errStep, err)
 			}
 		}
@@ -224,12 +252,9 @@ func (builder *SiteBuilder) copyCollectedImages() {
 }
 
 // Copy theme assets
-func (builder *SiteBuilder) copyAssets() error {
+func (builder *SiteBuilder) syncAssets() error {
 	syncer := fsync.NewSyncer()
 	syncer.Delete = true
-
-	syncer.SrcFs = new(afero.OsFs)
-	syncer.DestFs = new(afero.OsFs)
 
 	return syncer.Sync(builder.genAssetsDir(), builder.themeAssetsDir())
 }
