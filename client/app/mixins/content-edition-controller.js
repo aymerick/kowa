@@ -4,7 +4,11 @@ import Ember from 'ember';
 //  https://github.com/emberjs/data/issues/1308
 var ContentEditionControllerMixin = Ember.Mixin.create({
   isDirty: false,
+  isSaving: false,
+
   nothingChanged: Ember.computed.not('isDirty'),
+  cannotSave: Ember.computed.or('nothingChanged', 'isSaving'),
+  cannotDelete: Ember.computed.or('model.isNew', 'isSaving'),
 
   watchProperties: Ember.A([ ]),
 
@@ -51,6 +55,8 @@ var ContentEditionControllerMixin = Ember.Mixin.create({
     var model = this.get('model');
     var self = this;
 
+    this.set('isSaving', true);
+
     model.save().then(function (recordSaved) {
       self.get('flashes').success(okMsg);
 
@@ -67,6 +73,8 @@ var ContentEditionControllerMixin = Ember.Mixin.create({
       return recordSaved;
     }).catch(function () {
       self.get('flashes').danger(errorMsg);
+    }).finally(function(){
+      self.set('isSaving', false);
     });
   },
 
