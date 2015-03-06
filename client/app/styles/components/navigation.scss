@@ -67,7 +67,7 @@
 
         // adds top triangle
         // cf. http://stackoverflow.com/a/14051581
-        &::before {
+        &:before {
             position: absolute;
             top: -7px;
             right: 9px;
@@ -78,7 +78,7 @@
             border-bottom-color: rgba(0, 0, 0, 0.2);
             content: '';
         }
-        &::after {
+        &:after {
             position: absolute;
             top: -6px;
             right: 10px;
