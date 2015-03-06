@@ -1,6 +1,8 @@
 import Ember from 'ember';
 
 var SettingsMembersMemberController = Ember.ObjectController.extend({
+  isSaving: false,
+
   actions: {
     removePhoto: function() {
       this.get('model').set('photo', null);
@@ -15,12 +17,16 @@ var SettingsMembersMemberController = Ember.ObjectController.extend({
     save: function () {
       var self = this;
 
+      this.set('isSaving', true);
+
       return this.get('model').save().then(function (model) {
         self.get('flashes').success(self.t('member.saved'));
 
         return model;
       }).catch(function (/* errors */) {
         self.get('flashes').danger(self.t('member.saveFailed'));
+      }).finally(function(){
+        self.set('isSaving', false);
       });
     }
   }

@@ -1,6 +1,8 @@
 import Ember from 'ember';
 
 var SettingsActivitiesActivityController = Ember.ObjectController.extend({
+  isSaving: false,
+
   actions: {
     removeCover: function() {
       this.get('model').set('cover', null);
@@ -25,12 +27,16 @@ var SettingsActivitiesActivityController = Ember.ObjectController.extend({
     save: function () {
       var self = this;
 
+      this.set('isSaving', true);
+
       return this.get('model').save().then(function (model) {
         self.get('flashes').success(self.t('activity.saved'));
 
         return model;
       }).catch(function (/* errors */) {
         self.get('flashes').danger(self.t('activity.saveFailed'));
+      }).finally(function(){
+        self.set('isSaving', false);
       });
     }
   }

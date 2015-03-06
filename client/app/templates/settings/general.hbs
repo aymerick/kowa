@@ -1,7 +1,7 @@
 <header class="settings-header">
     <h2 class="settings-item-title">{{t 'General'}}</h2>
 
-    <button class="btn btn-primary action-save" {{action "save"}}><i class="fa fa-floppy-o"></i>{{t 'save'}}</button>
+    <button class="btn btn-primary action-save" {{action "save"}} {{bind-attr disabled=isSaving}}><i class="fa fa-floppy-o"></i>{{t 'save'}}</button>
 </header>
 
 <form class="settings-body" role="form" {{action 'save' on='submit'}}>

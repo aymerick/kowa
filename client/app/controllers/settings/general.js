@@ -3,6 +3,7 @@ import Ember from 'ember';
 var SettingsGeneralController = Ember.ObjectController.extend({
   needs: ['settings'],
   site: Ember.computed.alias('controllers.settings.model'),
+  isSaving: false,
 
   // @todo Get that list from the server
   allThemes: [ 'willy' ],
@@ -40,12 +41,16 @@ var SettingsGeneralController = Ember.ObjectController.extend({
     save: function () {
       var self = this;
 
+      this.set('isSaving', true);
+
       return this.get('model').save().then(function (model) {
         self.get('flashes').success('Settings saved.');
 
         return model;
       }).catch(function (/* errors */) {
         self.get('flashes').danger('Failed to save settings.');
+      }).finally(function(){
+        self.set('isSaving', false);
       });
     }
   }
