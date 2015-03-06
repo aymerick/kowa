@@ -17,7 +17,7 @@
     "font-awesome": "~4.3.0",
     "ember-cli-moment-shim": "~0.0.3",
     "ember-uploader": "0.3.0",
-    "spin.js": "~2.0.1",
+    "spin.js": "~2.0.2",
     "ember-cli-codemirror-shim": "~0.0.1",
     "codemirror": "~4.8.0",
     "pretender": "0.1.0",
