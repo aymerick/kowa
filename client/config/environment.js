@@ -34,9 +34,9 @@ module.exports = function(environment) {
   // cf. https://github.com/rwjblue/ember-cli-content-security-policy
   ENV.contentSecurityPolicy = {
     'default-src': "'none'",
-    'script-src': "'self' 'unsafe-eval' 'unsafe-inline' localhost:35729 0.0.0.0:35729;",
+    'script-src': "'self' 'unsafe-eval' 'unsafe-inline' localhost:35729 0.0.0.0:35729 127.0.0.1:35729",
     'font-src': "'self'",
-    'connect-src': "'self' ws://localhost:35729 ws://0.0.0.0:35729",
+    'connect-src': "'self' ws://localhost:35729 ws://0.0.0.0:35729 ws://127.0.0.1:35729",
     'img-src': "'self'",
     'style-src': "'self' 'unsafe-eval' 'unsafe-inline'",
     'media-src': "'self'"
