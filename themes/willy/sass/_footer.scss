@@ -20,4 +20,12 @@ footer {
             color: #fff;
         }
     }
+
+    .social {
+        padding: 0 10px;
+
+        &:nth-child(n+2) {
+            border-left: #fff solid 1px;
+        }
+    }
 }
