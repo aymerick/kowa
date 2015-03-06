@@ -2,6 +2,7 @@ export default {
   // common
   cancel: 'Cancel',
   chooseImage: 'Choose image',
+  close: 'Close',
   coverImage: 'cover image',
   'delete': 'Delete',
   photo: 'Photo',

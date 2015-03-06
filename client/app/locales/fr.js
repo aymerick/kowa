@@ -2,6 +2,7 @@ export default {
   // common
   cancel: 'Annuler',
   chooseImage: 'Choisir image',
+  close: 'Fermer',
   coverImage: 'image principale',
   'delete': 'Supprimer',
   photo: 'Photo',
