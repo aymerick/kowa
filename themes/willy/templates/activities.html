@@ -6,7 +6,11 @@
         <div class="row">
             <div class="col-md-12">
                 <h2>{{ .Title }}</h2>
-                {{ .Body }}
+                {{ if .Body }}
+                    {{ .Body }}
+                {{ else }}
+                    {{ .Summary }}
+                {{ end }}
             </div>
         </div>
         {{ if .Cover }}
