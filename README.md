@@ -28,14 +28,14 @@ Technically, the server is written in Go and the client is an Ember.js applicati
 
 First, you need a running mongodb server running on standard port.
 
-Then checkout the project:
+Fetch sources:
 
-    $ git clone git@github.com:aymerick/kowa.git
+    $ go get git@github.com:aymerick/kowa
 
 Build kowa:
 
     $ cd kowa
-    $ go build -i
+    $ go build
 
 Setup the database:
 
