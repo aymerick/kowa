@@ -1,6 +1,7 @@
-/* global moment */
 import Ember from 'ember';
 import DS from 'ember-data';
+
+import moment from 'moment';
 
 var EventModel = DS.Model.extend({
   createdAt: DS.attr('date', { defaultValue: function() { return new Date(); } }),

@@ -1,5 +1,5 @@
-/* global moment */
 import Ember from 'ember';
+import moment from 'moment';
 
 import PaginationControllerMixin from 'kowa/mixins/pagination-controller';
 import UploadJob from 'kowa/services/upload-job';
