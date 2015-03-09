@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/aymerick/kowa/models"
-	"github.com/aymerick/kowa/utils"
 )
 
 // Page nodes builder
@@ -47,7 +46,7 @@ func (builder *PagesBuilder) Load() {
 // Build page
 func (builder *PagesBuilder) loadPage(page *models.Page) {
 	node := builder.newNode()
-	node.fillUrl(utils.Urlify(page.Title))
+	node.fillUrl(page.Title)
 
 	pageContent := builder.NewPageContent(page, node)
 	if pageContent.Body != "" {

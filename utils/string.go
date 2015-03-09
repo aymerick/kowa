@@ -2,9 +2,12 @@ package utils
 
 import (
 	"math/rand"
+	"net/url"
 	"strings"
 	"time"
-	"unicode"
+
+	"golang.org/x/text/transform"
+	"golang.org/x/text/unicode/norm"
 )
 
 var AlphaNumChars = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -20,23 +23,41 @@ func RandomAlphaNumString(size int) string {
 	return string(bytes)
 }
 
-// Returns a string than can be used in an URL
-func Urlify(str string) string {
-	return strings.ToLower(UnicodeSanitize(strings.Replace(strings.TrimSpace(str), " ", "-", -1)))
+func Pathify(s string) string {
+	return strings.ToLower(NormalizeToASCII(strings.Replace(strings.TrimSpace(s), " ", "-", -1)))
 }
 
-// Borrowed from https://github.com/spf13/hugo/blob/master/helpers/path.go
-func UnicodeSanitize(s string) string {
-	source := []rune(s)
-	target := make([]rune, 0, len(source))
-
-	for _, r := range source {
-		if unicode.IsLetter(r) || unicode.IsDigit(r) || r == '.' || r == '/' || r == '_' || r == '-' {
-			target = append(target, r)
-		}
+// Returns a string than can be used in an URL
+func Urlify(str string) string {
+	// escape unicode letters
+	parsedUri, err := url.Parse(str)
+	if err != nil {
+		panic(err)
 	}
 
-	return string(target)
+	return parsedUri.String()
+}
+
+// Normalize unicode string to ASCII
+func NormalizeToASCII(str string) string {
+	isNotOk := func(r rune) bool {
+		isOk := (r == 35) || // '#'
+			(r == 45) || // '-'
+			(r == 46) || // '.'
+			(r == 47) || // '/'
+			((r >= 48) && (r <= 57)) || // '0'..'9'
+			((r >= 65) && (r <= 90)) || // 'A'..'Z'
+			((r >= 97) && (r <= 122)) || // 'a'..'z'
+			(r == 95) // '_'
+
+		return !isOk
+	}
+
+	t := transform.Chain(norm.NFKD, transform.RemoveFunc(isNotOk))
+
+	result, _, _ := transform.String(t, str)
+
+	return result
 }
 
 // Returns true is string has one of given prefixes

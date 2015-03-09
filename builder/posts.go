@@ -76,7 +76,7 @@ func postSlug(post *models.Post) string {
 		title = title[:MAX_SLUG]
 	}
 
-	return fmt.Sprintf("%d/%02d/%02d/%s", year, month, day, utils.Urlify(title))
+	return fmt.Sprintf("%d/%02d/%02d/%s", year, month, day, title)
 }
 
 // Build post page

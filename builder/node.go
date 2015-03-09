@@ -7,6 +7,8 @@ import (
 	"io"
 	"io/ioutil"
 	"path"
+
+	"github.com/aymerick/kowa/utils"
 )
 
 // Node vars
@@ -69,7 +71,7 @@ func (node *Node) fillUrl(slug string) {
 	config := siteBuilder.config
 
 	// Slug
-	node.Slug = siteBuilder.addNodeSlug(slug)
+	node.Slug = siteBuilder.addNodeSlug(utils.Pathify(slug))
 
 	// FilePath
 	if config.UglyURL || (node.Slug == "") || (node.Slug == "/") || (node.Slug == "index") {
@@ -87,7 +89,7 @@ func (node *Node) fillUrl(slug string) {
 	}
 
 	// FillUrl
-	node.FullUrl = path.Join(config.BaseURL, node.FilePath)
+	node.FullUrl = utils.Urlify(path.Join(config.BaseURL, node.FilePath))
 
 	// Url
 	dir, fileName := path.Split(node.FullUrl)

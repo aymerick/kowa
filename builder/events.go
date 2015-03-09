@@ -103,7 +103,7 @@ func eventSlug(event *models.Event) string {
 		title = title[:MAX_SLUG]
 	}
 
-	return fmt.Sprintf("%d/%02d/%02d/%s", year, month, day, utils.Urlify(title))
+	return fmt.Sprintf("%d/%02d/%02d/%s", year, month, day, title)
 }
 
 // Build event page

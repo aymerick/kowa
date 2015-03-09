@@ -222,7 +222,7 @@ func (builder *SiteBuilder) syncNodes() {
 	for _, nodeBuilder := range builder.nodeBuilders {
 		filePaths := nodeBuilder.Generate()
 		for filePath, _ := range filePaths {
-			log.Printf("Generated node: %s", filePath)
+			log.Printf("Generated node: %+q", filePath)
 			allFiles[filePath] = true
 
 			relativePath := path.Dir(strings.TrimPrefix(filePath, builder.GenDir()))
@@ -262,7 +262,7 @@ func (builder *SiteBuilder) syncNodes() {
 
 	destFs := new(afero.OsFs)
 	for filePath, _ := range filesToDelete {
-		log.Printf("Deleting: %s", filePath)
+		log.Printf("Deleting: %+q", filePath)
 
 		if err := destFs.RemoveAll(filePath); err != nil {
 			builder.addError(errStep, err)
