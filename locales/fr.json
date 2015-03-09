@@ -32,6 +32,14 @@
     "translation": "image principale"
   },
   {
+    "id": "date_times_interval",
+    "translation": "{{.StartDate}} de {{.StartTime}} à {{.EndTime}}"
+  },
+  {
+    "id": "dates_interval",
+    "translation": "Du {{.StartDateTime}} au {{.EndDateTime}}"
+  },
+  {
     "id": "email",
     "translation": "Email"
   },
@@ -52,6 +60,18 @@
     "translation": "evenements"
   },
   {
+    "id": "event_format_datetime",
+    "translation": "{{.Weekday}} {{.Day}} {{.Month}} {{.Time}}"
+  },
+  {
+    "id": "event_format_date",
+    "translation": "{{.Weekday}} {{.Day}} {{.Month}}"
+  },
+  {
+    "id": "format_time",
+    "translation": "15:04"
+  },
+  {
     "id": "follow_us",
     "translation": "Suivez-nous sur les réseaux sociaux"
   },
@@ -66,6 +86,102 @@
   {
     "id": "members",
     "translation": "equipe"
+  },
+  {
+    "id": "month_January",
+    "translation": "Janvier"
+  },
+  {
+    "id": "month_short_Jan",
+    "translation": "Jan"
+  },
+  {
+    "id": "month_Febrary",
+    "translation": "Fevrier"
+  },
+  {
+    "id": "month_short_Feb",
+    "translation": "Fev"
+  },
+  {
+    "id": "month_March",
+    "translation": "Mars"
+  },
+  {
+    "id": "month_short_Mar",
+    "translation": "Mar"
+  },
+  {
+    "id": "month_April",
+    "translation": "Avril"
+  },
+  {
+    "id": "month_short_Apr",
+    "translation": "Avr"
+  },
+  {
+    "id": "month_May",
+    "translation": "Mai"
+  },
+  {
+    "id": "month_short_May",
+    "translation": "Mai"
+  },
+  {
+    "id": "month_June",
+    "translation": "Juin"
+  },
+  {
+    "id": "month_short_Jun",
+    "translation": "Jui"
+  },
+  {
+    "id": "month_July",
+    "translation": "Juillet"
+  },
+  {
+    "id": "month_short_Jul",
+    "translation": "Juil"
+  },
+  {
+    "id": "month_August",
+    "translation": "Aout"
+  },
+  {
+    "id": "month_short_Aug",
+    "translation": "Aou"
+  },
+  {
+    "id": "month_September",
+    "translation": "Septembre"
+  },
+  {
+    "id": "month_short_Sep",
+    "translation": "Sep"
+  },
+  {
+    "id": "month_October",
+    "translation": "Octobre"
+  },
+  {
+    "id": "month_short_Oct",
+    "translation": "Oct"
+  },
+  {
+    "id": "month_November",
+    "translation": "Novembre"
+  },
+  {
+    "id": "month_short_Nov",
+    "translation": "Nov"
+  },
+  {
+    "id": "month_December",
+    "translation": "Décembre"
+  },
+  {
+    "id": "month_short_Dec",
+    "translation": "Déc"
   },
   {
     "id": "more_infos",
@@ -84,7 +200,67 @@
     "translation": "actualites"
   },
   {
+    "id": "post_format_date",
+    "translation": "{{.Day}} {{.Month}} {{.Year}}"
+  },
+  {
     "id": "toogle_navigation",
     "translation": "Menu"
+  },
+  {
+    "id": "weekday_Monday",
+    "translation": "Lundi"
+  },
+  {
+    "id": "weekday_short_Mon",
+    "translation": "Lun"
+  },
+  {
+    "id": "weekday_Tuesday",
+    "translation": "Mardi"
+  },
+  {
+    "id": "weekday_short_Tue",
+    "translation": "Mar"
+  },
+  {
+    "id": "weekday_Wednesday",
+    "translation": "Mercredi"
+  },
+  {
+    "id": "weekday_short_Wed",
+    "translation": "Mer"
+  },
+  {
+    "id": "weekday_Thursday",
+    "translation": "Jeudi"
+  },
+  {
+    "id": "weekday_short_Thu",
+    "translation": "Jeu"
+  },
+  {
+    "id": "weekday_Friday",
+    "translation": "Vendredi"
+  },
+  {
+    "id": "weekday_short_Fri",
+    "translation": "Ven"
+  },
+  {
+    "id": "weekday_Saturday",
+    "translation": "Samedi"
+  },
+  {
+    "id": "weekday_short_Sat",
+    "translation": "Sam"
+  },
+  {
+    "id": "weekday_Sunday",
+    "translation": "Dimanche"
+  },
+  {
+    "id": "weekday_short_Sun",
+    "translation": "Dim"
   }
 ]

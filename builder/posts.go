@@ -106,14 +106,22 @@ func (builder *PostsBuilder) loadPost(post *models.Post) {
 
 // Instanciate a new post content
 func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *PostContent {
+	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
+
 	result := &PostContent{
 		Node:  node,
 		Model: post,
 
-		Date:  post.CreatedAt.Format("02/01/06"), // @todo i18n
 		Title: post.Title,
 		Url:   node.Url,
 	}
+
+	year, _, day := post.CreatedAt.Date()
+	result.Date = T("post_format_date", map[string]interface{}{
+		"Year":  year,
+		"Month": T("month_" + post.CreatedAt.Format("January")),
+		"Day":   day,
+	})
 
 	cover := post.FindCover()
 	if cover != nil {
