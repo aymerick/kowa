@@ -8,12 +8,40 @@
     "translation": "activites"
   },
   {
+    "id": "address",
+    "translation": "Addresse"
+  },
+  {
+    "id": "back_to_events",
+    "translation": "Retours aux évènements"
+  },
+  {
+    "id": "back_to_posts",
+    "translation": "Retours aux actualités"
+  },
+  {
     "id": "Contact",
     "translation": "Contact"
   },
   {
     "id": "contact",
     "translation": "contact"
+  },
+  {
+    "id": "cover",
+    "translation": "image principale"
+  },
+  {
+    "id": "email",
+    "translation": "Email"
+  },
+  {
+    "id": "empty_site_name",
+    "translation": "Votre site"
+  },
+  {
+    "id": "empty_site_tagline",
+    "translation": "Bienvenue sur votre nouveau site web. Veuillez ajouter une description de votre site dans l'administration."
   },
   {
     "id": "Events",
@@ -24,12 +52,28 @@
     "translation": "evenements"
   },
   {
+    "id": "follow_us",
+    "translation": "Suivez-nous sur les réseaux sociaux"
+  },
+  {
+    "id": "logo",
+    "translation": "logo"
+  },
+  {
     "id": "Members",
     "translation": "Équipe"
   },
   {
     "id": "members",
     "translation": "equipe"
+  },
+  {
+    "id": "more_infos",
+    "translation": "En savoir plus"
+  },
+  {
+    "id": "past_events",
+    "translation": "Évènements passés"
   },
   {
     "id": "Posts",
@@ -40,11 +84,7 @@
     "translation": "actualites"
   },
   {
-    "id": "empty_site_name",
-    "translation": "Votre site"
-  },
-  {
-    "id": "empty_site_tagline",
-    "translation": "Bienvenue sur votre nouveau site web. Veuillez ajouter une description de votre site dans l'administration."
+    "id": "toogle_navigation",
+    "translation": "Menu"
   }
 ]

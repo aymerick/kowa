@@ -5,14 +5,14 @@
         {{ if .HaveContact }}
             <div class="col-md-6 contact">
                 {{ if .Address }}
-                    <h3><i class="fa fa-building-o"></i> Address</h3>
+                    <h3><i class="fa fa-building-o"></i> {{ t "address" }}</h3>
                     <address>
                         {{ .Address }}
                     </address>
                 {{ end }}
 
                 {{ if .Email }}
-                    <h3><i class="fa fa-envelope-o"></i> Email</h3>
+                    <h3><i class="fa fa-envelope-o"></i> {{ t "email" }}</h3>
                     <a class="email" href="mailto:{{ .Email }}">{{ .Email }}</a>
                 {{ end }}
             </div>
@@ -20,7 +20,7 @@
 
         {{ if .HaveSocial }}
             <div class="col-md-6 social">
-                <h3>Follow us on social networks</h3>
+                <h3>{{ t "follow_us" }}</h3>
                 {{ if .Facebook }}
                     <p><i class="fa fa-facebook-square"></i> <a href="{{ .Facebook }}" target="_blank">Facebook</a></p>
                 {{ end }}

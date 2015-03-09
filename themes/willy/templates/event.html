@@ -13,7 +13,7 @@
 
                 {{ if .Cover }}
                     <section class="event-cover">
-                        <img src="{{ .Cover.Small }}" class="cover img-thumbnail" alt="cover" />
+                        <img src="{{ .Cover.Small }}" class="cover img-thumbnail" alt="{{ t "cover" }}" />
                     </section>
                 {{ end }}
 
@@ -24,7 +24,7 @@
                 <section class="event-footer">
                     <ul class="nav nav-pills pull-left">
                         <li>
-                            <a href="{{ urlFor "events" }}"><i class="fa fa-arrow-left"></i> Back to events</a>
+                            <a href="{{ urlFor "events" }}"><i class="fa fa-arrow-left"></i> {{ t "back_to_events" }}</a>
                         </li>
                     </ul>
                 </section>

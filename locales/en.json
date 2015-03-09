@@ -8,12 +8,40 @@
     "translation": "activities"
   },
   {
+    "id": "address",
+    "translation": "Address"
+  },
+  {
+    "id": "back_to_events",
+    "translation": "Back to events"
+  },
+  {
+    "id": "back_to_posts",
+    "translation": "Back to posts"
+  },
+  {
     "id": "Contact",
     "translation": "Contact"
   },
   {
     "id": "contact",
     "translation": "contact"
+  },
+  {
+    "id": "cover",
+    "translation": "cover"
+  },
+  {
+    "id": "email",
+    "translation": "Email"
+  },
+  {
+    "id": "empty_site_name",
+    "translation": "Your site"
+  },
+  {
+    "id": "empty_site_tagline",
+    "translation": "Welcome to your new site. Please take time to describe what your site is about in the administration."
   },
   {
     "id": "Events",
@@ -24,12 +52,28 @@
     "translation": "events"
   },
   {
+    "id": "follow_us",
+    "translation": "Follow us on social networks"
+  },
+  {
+    "id": "logo",
+    "translation": "logo"
+  },
+  {
     "id": "Members",
     "translation": "Members"
   },
   {
     "id": "members",
     "translation": "members"
+  },
+  {
+    "id": "more_infos",
+    "translation": "More infos"
+  },
+  {
+    "id": "past_events",
+    "translation": "Past events"
   },
   {
     "id": "Posts",
@@ -40,11 +84,7 @@
     "translation": "posts"
   },
   {
-    "id": "empty_site_name",
-    "translation": "Your site"
-  },
-  {
-    "id": "empty_site_tagline",
-    "translation": "Welcome to your new site. Please take time to describe what your site is about in the administration."
+    "id": "toogle_navigation",
+    "translation": "Toggle navigation"
   }
 ]

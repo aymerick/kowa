@@ -11,7 +11,7 @@
 
                 {{ if .Cover }}
                     <section class="post-cover">
-                        <img src="{{ .Cover.Small }}" class="cover img-thumbnail" alt="cover" />
+                        <img src="{{ .Cover.Small }}" class="cover img-thumbnail" alt="{{ t "cover" }}" />
                     </section>
                 {{ end }}
 
@@ -22,7 +22,7 @@
                 <section class="post-footer">
                     <ul class="nav nav-pills pull-left">
                         <li>
-                            <a href="{{ urlFor "posts" }}"><i class="fa fa-arrow-left"></i> Back to posts</a>
+                            <a href="{{ urlFor "posts" }}"><i class="fa fa-arrow-left"></i> {{ t "back_to_posts" }}</a>
                         </li>
                     </ul>
                 </section>

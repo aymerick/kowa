@@ -7,9 +7,11 @@ import (
 	"strings"
 
 	"github.com/microcosm-cc/bluemonday"
+	"github.com/nicksnyder/go-i18n/i18n"
 	"github.com/russross/blackfriday"
 
 	"github.com/aymerick/kowa/models"
+	"github.com/aymerick/kowa/utils"
 )
 
 func generateHTML(inputFormat string, input string) template.HTML {
@@ -39,6 +41,7 @@ func (builder *SiteBuilder) FuncMap() template.FuncMap {
 	return template.FuncMap{
 		"urlFor":     builder.UrlFor,
 		"startsWith": builder.StartsWith,
+		"t":          builder.Translate,
 		"mod":        builder.Mod,
 		"modBool":    builder.ModBool,
 	}
@@ -114,6 +117,20 @@ func (builder *SiteBuilder) StartsWith(check interface{}, prefix interface{}) (b
 	}
 
 	return strings.HasPrefix(checkStr, prefixStr), nil
+}
+
+func (builder *SiteBuilder) Translate(sentence interface{}) (string, error) {
+	sentenceValue := reflect.ValueOf(sentence)
+
+	if sentenceValue.Kind() != reflect.String {
+		return "", errors.New("StartsWith operator needs string arguments")
+	}
+
+	sentenceStr := sentenceValue.String()
+
+	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
+
+	return T(sentenceStr), nil
 }
 
 // Borrowed from https://github.com/spf13/hugo/blob/master/tpl/template.go
