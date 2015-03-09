@@ -31,10 +31,11 @@ func addSite(cmd *cobra.Command, args []string) {
 	}
 
 	site := &models.Site{
-		Id:     args[0],
-		Name:   args[1],
-		UserId: args[2],
-		Theme:  builder.DEFAULT_THEME,
+		Id:           args[0],
+		Name:         args[1],
+		UserId:       args[2],
+		Theme:        builder.DEFAULT_THEME,
+		NameInNavBar: true,
 	}
 
 	if err := dbSession.CreateSite(site); err != nil {

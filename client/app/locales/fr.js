@@ -154,6 +154,7 @@ export default {
     coverInfos: "Une image à afficher en haut de la page d'accueil",
     description: 'Description',
     descriptionInfos: 'Décrivez votre site en quelques phrases',
+    displayNameInNavBar: 'Afficher le nom dans la barre de navigation',
     joinText: 'Rejoignez nous',
     joinTextInfos: 'Si pertinent, expliquez pourquoi les visiteurs devraient rejoindre votre organisation',
     logo: 'Logo du site',

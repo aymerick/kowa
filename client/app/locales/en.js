@@ -154,6 +154,7 @@ export default {
     coverInfos: 'Display a cover image on your site',
     description: 'Site Description',
     descriptionInfos: 'Describe what your site is about',
+    displayNameInNavBar: 'Display name in navigation bar',
     joinText: 'Site Join Text',
     joinTextInfos: 'If relevant, explain to visitors why then should become a member of your organisation',
     logo: 'Site Logo',

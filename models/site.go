@@ -52,6 +52,9 @@ type Site struct {
 	// build settings
 	Theme   string `bson:"theme"    json:"theme"`
 	UglyURL bool   `bson:"ugly_url" json:"uglyUrl"`
+
+	// theme settings
+	NameInNavBar bool `bson:"name_in_navbar" json:"nameInNavBar"`
 }
 
 type SiteJson struct {
@@ -645,6 +648,16 @@ func (site *Site) Update(newSite *Site) (bool, error) {
 			unset = append(unset, bson.DocElem{"ugly_url", 1})
 		} else {
 			set = append(set, bson.DocElem{"ugly_url", site.UglyURL})
+		}
+	}
+
+	if site.NameInNavBar != newSite.NameInNavBar {
+		site.NameInNavBar = newSite.NameInNavBar
+
+		if site.NameInNavBar == false {
+			unset = append(unset, bson.DocElem{"name_in_navbar", 1})
+		} else {
+			set = append(set, bson.DocElem{"name_in_navbar", site.NameInNavBar})
 		}
 	}
 

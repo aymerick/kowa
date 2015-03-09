@@ -9,9 +9,10 @@ import (
 
 // Site vars
 type SiteVars struct {
-	Name    string
-	Logo    *ImageVars
-	Tagline string
+	Name         string
+	Logo         *ImageVars
+	Tagline      string
+	NameInNavBar bool
 
 	BaseURL string
 
@@ -52,6 +53,8 @@ func (vars *SiteVars) fill() {
 	vars.Name = name
 	vars.BaseURL = vars.builder.config.BaseURL
 	vars.Tagline = site.Tagline
+	vars.NameInNavBar = site.NameInNavBar
+
 	vars.Facebook = site.Facebook
 	vars.Twitter = site.Twitter
 	vars.GooglePlus = site.GooglePlus

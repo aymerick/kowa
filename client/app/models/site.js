@@ -34,7 +34,10 @@ var Site = DS.Model.extend({
 
   // settings
   theme: DS.attr(),
-  uglyUrl: DS.attr('boolean')
+  uglyUrl: DS.attr('boolean'),
+
+  // theme settings
+  nameInNavBar: DS.attr('boolean')
 });
 
 export default Site;
