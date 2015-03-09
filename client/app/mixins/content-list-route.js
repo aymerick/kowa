@@ -19,7 +19,7 @@ var ContentListRouteMixin = Ember.Mixin.create({
     // 1. Caching resultPromise permits to avoid sending a request to server everytime we transition into this route
     // 2. Using filter() allows the template to auto-update when new models are pulled in from the server
     var resultPromise = this.get('resultPromise') || this.store.filter(this.get('contentModelType'), params, function (contentModel) {
-      return contentModel.get('site.id') == site.get('id');
+      return contentModel.get('site.id') === site.get('id');
     });
 
     this.set('resultPromise', resultPromise);
