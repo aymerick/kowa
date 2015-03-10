@@ -266,13 +266,9 @@ footer p {
   }
 }
 
-.events-list .event .a {
+.events-list .event a {
   display: block;
   text-decoration: none;
-}
-
-.events-list .event .a:hover {
-  text-decoration: none; /* @todo FIXME !*/
 }
 
 .events-list .event time {
