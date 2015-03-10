@@ -264,3 +264,29 @@ footer p {
   font-size: 15px;
   font-style: italic;
 }
+
+
+/* contact */
+
+.contact .content {
+  padding-top: 30px;
+  padding-bottom: 20px;
+}
+
+.contact .content .contact i.fa-building-o {
+  margin-right: 10px;
+}
+
+.contact .content .social i.fa {
+  margin-right: 10px;
+}
+
+@media (min-width: 768px) {
+  .contact .content .contact {
+    font-size: 16px;
+  }
+
+  .contact .content .social {
+    font-size: 24px;
+  }
+}
