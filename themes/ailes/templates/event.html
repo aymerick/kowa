@@ -1,5 +1,3 @@
-{{ template "partials/jumbotron" .Node }}
-
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -11,15 +9,15 @@
                     </p>
                 </header>
 
+                <section class="event-body">
+                    {{ .Body }}
+                </section>
+
                 {{ if .Cover }}
                     <section class="event-cover">
                         <img src="{{ .Cover.Small }}" class="cover img-thumbnail" alt="{{ t "cover" }}" />
                     </section>
                 {{ end }}
-
-                <section class="event-body">
-                    {{ .Body }}
-                </section>
 
                 <section class="event-footer">
                     <ul class="nav nav-pills pull-left">
