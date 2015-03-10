@@ -1,0 +1,277 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-top: 80px;    /* navbar-height */
+  margin-bottom: 90px; /* footer-height */
+}
+
+body > .navbar {
+  font-size: 14px;
+  background-color: #fff;
+  min-height: 80px; /* navbar-height */
+  margin-bottom: 0px;
+  border-bottom: 1px solid #e7e7e7;
+  box-shadow: 0 2px 5px rgba(0,0,0,.08);
+}
+
+body > .navbar .nav > li > a {
+  color: #777777;
+}
+
+body > .navbar .nav > li.active {
+  font-weight: bold;
+}
+
+body > .navbar .nav > li.active a,
+body > .navbar .nav > li.active a:hover,
+body > .navbar .nav > li.active a:focus {
+  background: none;
+}
+
+body > .navbar .navbar-collapse {
+  margin-top: 15px;
+}
+
+.container.content {
+  padding-bottom: 30px;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 10px;
+  height: 90px; /* footer-height */
+
+  background-image: url("../img/satinweave.png");
+  border-top: 1px solid #e5e5e5;
+  color: #777;
+}
+
+footer p {
+  text-align: center;
+  font-size: 16px;
+  line-height: 30px;
+}
+
+/* jumbotron */
+
+.jumbotron {
+  background-image: url("../img/satinweave.png");
+  border-bottom: 1px solid #e5e5e5;
+  padding: 15px 15px 0px 15px;
+}
+
+.jumbotron .title {
+  font-size: 50px;
+  line-height: 60px;
+}
+
+.jumbotron .description {
+  margin: 40px 0px 10px 0px;
+  padding-right: 20px;
+  font-size: 24px;
+  line-height: 32px;
+}
+
+.jumbotron .cover {
+  padding: 10px 0px;
+}
+
+/* Home */
+
+#home .adhesion {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#home section.hero {
+  text-align: center;
+  padding: 120px 0;
+}
+
+#home section.hero.empty {
+  text-align: center;
+  padding: 150px 0;
+}
+
+#home section.hero.asso {
+  background: url("../img/home/gouter_salle_2_b_filter.jpg");
+  background-size: cover;
+}
+
+#home section.hero.echanger {
+  background: url("../img/home/gouter_table_2_b.jpg") no-repeat center center fixed;
+  background-size: cover;
+}
+
+#home section.hero.informer {
+  background: url("../img/home/pate_a_sel_mains_b.jpg") no-repeat center center fixed;
+  background-size: cover;
+}
+
+#home section.hero.agir {
+  background: url("../img/home/piscine_b.jpg") no-repeat center center fixed;
+  background-size: cover;
+}
+
+#home section.hero.divertir {
+  background: url("../img/home/cine_b.jpg") no-repeat center center fixed;
+  background-size: cover;
+}
+
+#home section.hero h1 {
+  color: white;
+  line-height: 1.5em;
+  text-align: center;
+  font-size: 35px;
+}
+
+#home .objectives {
+  font-size: 16px;
+  line-height: 30px;
+}
+
+#home .objectives .title {
+  margin-bottom: 20px;
+  font-size: 40px;
+  text-align: center;
+}
+
+#home .objectives {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+/* Extra small devices and Small devices */
+@media (max-width: 768px) {
+  #home section.hero h1 {
+    font-size: 25px;
+  }
+
+  #home section.hero {
+    padding: 30px 0;
+  }
+
+  #home section.hero.empty {
+    padding: 80px 0;
+  }
+}
+
+
+/* Agenda */
+
+.calendar-container {
+  position: relative;
+  padding-bottom: 75%;
+  height: 0;
+  overflow: hidden;
+}
+
+.calendar-container iframe {
+  position: absolute;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+
+/* Contact */
+
+#contact footer {
+  display: none;
+}
+
+#contact .content {
+  font-size: 11px;
+}
+
+#contact .contact-line {
+  position: relative;
+  font-size: 30px;
+  line-height: 50px;
+}
+
+#contact .contact-line a {
+  font-size: 25px;
+}
+
+#contact .contact-link {
+  position: absolute;
+  left: 45px;
+}
+
+#contact .contact-logo {
+  font-size: 20px;
+  line-height: 25px;
+}
+
+
+/* Actualites */
+
+#actualites-post footer {
+  display: none;
+}
+
+#actualites .date,
+#actualites-post .date {
+  color: #999;
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+/* Images are centered */
+#actualites .post-excerpt img,
+#actualites-post .post-content img {
+/*
+  display: block;
+  margin: 20px auto;
+*/
+}
+
+/* The first image of the first paragragphe is left-floating */
+#actualites .post-excerpt p:nth-of-type(1) img:nth-of-type(1),
+#actualites-post .post-content p:nth-of-type(1) img:nth-of-type(1) {
+  display: inline-block;
+  float: left;
+  margin: 0px 20px 10px 0px;
+}
+
+
+/* Statuts */
+
+#statuts .content h1 {
+  font-size: 30px;
+}
+
+#statuts .content h2 {
+  font-size: 20px;
+}
+
+
+/* Equipe */
+
+#equipe .membre {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+#equipe .membre .name {
+  font-size: 20px;
+  line-height: 25px;
+}
+
+#equipe .membre .role {
+  margin-top: 10px;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+#equipe .membre .fondateur {
+  font-size: 15px;
+  font-style: italic;
+}

@@ -1,0 +1,18 @@
+{{ template "partials/jumbotron" .Node }}
+
+<div class="container events">
+    <div class="row">
+        <div class="col-xs-12 col-md-offset-2 col-md-8">
+            {{ template "partials/events-list" .Events }}
+
+            {{ if .PastEvents }}
+                {{ if .Events}}
+                    <hr />
+                {{ end }}
+
+                <h2>{{ t "past_events" }}</h2>
+                {{ template "partials/events-list" .PastEvents }}
+            {{ end }}
+        </div>
+    </div>
+</div>

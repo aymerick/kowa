@@ -54,14 +54,19 @@ Setup theme building depencencies:
     $ npm install -g bower
     $ gem install bundle
 
-Build the theme:
+Build `willy` theme:
 
     $ cd themes/willy
-
     $ npm install
     $ bower install
     $ bundle install
+    $ grunt build
 
+Build `ailes` theme:
+
+    $ cd themes/ailes
+    $ npm install
+    $ bower install
     $ grunt build
 
 Start server (the `-s` switch activates serving of static sites):
@@ -89,7 +94,7 @@ When you change client code, the app is rebuilt automatically, and the browser r
 
 When you change server code, you have to rebuild it with `go build` and restart it.
 
-When you change a `SASS` file in `willy` theme you don't have to rebuild the server, by you have to rebuild the theme:
+When you change a `SASS` file in a theme you don't have to rebuild the server, but you have to rebuild the theme:
 
     $ cd themes/willy
     $ grunt build

@@ -1,0 +1,28 @@
+{{ template "partials/jumbotron" .Node }}
+
+<div class="container posts">
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="posts-list">
+
+                {{ range .Posts }}
+                    <li class="post">
+                        <h2 class="title"><a href="{{ .Url }}">{{ .Title }}</a></h2>
+                        <div class="date">{{ .Date }}</div>
+                        {{ if .Cover }}
+                            <div class="cover">
+                                <a href="{{ .Url }}">
+                                    <img src="{{ .Cover.Small }}" class="img-thumbnail" alt="{{ t "cover" }}" />
+                                </a>
+                            </div>
+                        {{ end }}
+                        <div class="body">
+                            {{ .Body }}
+                        </div>
+                    </li>
+                {{ end }}
+
+            </ul>
+        </div>
+    </div>
+</div>

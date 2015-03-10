@@ -1,0 +1,36 @@
+{{ template "partials/jumbotron" .Node }}
+
+<div class="container content">
+    <div class="row">
+        {{ if .HaveContact }}
+            <div class="col-md-6 contact">
+                {{ if .Address }}
+                    <h3><i class="fa fa-building-o"></i> {{ t "address" }}</h3>
+                    <address>
+                        {{ .Address }}
+                    </address>
+                {{ end }}
+
+                {{ if .Email }}
+                    <h3><i class="fa fa-envelope-o"></i> {{ t "email" }}</h3>
+                    <a class="email" href="mailto:{{ .Email }}">{{ .Email }}</a>
+                {{ end }}
+            </div>
+        {{ end }}
+
+        {{ if .HaveSocial }}
+            <div class="col-md-6 social">
+                <h3>{{ t "follow_us" }}</h3>
+                {{ if .Facebook }}
+                    <p><i class="fa fa-facebook-square"></i> <a href="{{ .Facebook }}" target="_blank">Facebook</a></p>
+                {{ end }}
+                {{ if .Twitter }}
+                    <p><i class="fa fa-twitter-square"></i> <a href="{{ .Twitter }}" target="_blank">Twitter</a></p>
+                {{ end }}
+                {{ if .GooglePlus }}
+                    <p><i class="fa fa-google-plus-square"></i> <a href="{{ .GooglePlus }}" target="_blank">Google+</a></p>
+                {{ end }}
+            </div>
+        {{ end }}
+    </div>
+</div>

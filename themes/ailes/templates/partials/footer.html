@@ -1,0 +1,10 @@
+<footer>
+    <div class="container">
+        <p>{{ .Site.Tagline }}</p>
+        <p>
+            {{ if .Site.Facebook }}<span class="social"><i class="fa fa-facebook"></i> <a href="{{ .Site.Facebook }}" target="_blank">Facebook</a></span>{{ end }}
+            {{ if .Site.Twitter }}<span class="social"><i class="fa fa-twitter"></i> <a href="{{ .Site.Twitter }}" target="_blank">Twitter</a></span>{{ end }}
+            {{ if .Site.GooglePlus }}<span class="social"><i class="fa fa-google-plus"></i> <a href="{{ .Site.GooglePlus }}" rel="publisher" target="_blank">Google+</a></span>{{ end }}
+        </p>
+    </div>
+</footer>

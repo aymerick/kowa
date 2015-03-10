@@ -19,6 +19,7 @@ type Node struct {
 
 	Title   string
 	Tagline string
+	Cover   *ImageVars
 
 	Meta        *NodeMeta
 	BodyClass   string

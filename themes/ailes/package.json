@@ -1,7 +1,7 @@
 {
-  "name": "willy",
+  "name": "ailes",
   "version": "0.0.1",
-  "description": "willy theme for kowa",
+  "description": "ailes themes for kowa",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,7 +10,6 @@
   "license": "MIT",
   "devDependencies": {
     "grunt": "^0.4.5",
-    "grunt-contrib-copy": "^0.7.0",
-    "grunt-contrib-sass": "^0.8.1"
+    "grunt-contrib-copy": "^0.8.0"
   }
 }

@@ -6,7 +6,7 @@ var SettingsGeneralController = Ember.ObjectController.extend({
   isSaving: false,
 
   // @todo Get that list from the server
-  allThemes: [ 'willy' ],
+  allThemes: [ 'ailes', 'willy' ],
 
   actions: {
     removeLogo: function() {
