@@ -25,8 +25,6 @@ const (
 	PARTIALS_DIR  = "partials"
 	ASSETS_DIR    = "assets"
 
-	DEFAULT_THEME = "willy" // @todo FIXME !
-
 	MAX_SLUG        = 50
 	MAX_PAST_EVENTS = 5
 )
@@ -90,25 +88,12 @@ func NewSiteBuilder(site *models.Site, config *SiteBuilderConfig) *SiteBuilder {
 
 // Theme used by builder
 func (builder *SiteBuilder) Theme() string {
-	result := builder.config.Theme
-	if result == "" {
-		result = builder.site.Theme
-	}
-
-	if result == "" {
-		result = DEFAULT_THEME
-	}
-
-	return result
+	return builder.site.Theme
 }
 
 // Are we building site with ugly urls ?
 func (builder *SiteBuilder) UglyUrl() bool {
-	if builder.config.UglyURL {
-		return true
-	} else {
-		return builder.site.UglyURL
-	}
+	return builder.site.UglyURL
 }
 
 // Build site
@@ -290,9 +275,11 @@ func (builder *SiteBuilder) syncImages() {
 		for _, derivative := range models.Derivatives {
 			filePath := image.DerivativeFilePath(derivative)
 
-			sourceFiles[path.Base(filePath)] = true
+			if !sourceFiles[path.Base(filePath)] {
+				files = append(files, filePath)
 
-			files = append(files, filePath)
+				sourceFiles[path.Base(filePath)] = true
+			}
 		}
 	}
 

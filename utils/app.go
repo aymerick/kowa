@@ -13,7 +13,8 @@ const (
 
 	DEFAULT_OUTPUT_DIR = "_sites"
 
-	DEFAULT_LANG = "en" // @todo FIXME
+	DEFAULT_LANG  = "en"    // @todo FIXME
+	DEFAULT_THEME = "willy" // @todo FIXME
 )
 
 func AppPublicDir() string {

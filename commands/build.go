@@ -14,10 +14,6 @@ import (
 	"github.com/aymerick/kowa/models"
 )
 
-const (
-	DEFAULT_UGLY_URL = false
-)
-
 var buildCmd = &cobra.Command{
 	Use:   "build [site_id]",
 	Short: "Build site",
@@ -26,11 +22,6 @@ var buildCmd = &cobra.Command{
 }
 
 func initBuilderConf() {
-	buildCmd.Flags().StringP("theme", "t", builder.DEFAULT_THEME, "Theme to use")
-	viper.BindPFlag("theme", buildCmd.Flags().Lookup("theme"))
-
-	buildCmd.Flags().BoolP("ugly_url", "g", DEFAULT_UGLY_URL, "Generate ugly URLs")
-	viper.BindPFlag("ugly_url", buildCmd.Flags().Lookup("ugly_url"))
 }
 
 func buildSiteCmd(cmd *cobra.Command, args []string) {
@@ -64,8 +55,6 @@ func buildSite(site *models.Site) *builder.SiteBuilder {
 	config := &builder.SiteBuilderConfig{
 		WorkingDir: viper.GetString("working_dir"),
 		OutputDir:  path.Join(viper.GetString("output_dir"), site.Id),
-		Theme:      viper.GetString("theme"),
-		UglyURL:    viper.GetBool("ugly_url"),
 		BaseURL:    path.Join("/", site.Id),
 	}
 

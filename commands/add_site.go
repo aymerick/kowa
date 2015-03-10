@@ -6,7 +6,6 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/aymerick/kowa/builder"
 	"github.com/aymerick/kowa/models"
 	"github.com/aymerick/kowa/utils"
 )
@@ -34,7 +33,7 @@ func addSite(cmd *cobra.Command, args []string) {
 		Id:           args[0],
 		Name:         args[1],
 		UserId:       args[2],
-		Theme:        builder.DEFAULT_THEME,
+		Theme:        utils.DEFAULT_THEME,
 		NameInNavBar: true,
 	}
 
