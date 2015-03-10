@@ -9,7 +9,7 @@
                 {{ end }}
 
                 <div class="col-md-4 col-sm-6 member">
-                    <h3>{{ $member.Fullname }}</h3>
+                    <h3 class='fullname'>{{ $member.Fullname }}</h3>
                     {{ if .Photo }}
                         <img src="{{ $member.Photo.PortraitFill }}" class="img-responsive img-thumbnail avatar" alt="{{ $member.Fullname }}" />
                     {{ else }}

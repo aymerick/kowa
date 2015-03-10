@@ -1,50 +1,35 @@
-{{ template "partials/jumbotron" .Node }}
-
-{{ if .Description }}
-<section class="presentation">
-    <div class="container">
-        <div class="row">
-            {{ if .Cover }}
-                <div class="col-md-4 photo">
-                    <img src="{{ .Cover.Small }}" class="img-responsive img-thumbnail center-block" alt="{{ t "cover" }}" />
-                </div>
-                <div class="col-md-8 intro">
-                    {{ .Description }}
-                </div>
-            {{ else }}
-                <div class="col-md-12 intro">
-                    {{ .Description }}
-                </div>
-            {{ end }}
-        </div>
+<section class="hero" {{ if .Cover }}style='background: url("{{ .Cover.Large }}"); background-size: cover;'{{ end }}>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <h1>{{ .Node.Tagline }}</h1>
+      </div>
     </div>
+  </div>
 </section>
-{{ end }}
 
 {{ if .Activities }}
-<section class="activities">
-    <div class="container">
-        <div class="row">
-            {{ range $index, $activity := .Activities }}
-                {{ if modBool $index 2 }}
-                    <div class="clearfix visible-sm-block"></div>
-                {{ end }}
+    {{ range .Activities }}
+        <section class="activity">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-6 col-md-offset-3">
+                <p class="title">{{ .Title }}</p>
+                {{ .Summary }}
+              </div>
+            </div>
+          </div>
+        </section>
 
-                <div class="col-md-4 col-sm-6 activity">
-                    <h3>{{ $activity.Title }}</h3>
-                    {{ $activity.Summary }}
-                    <p class='more'>
-                        <a href="{{ urlFor "activities" }}" class="btn btn-purple">{{ t "more_infos" }}</a>
-                    </p>
-                </div>
-            {{ end }}
-        </div>
-    </div>
-</section>
+        {{ if .Cover }}
+            <section class="hero cover" style='background: url("{{ .Cover.Large }}") no-repeat center center fixed; background-size: cover;'>
+            </section>
+        {{ end }}
+    {{ end }}
 {{ end }}
 
 {{ if .MoreDesc }}
-<section class="more-desription">
+<section class="more-description">
     <div class="container">
         <div class="row">
             <div class="col-md-10 col-md-offset-1">

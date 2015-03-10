@@ -5,8 +5,15 @@ html {
 
 body {
   margin-top: 80px;    /* navbar-height */
-  margin-bottom: 90px; /* footer-height */
+  margin-bottom: 110px; /* footer-height + 20px */
 }
+
+.container.content {
+  padding-bottom: 30px;
+}
+
+
+/* navbar */
 
 body > .navbar {
   font-size: 14px;
@@ -35,9 +42,8 @@ body > .navbar .navbar-collapse {
   margin-top: 15px;
 }
 
-.container.content {
-  padding-bottom: 30px;
-}
+
+/* footer */
 
 footer {
   position: absolute;
@@ -56,6 +62,15 @@ footer p {
   font-size: 16px;
   line-height: 30px;
 }
+
+/* Extra small devices and Small devices */
+@media (max-width: 768px) {
+  footer p {
+    font-size: 15px;
+    line-height: 1em;
+  }
+}
+
 
 /* jumbotron */
 
@@ -79,4 +94,173 @@ footer p {
 
 .jumbotron .cover {
   padding: 10px 0px;
+}
+
+
+/* homepage */
+
+.homepage .hero {
+  text-align: center;
+  padding: 120px 0;
+}
+
+.homepage .hero.cover {
+  padding: 150px 0;
+}
+
+.homepage .hero h1 {
+  color: white;
+  line-height: 1.5em;
+  text-align: center;
+  font-size: 35px;
+}
+
+.homepage .activity,
+.homepage .more-description,
+.homepage .join-us
+{
+  margin-top: 40px;
+  margin-bottom: 40px;
+
+  font-size: 16px;
+  line-height: 30px;
+}
+
+.homepage .activity .title {
+  margin-bottom: 20px;
+  font-size: 40px;
+  text-align: center;
+}
+
+/* Extra small devices and Small devices */
+@media (max-width: 768px) {
+  .homepage .hero {
+    padding: 30px 0;
+  }
+
+  .homepage .hero.cover {
+    padding: 80px 0;
+  }
+
+  .homepage .hero h1 {
+    font-size: 25px;
+  }
+}
+
+
+/* posts */
+
+.posts-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.posts-list .post {
+  position: relative;
+
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+
+  border-bottom: #EBF2F6 1px solid;
+}
+
+.posts-list .post .title {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+.posts-list .post .date {
+  color: #999;
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.posts-list .post .cover img {
+  /* center image */
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 768px) {
+  .posts-list .post .cover {
+    /* 'table-cell' style */
+    width: 200px;
+  }
+}
+
+.posts-list .post .body {
+  padding: 15px 0 0 0;
+}
+
+.posts-list .post:last-child {
+  border-bottom: none;
+}
+
+.posts-list .post:after {
+  display: block;
+  content: "";
+  width: 7px;
+  height: 7px;
+  border: #E7EEF2 1px solid;
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  margin-left: -5px;
+  background: #FFF;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  border-radius: 100%;
+  box-shadow: #FFF 0 0 0 5px;
+}
+
+@media (min-width: 768px) {
+    .posts-list .post .cover,
+    .posts-list .post .body
+    {
+        display: table-cell;
+        vertical-align: top;
+    }
+
+    .posts-list .post .body {
+        padding: 0 15px;
+    }
+}
+
+
+/* post */
+
+.post .post-header .meta {
+  color: #999;
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.post .post-footer {
+  margin-top: 10px;
+}
+
+
+/* members */
+
+.members .member {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.members .member .fullname {
+  font-size: 20px;
+  line-height: 25px;
+}
+
+.members .member .role {
+  margin-top: 10px;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.members .member .description {
+  font-size: 15px;
+  font-style: italic;
 }
