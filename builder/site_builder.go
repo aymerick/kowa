@@ -310,6 +310,7 @@ func (builder *SiteBuilder) syncImages() {
 func (builder *SiteBuilder) syncAssets() error {
 	syncer := fsync.NewSyncer()
 	syncer.Delete = true
+	syncer.NoTimes = true
 
 	return syncer.Sync(builder.genAssetsDir(), builder.themeAssetsDir())
 }

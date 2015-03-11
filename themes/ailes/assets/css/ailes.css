@@ -5,7 +5,7 @@ html {
 
 body {
   margin-top: 80px;    /* navbar-height */
-  margin-bottom: 110px; /* footer-height + 20px */
+  margin-bottom: 90px; /* footer-height */
 }
 
 .container.content {
@@ -42,6 +42,10 @@ body > .navbar .navbar-collapse {
   margin-top: 15px;
 }
 
+body > .navbar > .container .navbar-header .logo {
+  display: inline-block;
+}
+
 
 /* footer */
 
@@ -69,6 +73,14 @@ footer p {
     font-size: 15px;
     line-height: 1em;
   }
+}
+
+footer .social {
+  padding: 0 10px;
+}
+
+footer .social:nth-child(n+2) {
+  border-left: #777 solid 1px;
 }
 
 
@@ -119,8 +131,8 @@ footer p {
 .homepage .more-description,
 .homepage .join-us
 {
-  margin-top: 40px;
-  margin-bottom: 40px;
+  padding-top: 40px;
+  padding-bottom: 40px;
 
   font-size: 16px;
   line-height: 30px;
@@ -442,4 +454,26 @@ footer p {
   .contact .content .social {
     font-size: 24px;
   }
+}
+
+
+/* activities */
+
+.activities section {
+  padding-top: 20px;
+  padding-bottom: 50px;
+}
+
+@media (min-width: 768px) {
+  .activities section {
+    font-size: 16px;
+  }
+}
+
+.activities section:nth-child(2n) {
+  background-color: #E8F0F8;
+}
+
+.activities section img {
+  margin-top: 20px;
 }
