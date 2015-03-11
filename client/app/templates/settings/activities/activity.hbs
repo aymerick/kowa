@@ -6,12 +6,12 @@
     <button class="btn btn-primary action-save" {{action "save"}}><i class="fa fa-floppy-o"></i> {{t 'save'}}</button>
 </header>
 
-<form class="settings-body" id="settings-activity" role="form" {{action 'save' on='submit'}}>
+<form class="settings-body" role="form" {{action 'save' on='submit'}}>
     <div class="form-group">
         <label for="activity-cover">{{t 'activity.cover'}}</label>
         {{#if model.cover}}
             <button type="button" class="thumbnail select-image" {{action "openModal" "select-image" controller "cover"}}>
-                <img {{bind-attr src=cover.smallUrl}} alt="cover" class="activity-cover">
+                <img id="activity-cover" {{bind-attr src=cover.smallUrl}} alt="cover">
                 <span class="remove-image" {{action 'removeCover'}}>&#10006;</span>
             </button>
         {{else}}
@@ -32,7 +32,7 @@
 
     <div class="form-group">
         <label for="activity-summary">{{t 'activity.summary'}}</label>
-        {{tinymce-editor value=model.summary onChange="summaryChanged" height=150 id="activity-summary"}}
+        {{tinymce-editor id="activity-summary" value=model.summary onChange="summaryChanged" height=150}}
         <p class="info">
             {{t 'activity.summaryInfos'}}
         </p>
@@ -40,7 +40,7 @@
 
     <div class="form-group">
         <label for="activity-body">{{t 'activity.description'}}</label>
-        {{tinymce-editor value=model.body onChange="bodyChanged" height=300 id="activity-body"}}
+        {{tinymce-editor id="activity-body" value=model.body onChange="bodyChanged" height=300}}
         <p class="info">
             {{t 'activity.descriptionInfos'}}
         </p>

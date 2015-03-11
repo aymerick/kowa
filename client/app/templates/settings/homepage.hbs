@@ -22,7 +22,7 @@
 
     <div class="form-group">
         <label for="site-description">{{t 'homepage.description'}}</label>
-        {{tinymce-editor value=description onChange="descriptionChanged" height=300 id="site-description"}}
+        {{tinymce-editor id="site-description" value=description onChange="descriptionChanged" height=300}}
         <p class="info">
             {{t 'homepage.descriptionInfos'}}
         </p>
@@ -30,7 +30,7 @@
 
     <div class="form-group">
         <label for="site-more-desc">{{t 'homepage.additionalDescription'}}</label>
-        {{tinymce-editor value=moreDesc onChange="moreDescChanged" height=300 id="site-more-desc"}}
+        {{tinymce-editor id="site-more-desc" value=moreDesc onChange="moreDescChanged" height=300}}
         <p class="info">
             {{t 'homepage.additionalDescriptionInfos'}}
         </p>
@@ -38,7 +38,7 @@
 
     <div class="form-group">
         <label for="site-join-text">{{t 'homepage.joinText'}}</label>
-        {{tinymce-editor value=joinText onChange="joinTextChanged" height=300 id="site-join-text"}}
+        {{tinymce-editor id="site-join-text" value=joinText onChange="joinTextChanged" height=300}}
         <p class="info">
             {{t 'homepage.joinTextInfos'}}
         </p>
