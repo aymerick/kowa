@@ -7,6 +7,19 @@ export default function(){
     this.reverse('toRight')
   );
 
+  // this.transition(
+  //   this.fromRoute('settings.activities.index'),
+  //   this.toRoute('settings.activities.activity'),
+  //   this.use('explode', {
+  //     pick: '.activity-cover',
+  //     use: ['flyTo', { duration: 500 } ]
+  //   }, { use: 'toLeft' }),
+  //   this.reverse('explode', {
+  //     pick: '.activity-cover',
+  //     use: ['flyTo', { duration: 500 } ]
+  //   }, { use: 'toRight' })
+  // );
+
   // settings.members
   this.transition(
     this.fromRoute('settings.members.index'),
