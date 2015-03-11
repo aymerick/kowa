@@ -148,15 +148,7 @@ export default {
   // general settings
   General: 'General',
   site: {
-    additionalDescription: 'Site Additional Description',
-    additionalDescriptionInfos: 'An additional description to display at bottom of homepage',
-    cover: 'Site Cover',
-    coverInfos: 'Display a cover image on your site',
-    description: 'Site Description',
-    descriptionInfos: 'Describe what your site is about',
     displayNameInNavBar: 'Display name in navigation bar',
-    joinText: 'Site Join Text',
-    joinTextInfos: 'If relevant, explain to visitors why then should become a member of your organisation',
     logo: 'Site Logo',
     logoInfos: 'Display a logo for your site',
     name: 'Site Name',
@@ -164,7 +156,20 @@ export default {
     tagline: 'Site Tagline',
     taglineInfos: 'The tagline of your site',
     theme: 'Site theme',
-    themeInfos: 'The theme to use for your site',
+    themeInfos: 'The theme to use for your site'
+  },
+
+  // homepage settings
+  Homepage: 'Homepage',
+  homepage: {
+    additionalDescription: 'Site Additional Description',
+    additionalDescriptionInfos: 'An additional description to display at bottom of homepage',
+    cover: 'Site Cover',
+    coverInfos: 'Cover image on your homepage',
+    description: 'Site Description',
+    descriptionInfos: 'Describe what your site is about',
+    joinText: 'Site Join Text',
+    joinTextInfos: 'If relevant, explain to visitors why then should become a member of your organisation'
   },
 
   // images settings

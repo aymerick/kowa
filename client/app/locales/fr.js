@@ -35,7 +35,7 @@ export default {
   Activities: 'Activités',
   activity: {
     cover: 'Image principale',
-    coverInfos: 'Une image représentant votre activité',
+    coverInfos: "Une image à afficher sur votre page d'accueil",
     deleteQuestion: "Etes-vous certain de vouloir supprimer cette activité ?",
     deleted: 'Activité supprimée',
     deleteFailed: "Erreur lors de la suppression de l'actualité",
@@ -145,18 +145,23 @@ export default {
   // settings
   Settings: 'Paramètres',
 
-  // general settings
-  General: 'Général',
-  site: {
+  // homepage settings
+  Homepage: "Page d'accueil",
+  homepage: {
     additionalDescription: 'Description supplémentaire',
     additionalDescriptionInfos: "Un texte supplémentaire à afficher en bas de la page d'accueil",
     cover: 'Image Principale',
     coverInfos: "Une image à afficher en haut de la page d'accueil",
     description: 'Description',
     descriptionInfos: 'Décrivez votre site en quelques phrases',
-    displayNameInNavBar: 'Afficher le nom dans la barre de navigation',
     joinText: 'Rejoignez nous',
-    joinTextInfos: 'Si pertinent, expliquez pourquoi les visiteurs devraient rejoindre votre organisation',
+    joinTextInfos: 'Si pertinent, expliquez pourquoi les visiteurs devraient rejoindre votre organisation'
+  },
+
+  // general settings
+  General: 'Général',
+  site: {
+    displayNameInNavBar: 'Afficher le nom dans la barre de navigation',
     logo: 'Logo du site',
     logoInfos: 'Un logo à afficher sur le site',
     name: 'Nom du site',

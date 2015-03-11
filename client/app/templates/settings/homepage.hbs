@@ -1,0 +1,46 @@
+<header class="settings-header">
+    <h2 class="settings-item-title">{{t 'Homepage'}}</h2>
+
+    <button class="btn btn-primary action-save" {{action "save"}} {{bind-attr disabled=isSaving}}><i class="fa fa-floppy-o"></i>{{t 'save'}}</button>
+</header>
+
+<form class="settings-body" role="form" {{action 'save' on='submit'}}>
+    <div class="form-group">
+        <label for="site-cover">{{t 'homepage.cover'}}</label>
+        {{#if cover}}
+            <button type="button" class="thumbnail select-image" {{action "openModal" "select-image" controller "cover"}}>
+                <img id="site-cover" {{bind-attr src=cover.smallUrl}} alt="cover">
+                <span class="remove-image" {{action 'removeCover'}}>&#10006;</span>
+            </button>
+        {{else}}
+            <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "cover"}}>{{t 'chooseImage'}}</button>
+        {{/if}}
+        <p class="info">
+            {{t 'homepage.coverInfos'}}
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="site-description">{{t 'homepage.description'}}</label>
+        {{tinymce-editor value=description onChange="descriptionChanged" height=300 id="site-description"}}
+        <p class="info">
+            {{t 'homepage.descriptionInfos'}}
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="site-more-desc">{{t 'homepage.additionalDescription'}}</label>
+        {{tinymce-editor value=moreDesc onChange="moreDescChanged" height=300 id="site-more-desc"}}
+        <p class="info">
+            {{t 'homepage.additionalDescriptionInfos'}}
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="site-join-text">{{t 'homepage.joinText'}}</label>
+        {{tinymce-editor value=joinText onChange="joinTextChanged" height=300 id="site-join-text"}}
+        <p class="info">
+            {{t 'homepage.joinTextInfos'}}
+        </p>
+    </div>
+</form>
