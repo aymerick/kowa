@@ -8,6 +8,21 @@
 
 <form class="settings-body" id="settings-member" role="form" {{action 'save' on='submit'}}>
     <div class="form-group">
+        <label for="member-photo">{{t 'member.photo'}}</label>
+        {{#if model.photo}}
+            <button type="button" class="thumbnail select-image" {{action "openModal" "select-image" controller "photo"}}>
+                <img id="member-photo" {{bind-attr src=photo.smallUrl}} alt="photo">
+                <span class="remove-image" {{action 'removePhoto'}}>&#10006;</span>
+            </button>
+        {{else}}
+            <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "photo"}}>{{t 'chooseImage'}}</button>
+        {{/if}}
+        <p class="info">
+            {{t 'member.photoInfos'}}
+        </p>
+    </div>
+
+    <div class="form-group">
         <label for="member-fullname">{{t 'member.fullname'}}</label>
         {{input id="member-fullname" name="member[fullname]" type="text" class="form-control" value=model.fullname}}
         <p class="info">
@@ -28,21 +43,6 @@
         {{textarea rows=10 id="member-description" name="member[description]" class="form-control" value=model.description}}
         <p class="info">
             {{t 'member.descriptionInfos'}}
-        </p>
-    </div>
-
-    <div class="form-group">
-        <label for="member-photo">{{t 'member.photo'}}</label>
-        {{#if model.photo}}
-            <button type="button" class="thumbnail select-image" {{action "openModal" "select-image" controller "photo"}}>
-                <img id="member-photo" {{bind-attr src=photo.smallUrl}} alt="photo">
-                <span class="remove-image" {{action 'removePhoto'}}>&#10006;</span>
-            </button>
-        {{else}}
-            <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "photo"}}>{{t 'chooseImage'}}</button>
-        {{/if}}
-        <p class="info">
-            {{t 'member.photoInfos'}}
         </p>
     </div>
 </form>
