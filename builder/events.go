@@ -114,14 +114,20 @@ func eventSlug(event *models.Event) string {
 func (builder *EventsBuilder) loadEvent(event *models.Event) {
 	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
 
-	title := T("events")
-	tagline := "" // @todo Fill
+	slug := T("events")
+
+	title, tagline, cover := builder.pageSettings(models.PAGE_KIND_EVENTS)
+	if title == "" {
+		title = slug
+	}
 
 	node := builder.newNode()
-	node.fillUrl(path.Join(title, eventSlug(event)))
+	node.fillUrl(path.Join(slug, eventSlug(event)))
 
 	node.Title = title
 	node.Tagline = tagline
+	node.Cover = cover
+
 	node.Meta = &NodeMeta{
 		Title:       fmt.Sprintf("%s - %s", event.Title, builder.site().Name),
 		Description: tagline,
@@ -239,6 +245,7 @@ func (builder *EventsBuilder) loadEventsLists() {
 		node.Title = title
 		node.Tagline = tagline
 		node.Meta = &NodeMeta{Description: tagline}
+
 		node.InNavBar = true
 		node.NavBarOrder = 10
 

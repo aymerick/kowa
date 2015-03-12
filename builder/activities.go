@@ -49,21 +49,28 @@ func NewActivitiesBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 
 // NodeBuilder
 func (builder *ActivitiesBuilder) Load() {
-	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
-
 	// fetch activities
 	activitiesVars := builder.activities()
 	if len(activitiesVars) > 0 {
-		title := T("activities")
-		tagline := "" // @todo Fill
+		T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
+
+		slug := T("activities")
+
+		title, tagline, cover := builder.pageSettings(models.PAGE_KIND_ACTIVITIES)
+		if title == "" {
+			title = slug
+		}
 
 		// build activities page
 		node := builder.newNode()
-		node.fillUrl(title)
+		node.fillUrl(slug)
 
 		node.Title = title
 		node.Tagline = tagline
+		node.Cover = cover
+
 		node.Meta = &NodeMeta{Description: tagline}
+
 		node.InNavBar = true
 		node.NavBarOrder = 1
 

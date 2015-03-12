@@ -48,21 +48,28 @@ func NewMembersBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 
 // NodeBuilder
 func (builder *MembersBuilder) Load() {
-	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
-
 	// fetch members
 	membersVars := builder.members()
 	if len(membersVars) > 0 {
-		title := T("members")
-		tagline := "" // @todo Fill
+		T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
+
+		slug := T("members")
+
+		title, tagline, cover := builder.pageSettings(models.PAGE_KIND_MEMBERS)
+		if title == "" {
+			title = slug
+		}
 
 		// build members page
 		node := builder.newNode()
-		node.fillUrl(title)
+		node.fillUrl(slug)
 
 		node.Title = title
 		node.Tagline = tagline
+		node.Cover = cover
+
 		node.Meta = &NodeMeta{Description: tagline}
+
 		node.InNavBar = true
 		node.NavBarOrder = 15
 

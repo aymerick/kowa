@@ -83,14 +83,20 @@ func postSlug(post *models.Post) string {
 func (builder *PostsBuilder) loadPost(post *models.Post) {
 	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
 
-	title := T("posts")
-	tagline := "" // @todo fill
+	slug := T("posts")
+
+	title, tagline, cover := builder.pageSettings(models.PAGE_KIND_EVENTS)
+	if title == "" {
+		title = slug
+	}
 
 	node := builder.newNode()
-	node.fillUrl(path.Join(title, postSlug(post)))
+	node.fillUrl(path.Join(slug, postSlug(post)))
 
 	node.Title = title
 	node.Tagline = tagline
+	node.Cover = cover
+
 	node.Meta = &NodeMeta{
 		Title:       fmt.Sprintf("%s - %s", post.Title, builder.site().Name),
 		Description: tagline,

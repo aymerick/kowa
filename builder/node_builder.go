@@ -90,6 +90,27 @@ func (builder *NodeBuilderBase) site() *models.Site {
 	return builder.SiteBuilder().site
 }
 
+// Computes page settings
+func (builder *NodeBuilderBase) pageSettings(kind string) (string, string, *ImageVars) {
+	var title, tagline string
+	var cover *ImageVars
+
+	site := builder.site()
+
+	// find settings
+	pageSettings := site.PageSettings[kind]
+	if pageSettings != nil {
+		title = pageSettings.Title
+		tagline = pageSettings.Tagline
+
+		if image := site.FindPageSettingsCover(kind); image != nil {
+			cover = builder.addImage(image)
+		}
+	}
+
+	return title, tagline, cover
+}
+
 // Fill node with more data
 func (builder *NodeBuilderBase) fillNodeBeforeGeneration(node *Node) {
 	node.Site = builder.siteBuilder.siteVars

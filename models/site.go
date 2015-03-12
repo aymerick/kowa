@@ -2,7 +2,9 @@ package models
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"gopkg.in/mgo.v2"
@@ -13,9 +15,12 @@ const (
 	SITES_COL_NAME = "sites"
 )
 
+// All possible page settings kinds
+var SitePagesSettingsKinds map[string]bool
+
 type SitePageSettings struct {
 	Id      bson.ObjectId `bson:"_id,omitempty"   json:"id"`
-	Kind    string        `bson:"kind"            json:"kind"` // 'contact' || 'activities' || 'posts' || 'events' || 'members'
+	Kind    string        `bson:"kind"            json:"kind"` // cf. SitePagesSettingsKinds
 	Title   string        `bson:"title"           json:"title"`
 	Tagline string        `bson:"tagline"         json:"tagline"`
 	Cover   bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
@@ -67,6 +72,24 @@ type SiteJson struct {
 }
 
 type SitesList []*Site
+
+const (
+	PAGE_KIND_CONTACT    = "contact"
+	PAGE_KIND_ACTIVITIES = "activities"
+	PAGE_KIND_MEMBERS    = "members"
+	PAGE_KIND_POSTS      = "posts"
+	PAGE_KIND_EVENTS     = "events"
+)
+
+func init() {
+	SitePagesSettingsKinds = map[string]bool{
+		PAGE_KIND_CONTACT:    true,
+		PAGE_KIND_ACTIVITIES: true,
+		PAGE_KIND_MEMBERS:    true,
+		PAGE_KIND_POSTS:      true,
+		PAGE_KIND_EVENTS:     true,
+	}
+}
 
 //
 // DBSession
@@ -757,11 +780,18 @@ func (site *Site) DeleteFields(fields []string) error {
 }
 
 // Insert/update page settings to database
-// Side effect: 'Id' field is set on record if not already present
+// Side effect: 'Id' field is set on record if not already present, and string fields are trimed
 func (site *Site) SetPageSettings(settings *SitePageSettings) error {
+	if !SitePagesSettingsKinds[settings.Kind] {
+		return errors.New("Unsupported page settings kind: " + settings.Kind)
+	}
+
 	if settings.Id == "" {
 		settings.Id = bson.NewObjectId()
 	}
+
+	settings.Title = strings.TrimSpace(settings.Title)
+	settings.Tagline = strings.TrimSpace(settings.Tagline)
 
 	return site.dbSession.SitesCol().UpdateId(site.Id, bson.M{"$set": bson.D{bson.DocElem{fmt.Sprintf("page_settings.%s", settings.Kind), settings}}})
 }
