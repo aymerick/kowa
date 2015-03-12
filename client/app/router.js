@@ -38,6 +38,8 @@ Router.map(function() {
         this.route('homepage');
 
         this.resource('settings.activities', {path: '/activities'}, function () {
+            this.route('page');
+
             this.route('new');
             this.route('activity', {path: ':activity_id'});
         });

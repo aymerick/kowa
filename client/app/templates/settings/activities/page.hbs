@@ -1,0 +1,39 @@
+<header class="settings-header settings-page">
+    <h2 class="settings-item-title">{{t 'activity.pageSettings'}}</h2>
+
+    <button class="btn btn-primary action-save" {{action "save"}} {{bind-attr disabled=cannotSave}}><i class="fa fa-floppy-o"></i> {{t 'save'}}</button>
+    {{#link-to "settings.activities.index" class="btn btn-default action-back"}}<i class="fa fa-angle-left"></i> {{t 'Activities'}}{{/link-to}}
+</header>
+
+<form class="settings-body" role="form" {{action 'save' on='submit'}}>
+    <div class="form-group">
+        <label for="page-title">{{t 'activity.pageTitle'}}</label>
+        {{input id="page-title" type="text" class="form-control" value=title}}
+        <p class="info">
+            {{t 'activity.pageTitleInfos'}}
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="page-tagline">{{t 'activity.pageTagline'}}</label>
+        {{input id="page-tagline" type="text" class="form-control" value=tagline}}
+        <p class="info">
+            {{t 'activity.pageTaglineInfos'}}
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="page-cover">{{t 'activity.pageCover'}}</label>
+        {{#if cover}}
+            <button type="button" class="thumbnail select-image" {{action "openModal" "select-image" controller "cover"}}>
+                <img id="page-cover" {{bind-attr src=cover.smallUrl}} alt="cover">
+                <span class="remove-image" {{action 'removeCover'}}>&#10006;</span>
+            </button>
+        {{else}}
+            <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "cover"}}>{{t 'chooseImage'}}</button>
+        {{/if}}
+        <p class="info">
+            {{t 'activity.pageCoverInfos'}}
+        </p>
+    </div>
+</form>

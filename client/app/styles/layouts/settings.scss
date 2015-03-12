@@ -134,7 +134,7 @@
 .settings-header {
     margin: 30px 0px;
 
-    &.settings-item-show {
+    &.settings-item-show, &.settings-page {
         text-align: center;
     }
 
@@ -147,16 +147,21 @@
         overflow: hidden;
     }
 
+    button .fa {
+        margin-right: 5px;
+    }
+
     .action-back {
         float: left;
     }
 
+    .action-page {
+        float: right;
+        margin-right: 30px;
+    }
+
     .action-save, .action-add {
         float: right;
-
-        .fa-plus {
-            margin-right: 5px;
-        }
     }
 }
 

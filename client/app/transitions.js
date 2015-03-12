@@ -7,6 +7,13 @@ export default function(){
     this.reverse('toRight')
   );
 
+  this.transition(
+    this.fromRoute('settings.activities.index'),
+    this.toRoute('settings.activities.page'),
+    this.use('toLeft'),
+    this.reverse('toRight')
+  );
+
   // this.transition(
   //   this.fromRoute('settings.activities.index'),
   //   this.toRoute('settings.activities.activity'),
