@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/aymerick/kowa/models"
+	"github.com/aymerick/kowa/utils"
 )
 
 // Interface for node builder
@@ -90,10 +91,22 @@ func (builder *NodeBuilderBase) site() *models.Site {
 	return builder.SiteBuilder().site
 }
 
+// Get site language
+func (builder *NodeBuilderBase) siteLang() string {
+	result := builder.SiteBuilder().site.Lang
+
+	if result == "" {
+		result = utils.DEFAULT_LANG
+	}
+
+	return result
+}
+
 // Computes page settings
-func (builder *NodeBuilderBase) pageSettings(kind string) (string, string, *ImageVars) {
+func (builder *NodeBuilderBase) pageSettings(kind string) (string, string, *ImageVars, bool) {
 	var title, tagline string
 	var cover *ImageVars
+	var disabled bool
 
 	site := builder.site()
 
@@ -102,13 +115,14 @@ func (builder *NodeBuilderBase) pageSettings(kind string) (string, string, *Imag
 	if pageSettings != nil {
 		title = pageSettings.Title
 		tagline = pageSettings.Tagline
+		disabled = pageSettings.Disabled
 
 		if image := site.FindPageSettingsCover(kind); image != nil {
 			cover = builder.addImage(image)
 		}
 	}
 
-	return title, tagline, cover
+	return title, tagline, cover, disabled
 }
 
 // Fill node with more data

@@ -5,7 +5,7 @@ var SITE_SERIALIZER_FIELDS = [
   'moreDesc', 'joinText', 'email', 'address',
   'facebook', 'twitter', 'googlePlus',
   'logo', 'cover', 'theme', 'uglyUrl',
-  'nameInNavBar'
+  'nameInNavBar', 'lang'
 ];
 
 var SiteSerializer = DS.RESTSerializer.extend({

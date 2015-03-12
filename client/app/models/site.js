@@ -5,6 +5,7 @@ var Site = DS.Model.extend({
   updatedAt: DS.attr('date'),
   changedAt: DS.attr('date'),
   builtAt: DS.attr('date'),
+  lang: DS.attr(),
 
   name: DS.attr(),
   tagline: DS.attr(),

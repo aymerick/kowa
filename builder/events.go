@@ -10,7 +10,6 @@ import (
 	"github.com/nicksnyder/go-i18n/i18n"
 
 	"github.com/aymerick/kowa/models"
-	"github.com/aymerick/kowa/utils"
 )
 
 // Event nodes builder
@@ -112,15 +111,20 @@ func eventSlug(event *models.Event) string {
 
 // Build event page
 func (builder *EventsBuilder) loadEvent(event *models.Event) {
-	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
+	// get page settings
+	title, tagline, cover, disabled := builder.pageSettings(models.PAGE_KIND_EVENTS)
+	if disabled {
+		return
+	}
 
+	T := i18n.MustTfunc(builder.siteLang())
 	slug := T("events")
 
-	title, tagline, cover := builder.pageSettings(models.PAGE_KIND_EVENTS)
 	if title == "" {
 		title = slug
 	}
 
+	// build node
 	node := builder.newNode()
 	node.fillUrl(path.Join(slug, eventSlug(event)))
 
@@ -148,7 +152,7 @@ func (builder *EventsBuilder) loadEvent(event *models.Event) {
 
 // Instanciate a new event content
 func (builder *EventsBuilder) NewEventContent(event *models.Event, node *Node) *EventContent {
-	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
+	T := i18n.MustTfunc(builder.siteLang())
 
 	result := &EventContent{
 		Node:  node,
@@ -231,48 +235,54 @@ func (builder *EventsBuilder) NewEventContent(event *models.Event, node *Node) *
 }
 
 // Build events list pages
+// @todo pagination
 func (builder *EventsBuilder) loadEventsLists() {
-	if len(builder.events) > 0 || len(builder.pastEvents) > 0 {
-		// @todo pagination
-
-		T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
-
-		slug := T("events")
-
-		title, tagline, cover := builder.pageSettings(models.PAGE_KIND_EVENTS)
-		if title == "" {
-			title = slug
-		}
-
-		node := builder.newNodeForKind(KIND_EVENTS)
-		node.fillUrl(slug)
-
-		node.Title = title
-		node.Tagline = tagline
-		node.Cover = cover
-
-		node.Meta = &NodeMeta{Description: tagline}
-
-		node.InNavBar = true
-		node.NavBarOrder = 10
-
-		events := builder.events
-		sort.Sort(EventContentsByStartDate(events))
-
-		pastEvents := builder.pastEvents
-		sort.Sort(sort.Reverse(EventContentsByStartDate(pastEvents)))
-		if len(pastEvents) > MAX_PAST_EVENTS {
-			pastEvents = pastEvents[:MAX_PAST_EVENTS]
-		}
-
-		node.Content = &EventsContent{
-			Node:       node,
-			Events:     events,
-			PastEvents: pastEvents,
-		}
-
-		builder.addNode(node)
+	if len(builder.events) == 0 && len(builder.pastEvents) == 0 {
+		return
 	}
+
+	// get page settings
+	title, tagline, cover, disabled := builder.pageSettings(models.PAGE_KIND_EVENTS)
+	if disabled {
+		return
+	}
+
+	T := i18n.MustTfunc(builder.siteLang())
+	slug := T("events")
+
+	if title == "" {
+		title = slug
+	}
+
+	// build node
+	node := builder.newNodeForKind(KIND_EVENTS)
+	node.fillUrl(slug)
+
+	node.Title = title
+	node.Tagline = tagline
+	node.Cover = cover
+
+	node.Meta = &NodeMeta{Description: tagline}
+
+	node.InNavBar = true
+	node.NavBarOrder = 10
+
+	events := builder.events
+	sort.Sort(EventContentsByStartDate(events))
+
+	pastEvents := builder.pastEvents
+	sort.Sort(sort.Reverse(EventContentsByStartDate(pastEvents)))
+	if len(pastEvents) > MAX_PAST_EVENTS {
+		pastEvents = pastEvents[:MAX_PAST_EVENTS]
+	}
+
+	node.Content = &EventsContent{
+		Node:       node,
+		Events:     events,
+		PastEvents: pastEvents,
+	}
+
+	builder.addNode(node)
 }
 
 //

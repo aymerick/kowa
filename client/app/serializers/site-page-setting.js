@@ -1,7 +1,7 @@
 import DS from 'ember-data';
 
 var SITE_PAGE_SETTINGS_SERIALIZER_FIELDS = [
-  'kind', 'title', 'tagline', 'cover'
+  'kind', 'title', 'tagline', 'cover', 'disabled'
 ];
 
 var SitePageSettingsSerializer = DS.RESTSerializer.extend({

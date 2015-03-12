@@ -33,6 +33,7 @@ func addSite(cmd *cobra.Command, args []string) {
 		Id:           args[0],
 		Name:         args[1],
 		UserId:       args[2],
+		Lang:         utils.DEFAULT_LANG,
 		Theme:        utils.DEFAULT_THEME,
 		NameInNavBar: true,
 	}

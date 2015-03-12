@@ -19,11 +19,12 @@ const (
 var SitePagesSettingsKinds map[string]bool
 
 type SitePageSettings struct {
-	Id      bson.ObjectId `bson:"_id,omitempty"   json:"id"`
-	Kind    string        `bson:"kind"            json:"kind"` // cf. SitePagesSettingsKinds
-	Title   string        `bson:"title"           json:"title"`
-	Tagline string        `bson:"tagline"         json:"tagline"`
-	Cover   bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
+	Id       bson.ObjectId `bson:"_id,omitempty"   json:"id"`
+	Kind     string        `bson:"kind"            json:"kind"` // cf. SitePagesSettingsKinds
+	Title    string        `bson:"title"           json:"title"`
+	Tagline  string        `bson:"tagline"         json:"tagline"`
+	Cover    bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
+	Disabled bool          `bson:"disabled"        json:"disabled"`
 }
 
 type Site struct {
@@ -35,6 +36,7 @@ type Site struct {
 	ChangedAt time.Time `bson:"changed_at,omitempty"  json:"changedAt,omitempty"`
 	BuiltAt   time.Time `bson:"built_at,omitempty"    json:"builtAt,omitempty"`
 	UserId    string    `bson:"user_id"               json:"user"`
+	Lang      string    `bson:"lang"                  json:"lang"`
 
 	Name        string `bson:"name"        json:"name"`
 	Tagline     string `bson:"tagline"     json:"tagline"`
@@ -573,6 +575,16 @@ func (site *Site) RemoveImageReferences(image *Image) error {
 // Update site in database
 func (site *Site) Update(newSite *Site) (bool, error) {
 	var set, unset, modifier bson.D
+
+	if site.Lang != newSite.Lang {
+		site.Lang = newSite.Lang
+
+		if site.Lang == "" {
+			unset = append(unset, bson.DocElem{"lang", 1})
+		} else {
+			set = append(set, bson.DocElem{"lang", site.Lang})
+		}
+	}
 
 	if site.Name != newSite.Name {
 		site.Name = newSite.Name

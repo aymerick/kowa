@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/aymerick/kowa/models"
-	"github.com/aymerick/kowa/utils"
 	"github.com/nicksnyder/go-i18n/i18n"
 )
 
@@ -43,35 +42,42 @@ func NewContactBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 
 // NodeBuilder
 func (builder *ContactBuilder) Load() {
+	// get node content
 	contactContent := builder.NewContactContent()
-	if contactContent.HaveContact || contactContent.HaveSocial {
-		T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
-
-		slug := T("contact")
-
-		title, tagline, cover := builder.pageSettings(models.PAGE_KIND_CONTACT)
-		if title == "" {
-			title = slug
-		}
-
-		// build contact page
-		node := builder.newNode()
-		node.fillUrl(slug)
-
-		node.Title = title
-		node.Tagline = tagline
-		node.Cover = cover
-
-		node.Meta = &NodeMeta{Description: tagline}
-
-		node.InNavBar = true
-		node.NavBarOrder = 20
-
-		contactContent.Node = node
-		node.Content = contactContent
-
-		builder.addNode(node)
+	if !contactContent.HaveContact && !contactContent.HaveSocial {
+		return
 	}
+
+	// get page settings
+	title, tagline, cover, disabled := builder.pageSettings(models.PAGE_KIND_CONTACT)
+	if disabled {
+		return
+	}
+
+	T := i18n.MustTfunc(builder.siteLang())
+	slug := T("contact")
+
+	if title == "" {
+		title = slug
+	}
+
+	// build node
+	node := builder.newNode()
+	node.fillUrl(slug)
+
+	node.Title = title
+	node.Tagline = tagline
+	node.Cover = cover
+
+	node.Meta = &NodeMeta{Description: tagline}
+
+	node.InNavBar = true
+	node.NavBarOrder = 20
+
+	contactContent.Node = node
+	node.Content = contactContent
+
+	builder.addNode(node)
 }
 
 func (builder *ContactBuilder) NewContactContent() *ContactContent {

@@ -7,7 +7,6 @@ import (
 	"github.com/nicksnyder/go-i18n/i18n"
 
 	"github.com/aymerick/kowa/models"
-	"github.com/aymerick/kowa/utils"
 )
 
 // Activities node builder
@@ -51,36 +50,42 @@ func NewActivitiesBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 func (builder *ActivitiesBuilder) Load() {
 	// fetch activities
 	activitiesVars := builder.activities()
-	if len(activitiesVars) > 0 {
-		T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
-
-		slug := T("activities")
-
-		title, tagline, cover := builder.pageSettings(models.PAGE_KIND_ACTIVITIES)
-		if title == "" {
-			title = slug
-		}
-
-		// build activities page
-		node := builder.newNode()
-		node.fillUrl(slug)
-
-		node.Title = title
-		node.Tagline = tagline
-		node.Cover = cover
-
-		node.Meta = &NodeMeta{Description: tagline}
-
-		node.InNavBar = true
-		node.NavBarOrder = 1
-
-		node.Content = &ActivitiesContent{
-			Node:       node,
-			Activities: activitiesVars,
-		}
-
-		builder.addNode(node)
+	if len(activitiesVars) == 0 {
+		return
 	}
+
+	// get page settings
+	title, tagline, cover, disabled := builder.pageSettings(models.PAGE_KIND_ACTIVITIES)
+	if disabled {
+		return
+	}
+
+	T := i18n.MustTfunc(builder.siteLang())
+	slug := T("activities")
+
+	if title == "" {
+		title = slug
+	}
+
+	// build node
+	node := builder.newNode()
+	node.fillUrl(slug)
+
+	node.Title = title
+	node.Tagline = tagline
+	node.Cover = cover
+
+	node.Meta = &NodeMeta{Description: tagline}
+
+	node.InNavBar = true
+	node.NavBarOrder = 1
+
+	node.Content = &ActivitiesContent{
+		Node:       node,
+		Activities: activitiesVars,
+	}
+
+	builder.addNode(node)
 }
 
 // NodeBuilder

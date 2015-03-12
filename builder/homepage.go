@@ -6,7 +6,6 @@ import (
 	"github.com/nicksnyder/go-i18n/i18n"
 
 	"github.com/aymerick/kowa/models"
-	"github.com/aymerick/kowa/utils"
 )
 
 // Homepage node builder
@@ -42,7 +41,7 @@ func NewHomepageBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 
 // NodeBuilder
 func (builder *HomepageBuilder) Load() {
-	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
+	T := i18n.MustTfunc(builder.siteLang())
 
 	node := builder.newNode()
 	node.fillUrl("")

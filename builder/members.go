@@ -6,7 +6,6 @@ import (
 	"github.com/nicksnyder/go-i18n/i18n"
 
 	"github.com/aymerick/kowa/models"
-	"github.com/aymerick/kowa/utils"
 )
 
 // Members node builder
@@ -50,36 +49,41 @@ func NewMembersBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 func (builder *MembersBuilder) Load() {
 	// fetch members
 	membersVars := builder.members()
-	if len(membersVars) > 0 {
-		T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
-
-		slug := T("members")
-
-		title, tagline, cover := builder.pageSettings(models.PAGE_KIND_MEMBERS)
-		if title == "" {
-			title = slug
-		}
-
-		// build members page
-		node := builder.newNode()
-		node.fillUrl(slug)
-
-		node.Title = title
-		node.Tagline = tagline
-		node.Cover = cover
-
-		node.Meta = &NodeMeta{Description: tagline}
-
-		node.InNavBar = true
-		node.NavBarOrder = 15
-
-		node.Content = &MembersContent{
-			Node:    node,
-			Members: membersVars,
-		}
-
-		builder.addNode(node)
+	if len(membersVars) == 0 {
 	}
+
+	// get page settings
+	title, tagline, cover, disabled := builder.pageSettings(models.PAGE_KIND_MEMBERS)
+	if disabled {
+		return
+	}
+
+	T := i18n.MustTfunc(builder.siteLang())
+	slug := T("members")
+
+	if title == "" {
+		title = slug
+	}
+
+	// build node
+	node := builder.newNode()
+	node.fillUrl(slug)
+
+	node.Title = title
+	node.Tagline = tagline
+	node.Cover = cover
+
+	node.Meta = &NodeMeta{Description: tagline}
+
+	node.InNavBar = true
+	node.NavBarOrder = 15
+
+	node.Content = &MembersContent{
+		Node:    node,
+		Members: membersVars,
+	}
+
+	builder.addNode(node)
 }
 
 // NodeBuilder

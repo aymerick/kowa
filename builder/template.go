@@ -11,7 +11,6 @@ import (
 	"github.com/russross/blackfriday"
 
 	"github.com/aymerick/kowa/models"
-	"github.com/aymerick/kowa/utils"
 )
 
 func generateHTML(inputFormat string, input string) template.HTML {
@@ -128,7 +127,7 @@ func (builder *SiteBuilder) Translate(sentence interface{}) (string, error) {
 
 	sentenceStr := sentenceValue.String()
 
-	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
+	T := i18n.MustTfunc(builder.site.Lang)
 
 	return T(sentenceStr), nil
 }

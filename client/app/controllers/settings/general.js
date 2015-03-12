@@ -8,6 +8,9 @@ var SettingsGeneralController = Ember.ObjectController.extend({
   // @todo Get that list from the server
   allThemes: [ 'ailes', 'willy' ],
 
+  // @todo Get that list from the server
+  allLangs: [ 'en', 'fr' ],
+
   actions: {
     removeLogo: function() {
       this.get('model').set('logo', null);

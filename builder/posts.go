@@ -8,7 +8,6 @@ import (
 	"github.com/nicksnyder/go-i18n/i18n"
 
 	"github.com/aymerick/kowa/models"
-	"github.com/aymerick/kowa/utils"
 )
 
 // Post nodes builder
@@ -81,15 +80,20 @@ func postSlug(post *models.Post) string {
 
 // Build post page
 func (builder *PostsBuilder) loadPost(post *models.Post) {
-	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
+	// get page settings
+	title, tagline, cover, disabled := builder.pageSettings(models.PAGE_KIND_POSTS)
+	if disabled {
+		return
+	}
 
+	T := i18n.MustTfunc(builder.siteLang())
 	slug := T("posts")
 
-	title, tagline, cover := builder.pageSettings(models.PAGE_KIND_POSTS)
 	if title == "" {
 		title = slug
 	}
 
+	// build node
 	node := builder.newNode()
 	node.fillUrl(path.Join(slug, postSlug(post)))
 
@@ -112,7 +116,7 @@ func (builder *PostsBuilder) loadPost(post *models.Post) {
 
 // Instanciate a new post content
 func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *PostContent {
-	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
+	T := i18n.MustTfunc(builder.siteLang())
 
 	result := &PostContent{
 		Node:  node,
@@ -140,35 +144,41 @@ func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *Post
 }
 
 // Build posts list pages
+// @todo pagination
 func (builder *PostsBuilder) loadPostsLists() {
-	if len(builder.posts) > 0 {
-		// @todo pagination
-
-		T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
-
-		slug := T("posts")
-
-		title, tagline, cover := builder.pageSettings(models.PAGE_KIND_POSTS)
-		if title == "" {
-			title = slug
-		}
-
-		node := builder.newNodeForKind(KIND_POSTS)
-		node.fillUrl(slug)
-
-		node.Title = title
-		node.Tagline = tagline
-		node.Cover = cover
-
-		node.Meta = &NodeMeta{Description: tagline}
-		node.InNavBar = true
-		node.NavBarOrder = 5
-
-		node.Content = &PostsContent{
-			Node:  node,
-			Posts: builder.posts,
-		}
-
-		builder.addNode(node)
+	if len(builder.posts) == 0 {
+		return
 	}
+
+	// get page settings
+	title, tagline, cover, disabled := builder.pageSettings(models.PAGE_KIND_POSTS)
+	if disabled {
+		return
+	}
+
+	T := i18n.MustTfunc(builder.siteLang())
+	slug := T("posts")
+
+	if title == "" {
+		title = slug
+	}
+
+	// build node
+	node := builder.newNodeForKind(KIND_POSTS)
+	node.fillUrl(slug)
+
+	node.Title = title
+	node.Tagline = tagline
+	node.Cover = cover
+
+	node.Meta = &NodeMeta{Description: tagline}
+	node.InNavBar = true
+	node.NavBarOrder = 5
+
+	node.Content = &PostsContent{
+		Node:  node,
+		Posts: builder.posts,
+	}
+
+	builder.addNode(node)
 }

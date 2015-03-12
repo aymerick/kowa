@@ -3,7 +3,6 @@ package builder
 import (
 	"sort"
 
-	"github.com/aymerick/kowa/utils"
 	"github.com/nicksnyder/go-i18n/i18n"
 )
 
@@ -41,9 +40,9 @@ func NewSiteVars(siteBuilder *SiteBuilder) *SiteVars {
 
 // Fill site variables
 func (vars *SiteVars) fill() {
-	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
-
 	site := vars.builder.site
+
+	T := i18n.MustTfunc(site.Lang)
 
 	name := site.Name
 	if name == "" {
