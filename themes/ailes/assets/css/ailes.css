@@ -106,6 +106,7 @@ footer .social:nth-child(n+2) {
 
 .jumbotron .cover {
   padding: 10px 0px;
+  max-height: 190px;
 }
 
 
