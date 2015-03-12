@@ -85,7 +85,7 @@ func (builder *PostsBuilder) loadPost(post *models.Post) {
 
 	slug := T("posts")
 
-	title, tagline, cover := builder.pageSettings(models.PAGE_KIND_EVENTS)
+	title, tagline, cover := builder.pageSettings(models.PAGE_KIND_POSTS)
 	if title == "" {
 		title = slug
 	}
@@ -141,18 +141,25 @@ func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *Post
 
 // Build posts list pages
 func (builder *PostsBuilder) loadPostsLists() {
-	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
-
 	if len(builder.posts) > 0 {
 		// @todo pagination
-		node := builder.newNodeForKind(KIND_POSTS)
-		node.fillUrl(T("posts"))
 
-		title := T("Posts")
-		tagline := "" // @todo fill
+		T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
+
+		slug := T("posts")
+
+		title, tagline, cover := builder.pageSettings(models.PAGE_KIND_POSTS)
+		if title == "" {
+			title = slug
+		}
+
+		node := builder.newNodeForKind(KIND_POSTS)
+		node.fillUrl(slug)
 
 		node.Title = title
 		node.Tagline = tagline
+		node.Cover = cover
+
 		node.Meta = &NodeMeta{Description: tagline}
 		node.InNavBar = true
 		node.NavBarOrder = 5

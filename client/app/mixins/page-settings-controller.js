@@ -4,8 +4,6 @@ var PageSettingsControllerMixin = Ember.Mixin.create({
   needs: ['settings'],
   site: Ember.computed.alias('controllers.settings.model'),
 
-  emptyTitle: Ember.computed.empty('model.title'),
-  cannotSave: Ember.computed.and('model.isNew', 'emptyTitle'),
   isSaving: false,
 
   pageSettingsSaveMsgOk: 'pageSettings.saved', // This is a i18n key

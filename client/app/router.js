@@ -55,6 +55,10 @@ Router.map(function() {
             this.route('page');
         });
 
+        this.route('posts');
+
+        this.route('events');
+
         this.route('images');
       });
     });

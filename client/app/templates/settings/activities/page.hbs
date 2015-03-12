@@ -1,7 +1,7 @@
 <header class="settings-header settings-page">
     <h2 class="settings-item-title">{{t 'PageSettings'}}</h2>
 
-    <button class="btn btn-primary action-save" {{action "save"}} {{bind-attr disabled=cannotSave}}><i class="fa fa-floppy-o"></i> {{t 'save'}}</button>
+    <button class="btn btn-primary action-save" {{action "save"}}><i class="fa fa-floppy-o"></i> {{t 'save'}}</button>
     {{#link-to "settings.activities.index" class="btn btn-default action-back"}}<i class="fa fa-angle-left"></i> {{t 'Activities'}}{{/link-to}}
 </header>
 

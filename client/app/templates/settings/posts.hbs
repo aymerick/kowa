@@ -1,8 +1,7 @@
-<header class="settings-header settings-page">
-    <h2 class="settings-item-title">{{t 'PageSettings'}}</h2>
+<header class="settings-header">
+    <h2 class="settings-item-title">{{t 'Posts'}} &gt; {{t 'PageSettings'}}</h2>
 
     <button class="btn btn-primary action-save" {{action "save"}}><i class="fa fa-floppy-o"></i> {{t 'save'}}</button>
-    {{#link-to "settings.members.index" class="btn btn-default action-back"}}<i class="fa fa-angle-left"></i> {{t 'Members'}}{{/link-to}}
 </header>
 
 <form class="settings-body" role="form" {{action 'save' on='submit'}}>
@@ -10,7 +9,7 @@
         <label for="page-title">{{t 'pageSettings.title'}}</label>
         {{input id="page-title" type="text" class="form-control" value=title}}
         <p class="info">
-            {{t 'member.pageTitleInfos'}}
+            {{t 'event.pageTitleInfos'}}
         </p>
     </div>
 
@@ -18,7 +17,7 @@
         <label for="page-tagline">{{t 'pageSettings.tagline'}}</label>
         {{input id="page-tagline" type="text" class="form-control" value=tagline}}
         <p class="info">
-            {{t 'member.pageTaglineInfos'}}
+            {{t 'event.pageTaglineInfos'}}
         </p>
     </div>
 
@@ -33,7 +32,7 @@
             <button type="button" class="btn btn-success" {{action "openModal" "select-image" controller "cover"}}>{{t 'chooseImage'}}</button>
         {{/if}}
         <p class="info">
-            {{t 'member.pageCoverInfos'}}
+            {{t 'event.pageCoverInfos'}}
         </p>
     </div>
 </form>

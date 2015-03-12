@@ -232,18 +232,25 @@ func (builder *EventsBuilder) NewEventContent(event *models.Event, node *Node) *
 
 // Build events list pages
 func (builder *EventsBuilder) loadEventsLists() {
-	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
-
 	if len(builder.events) > 0 || len(builder.pastEvents) > 0 {
 		// @todo pagination
-		node := builder.newNodeForKind(KIND_EVENTS)
-		node.fillUrl(T("events"))
 
-		title := T("Events")
-		tagline := "" // @todo Fill
+		T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
+
+		slug := T("events")
+
+		title, tagline, cover := builder.pageSettings(models.PAGE_KIND_EVENTS)
+		if title == "" {
+			title = slug
+		}
+
+		node := builder.newNodeForKind(KIND_EVENTS)
+		node.fillUrl(slug)
 
 		node.Title = title
 		node.Tagline = tagline
+		node.Cover = cover
+
 		node.Meta = &NodeMeta{Description: tagline}
 
 		node.InNavBar = true
