@@ -1,34 +1,8 @@
-import Ember from 'ember';
 import AuthenticatedRoute from 'kowa/routes/authenticated';
+import PageSettingsRoute from 'kowa/mixins/page-settings-route';
 
-var SettingsActivitiesPageRoute = AuthenticatedRoute.extend({
-  model: function() {
-    var site = this.modelFor('site');
-
-    var result = site.get('pageSettings').find(function(pageSettings) {
-      return pageSettings.get('kind') === 'activities';
-    });
-
-    if (Ember.isNone(result)) {
-      result = this.store.createRecord('site-page-setting', { kind: 'activities' });
-    }
-
-    // set fake attribute
-    result.set('site', site);
-
-    return result;
-  },
-
-  deactivate: function () {
-    var model = this.modelFor('settings.activities.page');
-
-    // delete if not saved
-    if (model && model.get('isNew')) {
-        model.rollback();
-    }
-
-    this._super();
-  }
+var SettingsActivitiesPageRoute = AuthenticatedRoute.extend(PageSettingsRoute, {
+  pageKind: 'activities'
 });
 
 export default SettingsActivitiesPageRoute;

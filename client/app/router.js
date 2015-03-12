@@ -45,6 +45,8 @@ Router.map(function() {
         });
 
         this.resource('settings.members', {path: '/members'}, function () {
+            this.route('page');
+
             this.route('new');
             this.route('member', {path: ':member_id'});
         });

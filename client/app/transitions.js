@@ -34,4 +34,11 @@ export default function(){
     this.use('toLeft'),
     this.reverse('toRight')
   );
+
+  this.transition(
+    this.fromRoute('settings.members.index'),
+    this.toRoute('settings.members.page'),
+    this.use('toLeft'),
+    this.reverse('toRight')
+  );
 }
