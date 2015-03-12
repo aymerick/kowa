@@ -14,11 +14,11 @@ const (
 )
 
 type SitePageSettings struct {
-	Id      string `bson:"_id,omitempty" json:"id"`
-	Kind    string `bson:"kind"    json:"kind"` // 'contact' || 'activities' || 'posts' || 'events' || 'members'
-	Title   string `bson:"title"   json:"title"`
-	Tagline string `bson:"tagline" json:"tagline"`
-	// @todo Photo
+	Id      bson.ObjectId `bson:"_id,omitempty"   json:"id"`
+	Kind    string        `bson:"kind"            json:"kind"` // 'contact' || 'activities' || 'posts' || 'events' || 'members'
+	Title   string        `bson:"title"           json:"title"`
+	Tagline string        `bson:"tagline"         json:"tagline"`
+	Cover   bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
 }
 
 type Site struct {
@@ -47,7 +47,7 @@ type Site struct {
 	Logo  bson.ObjectId `bson:"logo,omitempty"  json:"logo,omitempty"`
 	Cover bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
 
-	PageSettings []SitePageSettings `bson:"page_settings" json:"pageSettings"`
+	PageSettings map[string]*SitePageSettings `bson:"page_settings" json:"pageSettings,omitempty"`
 
 	// build settings
 	Theme   string `bson:"theme"    json:"theme"`
@@ -60,6 +60,10 @@ type Site struct {
 type SiteJson struct {
 	Site
 	Links map[string]interface{} `json:"links"`
+
+	// overrides the PageSettings field from Site to provide to client an array
+	// of ids (as needed by Ember Data) instead of a hash of embedded documents
+	PageSettings []string `json:"pageSettings,omitempty"`
 }
 
 type SitesList []*Site
@@ -115,6 +119,12 @@ func (session *DBSession) CreateSite(site *Site) error {
 	return nil
 }
 
+// Remove all references to given image from site page settings
+func (session *DBSession) RemoveImageReferencesFromSitePageSettings(image *Image) error {
+	// @todo
+	return nil
+}
+
 //
 // Site
 //
@@ -132,9 +142,16 @@ func (site *Site) MarshalJSON() ([]byte, error) {
 		"images":     fmt.Sprintf("/api/sites/%s/images", site.Id),
 	}
 
+	// convert hash of embedded docs into an array of doc ids, as needed by Ember Data
+	pageSettingsIds := []string{}
+	for _, settings := range site.PageSettings {
+		pageSettingsIds = append(pageSettingsIds, settings.Id.Hex())
+	}
+
 	siteJson := SiteJson{
-		Site:  *site,
-		Links: links,
+		Site:         *site,
+		Links:        links,
+		PageSettings: pageSettingsIds,
 	}
 
 	return json.Marshal(siteJson)
@@ -462,6 +479,24 @@ func (site *Site) FindCover() *Image {
 	return nil
 }
 
+// Fetch page settings Cover from database
+func (site *Site) FindPageSettingsCover(settingKind string) *Image {
+	pageSettings := site.PageSettings[settingKind]
+	if (pageSettings != nil) && (pageSettings.Cover != "") {
+		var result Image
+
+		if err := site.dbSession.ImagesCol().FindId(pageSettings.Cover).One(&result); err != nil {
+			return nil
+		}
+
+		result.dbSession = site.dbSession
+
+		return &result
+	}
+
+	return nil
+}
+
 // Remove all references to given image from database
 func (site *Site) RemoveImageReferences(image *Image) error {
 	// remove image reference from site settings
@@ -477,6 +512,11 @@ func (site *Site) RemoveImageReferences(image *Image) error {
 
 	if len(fieldsToDelete) > 0 {
 		site.DeleteFields(fieldsToDelete)
+	}
+
+	// remove image references from page settings
+	if err := site.dbSession.RemoveImageReferencesFromSitePageSettings(image); err != nil {
+		return err
 	}
 
 	// remove image references from posts
@@ -714,4 +754,14 @@ func (site *Site) DeleteFields(fields []string) error {
 	}
 
 	return site.dbSession.SitesCol().UpdateId(site.Id, bson.M{"$unset": unset})
+}
+
+// Insert/update page settings to database
+// Side effect: 'Id' field is set on record if not already present
+func (site *Site) SetPageSettings(settings *SitePageSettings) error {
+	if settings.Id == "" {
+		settings.Id = bson.NewObjectId()
+	}
+
+	return site.dbSession.SitesCol().UpdateId(site.Id, bson.M{"$set": bson.D{bson.DocElem{fmt.Sprintf("page_settings.%s", settings.Kind), settings}}})
 }

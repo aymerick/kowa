@@ -59,6 +59,8 @@ func (app *Application) handleGetUserSites(rw http.ResponseWriter, req *http.Req
 		var image *models.Image
 		images := []*models.Image{}
 
+		pageSettingsArray := []*models.SitePageSettings{}
+
 		sites := user.FindSites()
 		for _, site := range *sites {
 			if image = site.FindLogo(); image != nil {
@@ -68,9 +70,17 @@ func (app *Application) handleGetUserSites(rw http.ResponseWriter, req *http.Req
 			if image = site.FindCover(); image != nil {
 				images = append(images, image)
 			}
+
+			for _, pageSettings := range site.PageSettings {
+				pageSettingsArray = append(pageSettingsArray, pageSettings)
+
+				if image = site.FindPageSettingsCover(pageSettings.Kind); image != nil {
+					images = append(images, image)
+				}
+			}
 		}
 
-		app.render.JSON(rw, http.StatusOK, renderMap{"sites": sites, "images": images})
+		app.render.JSON(rw, http.StatusOK, renderMap{"sites": sites, "images": images, "sitePageSettings": pageSettingsArray})
 	} else {
 		http.NotFound(rw, req)
 	}

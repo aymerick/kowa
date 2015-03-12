@@ -53,6 +53,9 @@ func (app *Application) newWebRouter() *mux.Router {
 	apiRouter.Methods("GET").Path("/sites/{site_id}/activities").Handler(curSiteOwnerChain.ThenFunc(app.handleGetActivities))
 	apiRouter.Methods("GET").Path("/sites/{site_id}/images").Handler(curSiteOwnerChain.ThenFunc(app.handleGetImages))
 
+	apiRouter.Methods("POST").Path("/sites/{site_id}/page-settings").Handler(curSiteOwnerChain.ThenFunc(app.handleSetPageSettings))
+	apiRouter.Methods("PUT").Path("/sites/{site_id}/page-settings/{setting_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleSetPageSettings))
+
 	// /api/posts?site={site_id}
 	apiRouter.Methods("GET").Path("/posts").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetPosts))
 	apiRouter.Methods("POST").Path("/posts").Handler(authChain.ThenFunc(app.handlePostPosts))
