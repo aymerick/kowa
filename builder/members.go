@@ -53,12 +53,12 @@ func (builder *MembersBuilder) Load() {
 	// fetch members
 	membersVars := builder.members()
 	if len(membersVars) > 0 {
+		title := T("members")
+		tagline := "" // @todo Fill
+
 		// build members page
 		node := builder.newNode()
-		node.fillUrl(T(node.Kind))
-
-		title := T("Members")
-		tagline := "" // @todo Fill
+		node.fillUrl(title)
 
 		node.Title = title
 		node.Tagline = tagline

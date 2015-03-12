@@ -1,11 +1,7 @@
 [
   {
-    "id": "Activities",
-    "translation": "Activities"
-  },
-  {
     "id": "activities",
-    "translation": "activities"
+    "translation": "Activities"
   },
   {
     "id": "address",
@@ -20,12 +16,8 @@
     "translation": "Back to posts"
   },
   {
-    "id": "Contact",
-    "translation": "Contact"
-  },
-  {
     "id": "contact",
-    "translation": "contact"
+    "translation": "Contact"
   },
   {
     "id": "cover",
@@ -52,12 +44,8 @@
     "translation": "Welcome to your new site. Please take time to describe what your site is about in the administration."
   },
   {
-    "id": "Events",
-    "translation": "Events"
-  },
-  {
     "id": "events",
-    "translation": "events"
+    "translation": "Events"
   },
   {
     "id": "event_format_datetime",
@@ -80,12 +68,8 @@
     "translation": "logo"
   },
   {
-    "id": "Members",
-    "translation": "Members"
-  },
-  {
     "id": "members",
-    "translation": "members"
+    "translation": "Members"
   },
   {
     "id": "month_January",
@@ -192,12 +176,8 @@
     "translation": "Past events"
   },
   {
-    "id": "Posts",
-    "translation": "Posts"
-  },
-  {
     "id": "posts",
-    "translation": "posts"
+    "translation": "Posts"
   },
   {
     "id": "post_format_date",

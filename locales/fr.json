@@ -1,11 +1,7 @@
 [
   {
-    "id": "Activities",
-    "translation": "Activités"
-  },
-  {
     "id": "activities",
-    "translation": "activites"
+    "translation": "Activités"
   },
   {
     "id": "address",
@@ -20,12 +16,8 @@
     "translation": "Retours aux actualités"
   },
   {
-    "id": "Contact",
-    "translation": "Contact"
-  },
-  {
     "id": "contact",
-    "translation": "contact"
+    "translation": "Contact"
   },
   {
     "id": "cover",
@@ -52,12 +44,8 @@
     "translation": "Bienvenue sur votre nouveau site web. Veuillez ajouter une description de votre site dans l'administration."
   },
   {
-    "id": "Events",
-    "translation": "Évènements"
-  },
-  {
     "id": "events",
-    "translation": "evenements"
+    "translation": "Évènements"
   },
   {
     "id": "event_format_datetime",
@@ -80,12 +68,8 @@
     "translation": "logo"
   },
   {
-    "id": "Members",
-    "translation": "Équipe"
-  },
-  {
     "id": "members",
-    "translation": "equipe"
+    "translation": "Équipe"
   },
   {
     "id": "month_January",
@@ -192,12 +176,8 @@
     "translation": "Évènements passés"
   },
   {
-    "id": "Posts",
-    "translation": "Actualités"
-  },
-  {
     "id": "posts",
-    "translation": "actualites"
+    "translation": "Actualités"
   },
   {
     "id": "post_format_date",

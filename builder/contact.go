@@ -44,13 +44,13 @@ func NewContactBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 func (builder *ContactBuilder) Load() {
 	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
 
-	title := T("Contact")
+	title := T("contact")
 	tagline := "" // @todo Fill
 
 	contactContent := builder.NewContactContent()
 	if contactContent.HaveContact || contactContent.HaveSocial {
 		node := builder.newNode()
-		node.fillUrl(T(node.Kind))
+		node.fillUrl(title)
 
 		node.Title = title
 		node.Tagline = tagline

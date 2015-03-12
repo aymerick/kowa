@@ -83,11 +83,11 @@ func postSlug(post *models.Post) string {
 func (builder *PostsBuilder) loadPost(post *models.Post) {
 	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
 
-	node := builder.newNode()
-	node.fillUrl(path.Join(T("posts"), postSlug(post)))
-
-	title := T("Posts")
+	title := T("posts")
 	tagline := "" // @todo fill
+
+	node := builder.newNode()
+	node.fillUrl(path.Join(title, postSlug(post)))
 
 	node.Title = title
 	node.Tagline = tagline

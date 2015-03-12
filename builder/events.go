@@ -114,11 +114,11 @@ func eventSlug(event *models.Event) string {
 func (builder *EventsBuilder) loadEvent(event *models.Event) {
 	T := i18n.MustTfunc(utils.DEFAULT_LANG) // @todo i18n
 
-	node := builder.newNode()
-	node.fillUrl(path.Join(T("events"), eventSlug(event)))
-
-	title := T("Events")
+	title := T("events")
 	tagline := "" // @todo Fill
+
+	node := builder.newNode()
+	node.fillUrl(path.Join(title, eventSlug(event)))
 
 	node.Title = title
 	node.Tagline = tagline
