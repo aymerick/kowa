@@ -31,6 +31,16 @@ export default {
     stay: "Rester"
   },
 
+  // common page settings
+  PageSettings: 'Paramètres de la page',
+  pageSettings: {
+    cover: 'Image principale',
+    saved: 'Paramètres de la page sauvegardés',
+    saveFailed: "Erreur lors de la sauvegarde des paramètres de la page",
+    tagline: 'Accroche',
+    title: 'Titre de la page'
+  },
+
   // activities
   Activities: 'Activités',
   activity: {
@@ -46,14 +56,8 @@ export default {
     nameInfos: 'Un titre pour votre activité',
     'new': 'Nouvelle activité',
     none: "Vous n'avez créé aucune activité pour le moment.",
-    pageCover: 'Image principale',
     pageCoverInfos: "Cette image sera affichée sur la page d'activités",
-    pageSettings: 'Paramètres de la page',
-    pageSettingsSaved: 'Paramètres de la page sauvegardés',
-    pageSettingsSaveFailed: "Erreur lors de la sauvegarde des paramètres de la page",
-    pageTagline: 'Accroche',
     pageTaglineInfos: "Cette accroche sera affichée sur la page d'activités",
-    pageTitle: 'Titre de la page',
     pageTitleInfos: "Ce titre sera affiché à la place de 'Activités'",
     saved: 'Activité sauvegardé',
     saveFailed: "Erreur lors de la sauvegarde de l'activité",
@@ -72,6 +76,9 @@ export default {
     facebookInfos: 'Votre page facebook',
     googlePlusAccount: 'Compte Google+',
     googlePlusInfos: 'Votre compte google+',
+    pageCoverInfos: "Cette image sera affichée sur la page de contact",
+    pageTaglineInfos: "Cette accroche sera affichée sur la page de contact",
+    pageTitleInfos: "Ce titre sera affiché à la place de 'Contact'",
     twitter: 'Twitter',
     twitterInfos: 'Votre compte twitter'
   },
@@ -108,14 +115,8 @@ export default {
     fullnameInfos: 'Indiquez le nom de cette personne',
     'new': 'Nouvelle personne',
     none: "Vous n'avez ajouté aucune personne à votre équipe pour le moment.",
-    pageCover: 'Image principale',
     pageCoverInfos: "Cette image sera affichée sur la page 'Équipe'",
-    pageSettings: 'Paramètres de la page',
-    pageSettingsSaved: 'Paramètres de la page sauvegardés',
-    pageSettingsSaveFailed: "Erreur lors de la sauvegarde des paramètres de la page",
-    pageTagline: 'Accroche',
     pageTaglineInfos: "Cette accroche sera affichée sur la page 'Équipe'",
-    pageTitle: 'Titre de la page',
     pageTitleInfos: "Ce titre sera affiché à la place de 'Équipe'",
     photo: 'Photo',
     photoInfos: 'Ajoutez une photo pour cette personne',

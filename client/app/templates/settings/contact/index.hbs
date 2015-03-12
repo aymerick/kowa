@@ -1,0 +1,48 @@
+<header class="settings-header settings-contact">
+    <h2 class="settings-item-title">{{t 'Contact'}}</h2>
+
+    <button class="btn btn-primary action-save" {{action "save"}} {{bind-attr disabled=isSaving}}><i class="fa fa-floppy-o"></i> {{t 'save'}}</button>
+    {{#link-to "settings.contact.page" class="btn btn-default action-page" title="Page settings"}}<i class="fa fa-cog"></i> {{t 'PageSettings'}}{{/link-to}}
+</header>
+
+<form class="settings-body" role="form" {{action 'save' on='submit'}}>
+    <div class="form-group">
+        <label for="contact-email">{{t 'contact.email'}}</label>
+        {{input id="contact-email" name="contact[email]" type="text" class="form-control" value=email}}
+        <p class="info">
+            {{t 'contact.emailInfos'}}
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="contact-address">{{t 'contact.address'}}</label>
+        {{textarea rows=10 id="contact-address" name="contact[address]" type="text" class="form-control" value=address}}
+        <p class="info">
+            {{t 'contact.addressInfos'}}
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="contact-facebook-page">{{t 'contact.facebook'}}</label>
+        {{input id="contact-facebook-page" name="contact[facebook]" type="text" class="form-control" value=facebook}}
+        <p class="info">
+            {{t 'contact.facebookInfos'}}
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="contact-twitter">{{t 'contact.twitter'}}</label>
+        {{input id="contact-twitter" name="contact[twitter]" type="text" class="form-control" value=twitter}}
+        <p class="info">
+            {{t 'contact.twitterInfos'}}
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="contact-google-plus">{{t 'contact.googlePlusAccount'}}</label>
+        {{input id="contact-google-plus" name="contact[googlePlus]" type="text" class="form-control" value=googlePlus}}
+        <p class="info">
+            {{t 'contact.googlePlusInfos'}}
+        </p>
+    </div>
+</form>

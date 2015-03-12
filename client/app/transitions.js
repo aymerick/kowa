@@ -1,4 +1,12 @@
 export default function(){
+  // settings.contact
+  this.transition(
+    this.fromRoute('settings.contact.index'),
+    this.toRoute('settings.contact.page'),
+    this.use('toLeft'),
+    this.reverse('toRight')
+  );
+
   // settings.activities
   this.transition(
     this.fromRoute('settings.activities.index'),

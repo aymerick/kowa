@@ -51,7 +51,9 @@ Router.map(function() {
             this.route('member', {path: ':member_id'});
         });
 
-        this.route('contact');
+        this.resource('settings.contact', {path: '/contact'}, function () {
+            this.route('page');
+        });
 
         this.route('images');
       });

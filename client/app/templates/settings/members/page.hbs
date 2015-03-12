@@ -1,5 +1,5 @@
 <header class="settings-header settings-page">
-    <h2 class="settings-item-title">{{t 'member.pageSettings'}}</h2>
+    <h2 class="settings-item-title">{{t 'PageSettings'}}</h2>
 
     <button class="btn btn-primary action-save" {{action "save"}} {{bind-attr disabled=cannotSave}}><i class="fa fa-floppy-o"></i> {{t 'save'}}</button>
     {{#link-to "settings.members.index" class="btn btn-default action-back"}}<i class="fa fa-angle-left"></i> {{t 'Members'}}{{/link-to}}
@@ -7,7 +7,7 @@
 
 <form class="settings-body" role="form" {{action 'save' on='submit'}}>
     <div class="form-group">
-        <label for="page-title">{{t 'member.pageTitle'}}</label>
+        <label for="page-title">{{t 'pageSettings.title'}}</label>
         {{input id="page-title" type="text" class="form-control" value=title}}
         <p class="info">
             {{t 'member.pageTitleInfos'}}
@@ -15,7 +15,7 @@
     </div>
 
     <div class="form-group">
-        <label for="page-tagline">{{t 'member.pageTagline'}}</label>
+        <label for="page-tagline">{{t 'pageSettings.tagline'}}</label>
         {{input id="page-tagline" type="text" class="form-control" value=tagline}}
         <p class="info">
             {{t 'member.pageTaglineInfos'}}
@@ -23,7 +23,7 @@
     </div>
 
     <div class="form-group">
-        <label for="page-cover">{{t 'member.pageCover'}}</label>
+        <label for="page-cover">{{t 'pageSettings.cover'}}</label>
         {{#if cover}}
             <button type="button" class="thumbnail select-image" {{action "openModal" "select-image" controller "cover"}}>
                 <img id="page-cover" {{bind-attr src=cover.smallUrl}} alt="cover">

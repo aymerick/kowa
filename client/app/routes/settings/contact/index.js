@@ -1,6 +1,6 @@
 import AuthenticatedRoute from 'kowa/routes/authenticated';
 
-var SettingsContactRoute = AuthenticatedRoute.extend({
+var SettingsContactIndexRoute = AuthenticatedRoute.extend({
   // use SettingsGeneralController
   controllerName: 'settings.general',
 
@@ -20,4 +20,4 @@ var SettingsContactRoute = AuthenticatedRoute.extend({
   }
 });
 
-export default SettingsContactRoute;
+export default SettingsContactIndexRoute;

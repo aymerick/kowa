@@ -31,6 +31,16 @@ export default {
     stay: "Stay"
   },
 
+  // common page settings
+  PageSettings: 'Page settings',
+  pageSettings: {
+    cover: 'Page cover',
+    saved: 'Page settings saved',
+    saveFailed: 'Failed to save page settings',
+    tagline: 'Page tagline',
+    title: 'Page title'
+  },
+
   // activities
   Activities: 'Activities',
   activity: {
@@ -46,14 +56,8 @@ export default {
     nameInfos: 'A title for your activity',
     'new': 'New activity',
     none: 'You have no activity yet.',
-    pageCover: 'Page cover',
     pageCoverInfos: "The image to display on the activities page",
-    pageSettings: 'Page settings',
-    pageSettingsSaved: 'Page settings saved',
-    pageSettingsSaveFailed: 'Failed to save page settings',
-    pageTagline: 'Page tagline',
     pageTaglineInfos: "The tagline to display on the activities page",
-    pageTitle: 'Page title',
     pageTitleInfos: "This title will be displayed instead of 'Activities'",
     saved: 'Activity saved',
     saveFailed: 'Failed to save activity',
@@ -72,6 +76,9 @@ export default {
     facebookInfos: 'Your facebook page',
     googlePlusAccount: 'Google+ account',
     googlePlusInfos: 'Your google+ account',
+    pageCoverInfos: "The image to display on the contact page",
+    pageTaglineInfos: "The tagline to display on the contact page",
+    pageTitleInfos: "This title will be displayed instead of 'Contact'",
     twitter: 'Twitter',
     twitterInfos: 'Your twitter account'
   },
@@ -108,14 +115,8 @@ export default {
     fullnameInfos: 'Fullname for this member',
     'new': 'New member',
     none: 'You have no members yet.',
-    pageCover: 'Page cover',
     pageCoverInfos: "The image to display on the members page",
-    pageSettings: 'Page settings',
-    pageSettingsSaved: 'Page settings saved',
-    pageSettingsSaveFailed: 'Failed to save page settings',
-    pageTagline: 'Page tagline',
     pageTaglineInfos: "The tagline to display on the members page",
-    pageTitle: 'Page title',
     pageTitleInfos: "This title will be displayed instead of 'Members'",
     photo: 'Member photo',
     photoInfos: 'Set a photo for this member',

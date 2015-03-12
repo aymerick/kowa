@@ -8,6 +8,9 @@ var PageSettingsControllerMixin = Ember.Mixin.create({
   cannotSave: Ember.computed.and('model.isNew', 'emptyTitle'),
   isSaving: false,
 
+  pageSettingsSaveMsgOk: 'pageSettings.saved', // This is a i18n key
+  pageSettingsSaveMsgErr: 'pageSettings.saveFailed', // This is a i18n key
+
   actions: {
     removeCover: function() {
       this.get('model').set('cover', null);
