@@ -9,7 +9,13 @@ var SettingsGeneralController = Ember.ObjectController.extend({
   allThemes: [ 'ailes', 'willy' ],
 
   // @todo Get that list from the server
-  allLangs: [ 'en', 'fr' ],
+  allLangs: [{
+    id: 'en',
+    name: 'English',
+  }, {
+    id: 'fr',
+    name: 'Français',
+  }],
 
   actions: {
     removeLogo: function() {

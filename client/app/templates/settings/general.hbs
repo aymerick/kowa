@@ -50,7 +50,7 @@
 
     <div class="form-group">
         <label for="site-lang">{{t 'site.lang'}}</label>
-        {{view "select" id="site-lang" content=allLangs selection=lang class="form-control"}}
+        {{view "select" id="site-lang" content=allLangs optionValuePath="content.id" optionLabelPath="content.name" value=lang class="form-control"}}
         <p class="info">
             {{t 'site.langInfos'}}
         </p>
