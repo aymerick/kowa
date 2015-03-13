@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-var ApplicationController = Ember.Controller.extend({
+var SettingsController = Ember.Controller.extend({
   // @todo Get that list from the server
   allLangs: [{
     id: 'en',
@@ -11,4 +11,4 @@ var ApplicationController = Ember.Controller.extend({
   }]
 });
 
-export default ApplicationController;
+export default SettingsController;

@@ -205,6 +205,17 @@ export default {
     joinTextInfos: 'If relevant, explain to visitors why then should become a member of your organisation'
   },
 
+  // account settings
+  yourAccount: 'Your account',
+  account: {
+    firstName: 'First name',
+    firstNameInfos: 'Your first name',
+    lastName: 'Last name',
+    lastNameInfos: 'Your last name',
+    lang: 'Language',
+    langInfos: 'The language you want to use for this administration site',
+  },
+
   // images settings
   Images: 'Images',
   image: {

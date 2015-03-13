@@ -60,6 +60,8 @@ Router.map(function() {
         this.route('events');
 
         this.route('images');
+
+        this.route('account');
       });
     });
   });

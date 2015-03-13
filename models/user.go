@@ -23,6 +23,7 @@ type User struct {
 	Email     string `bson:"email"      json:"email"`
 	FirstName string `bson:"first_name" json:"firstName"`
 	LastName  string `bson:"last_name"  json:"lastName"`
+	Lang      string `bson:"lang"       json:"lang"`
 	Password  string `bson:"password"   json:"-"`
 }
 
@@ -131,4 +132,59 @@ func (user *User) FindSites() *SitesList {
 	}
 
 	return &result
+}
+
+// Update user in database
+func (user *User) Update(newUser *User) (bool, error) {
+	var set, unset, modifier bson.D
+
+	// FirstName
+	if user.FirstName != newUser.FirstName {
+		user.FirstName = newUser.FirstName
+
+		if user.FirstName == "" {
+			unset = append(unset, bson.DocElem{"first_name", 1})
+		} else {
+			set = append(set, bson.DocElem{"first_name", user.FirstName})
+		}
+	}
+
+	// LastName
+	if user.LastName != newUser.LastName {
+		user.LastName = newUser.LastName
+
+		if user.LastName == "" {
+			unset = append(unset, bson.DocElem{"last_name", 1})
+		} else {
+			set = append(set, bson.DocElem{"last_name", user.LastName})
+		}
+	}
+
+	// Lang
+	if user.Lang != newUser.Lang {
+		user.Lang = newUser.Lang
+
+		if user.Lang == "" {
+			unset = append(unset, bson.DocElem{"lang", 1})
+		} else {
+			set = append(set, bson.DocElem{"lang", user.Lang})
+		}
+	}
+
+	if len(unset) > 0 {
+		modifier = append(modifier, bson.DocElem{"$unset", unset})
+	}
+
+	if len(set) > 0 {
+		modifier = append(modifier, bson.DocElem{"$set", set})
+	}
+
+	if len(modifier) > 0 {
+		user.UpdatedAt = time.Now()
+		set = append(set, bson.DocElem{"updated_at", user.UpdatedAt})
+
+		return true, user.dbSession.UsersCol().UpdateId(user.Id, modifier)
+	} else {
+		return false, nil
+	}
 }

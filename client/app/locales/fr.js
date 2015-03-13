@@ -205,6 +205,17 @@ export default {
     themeInfos: 'Choisissez un habillage graphique pour votre site'
   },
 
+  // account settings
+  yourAccount: 'Votre compte',
+  account: {
+    firstName: 'Prénom',
+    firstNameInfos: 'Votre prénom',
+    lastName: 'Nom',
+    lastNameInfos: 'Votre nom de famille',
+    lang: 'Langue',
+    langInfos: "La langue que vous souhaitez utiliser votre cette interface d'administration",
+  },
+
   // images settings
   Images: 'Images',
   image: {

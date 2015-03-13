@@ -7,6 +7,7 @@ var User = DS.Model.extend({
   email: DS.attr(),
   firstName: DS.attr(),
   lastName: DS.attr(),
+  lang: DS.attr(),
 
   sites: DS.hasMany('site', { async: true }),
 

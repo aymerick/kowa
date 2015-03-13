@@ -1,25 +1,12 @@
 import Ember from 'ember';
 
-var SettingsGeneralController = Ember.ObjectController.extend({
+var SettingsAccountController = Ember.ObjectController.extend({
   needs: ['settings'],
-  site: Ember.computed.alias('controllers.settings.model'),
   allLangs: Ember.computed.alias('controllers.settings.allLangs'),
+
   isSaving: false,
 
-  // @todo Get that list from the server
-  allThemes: [ 'ailes', 'willy' ],
-
   actions: {
-    removeLogo: function() {
-      this.get('model').set('logo', null);
-    },
-
-    // called by 'select-image' modal controller
-    imageSelected: function(field, image) {
-      var model = this.get('model');
-      model.set(field, image);
-    },
-
     save: function () {
       var self = this;
 
@@ -38,4 +25,4 @@ var SettingsGeneralController = Ember.ObjectController.extend({
   }
 });
 
-export default SettingsGeneralController;
+export default SettingsAccountController;

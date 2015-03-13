@@ -1,0 +1,31 @@
+<header class="settings-header">
+    <h2 class="settings-item-title">{{t 'yourAccount'}}</h2>
+
+    <button class="btn btn-primary action-save" {{action "save"}} {{bind-attr disabled=isSaving}}><i class="fa fa-floppy-o"></i>{{t 'save'}}</button>
+</header>
+
+<form class="settings-body" role="form" {{action 'save' on='submit'}}>
+    <div class="form-group">
+        <label for="account-firstName">{{t 'account.firstName'}}</label>
+        {{input id="account-firstName" name="general[firstName]" type="text" class="form-control" value=firstName}}
+        <p class="info">
+            {{t 'account.firstNameInfos'}}
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="account-lastName">{{t 'account.lastName'}}</label>
+        {{input id="account-lastName" name="general[lastName]" type="text" class="form-control" value=lastName}}
+        <p class="info">
+            {{t 'account.lastNameInfos'}}
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="account-lang">{{t 'account.lang'}}</label>
+        {{view "select" id="account-lang" content=allLangs optionValuePath="content.id" optionLabelPath="content.name" value=lang class="form-control"}}
+        <p class="info">
+            {{t 'account.langInfos'}}
+        </p>
+    </div>
+</form>

@@ -32,8 +32,9 @@ func (app *Application) newWebRouter() *mux.Router {
 	curUserChain := authChain.Append(app.ensureUserAccessMiddleware)
 
 	// /api/users/{user_id}
-	apiRouter.Methods("GET").Path("/users/{user_id}/sites").Handler(curUserChain.ThenFunc(app.handleGetUserSites))
 	apiRouter.Methods("GET").Path("/users/{user_id}").Handler(curUserChain.ThenFunc(app.handleGetUser))
+	apiRouter.Methods("PUT").Path("/users/{user_id}").Handler(curUserChain.ThenFunc(app.handleUpdateUser))
+	apiRouter.Methods("GET").Path("/users/{user_id}/sites").Handler(curUserChain.ThenFunc(app.handleGetUserSites))
 
 	// midllewares
 	curSiteOwnerChain := authChain.Append(app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
