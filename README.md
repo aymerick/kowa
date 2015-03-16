@@ -1,7 +1,7 @@
 kowa
 ====
 
-Static website manager.
+The static website manager.
 
 **WARNING: This is a work in progress, tests are missing, documentation is missing... a lot of stuff is missing, and it has NOT been deployed in production yet.**
 
