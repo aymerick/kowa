@@ -1,5 +1,4 @@
-kowa
-====
+# kowa [![Build Status](https://secure.travis-ci.org/aymerick/kowa.svg?branch=master)](http://travis-ci.org/aymerick/kowa)
 
 The static website manager.
 
