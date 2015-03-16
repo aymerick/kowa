@@ -21,7 +21,7 @@ With kowa, create a website for your organisation with:
 
 All these features are optionnals: only take what your need.
 
-Technically, the server is written in Go and the client is an Ember.js application that you can find inside the `client` directory.
+The server is written in Go and the client is an Ember.js application that you can find at <https://github.com/aymerick/kowa-client>.
 
 
 ## Development setup
