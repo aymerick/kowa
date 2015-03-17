@@ -60,7 +60,7 @@ type Site struct {
 
 	// build settings
 	Theme   string `bson:"theme"    json:"theme"`
-	UglyURL bool   `bson:"ugly_url" json:"uglyUrl"`
+	UglyUrl bool   `bson:"ugly_url" json:"uglyUrl"`
 
 	// theme settings
 	NameInNavBar bool `bson:"name_in_navbar" json:"nameInNavBar"`
@@ -728,13 +728,13 @@ func (site *Site) Update(newSite *Site) (bool, error) {
 		}
 	}
 
-	if site.UglyURL != newSite.UglyURL {
-		site.UglyURL = newSite.UglyURL
+	if site.UglyUrl != newSite.UglyUrl {
+		site.UglyUrl = newSite.UglyUrl
 
-		if site.UglyURL == false {
+		if site.UglyUrl == false {
 			unset = append(unset, bson.DocElem{"ugly_url", 1})
 		} else {
-			set = append(set, bson.DocElem{"ugly_url", site.UglyURL})
+			set = append(set, bson.DocElem{"ugly_url", site.UglyUrl})
 		}
 	}
 
