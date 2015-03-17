@@ -19,6 +19,8 @@ type SiteVars struct {
 	Twitter    string
 	GooglePlus string
 
+	GoogleAnalytics string
+
 	NavBar []*SiteNavBarItem // Navigation bar
 
 	builder *SiteBuilder
@@ -57,6 +59,8 @@ func (vars *SiteVars) fill() {
 	vars.Facebook = site.Facebook
 	vars.Twitter = site.Twitter
 	vars.GooglePlus = site.GooglePlus
+
+	vars.GoogleAnalytics = site.GoogleAnalytics
 
 	if logo := site.FindLogo(); logo != nil {
 		vars.Logo = vars.builder.addImage(logo)

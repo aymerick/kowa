@@ -51,6 +51,8 @@ type Site struct {
 	Twitter    string `bson:"twitter"     json:"twitter"`
 	GooglePlus string `bson:"google_plus" json:"googlePlus"`
 
+	GoogleAnalytics string `bson:"google_analytics" json:"googleAnalytics"`
+
 	Logo  bson.ObjectId `bson:"logo,omitempty"  json:"logo,omitempty"`
 	Cover bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
 
@@ -683,6 +685,16 @@ func (site *Site) Update(newSite *Site) (bool, error) {
 			unset = append(unset, bson.DocElem{"google_plus", 1})
 		} else {
 			set = append(set, bson.DocElem{"google_plus", site.GooglePlus})
+		}
+	}
+
+	if site.GoogleAnalytics != newSite.GoogleAnalytics {
+		site.GoogleAnalytics = newSite.GoogleAnalytics
+
+		if site.GoogleAnalytics == "" {
+			unset = append(unset, bson.DocElem{"google_analytics", 1})
+		} else {
+			set = append(set, bson.DocElem{"google_analytics", site.GoogleAnalytics})
 		}
 	}
 
