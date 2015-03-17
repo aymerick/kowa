@@ -63,8 +63,6 @@ type SiteBuilder struct {
 type SiteBuilderConfig struct {
 	WorkingDir string
 	OutputDir  string
-	Theme      string
-	UglyURL    bool
 	BasePath   string
 }
 
@@ -84,16 +82,6 @@ func NewSiteBuilder(site *models.Site, config *SiteBuilderConfig) *SiteBuilder {
 	result.setTemplatesDir()
 
 	return result
-}
-
-// Theme used by builder
-func (builder *SiteBuilder) Theme() string {
-	return builder.site.Theme
-}
-
-// Are we building site with ugly urls ?
-func (builder *SiteBuilder) UglyUrl() bool {
-	return builder.site.UglyURL
 }
 
 // Build site
@@ -345,7 +333,7 @@ func (builder *SiteBuilder) DumpErrors() {
 
 // Computes theme directory
 func (builder *SiteBuilder) themeDir() string {
-	return path.Join(builder.config.WorkingDir, THEMES_DIR, builder.Theme())
+	return path.Join(builder.config.WorkingDir, THEMES_DIR, builder.site.Theme)
 }
 
 // Computes theme templates directory

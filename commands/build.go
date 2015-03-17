@@ -60,7 +60,7 @@ func buildSite(site *models.Site) *builder.SiteBuilder {
 
 	siteBuilder := builder.NewSiteBuilder(site, config)
 
-	log.Printf("Building site '%s' with theme '%s' into %s", site.Id, siteBuilder.Theme(), siteBuilder.GenDir())
+	log.Printf("Building site '%s' with theme '%s' into %s", site.Id, site.Theme, siteBuilder.GenDir())
 
 	startTime := time.Now()
 
