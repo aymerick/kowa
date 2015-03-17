@@ -65,7 +65,7 @@ type SiteBuilderConfig struct {
 	OutputDir  string
 	Theme      string
 	UglyURL    bool
-	BaseURL    string
+	BasePath   string
 }
 
 func NewSiteBuilder(site *models.Site, config *SiteBuilderConfig) *SiteBuilder {
@@ -319,7 +319,7 @@ func (builder *SiteBuilder) syncAssets() error {
 func (builder *SiteBuilder) addImage(img *models.Image) *ImageVars {
 	builder.images = append(builder.images, img)
 
-	return NewImageVars(img, builder.config.BaseURL)
+	return NewImageVars(img, builder.config.BasePath)
 }
 
 // Check if builder have error

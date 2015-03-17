@@ -13,7 +13,7 @@
                     {{ if .Photo }}
                         <img src="{{ $member.Photo.PortraitFill }}" class="img-responsive img-thumbnail avatar" alt="{{ $member.Fullname }}" />
                     {{ else }}
-                        <img src="{{ $.Node.Site.BaseURL }}/assets/img/avatar.jpg" class="img-responsive img-thumbnail avatar no-photo" alt="{{ $member.Fullname }}" />
+                        <img src="{{ $.Node.Site.BasePath }}/assets/img/avatar.jpg" class="img-responsive img-thumbnail avatar no-photo" alt="{{ $member.Fullname }}" />
                     {{ end }}
                     <p class="role">{{ $member.Role }}</p>
                     <div class="description">

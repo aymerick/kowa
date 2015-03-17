@@ -25,10 +25,11 @@ type Node struct {
 	BodyClass   string
 	InNavBar    bool
 	NavBarOrder int
-	Slug        string
-	FilePath    string
-	Url         string
-	FullUrl     string
+
+	Slug     string
+	FilePath string
+	Url      string
+	FullUrl  string
 
 	Content interface{}
 
@@ -90,7 +91,7 @@ func (node *Node) fillUrl(slug string) {
 	}
 
 	// FillUrl
-	node.FullUrl = utils.Urlify(path.Join(config.BaseURL, node.FilePath))
+	node.FullUrl = utils.Urlify(path.Join(config.BasePath, node.FilePath))
 
 	// Url
 	dir, fileName := path.Split(node.FullUrl)

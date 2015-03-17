@@ -9,9 +9,9 @@
             </button>
 
             {{ if .Site.Logo }}
-                <a href="{{ .Site.BaseURL }}" class='navbar-brand with-logo'>{{ if .Site.Logo }}<img src="{{ .Site.Logo.Small }}" class="logo" alt="{{ t "logo" }}" /> {{ end }}{{ if .Site.NameInNavBar }}{{ .Site.Name }}{{ end }}</a>
+                <a href="{{ .Site.BasePath }}" class='navbar-brand with-logo'>{{ if .Site.Logo }}<img src="{{ .Site.Logo.Small }}" class="logo" alt="{{ t "logo" }}" /> {{ end }}{{ if .Site.NameInNavBar }}{{ .Site.Name }}{{ end }}</a>
             {{ else }}
-                <a href="{{ .Site.BaseURL }}" class='navbar-brand'>{{ .Site.Name }}</a>
+                <a href="{{ .Site.BasePath }}" class='navbar-brand'>{{ .Site.Name }}</a>
             {{ end }}
         </div>
 
