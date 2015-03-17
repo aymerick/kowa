@@ -42,6 +42,8 @@ type NodeMeta struct {
 	Description string
 	ImageUrl    string
 
+	// @todo article:published_time and article:modified_time
+
 	OGType      string
 	TwitterCard string
 }
