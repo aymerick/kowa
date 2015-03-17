@@ -60,6 +60,7 @@ type Site struct {
 
 	// build settings
 	Theme   string `bson:"theme"    json:"theme"`
+	BaseUrl string `bson:"base_url" json:"baseUrl"`
 	UglyUrl bool   `bson:"ugly_url" json:"uglyUrl"`
 
 	// theme settings
@@ -725,6 +726,16 @@ func (site *Site) Update(newSite *Site) (bool, error) {
 			unset = append(unset, bson.DocElem{"theme", 1})
 		} else {
 			set = append(set, bson.DocElem{"theme", site.Theme})
+		}
+	}
+
+	if site.BaseUrl != newSite.BaseUrl {
+		site.BaseUrl = newSite.BaseUrl
+
+		if site.BaseUrl == "" {
+			unset = append(unset, bson.DocElem{"base_url", 1})
+		} else {
+			set = append(set, bson.DocElem{"base_url", site.BaseUrl})
 		}
 	}
 

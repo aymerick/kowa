@@ -70,8 +70,6 @@ func NewNode(builder NodeBuilder, kind string) *Node {
 func (node *Node) fillUrl(slug string) {
 	siteBuilder := node.builder.SiteBuilder()
 
-	config := siteBuilder.config
-
 	// Slug
 	node.Slug = siteBuilder.addNodeSlug(utils.Pathify(slug))
 
@@ -91,7 +89,7 @@ func (node *Node) fillUrl(slug string) {
 	}
 
 	// FillUrl
-	node.FullUrl = utils.Urlify(path.Join(config.BasePath, node.FilePath))
+	node.FullUrl = utils.Urlify(path.Join(siteBuilder.basePath(), node.FilePath))
 
 	// Url
 	dir, fileName := path.Split(node.FullUrl)

@@ -63,7 +63,6 @@ type SiteBuilder struct {
 type SiteBuilderConfig struct {
 	WorkingDir string
 	OutputDir  string
-	BasePath   string
 }
 
 func NewSiteBuilder(site *models.Site, config *SiteBuilderConfig) *SiteBuilder {
@@ -175,6 +174,12 @@ func (builder *SiteBuilder) activitiesVars() []*ActivityVars {
 	}
 
 	return activities
+}
+
+// Return site base path
+func (builder *SiteBuilder) basePath() string {
+	_, result := path.Split(builder.site.BaseUrl)
+	return path.Join("/", result)
 }
 
 // Fill site variables
@@ -307,7 +312,7 @@ func (builder *SiteBuilder) syncAssets() error {
 func (builder *SiteBuilder) addImage(img *models.Image) *ImageVars {
 	builder.images = append(builder.images, img)
 
-	return NewImageVars(img, builder.config.BasePath)
+	return NewImageVars(img, builder.basePath())
 }
 
 // Check if builder have error

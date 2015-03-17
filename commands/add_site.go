@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 
 	"github.com/aymerick/kowa/models"
 	"github.com/aymerick/kowa/utils"
@@ -29,12 +30,16 @@ func addSite(cmd *cobra.Command, args []string) {
 		log.Fatalln("There is already a site with that id: " + args[0])
 	}
 
+	// @todo FIXME !
+	baseUrl := fmt.Sprintf("%s:%d/%s", utils.DEFAULT_BASEURL, viper.GetInt("serve_output_port"), args[0])
+
 	site := &models.Site{
 		Id:           args[0],
 		Name:         args[1],
 		UserId:       args[2],
 		Lang:         utils.DEFAULT_LANG,
 		Theme:        utils.DEFAULT_THEME,
+		BaseUrl:      baseUrl,
 		NameInNavBar: true,
 	}
 

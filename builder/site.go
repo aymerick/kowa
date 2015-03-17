@@ -13,6 +13,7 @@ type SiteVars struct {
 	Tagline      string
 	NameInNavBar bool
 
+	BaseUrl  string
 	BasePath string
 
 	Facebook   string
@@ -52,7 +53,8 @@ func (vars *SiteVars) fill() {
 	}
 
 	vars.Name = name
-	vars.BasePath = vars.builder.config.BasePath
+	vars.BaseUrl = site.BaseUrl
+	vars.BasePath = vars.builder.basePath()
 	vars.Tagline = site.Tagline
 	vars.NameInNavBar = site.NameInNavBar
 

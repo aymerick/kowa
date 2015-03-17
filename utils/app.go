@@ -15,6 +15,8 @@ const (
 
 	DEFAULT_LANG  = "en"
 	DEFAULT_THEME = "willy" // @todo FIXME
+
+	DEFAULT_BASEURL = "http://127.0.0.1" // @todo FIXME
 )
 
 func AppPublicDir() string {

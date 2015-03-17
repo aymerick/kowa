@@ -55,7 +55,6 @@ func buildSite(site *models.Site) *builder.SiteBuilder {
 	config := &builder.SiteBuilderConfig{
 		WorkingDir: viper.GetString("working_dir"),
 		OutputDir:  path.Join(viper.GetString("output_dir"), site.Id),
-		BasePath:   path.Join("/", site.Id),
 	}
 
 	siteBuilder := builder.NewSiteBuilder(site, config)
