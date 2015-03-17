@@ -26,10 +26,10 @@ type Node struct {
 	InNavBar    bool
 	NavBarOrder int
 
-	Slug     string
-	FilePath string
-	Url      string
-	FullUrl  string
+	Slug        string // eg: 2015/03/17/my_post
+	FilePath    string // eg: /2015/03/17/my_post/index.html
+	Url         string // eg: /my_site/2015/03/17/my_post/
+	AbsoluteUrl string // eg: http://127.0.0.1:48910/my_site/2015/03/17/my_post/
 
 	Content interface{}
 
@@ -40,6 +40,10 @@ type Node struct {
 type NodeMeta struct {
 	Title       string
 	Description string
+	ImageUrl    string
+
+	OGType      string
+	TwitterCard string
 }
 
 // All node kinds
@@ -88,18 +92,22 @@ func (node *Node) fillUrl(slug string) {
 		node.FilePath = path.Join("/", node.Slug, "index.html")
 	}
 
-	// FillUrl
-	node.FullUrl = utils.Urlify(path.Join(siteBuilder.basePath(), node.FilePath))
+	var lastPart string
 
-	// Url
-	dir, fileName := path.Split(node.FullUrl)
+	dir, fileName := path.Split(node.FilePath)
 	if fileName == "index.html" {
 		// pretty URL
-		node.Url = dir
+		lastPart = dir
 	} else {
 		// ugly URL
-		node.Url = node.FullUrl
+		lastPart = node.FilePath
 	}
+
+	// Url
+	node.Url = utils.Urlify(path.Join(siteBuilder.basePath(), lastPart))
+
+	// AbsoluteUrl
+	node.AbsoluteUrl = utils.Urlify(fmt.Sprintf("%s%s", siteBuilder.site.BaseUrl, lastPart))
 }
 
 // Compute node template

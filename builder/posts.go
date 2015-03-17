@@ -99,15 +99,21 @@ func (builder *PostsBuilder) loadPost(post *models.Post) {
 
 	node.Title = title
 	node.Tagline = tagline
-	node.Cover = cover
 
 	node.Meta = &NodeMeta{
 		Title:       fmt.Sprintf("%s - %s", post.Title, builder.site().Name),
 		Description: tagline,
+		OGType:      "article",
 	}
 
 	postContent := builder.NewPostContent(post, node)
 	node.Content = postContent
+
+	if postContent.Cover != nil {
+		node.Cover = postContent.Cover
+	} else {
+		node.Cover = cover
+	}
 
 	builder.addNode(node)
 

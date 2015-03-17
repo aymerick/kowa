@@ -312,7 +312,7 @@ func (builder *SiteBuilder) syncAssets() error {
 func (builder *SiteBuilder) addImage(img *models.Image) *ImageVars {
 	builder.images = append(builder.images, img)
 
-	return NewImageVars(img, builder.basePath())
+	return NewImageVars(img, builder.basePath(), builder.site.BaseUrl)
 }
 
 // Check if builder have error
@@ -461,9 +461,9 @@ func (builder *SiteBuilder) ensureFileDir(osPath string) error {
 	return builder.ensureDir(path.Dir(osPath))
 }
 
-// Computes local file path for given URL
-func (builder *SiteBuilder) filePath(fullUrl string) string {
-	return path.Join(builder.GenDir(), fullUrl)
+// Computes local file path for given relative path
+func (builder *SiteBuilder) filePath(relativePath string) string {
+	return path.Join(builder.GenDir(), relativePath)
 }
 
 // Copy file to given directory

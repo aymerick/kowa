@@ -129,10 +129,21 @@ func (builder *NodeBuilderBase) pageSettings(kind string) (string, string, *Imag
 func (builder *NodeBuilderBase) fillNodeBeforeGeneration(node *Node) {
 	node.Site = builder.siteBuilder.siteVars
 
-	// defaults
 	if node.Meta.Title == "" {
 		// @todo Filter characters ?
 		node.Meta.Title = fmt.Sprintf("%s - %s", node.Title, builder.site().Name)
+	}
+
+	if node.Meta.OGType == "" {
+		node.Meta.OGType = "website"
+	}
+
+	if node.Meta.TwitterCard == "" {
+		if node.Cover != nil {
+			node.Meta.TwitterCard = "summary_large_image"
+		} else {
+			node.Meta.TwitterCard = "summary"
+		}
 	}
 }
 

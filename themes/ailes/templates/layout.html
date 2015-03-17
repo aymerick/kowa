@@ -8,6 +8,8 @@
     <title>{{ .Meta.Title }}</title>
     <meta name="description" content="{{ .Meta.Description }}" />
 
+    {{ template "partials/meta" . }}
+
     <link href="{{ .Site.BasePath }}/assets/vendor/css/font-awesome.min.css" rel="stylesheet">
     <link href="{{ .Site.BasePath }}/assets/vendor/css/bootstrap.min.css" rel="stylesheet">
 

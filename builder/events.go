@@ -130,16 +130,21 @@ func (builder *EventsBuilder) loadEvent(event *models.Event) {
 
 	node.Title = title
 	node.Tagline = tagline
-	node.Cover = cover
 
 	node.Meta = &NodeMeta{
 		Title:       fmt.Sprintf("%s - %s", event.Title, builder.site().Name),
 		Description: tagline,
+		OGType:      "article",
 	}
 
 	eventContent := builder.NewEventContent(event, node)
-
 	node.Content = eventContent
+
+	if eventContent.Cover != nil {
+		node.Cover = eventContent.Cover
+	} else {
+		node.Cover = cover
+	}
 
 	builder.addNode(node)
 
