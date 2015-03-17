@@ -65,9 +65,14 @@ func buildSite(site *models.Site) *builder.SiteBuilder {
 	startTime := time.Now()
 
 	// build
-	siteBuilder.Build()
+	if siteBuilder.Build(); siteBuilder.HaveError() {
+		log.Println("Failed to build site")
+	} else {
+		// update BuiltAt anchor
+		site.SetBuiltAt(time.Now())
 
-	log.Printf("Site build in %v ms\n", int(1000*time.Since(startTime).Seconds()))
+		log.Printf("Site build in %v ms\n", int(1000*time.Since(startTime).Seconds()))
+	}
 
 	return siteBuilder
 }
