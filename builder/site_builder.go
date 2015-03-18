@@ -112,7 +112,7 @@ func (builder *SiteBuilder) initBuilders() {
 	}
 }
 
-// Find templates dir
+// Set templates dir
 func (builder *SiteBuilder) setTemplatesDir() {
 	dirPath := path.Join(builder.themeDir(), TEMPLATES_DIR)
 	if _, err := os.Stat(dirPath); os.IsNotExist(err) {
@@ -277,7 +277,9 @@ func (builder *SiteBuilder) syncImages() {
 	}
 
 	if len(files) > 0 {
-		fsync.SyncTo(imgDir, files...)
+		if err := fsync.SyncTo(imgDir, files...); err != nil {
+			builder.addError(errStep, err)
+		}
 	}
 
 	// delete deprecated images
