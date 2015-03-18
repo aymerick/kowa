@@ -45,7 +45,9 @@ Build kowa:
 
 Setup the database:
 
-    $ ./kowa setup
+    $ ./kowa setup -u `/path/to/kowa-client/public/upload`
+
+The `-u` switch is mandatory and indicates where uploaded files are stored.
 
 Add a user with two sites:
 
@@ -75,10 +77,12 @@ Build `ailes` theme:
     $ bower install
     $ grunt build
 
-Start server (the `-s` switch activates serving of static sites):
+Start server:
 
     $ cd ../..
-    $ ./kowa server -s -a `/path/to/kowa-client`
+    $ ./kowa server -s -u `/path/to/kowa-client/public/upload`
+
+The `-s` switch activates serving of static sites.
 
 The server is now waiting for API requests on port `35830` and serves generated sites on port `48910`.
 
@@ -96,11 +100,11 @@ Every time you make a change on a site thanks to the client app, the correspondi
 
 You can still trigger a manual rebuild of a static site with this command:
 
-    $ ./kowa build site1 -a `/path/to/kowa-client`
+    $ ./kowa build site1 -u `/path/to/kowa-client/public/upload`
 
 If you modify the code that handle images, you can regenerate all derivatives for a given site with this command:
 
-    $ ./kowa gen_derivatives site1 -a `/path/to/kowa-client`
+    $ ./kowa gen_derivatives site1 -u `/path/to/kowa-client/public/upload`
 
 
 ## Test

@@ -22,9 +22,9 @@ func genDerivatives(cmd *cobra.Command, args []string) {
 		log.Fatalln("ERROR: No site id argument provided")
 	}
 
-	if viper.GetString("app_dir") == "" {
+	if viper.GetString("upload_dir") == "" {
 		cmd.Usage()
-		log.Fatalln("ERROR: The app_dir setting is mandatory")
+		log.Fatalln("ERROR: The upload_dir setting is mandatory")
 	}
 
 	// get site

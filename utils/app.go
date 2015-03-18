@@ -1,14 +1,15 @@
 package utils
 
 import (
+	"fmt"
+	"os"
 	"path"
 
 	"github.com/spf13/viper"
 )
 
 const (
-	APP_PUBLIC_DIR = "/public"
-	UPLOAD_DIR     = "/upload"
+	UPLOAD_URL_PATH = "/upload"
 
 	DEFAULT_OUTPUT_DIR = "_sites"
 
@@ -18,21 +19,13 @@ const (
 	DEFAULT_BASEURL = "http://127.0.0.1"
 )
 
-func AppDir() string {
-	dir := viper.GetString("app_dir")
+func AppUploadDir() string {
+	dir := viper.GetString("upload_dir")
 	if dir == "" {
-		panic("The app_dir setting is mandatory")
+		panic("The upload_dir setting is mandatory")
 	}
 
 	return dir
-}
-
-func AppPublicDir() string {
-	return path.Join(AppDir(), APP_PUBLIC_DIR)
-}
-
-func AppUploadDir() string {
-	return path.Join(AppPublicDir(), UPLOAD_DIR)
 }
 
 func AppUploadSiteDir(siteId string) string {
@@ -44,13 +37,22 @@ func AppUploadSiteFilePath(siteId string, fileName string) string {
 }
 
 func AppUploadSiteUrlPath(siteId string, fileName string) string {
-	return path.Join(UPLOAD_DIR, siteId, fileName)
+	return path.Join(UPLOAD_URL_PATH, siteId, fileName)
 }
 
 func AppEnsureUploadDir() {
-	EnsureDirectory(AppUploadDir())
+	dir := AppUploadDir()
+
+	parentDir, _ := path.Split(dir)
+	if _, err := os.Stat(parentDir); os.IsNotExist(err) {
+		panic(fmt.Sprintf("Directory %s does not exist. Your upload_dir setting may be incorrect.", parentDir))
+	}
+
+	EnsureDirectory(dir)
 }
 
 func AppEnsureSiteUploadDir(siteId string) {
+	AppEnsureUploadDir()
+
 	EnsureDirectory(AppUploadSiteDir(siteId))
 }

@@ -31,14 +31,14 @@ func initKowaConf() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.kowa/config.toml)")
 
 	// client app
-	rootCmd.PersistentFlags().StringP("app_dir", "a", "", "Client app directory")
-	viper.BindPFlag("app_dir", rootCmd.PersistentFlags().Lookup("app_dir"))
+	rootCmd.PersistentFlags().StringP("upload_dir", "u", "", "Uploaded files are stored in that directory")
+	viper.BindPFlag("upload_dir", rootCmd.PersistentFlags().Lookup("upload_dir"))
 
 	// mongodb database
-	rootCmd.PersistentFlags().StringP("mongodb_uri", "u", DEFAULT_MONGODB_URI, "Uri to connect to mongoDB")
+	rootCmd.PersistentFlags().StringP("mongodb_uri", "d", DEFAULT_MONGODB_URI, "Uri to connect to mongoDB")
 	viper.BindPFlag("mongodb_uri", rootCmd.PersistentFlags().Lookup("mongodb_uri"))
 
-	rootCmd.PersistentFlags().StringP("mongodb_dbname", "d", DEFAULT_MONGODB_DBNAME, "MongoDB database name")
+	rootCmd.PersistentFlags().StringP("mongodb_dbname", "n", DEFAULT_MONGODB_DBNAME, "MongoDB database name")
 	viper.BindPFlag("mongodb_dbname", rootCmd.PersistentFlags().Lookup("mongodb_dbname"))
 
 	// builder
