@@ -21,20 +21,22 @@ var buildCmd = &cobra.Command{
 	Run:   buildSiteCmd,
 }
 
-func initBuilderConf() {
-}
-
 func buildSiteCmd(cmd *cobra.Command, args []string) {
 	if len(args) < 1 {
 		cmd.Usage()
-		log.Fatalln("No site id argument provided")
+		log.Fatalln("ERROR: No site id argument provided")
+	}
+
+	if viper.GetString("app_dir") == "" {
+		cmd.Usage()
+		log.Fatalln("ERROR: The app_dir setting is mandatory")
 	}
 
 	// get site
 	site := models.NewDBSession().FindSite(args[0])
 	if site == nil {
 		cmd.Usage()
-		log.Fatalln("Site not found:" + args[0])
+		log.Fatalln("ERROR: Site not found:" + args[0])
 	}
 
 	// build site

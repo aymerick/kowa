@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"log"
 	"os"
 	"os/signal"
 
@@ -27,6 +28,11 @@ func initServerConf() {
 }
 
 func runServer(cmd *cobra.Command, args []string) {
+	if viper.GetString("app_dir") == "" {
+		cmd.Usage()
+		log.Fatalln("ERROR: The app_dir setting is mandatory")
+	}
+
 	app := server.NewApplication()
 	go app.Run()
 

@@ -30,6 +30,10 @@ func initKowaConf() {
 	// config file
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.kowa/config.toml)")
 
+	// client app
+	rootCmd.PersistentFlags().StringP("app_dir", "a", "", "Client app directory")
+	viper.BindPFlag("app_dir", rootCmd.PersistentFlags().Lookup("app_dir"))
+
 	// mongodb database
 	rootCmd.PersistentFlags().StringP("mongodb_uri", "u", DEFAULT_MONGODB_URI, "Uri to connect to mongoDB")
 	viper.BindPFlag("mongodb_uri", rootCmd.PersistentFlags().Lookup("mongodb_uri"))
@@ -78,7 +82,6 @@ func addCommands() {
 // Init commands configuration
 func InitConf() {
 	initKowaConf()
-	initBuilderConf()
 	initServerConf()
 }
 

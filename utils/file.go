@@ -46,3 +46,9 @@ func EnsureDirectory(dirPath string) {
 		panic(err)
 	}
 }
+
+func WorkingDir() string {
+	result, _ := os.Getwd()
+
+	return result
+}

@@ -1,30 +1,34 @@
 package utils
 
 import (
-	"os"
 	"path"
 
 	"github.com/spf13/viper"
 )
 
 const (
-	CLIENT_PUBLIC_DIR = "/client/public"
-	UPLOAD_DIR        = "/upload"
+	APP_PUBLIC_DIR = "/public"
+	UPLOAD_DIR     = "/upload"
 
 	DEFAULT_OUTPUT_DIR = "_sites"
 
 	DEFAULT_LANG  = "en"
 	DEFAULT_THEME = "willy" // @todo FIXME
 
-	DEFAULT_BASEURL = "http://127.0.0.1" // @todo FIXME
+	DEFAULT_BASEURL = "http://127.0.0.1"
 )
 
-func AppPublicDir() string {
-	wd := viper.GetString("working_dir")
-	if wd == "" {
-		wd = WorkingDir()
+func AppDir() string {
+	dir := viper.GetString("app_dir")
+	if dir == "" {
+		panic("The app_dir setting is mandatory")
 	}
-	return path.Join(wd, CLIENT_PUBLIC_DIR)
+
+	return dir
+}
+
+func AppPublicDir() string {
+	return path.Join(AppDir(), APP_PUBLIC_DIR)
 }
 
 func AppUploadDir() string {
@@ -49,10 +53,4 @@ func AppEnsureUploadDir() {
 
 func AppEnsureSiteUploadDir(siteId string) {
 	EnsureDirectory(AppUploadSiteDir(siteId))
-}
-
-func WorkingDir() string {
-	result, _ := os.Getwd()
-
-	return result
 }
