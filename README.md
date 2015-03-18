@@ -25,6 +25,11 @@ The server is written in Go and the client is an Ember.js application that you c
 
 ## Development setup
 
+### Client
+
+Follow instructions at: <https://github.com/aymerick/kowa-client>
+
+
 ### Server
 
 First, you need a running mongodb server running on standard port.
@@ -73,13 +78,9 @@ Build `ailes` theme:
 Start server (the `-s` switch activates serving of static sites):
 
     $ cd ../..
-    $ ./kowa server -s
+    $ ./kowa server -s -a `/path/to/kowa-client`
 
 The server is now waiting for API requests on port `35830` and serves generated sites on port `48910`.
-
-### Client
-
-Follow instructions at: <https://github.com/aymerick/kowa-client>
 
 
 ## Development workflow
@@ -95,11 +96,11 @@ Every time you make a change on a site thanks to the client app, the correspondi
 
 You can still trigger a manual rebuild of a static site with this command:
 
-    $ ./kowa build site1
+    $ ./kowa build site1 -a `/path/to/kowa-client`
 
 If you modify the code that handle images, you can regenerate all derivatives for a given site with this command:
 
-    $ ./kowa gen_derivatives site1
+    $ ./kowa gen_derivatives site1 -a `/path/to/kowa-client`
 
 
 ## Test
