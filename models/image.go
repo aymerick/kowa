@@ -292,22 +292,31 @@ func (img *Image) Original() *image.Image {
 }
 
 func (img *Image) OriginalFilePath() string {
-	return path.Join(utils.AppPublicDir(), img.Path)
+	return utils.AppUploadSiteFilePath(img.SiteId, img.Path)
 }
 
 // Returns image URL
 func (img *Image) URL() string {
-	// @todo FIXME
-	return img.Path
+	return utils.AppUploadSiteUrlPath(img.SiteId, img.Path)
 }
 
 //
 // Derivatives
 //
 
+// Returns Thumb derivative path
+func (img *Image) ThumbPath() string {
+	return img.DerivativePath(DerivativeForKind(THUMB_KIND))
+}
+
 // Returns Thumb derivative URL
 func (img *Image) ThumbURL() string {
 	return img.DerivativeURL(DerivativeForKind(THUMB_KIND))
+}
+
+// Returns Square derivative path
+func (img *Image) SquarePath() string {
+	return img.DerivativePath(DerivativeForKind(SQUARE_KIND))
 }
 
 // Returns Square derivative URL
@@ -315,9 +324,19 @@ func (img *Image) SquareURL() string {
 	return img.DerivativeURL(DerivativeForKind(SQUARE_KIND))
 }
 
+// Returns Small derivative path
+func (img *Image) SmallPath() string {
+	return img.DerivativePath(DerivativeForKind(SMALL_KIND))
+}
+
 // Returns Small derivative URL
 func (img *Image) SmallURL() string {
 	return img.DerivativeURL(DerivativeForKind(SMALL_KIND))
+}
+
+// Returns SmallFill derivative path
+func (img *Image) SmallFillPath() string {
+	return img.DerivativePath(DerivativeForKind(SMALL_FILL_KIND))
 }
 
 // Returns Small Fill derivative URL
@@ -325,9 +344,19 @@ func (img *Image) SmallFillURL() string {
 	return img.DerivativeURL(DerivativeForKind(SMALL_FILL_KIND))
 }
 
+// Returns PortraitFill derivative path
+func (img *Image) PortraitFillPath() string {
+	return img.DerivativePath(DerivativeForKind(PORTRAIT_FILL_KIND))
+}
+
 // Returns Portrait Fill derivative URL
 func (img *Image) PortraitFillURL() string {
 	return img.DerivativeURL(DerivativeForKind(PORTRAIT_FILL_KIND))
+}
+
+// Returns Large derivative path
+func (img *Image) LargePath() string {
+	return img.DerivativePath(DerivativeForKind(LARGE_KIND))
 }
 
 // Returns Large derivative URL
@@ -335,17 +364,16 @@ func (img *Image) LargeURL() string {
 	return img.DerivativeURL(DerivativeForKind(LARGE_KIND))
 }
 
-func (img *Image) derivativePath(derivative *Derivative) string {
-	return fmt.Sprintf("%s/%s%s%s", path.Dir(img.Path), utils.FileBase(img.Path), derivative.suffix, path.Ext(img.Path))
+func (img *Image) DerivativePath(derivative *Derivative) string {
+	return fmt.Sprintf("%s%s%s", utils.FileBase(img.Path), derivative.suffix, path.Ext(img.Path))
 }
 
 func (img *Image) DerivativeURL(derivative *Derivative) string {
-	// @todo FIXME
-	return img.derivativePath(derivative)
+	return utils.AppUploadSiteUrlPath(img.SiteId, img.DerivativePath(derivative))
 }
 
 func (img *Image) DerivativeFilePath(derivative *Derivative) string {
-	return path.Join(utils.AppPublicDir(), img.derivativePath(derivative))
+	return utils.AppUploadSiteFilePath(img.SiteId, img.DerivativePath(derivative))
 }
 
 func (img *Image) generateDerivative(derivative *Derivative, force bool) error {

@@ -132,7 +132,7 @@ func (app *Application) handleUploadImage(rw http.ResponseWriter, req *http.Requ
 		img := &models.Image{
 			Id:     bson.NewObjectId(),
 			SiteId: site.Id,
-			Path:   utils.AppUploadSiteUrlPath(site.Id, fileInfo.Name()),
+			Path:   fileInfo.Name(),
 			Name:   fileName,
 			Size:   fileInfo.Size(),
 			Type:   fileContentType,

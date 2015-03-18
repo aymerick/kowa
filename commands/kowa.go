@@ -73,6 +73,7 @@ func addCommands() {
 	rootCmd.AddCommand(genDerivativesCmd)
 	rootCmd.AddCommand(addUserCmd)
 	rootCmd.AddCommand(addSiteCmd)
+	rootCmd.AddCommand(fixImagesCmd)
 }
 
 //

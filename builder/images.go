@@ -25,22 +25,28 @@ type ImageVars struct {
 }
 
 func NewImageVars(img *models.Image, basePath string, baseUrl string) *ImageVars {
-	// eg: /my_site/image_m.jpg => /my_site/img/image_m.jpg
-	//                             http://.../my_site/img/image_m.jpg
+	// eg: image_m.jpg => /my_site/img/image_m.jpg
+	//                    http://.../my_site/img/image_m.jpg
 	return &ImageVars{
-		Original:             path.Join(basePath, IMAGES_DIR, path.Base(img.URL())),
-		OriginalAbsolute:     baseUrl + path.Join("/", IMAGES_DIR, path.Base(img.URL())),
-		Thumb:                path.Join(basePath, IMAGES_DIR, path.Base(img.ThumbURL())),
-		ThumbAbsolute:        baseUrl + path.Join("/", IMAGES_DIR, path.Base(img.ThumbURL())),
-		Square:               path.Join(basePath, IMAGES_DIR, path.Base(img.SquareURL())),
-		SquareAbsolute:       baseUrl + path.Join("/", IMAGES_DIR, path.Base(img.SquareURL())),
-		Small:                path.Join(basePath, IMAGES_DIR, path.Base(img.SmallURL())),
-		SmallAbsolute:        baseUrl + path.Join("/", IMAGES_DIR, path.Base(img.SmallURL())),
-		SmallFill:            path.Join(basePath, IMAGES_DIR, path.Base(img.SmallFillURL())),
-		SmallFillAbsolute:    baseUrl + path.Join("/", IMAGES_DIR, path.Base(img.SmallFillURL())),
-		PortraitFill:         path.Join(basePath, IMAGES_DIR, path.Base(img.PortraitFillURL())),
-		PortraitFillAbsolute: baseUrl + path.Join("/", IMAGES_DIR, path.Base(img.PortraitFillURL())),
-		Large:                path.Join(basePath, IMAGES_DIR, path.Base(img.LargeURL())),
-		LargeAbsolute:        baseUrl + path.Join("/", IMAGES_DIR, path.Base(img.LargeURL())),
+		Original:         path.Join(basePath, IMAGES_DIR, img.Path),
+		OriginalAbsolute: baseUrl + path.Join("/", IMAGES_DIR, img.Path),
+
+		Thumb:         path.Join(basePath, IMAGES_DIR, img.ThumbPath()),
+		ThumbAbsolute: baseUrl + path.Join("/", IMAGES_DIR, img.ThumbPath()),
+
+		Square:         path.Join(basePath, IMAGES_DIR, img.SquarePath()),
+		SquareAbsolute: baseUrl + path.Join("/", IMAGES_DIR, img.SquarePath()),
+
+		Small:         path.Join(basePath, IMAGES_DIR, img.SmallPath()),
+		SmallAbsolute: baseUrl + path.Join("/", IMAGES_DIR, img.SmallPath()),
+
+		SmallFill:         path.Join(basePath, IMAGES_DIR, img.SmallFillPath()),
+		SmallFillAbsolute: baseUrl + path.Join("/", IMAGES_DIR, img.SmallFillPath()),
+
+		PortraitFill:         path.Join(basePath, IMAGES_DIR, img.PortraitFillPath()),
+		PortraitFillAbsolute: baseUrl + path.Join("/", IMAGES_DIR, img.PortraitFillPath()),
+
+		Large:         path.Join(basePath, IMAGES_DIR, img.LargePath()),
+		LargeAbsolute: baseUrl + path.Join("/", IMAGES_DIR, img.LargePath()),
 	}
 }
