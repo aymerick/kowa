@@ -87,6 +87,18 @@ The `-s` switch activates serving of static sites.
 The server is now waiting for API requests on port `35830` and serves generated sites on port `48910`.
 
 
+## Configuration file
+
+If you want to get rid of passing flags to `kowa` commands, just create a `$HOME/.kowa/config.toml` config file, with [TomML](https://github.com/toml-lang/toml) syntax like that:
+
+  upload_dir = "/path/to/kowa-client/public/upload"
+  serve_output = true
+
+Now, you can start the server without flags:
+
+    $ ./kowa server
+
+
 ## Development workflow
 
 When you change server code, you have to rebuild it with `go build` and restart it.
