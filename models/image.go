@@ -70,8 +70,8 @@ type Image struct {
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
 	SiteId    string        `bson:"site_id"       json:"site"`
-	Path      string        `bson:"path"          json:"-"`
-	Name      string        `bson:"name"          json:"name"`
+	Path      string        `bson:"path"          json:"-"`    // this is the effective image path
+	Name      string        `bson:"name"          json:"name"` // this is the uploaded file name (may be different from Path)
 	Size      int64         `bson:"size"          json:"size"`
 	Type      string        `bson:"type"          json:"type"`
 
