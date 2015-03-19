@@ -53,26 +53,24 @@ Build kowa:
     $ cd $GOPATH/src/github.com/aymerick/kowa
     $ make build
 
-Setup the database:
+Setup the database and the upload dir:
 
-    $ ./kowa setup -t `/path/to/kowa-themes` -u `/path/to/kowa-client/public/upload`
+    $ ./kowa setup -u `/path/to/kowa-client/public/upload`
 
-  - The `-t` flag points to the `kowa-themes` directory you previously cloned.
-  - The `-u` flag is mandatory and indicates where uploaded files are stored (ie. the `/public/upload` dir of `kowa-client`).
+The `-u` flag is mandatory and indicates where uploaded files are stored (ie. the `/public/upload` directory of `kowa-client`).
 
 Add a user with two sites:
 
     $ ./kowa add_user mike mike@asso.ninja Michelangelo TMNT pizzaword
-
     $ ./kowa add_site site1 'My First Site' mike
     $ ./kowa add_site site2 'My Second Site' mike
 
 Start server:
 
-    $ cd ../..
     $ ./kowa server -s -t `/path/to/kowa-themes` -u `/path/to/kowa-client/public/upload`
 
-The `-s` flag activates serving of static sites.
+  - The `-s` flag activates serving of static sites.
+  - The `-t` flag points to the `kowa-themes` directory that you previously cloned.
 
 The server is now waiting for API requests on port `35830` and serves generated sites on port `48910`.
 
