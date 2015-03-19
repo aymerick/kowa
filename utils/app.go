@@ -11,8 +11,6 @@ import (
 const (
 	UPLOAD_URL_PATH = "/upload"
 
-	DEFAULT_OUTPUT_DIR = "_sites"
-
 	DEFAULT_LANG  = "en"
 	DEFAULT_THEME = "willy" // @todo FIXME
 

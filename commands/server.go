@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"log"
 	"os"
 	"os/signal"
 
@@ -28,10 +27,7 @@ func initServerConf() {
 }
 
 func runServer(cmd *cobra.Command, args []string) {
-	if viper.GetString("upload_dir") == "" {
-		cmd.Usage()
-		log.Fatalln("ERROR: The upload_dir setting is mandatory")
-	}
+	checkAndOutputsFlags()
 
 	app := server.NewApplication()
 	go app.Run()

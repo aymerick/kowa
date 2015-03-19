@@ -30,6 +30,13 @@ The server is written in Go and the client is an Ember.js application that you c
 Follow instructions at: <https://github.com/aymerick/kowa-client>
 
 
+### Themes
+
+Fetch all themes:
+
+    $ git clone --recursive git@github.com:aymerick/kowa-themes.git
+
+
 ### Server
 
 First, you need a running mongodb server running on standard port.
@@ -45,9 +52,10 @@ Build kowa:
 
 Setup the database:
 
-    $ ./kowa setup -u `/path/to/kowa-client/public/upload`
+    $ ./kowa setup -u -t `/path/to/kowa-themes` `/path/to/kowa-client/public/upload`
 
-The `-u` switch is mandatory and indicates where uploaded files are stored.
+  - The `-t` flag points to the `kowa-themes` directory you previously cloned.
+  - The `-u` flag is mandatory and indicates where uploaded files are stored (ie. the `/public/upload` dir of `kowa-client`).
 
 Add a user with two sites:
 
@@ -56,33 +64,12 @@ Add a user with two sites:
     $ ./kowa add_site site1 'My First Site' mike
     $ ./kowa add_site site2 'My Second Site' mike
 
-Setup theme building depencencies:
-
-    $ npm install -g grunt-cli
-    $ npm install -g bower
-    $ gem install bundle
-
-Build `willy` theme:
-
-    $ cd themes/willy
-    $ npm install
-    $ bower install
-    $ bundle install
-    $ grunt build
-
-Build `ailes` theme:
-
-    $ cd themes/ailes
-    $ npm install
-    $ bower install
-    $ grunt build
-
 Start server:
 
     $ cd ../..
-    $ ./kowa server -s -u `/path/to/kowa-client/public/upload`
+    $ ./kowa server -s -t `/path/to/kowa-themes` -u `/path/to/kowa-client/public/upload`
 
-The `-s` switch activates serving of static sites.
+The `-s` flag activates serving of static sites.
 
 The server is now waiting for API requests on port `35830` and serves generated sites on port `48910`.
 
@@ -92,6 +79,7 @@ The server is now waiting for API requests on port `35830` and serves generated 
 If you want to get rid of passing flags to `kowa` commands, just create a `$HOME/.kowa/config.toml` config file, with [TomML](https://github.com/toml-lang/toml) syntax like that:
 
     upload_dir = "/path/to/kowa-client/public/upload"
+    themes_dir = "/path/to/kowa-themes"
     serve_output = true
 
 Now, you can start the server without flags:
@@ -103,18 +91,18 @@ Now, you can start the server without flags:
 
 When you change server code, you have to rebuild it with `go build` and restart it.
 
-When you change a `SASS` file in a theme you don't have to rebuild the server, but you have to rebuild the theme:
+When you change a `SASS` file in a theme you don't have to rebuild the server, but you have to rebuild the theme, for example:
 
-    $ cd themes/willy
+    $ cd kowa-themes/willy
     $ grunt build
 
 Every time you make a change on a site thanks to the client app, the corresponding static site is rebuilt in the background.
 
 You can still trigger a manual rebuild of a static site with this command:
 
-    $ ./kowa build site1 -u `/path/to/kowa-client/public/upload`
+    $ ./kowa build site1 -t `/path/to/kowa-themes` -u `/path/to/kowa-client/public/upload`
 
-If you modify the code that handle images, you can regenerate all derivatives for a given site with this command:
+If you modify the code that handles images, you can regenerate all derivatives for a given site with this command:
 
     $ ./kowa gen_derivatives site1 -u `/path/to/kowa-client/public/upload`
 

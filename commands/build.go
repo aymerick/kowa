@@ -27,10 +27,7 @@ func buildSiteCmd(cmd *cobra.Command, args []string) {
 		log.Fatalln("ERROR: No site id argument provided")
 	}
 
-	if viper.GetString("upload_dir") == "" {
-		cmd.Usage()
-		log.Fatalln("ERROR: The upload_dir setting is mandatory")
-	}
+	checkAndOutputsFlags()
 
 	// get site
 	site := models.NewDBSession().FindSite(args[0])
@@ -55,13 +52,13 @@ func buildSiteCmd(cmd *cobra.Command, args []string) {
 func buildSite(site *models.Site) *builder.SiteBuilder {
 	// builder config
 	config := &builder.SiteBuilderConfig{
-		WorkingDir: viper.GetString("working_dir"),
-		OutputDir:  path.Join(viper.GetString("output_dir"), site.Id),
+		ThemesDir: viper.GetString("themes_dir"),
+		OutputDir: path.Join(viper.GetString("output_dir"), site.Id),
 	}
 
 	siteBuilder := builder.NewSiteBuilder(site, config)
 
-	log.Printf("Building site '%s' with theme '%s' into %s", site.Id, site.Theme, siteBuilder.GenDir())
+	log.Printf("Building site '%s' with theme '%s' into %s", site.Id, site.Theme, config.OutputDir)
 
 	startTime := time.Now()
 
@@ -79,7 +76,7 @@ func buildSite(site *models.Site) *builder.SiteBuilder {
 }
 
 func serve(siteBuilder *builder.SiteBuilder, port int) {
-	servePath, _ := path.Split(siteBuilder.GenDir())
+	servePath, _ := path.Split(siteBuilder.Config().OutputDir)
 
 	log.Printf("Serving built site from: " + servePath)
 

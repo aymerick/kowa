@@ -147,7 +147,7 @@ func (master *BuildMaster) run() {
 
 // Serve built sites
 func (master *BuildMaster) serveSites() {
-	dir := path.Join(viper.GetString("working_dir"), viper.GetString("output_dir"))
+	dir := viper.GetString("output_dir")
 	port := viper.GetInt("serve_output_port")
 
 	log.Println("[build] Serving built sites on port:", port)
@@ -273,8 +273,8 @@ func (worker *BuildWorker) executeJob(job *BuildJob) {
 
 	// builder config
 	config := &builder.SiteBuilderConfig{
-		WorkingDir: viper.GetString("working_dir"),
-		OutputDir:  path.Join(viper.GetString("output_dir"), site.Id),
+		ThemesDir: viper.GetString("themes_dir"),
+		OutputDir: path.Join(viper.GetString("output_dir"), site.Id),
 	}
 
 	builder := builder.NewSiteBuilder(site, config)

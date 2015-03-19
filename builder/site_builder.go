@@ -21,7 +21,6 @@ import (
 
 const (
 	IMAGES_DIR    = "img"
-	THEMES_DIR    = "themes"
 	TEMPLATES_DIR = "templates"
 	PARTIALS_DIR  = "partials"
 	ASSETS_DIR    = "assets"
@@ -64,8 +63,8 @@ type SiteBuilder struct {
 }
 
 type SiteBuilderConfig struct {
-	WorkingDir string
-	OutputDir  string
+	ThemesDir string
+	OutputDir string
 }
 
 func NewSiteBuilder(site *models.Site, config *SiteBuilderConfig) *SiteBuilder {
@@ -84,6 +83,10 @@ func NewSiteBuilder(site *models.Site, config *SiteBuilderConfig) *SiteBuilder {
 	result.setTemplatesDir()
 
 	return result
+}
+
+func (builder *SiteBuilder) Config() *SiteBuilderConfig {
+	return builder.config
 }
 
 // Build site
@@ -210,9 +213,9 @@ func (builder *SiteBuilder) syncNodes() {
 			log.Printf("Generated node: %+q", filePath)
 			allFiles[filePath] = true
 
-			relativePath := path.Dir(strings.TrimPrefix(filePath, builder.GenDir()))
+			relativePath := path.Dir(strings.TrimPrefix(filePath, builder.config.OutputDir))
 
-			destDir := builder.GenDir()
+			destDir := builder.config.OutputDir
 			for _, pathPart := range strings.Split(relativePath, "/") {
 				if pathPart != "" {
 					destDir = path.Join(destDir, pathPart)
@@ -227,12 +230,12 @@ func (builder *SiteBuilder) syncNodes() {
 
 	// ignore assets and img dirs
 	ignoreDirs := []string{
-		path.Join(builder.GenDir(), "assets"),
-		path.Join(builder.GenDir(), "img"),
+		path.Join(builder.config.OutputDir, "assets"),
+		path.Join(builder.config.OutputDir, "img"),
 	}
 
-	err := filepath.Walk(builder.GenDir(), func(path string, f os.FileInfo, err error) error {
-		if (path != builder.GenDir()) && !utils.HasOnePrefix(path, ignoreDirs) {
+	err := filepath.Walk(builder.config.OutputDir, func(path string, f os.FileInfo, err error) error {
+		if (path != builder.config.OutputDir) && !utils.HasOnePrefix(path, ignoreDirs) {
 			if (f.IsDir() && !allDirs[path]) || (!f.IsDir() && !allFiles[path]) {
 				filesToDelete[path] = true
 			}
@@ -327,7 +330,7 @@ func (builder *SiteBuilder) syncAssets() {
 func (builder *SiteBuilder) syncFavicon() {
 	errStep := "Sync favicon"
 
-	faviconPath := path.Join(builder.GenDir(), FAVICON_FILENAME)
+	faviconPath := path.Join(builder.config.OutputDir, FAVICON_FILENAME)
 
 	if img := builder.site.FindFavicon(); img != nil {
 		log.Printf("Generating favicon")
@@ -381,7 +384,7 @@ func (builder *SiteBuilder) DumpErrors() {
 
 // Computes theme directory
 func (builder *SiteBuilder) themeDir() string {
-	return path.Join(builder.config.WorkingDir, THEMES_DIR, builder.site.Theme)
+	return path.Join(builder.config.ThemesDir, builder.site.Theme)
 }
 
 // Computes theme templates directory
@@ -398,19 +401,14 @@ func (builder *SiteBuilder) themeAssetsDir() string {
 	return path.Join(builder.themeDir(), ASSETS_DIR)
 }
 
-// Computes directory where site is generated
-func (builder *SiteBuilder) GenDir() string {
-	return path.Join(builder.config.WorkingDir, builder.config.OutputDir)
-}
-
 // Computes directory where images are copied
 func (builder *SiteBuilder) genImagesDir() string {
-	return path.Join(builder.GenDir(), IMAGES_DIR)
+	return path.Join(builder.config.OutputDir, IMAGES_DIR)
 }
 
 // Computes directory where assets are copied
 func (builder *SiteBuilder) genAssetsDir() string {
-	return path.Join(builder.GenDir(), ASSETS_DIR)
+	return path.Join(builder.config.OutputDir, ASSETS_DIR)
 }
 
 // Compute template path for given template name
@@ -506,7 +504,7 @@ func (builder *SiteBuilder) ensureFileDir(osPath string) error {
 
 // Computes local file path for given relative path
 func (builder *SiteBuilder) filePath(relativePath string) string {
-	return path.Join(builder.GenDir(), relativePath)
+	return path.Join(builder.config.OutputDir, relativePath)
 }
 
 // Copy file to given directory

@@ -2,7 +2,9 @@ package commands
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"path"
 
 	"github.com/aymerick/kowa/utils"
 	"github.com/spf13/cobra"
@@ -14,6 +16,9 @@ const (
 	DEFAULT_MONGODB_DBNAME = "kowa"
 	DEFAULT_SERVE          = false
 	DEFAULT_SERVE_PORT     = 48910
+
+	DEFAULT_THEMES_DIR = "themes"
+	DEFAULT_OUTPUT_DIR = "_sites"
 )
 
 var cfgFile string
@@ -42,10 +47,10 @@ func initKowaConf() {
 	viper.BindPFlag("mongodb_dbname", rootCmd.PersistentFlags().Lookup("mongodb_dbname"))
 
 	// builder
-	rootCmd.PersistentFlags().StringP("working_dir", "w", utils.WorkingDir(), "Working directory")
-	viper.BindPFlag("working_dir", rootCmd.PersistentFlags().Lookup("working_dir"))
+	rootCmd.PersistentFlags().StringP("themes_dir", "t", defaultThemesDir(), "Themes directory")
+	viper.BindPFlag("themes_dir", rootCmd.PersistentFlags().Lookup("themes_dir"))
 
-	rootCmd.PersistentFlags().StringP("output_dir", "o", utils.DEFAULT_OUTPUT_DIR, "Output directory")
+	rootCmd.PersistentFlags().StringP("output_dir", "o", defaultOutputDir(), "Output directory")
 	viper.BindPFlag("output_dir", rootCmd.PersistentFlags().Lookup("output_dir"))
 
 	rootCmd.PersistentFlags().BoolP("serve_output", "s", DEFAULT_SERVE, "Start a server to serve built sites")
@@ -53,6 +58,24 @@ func initKowaConf() {
 
 	rootCmd.PersistentFlags().IntP("serve_output_port", "T", DEFAULT_SERVE_PORT, "Port to serve built sites")
 	viper.BindPFlag("serve_output_port", rootCmd.PersistentFlags().Lookup("serve_output_port"))
+}
+
+func defaultThemesDir() string {
+	return path.Join(utils.WorkingDir(), DEFAULT_THEMES_DIR)
+}
+
+func defaultOutputDir() string {
+	return path.Join(utils.WorkingDir(), DEFAULT_OUTPUT_DIR)
+}
+
+func checkAndOutputsFlags() {
+	if viper.GetString("upload_dir") == "" {
+		log.Fatalln("ERROR: The upload_dir setting is mandatory")
+	}
+
+	log.Printf("Upload dir: %s", viper.GetString("upload_dir"))
+	log.Printf("Themes dir: %s", viper.GetString("themes_dir"))
+	log.Printf("Output dir: %s", viper.GetString("output_dir"))
 }
 
 func setupConfig() {
