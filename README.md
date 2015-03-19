@@ -91,8 +91,8 @@ The server is now waiting for API requests on port `35830` and serves generated 
 
 If you want to get rid of passing flags to `kowa` commands, just create a `$HOME/.kowa/config.toml` config file, with [TomML](https://github.com/toml-lang/toml) syntax like that:
 
-  upload_dir = "/path/to/kowa-client/public/upload"
-  serve_output = true
+    upload_dir = "/path/to/kowa-client/public/upload"
+    serve_output = true
 
 Now, you can start the server without flags:
 
