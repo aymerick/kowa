@@ -53,8 +53,9 @@ type Site struct {
 
 	GoogleAnalytics string `bson:"google_analytics" json:"googleAnalytics"`
 
-	Logo  bson.ObjectId `bson:"logo,omitempty"  json:"logo,omitempty"`
-	Cover bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
+	Logo    bson.ObjectId `bson:"logo,omitempty"    json:"logo,omitempty"`
+	Cover   bson.ObjectId `bson:"cover,omitempty"   json:"cover,omitempty"`
+	Favicon bson.ObjectId `bson:"favicon,omitempty" json:"favicon,omitempty"`
 
 	PageSettings map[string]*SitePageSettings `bson:"page_settings" json:"pageSettings,omitempty"`
 
@@ -507,6 +508,23 @@ func (site *Site) FindCover() *Image {
 	return nil
 }
 
+// Fetch Favicon from database
+func (site *Site) FindFavicon() *Image {
+	if site.Favicon != "" {
+		var result Image
+
+		if err := site.dbSession.ImagesCol().FindId(site.Favicon).One(&result); err != nil {
+			return nil
+		}
+
+		result.dbSession = site.dbSession
+
+		return &result
+	}
+
+	return nil
+}
+
 // Fetch page settings Cover from database
 func (site *Site) FindPageSettingsCover(settingKind string) *Image {
 	pageSettings := site.PageSettings[settingKind]
@@ -536,6 +554,10 @@ func (site *Site) RemoveImageReferences(image *Image) error {
 
 	if site.Cover == image.Id {
 		fieldsToDelete = append(fieldsToDelete, "cover")
+	}
+
+	if site.Favicon == image.Id {
+		fieldsToDelete = append(fieldsToDelete, "favicon")
 	}
 
 	if len(fieldsToDelete) > 0 {
@@ -716,6 +738,16 @@ func (site *Site) Update(newSite *Site) (bool, error) {
 			unset = append(unset, bson.DocElem{"cover", 1})
 		} else {
 			set = append(set, bson.DocElem{"cover", site.Cover})
+		}
+	}
+
+	if site.Favicon != newSite.Favicon {
+		site.Favicon = newSite.Favicon
+
+		if site.Favicon == "" {
+			unset = append(unset, bson.DocElem{"favicon", 1})
+		} else {
+			set = append(set, bson.DocElem{"favicon", site.Favicon})
 		}
 	}
 

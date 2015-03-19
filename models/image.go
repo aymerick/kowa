@@ -73,7 +73,7 @@ type Image struct {
 	Path      string        `bson:"path"          json:"-"`    // this is the effective image path
 	Name      string        `bson:"name"          json:"name"` // this is the uploaded file name (may be different from Path)
 	Size      int64         `bson:"size"          json:"size"`
-	Type      string        `bson:"type"          json:"type"`
+	Type      string        `bson:"type"          json:"type"` // jpeg | png
 
 	original *image.Image
 }

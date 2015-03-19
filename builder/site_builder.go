@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/disintegration/imaging"
 	"github.com/spf13/afero"
 	"github.com/spf13/fsync"
 
@@ -24,6 +25,8 @@ const (
 	TEMPLATES_DIR = "templates"
 	PARTIALS_DIR  = "partials"
 	ASSETS_DIR    = "assets"
+
+	FAVICON_FILENAME = "favicon.png"
 
 	MAX_SLUG        = 50
 	MAX_PAST_EVENTS = 5
@@ -103,6 +106,9 @@ func (builder *SiteBuilder) Build() {
 
 	// sync assets
 	builder.syncAssets()
+
+	// sync favicon
+	builder.syncFavicon()
 }
 
 // Initialize builders
@@ -199,6 +205,7 @@ func (builder *SiteBuilder) syncNodes() {
 	// @todo Use go routines and channels
 	for _, nodeBuilder := range builder.nodeBuilders {
 		filePaths := nodeBuilder.Generate()
+
 		for filePath, _ := range filePaths {
 			log.Printf("Generated node: %+q", filePath)
 			allFiles[filePath] = true
@@ -277,6 +284,8 @@ func (builder *SiteBuilder) syncImages() {
 	}
 
 	if len(files) > 0 {
+		log.Printf("Syncing %d images", len(files))
+
 		if err := fsync.SyncTo(imgDir, files...); err != nil {
 			builder.addError(errStep, err)
 		}
@@ -302,12 +311,44 @@ func (builder *SiteBuilder) syncImages() {
 }
 
 // Copy theme assets
-func (builder *SiteBuilder) syncAssets() error {
+func (builder *SiteBuilder) syncAssets() {
+	errStep := "Sync assets"
+
 	syncer := fsync.NewSyncer()
 	syncer.Delete = true
 	syncer.NoTimes = true
 
-	return syncer.Sync(builder.genAssetsDir(), builder.themeAssetsDir())
+	if err := syncer.Sync(builder.genAssetsDir(), builder.themeAssetsDir()); err != nil {
+		builder.addError(errStep, err)
+	}
+}
+
+// Copy or generate favicon
+func (builder *SiteBuilder) syncFavicon() {
+	errStep := "Sync favicon"
+
+	faviconPath := path.Join(builder.GenDir(), FAVICON_FILENAME)
+
+	if img := builder.site.FindFavicon(); img != nil {
+		log.Printf("Generating favicon")
+
+		// build 16x16 favicon
+		favicon := imaging.Thumbnail(*img.Original(), 16, 16, imaging.Lanczos)
+
+		// save favicon
+		if err := imaging.Save(favicon, faviconPath); err != nil {
+			builder.addError(errStep, err)
+		}
+	} else {
+		// delete deprecated favicon
+		if _, err := os.Stat(faviconPath); !os.IsNotExist(err) {
+			log.Printf("Stat: %v", err)
+
+			if errRem := os.Remove(faviconPath); errRem != nil {
+				builder.addError(errStep, errRem)
+			}
+		}
+	}
 }
 
 // Collect image, and returns the template vars for that image

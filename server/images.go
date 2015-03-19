@@ -5,11 +5,33 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/aymerick/kowa/models"
 	"github.com/aymerick/kowa/utils"
 	"gopkg.in/mgo.v2/bson"
 )
+
+const (
+	IMAGE_CT_PREFIX = "image/"
+)
+
+var AcceptedImageContentTypes []string
+
+func init() {
+	AcceptedImageContentTypes = []string{"image/jpeg", "image/png", "image/gif"}
+}
+
+// Check if given content type is an allowed image
+func allowedImageContentType(ct string) bool {
+	for _, allowedCT := range AcceptedImageContentTypes {
+		if ct == allowedCT {
+			return true
+		}
+	}
+
+	return false
+}
 
 // GET /images?site={site_id}
 // GET /sites/{site_id}/images
@@ -81,7 +103,7 @@ func (app *Application) handleUploadImage(rw http.ResponseWriter, req *http.Requ
 	}
 
 	var fileName string
-	var fileContentType string
+	var fileType string
 	var fileInfo os.FileInfo
 
 	for fileName == "" {
@@ -95,9 +117,18 @@ func (app *Application) handleUploadImage(rw http.ResponseWriter, req *http.Requ
 			continue
 		}
 
-		// @todo Check that content-type is really an image
-		fileContentType = part.Header.Get("Content-Type")
+		// Check content type
+		fileType = part.Header.Get("Content-Type")
 
+		if !allowedImageContentType(fileType) {
+			log.Printf("Expected image content type but got: %v", fileType)
+			http.Error(rw, "Unsupported image type", http.StatusBadRequest)
+			return
+		}
+
+		fileType = strings.TrimPrefix(fileType, IMAGE_CT_PREFIX)
+
+		// copy uploaded file
 		log.Printf("Handling uploaded file: %s", fileName)
 
 		dstPath := utils.AvailableFilePath(utils.AppUploadSiteFilePath(site.Id, fileName))
@@ -135,7 +166,7 @@ func (app *Application) handleUploadImage(rw http.ResponseWriter, req *http.Requ
 			Path:   fileInfo.Name(),
 			Name:   fileName,
 			Size:   fileInfo.Size(),
-			Type:   fileContentType,
+			Type:   fileType,
 		}
 
 		if err := currentDBSession.CreateImage(img); err != nil {

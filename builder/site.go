@@ -12,6 +12,7 @@ type SiteVars struct {
 	Logo         *ImageVars
 	Tagline      string
 	NameInNavBar bool
+	Favicon      bool
 
 	BaseUrl  string
 	BasePath string
@@ -57,6 +58,10 @@ func (vars *SiteVars) fill() {
 	vars.BasePath = vars.builder.basePath()
 	vars.Tagline = site.Tagline
 	vars.NameInNavBar = site.NameInNavBar
+
+	if img := site.FindFavicon(); img != nil {
+		vars.Favicon = true
+	}
 
 	vars.Facebook = site.Facebook
 	vars.Twitter = site.Twitter

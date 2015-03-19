@@ -79,10 +79,12 @@ func buildSite(site *models.Site) *builder.SiteBuilder {
 }
 
 func serve(siteBuilder *builder.SiteBuilder, port int) {
-	log.Printf("Serving built site from: " + siteBuilder.GenDir())
+	servePath, _ := path.Split(siteBuilder.GenDir())
+
+	log.Printf("Serving built site from: " + servePath)
 
 	log.Printf("Web Server is available at http://127.0.0.1:%d\n", port)
 	log.Printf("Press Ctrl+C to stop")
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), http.FileServer(http.Dir(siteBuilder.GenDir()))))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), http.FileServer(http.Dir(servePath))))
 }
