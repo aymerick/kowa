@@ -37,9 +37,12 @@ Fetch all themes:
     $ git clone --recursive git@github.com:aymerick/kowa-themes.git
 
 
-### Server
+### Database
 
 You need a running mongodb server running on standard port.
+
+
+### Server
 
 Fetch kowa:
 
