@@ -62,8 +62,8 @@ The `-u` flag is mandatory and indicates where uploaded files are stored (ie. th
 Add a user with two sites:
 
     $ ./kowa add_user mike mike@asso.ninja Michelangelo TMNT pizzaword
-    $ ./kowa add_site site1 'My First Site' mike
-    $ ./kowa add_site site2 'My Second Site' mike
+    $ ./kowa add_site site1 'My First Site' mike -t `/path/to/kowa-themes` -u `/path/to/kowa-client/public/upload`
+    $ ./kowa add_site site2 'My Second Site' mike -t `/path/to/kowa-themes` -u `/path/to/kowa-client/public/upload`
 
 Start server:
 
