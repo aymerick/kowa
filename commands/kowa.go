@@ -6,9 +6,10 @@ import (
 	"os"
 	"path"
 
-	"github.com/aymerick/kowa/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/aymerick/kowa/utils"
 )
 
 const (
@@ -97,6 +98,7 @@ func addCommands() {
 	rootCmd.AddCommand(addUserCmd)
 	rootCmd.AddCommand(addSiteCmd)
 	rootCmd.AddCommand(fixImagesCmd)
+	rootCmd.AddCommand(versionCmd)
 }
 
 //

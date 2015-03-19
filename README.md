@@ -48,7 +48,7 @@ Fetch sources:
 Build kowa:
 
     $ cd kowa
-    $ go build
+    $ make build
 
 Setup the database:
 
