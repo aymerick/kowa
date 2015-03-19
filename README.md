@@ -39,20 +39,20 @@ Fetch all themes:
 
 ### Server
 
-First, you need a running mongodb server running on standard port.
+You need a running mongodb server running on standard port.
 
-Fetch sources:
+Fetch kowa:
 
     $ go get git@github.com:aymerick/kowa
 
 Build kowa:
 
-    $ cd kowa
+    $ cd $GOPATH/src/github.com/aymerick/kowa
     $ make build
 
 Setup the database:
 
-    $ ./kowa setup -u -t `/path/to/kowa-themes` `/path/to/kowa-client/public/upload`
+    $ ./kowa setup -t `/path/to/kowa-themes` -u `/path/to/kowa-client/public/upload`
 
   - The `-t` flag points to the `kowa-themes` directory you previously cloned.
   - The `-u` flag is mandatory and indicates where uploaded files are stored (ie. the `/public/upload` dir of `kowa-client`).
