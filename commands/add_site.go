@@ -7,8 +7,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	"github.com/aymerick/kowa/core"
 	"github.com/aymerick/kowa/models"
-	"github.com/aymerick/kowa/utils"
 )
 
 var addSiteCmd = &cobra.Command{
@@ -31,14 +31,14 @@ func addSite(cmd *cobra.Command, args []string) {
 	}
 
 	// @todo FIXME !
-	baseUrl := fmt.Sprintf("%s:%d/%s", utils.DEFAULT_BASEURL, viper.GetInt("serve_output_port"), args[0])
+	baseUrl := fmt.Sprintf("%s:%d/%s", core.DEFAULT_BASEURL, viper.GetInt("serve_output_port"), args[0])
 
 	site := &models.Site{
 		Id:           args[0],
 		Name:         args[1],
 		UserId:       args[2],
-		Lang:         utils.DEFAULT_LANG,
-		Theme:        utils.DEFAULT_THEME,
+		Lang:         core.DEFAULT_LANG,
+		Theme:        core.DEFAULT_THEME,
 		BaseUrl:      baseUrl,
 		NameInNavBar: true,
 	}
@@ -47,7 +47,7 @@ func addSite(cmd *cobra.Command, args []string) {
 		log.Fatalln(fmt.Sprintf("Failed to create site: %v", err))
 	}
 
-	utils.AppEnsureSiteUploadDir(site.Id)
+	core.EnsureSiteUploadDir(site.Id)
 
 	// build site
 	buildSite(site)

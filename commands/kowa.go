@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/aymerick/kowa/utils"
+	"github.com/aymerick/kowa/helpers"
 )
 
 const (
@@ -62,11 +62,11 @@ func initKowaConf() {
 }
 
 func defaultThemesDir() string {
-	return path.Join(utils.WorkingDir(), DEFAULT_THEMES_DIR)
+	return path.Join(helpers.WorkingDir(), DEFAULT_THEMES_DIR)
 }
 
 func defaultOutputDir() string {
-	return path.Join(utils.WorkingDir(), DEFAULT_OUTPUT_DIR)
+	return path.Join(helpers.WorkingDir(), DEFAULT_OUTPUT_DIR)
 }
 
 func checkAndOutputsFlags() {

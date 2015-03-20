@@ -1,8 +1,8 @@
 package commands
 
 import (
+	"github.com/aymerick/kowa/core"
 	"github.com/aymerick/kowa/server"
-	"github.com/aymerick/kowa/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +14,7 @@ var setupCmd = &cobra.Command{
 }
 
 func setup(cmd *cobra.Command, args []string) {
-	utils.AppEnsureUploadDir()
+	core.EnsureUploadDir()
 
 	// Insert oauth client
 	oauthStorage := server.NewOAuthStorage()

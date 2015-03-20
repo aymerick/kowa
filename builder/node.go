@@ -8,7 +8,7 @@ import (
 	"io/ioutil"
 	"path"
 
-	"github.com/aymerick/kowa/utils"
+	"github.com/aymerick/kowa/helpers"
 )
 
 // Node vars
@@ -77,7 +77,7 @@ func (node *Node) fillUrl(slug string) {
 	siteBuilder := node.builder.SiteBuilder()
 
 	// Slug
-	node.Slug = siteBuilder.addNodeSlug(utils.Pathify(slug))
+	node.Slug = siteBuilder.addNodeSlug(helpers.Pathify(slug))
 
 	// FilePath
 	if siteBuilder.site.UglyUrl || (node.Slug == "") || (node.Slug == "/") || (node.Slug == "index") {
@@ -106,10 +106,10 @@ func (node *Node) fillUrl(slug string) {
 	}
 
 	// Url
-	node.Url = utils.Urlify(path.Join(siteBuilder.basePath(), lastPart))
+	node.Url = helpers.Urlify(path.Join(siteBuilder.basePath(), lastPart))
 
 	// AbsoluteUrl
-	node.AbsoluteUrl = utils.Urlify(fmt.Sprintf("%s%s", siteBuilder.site.BaseUrl, lastPart))
+	node.AbsoluteUrl = helpers.Urlify(fmt.Sprintf("%s%s", siteBuilder.site.BaseUrl, lastPart))
 }
 
 // Compute node template

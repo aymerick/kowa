@@ -7,8 +7,9 @@ import (
 	"os"
 	"strings"
 
+	"github.com/aymerick/kowa/core"
+	"github.com/aymerick/kowa/helpers"
 	"github.com/aymerick/kowa/models"
-	"github.com/aymerick/kowa/utils"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -131,7 +132,7 @@ func (app *Application) handleUploadImage(rw http.ResponseWriter, req *http.Requ
 		// copy uploaded file
 		log.Printf("Handling uploaded file: %s", fileName)
 
-		dstPath := utils.AvailableFilePath(utils.AppUploadSiteFilePath(site.Id, fileName))
+		dstPath := helpers.AvailableFilePath(core.UploadSiteFilePath(site.Id, fileName))
 
 		dst, err := os.Create(dstPath)
 		if err != nil {

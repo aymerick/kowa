@@ -15,8 +15,8 @@ import (
 	"github.com/spf13/afero"
 	"github.com/spf13/fsync"
 
+	"github.com/aymerick/kowa/helpers"
 	"github.com/aymerick/kowa/models"
-	"github.com/aymerick/kowa/utils"
 )
 
 const (
@@ -235,7 +235,7 @@ func (builder *SiteBuilder) syncNodes() {
 	}
 
 	err := filepath.Walk(builder.config.OutputDir, func(path string, f os.FileInfo, err error) error {
-		if (path != builder.config.OutputDir) && !utils.HasOnePrefix(path, ignoreDirs) {
+		if (path != builder.config.OutputDir) && !helpers.HasOnePrefix(path, ignoreDirs) {
 			if (f.IsDir() && !allDirs[path]) || (!f.IsDir() && !allFiles[path]) {
 				filesToDelete[path] = true
 			}
@@ -453,7 +453,7 @@ func (builder *SiteBuilder) setupLayout() *template.Template {
 					builder.addError(errStep, err)
 				} else {
 					// eg: partials/navbar
-					tplName := fmt.Sprintf("%s/%s", PARTIALS_DIR, utils.FileBase(fileName))
+					tplName := fmt.Sprintf("%s/%s", PARTIALS_DIR, helpers.FileBase(fileName))
 
 					// add partial to layout
 					_, err := result.New(tplName).Parse(string(binData))

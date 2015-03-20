@@ -1,10 +1,11 @@
-package utils
+package core
 
 import (
 	"fmt"
 	"os"
 	"path"
 
+	"github.com/aymerick/kowa/helpers"
 	"github.com/spf13/viper"
 )
 
@@ -17,7 +18,7 @@ const (
 	DEFAULT_BASEURL = "http://127.0.0.1"
 )
 
-func AppUploadDir() string {
+func UploadDir() string {
 	dir := viper.GetString("upload_dir")
 	if dir == "" {
 		panic("The upload_dir setting is mandatory")
@@ -26,31 +27,31 @@ func AppUploadDir() string {
 	return dir
 }
 
-func AppUploadSiteDir(siteId string) string {
-	return path.Join(AppUploadDir(), siteId)
+func UploadSiteDir(siteId string) string {
+	return path.Join(UploadDir(), siteId)
 }
 
-func AppUploadSiteFilePath(siteId string, fileName string) string {
-	return path.Join(AppUploadSiteDir(siteId), fileName)
+func UploadSiteFilePath(siteId string, fileName string) string {
+	return path.Join(UploadSiteDir(siteId), fileName)
 }
 
-func AppUploadSiteUrlPath(siteId string, fileName string) string {
+func UploadSiteUrlPath(siteId string, fileName string) string {
 	return path.Join(UPLOAD_URL_PATH, siteId, fileName)
 }
 
-func AppEnsureUploadDir() {
-	dir := AppUploadDir()
+func EnsureUploadDir() {
+	dir := UploadDir()
 
 	parentDir, _ := path.Split(dir)
 	if _, err := os.Stat(parentDir); os.IsNotExist(err) {
 		panic(fmt.Sprintf("Directory %s does not exist. Your upload_dir setting may be incorrect.", parentDir))
 	}
 
-	EnsureDirectory(dir)
+	helpers.EnsureDirectory(dir)
 }
 
-func AppEnsureSiteUploadDir(siteId string) {
-	AppEnsureUploadDir()
+func EnsureSiteUploadDir(siteId string) {
+	EnsureUploadDir()
 
-	EnsureDirectory(AppUploadSiteDir(siteId))
+	helpers.EnsureDirectory(UploadSiteDir(siteId))
 }

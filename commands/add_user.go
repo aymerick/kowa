@@ -8,8 +8,8 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/aymerick/kowa/core"
 	"github.com/aymerick/kowa/models"
-	"github.com/aymerick/kowa/utils"
 )
 
 var addUserCmd = &cobra.Command{
@@ -45,7 +45,7 @@ func addUser(cmd *cobra.Command, args []string) {
 		Email:     args[1],
 		FirstName: args[2],
 		LastName:  args[3],
-		Lang:      utils.DEFAULT_LANG,
+		Lang:      core.DEFAULT_LANG,
 		Password:  string(password),
 	}
 

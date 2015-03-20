@@ -15,7 +15,8 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 
-	"github.com/aymerick/kowa/utils"
+	"github.com/aymerick/kowa/core"
+	"github.com/aymerick/kowa/helpers"
 )
 
 const (
@@ -163,7 +164,7 @@ func DerivativeForKind(kind string) *Derivative {
 // returns true if given path is an image derivative
 func IsDerivativePath(path string) bool {
 	for _, derivative := range Derivatives {
-		fileBase := utils.FileBase(path)
+		fileBase := helpers.FileBase(path)
 		if strings.HasSuffix(fileBase, derivative.suffix) {
 			return true
 		}
@@ -292,12 +293,12 @@ func (img *Image) Original() *image.Image {
 }
 
 func (img *Image) OriginalFilePath() string {
-	return utils.AppUploadSiteFilePath(img.SiteId, img.Path)
+	return core.UploadSiteFilePath(img.SiteId, img.Path)
 }
 
 // Returns image URL
 func (img *Image) URL() string {
-	return utils.AppUploadSiteUrlPath(img.SiteId, img.Path)
+	return core.UploadSiteUrlPath(img.SiteId, img.Path)
 }
 
 //
@@ -365,15 +366,15 @@ func (img *Image) LargeURL() string {
 }
 
 func (img *Image) DerivativePath(derivative *Derivative) string {
-	return fmt.Sprintf("%s%s%s", utils.FileBase(img.Path), derivative.suffix, path.Ext(img.Path))
+	return fmt.Sprintf("%s%s%s", helpers.FileBase(img.Path), derivative.suffix, path.Ext(img.Path))
 }
 
 func (img *Image) DerivativeURL(derivative *Derivative) string {
-	return utils.AppUploadSiteUrlPath(img.SiteId, img.DerivativePath(derivative))
+	return core.UploadSiteUrlPath(img.SiteId, img.DerivativePath(derivative))
 }
 
 func (img *Image) DerivativeFilePath(derivative *Derivative) string {
-	return utils.AppUploadSiteFilePath(img.SiteId, img.DerivativePath(derivative))
+	return core.UploadSiteFilePath(img.SiteId, img.DerivativePath(derivative))
 }
 
 func (img *Image) generateDerivative(derivative *Derivative, force bool) error {

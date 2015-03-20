@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/aymerick/kowa/core"
 	"github.com/aymerick/kowa/models"
-	"github.com/aymerick/kowa/utils"
 )
 
 // Interface for node builder
@@ -96,7 +96,7 @@ func (builder *NodeBuilderBase) siteLang() string {
 	result := builder.SiteBuilder().site.Lang
 
 	if result == "" {
-		result = utils.DEFAULT_LANG
+		result = core.DEFAULT_LANG
 	}
 
 	return result
