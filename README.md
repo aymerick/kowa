@@ -52,7 +52,7 @@ It is tedious to pass flags to `kowa` commands, so let's create a `$HOME/.kowa/c
 
   - The `upload_dir` setting indicates where uploaded files are stored (ie. the `/public/upload` directory of `kowa-client`).
   - The `themes_dir` setting points to the `kowa-themes` directory that you previously cloned.
-  - The `serve_output` setting activates serving of static sites.
+  - The `serve_output` setting activates serving of static sites for the `server` and `build` commands.
 
 
 ### Install
