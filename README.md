@@ -42,7 +42,20 @@ Fetch all themes:
 You need a running mongodb server running on standard port.
 
 
-### Server
+### Conf file
+
+It is tedious to pass flags to `kowa` commands, so let's create a `$HOME/.kowa/config.toml` config file, with [TomML](https://github.com/toml-lang/toml) syntax like that:
+
+    upload_dir = "/path/to/kowa-client/public/upload"
+    themes_dir = "/path/to/kowa-themes"
+    serve_output = true
+
+  - The `upload_dir` setting indicates where uploaded files are stored (ie. the `/public/upload` directory of `kowa-client`).
+  - The `themes_dir` setting points to the `kowa-themes` directory that you previously cloned.
+  - The `serve_output` setting activates serving of static sites.
+
+
+### Install
 
 Fetch kowa:
 
@@ -55,42 +68,24 @@ Build kowa:
 
 Setup the database and the upload dir:
 
-    $ ./kowa setup -u `/path/to/kowa-client/public/upload`
-
-The `-u` flag is mandatory and indicates where uploaded files are stored (ie. the `/public/upload` directory of `kowa-client`).
+    $ ./kowa setup
 
 Add a user with two sites:
 
     $ ./kowa add_user mike mike@asso.ninja Michelangelo TMNT pizzaword
-    $ ./kowa add_site site1 'My First Site' mike -t `/path/to/kowa-themes` -u `/path/to/kowa-client/public/upload`
-    $ ./kowa add_site site2 'My Second Site' mike -t `/path/to/kowa-themes` -u `/path/to/kowa-client/public/upload`
+    $ ./kowa add_site site1 'My First Site' mike
+    $ ./kowa add_site site2 'My Second Site' mike
 
 Start server:
 
-    $ ./kowa server -s -t `/path/to/kowa-themes` -u `/path/to/kowa-client/public/upload`
-
-  - The `-s` flag activates serving of static sites.
-  - The `-t` flag points to the `kowa-themes` directory that you previously cloned.
+    $ ./kowa server
 
 The server is now waiting for API requests on port `35830` and serves generated sites on port `48910`.
 
 
-## Configuration file
-
-If you want to get rid of passing flags to `kowa` commands, just create a `$HOME/.kowa/config.toml` config file, with [TomML](https://github.com/toml-lang/toml) syntax like that:
-
-    upload_dir = "/path/to/kowa-client/public/upload"
-    themes_dir = "/path/to/kowa-themes"
-    serve_output = true
-
-Now, you can start the server without flags:
-
-    $ ./kowa server
-
-
 ## Development workflow
 
-When you change server code, you have to rebuild it with `go build` and restart it.
+When you change server code, you have to rebuild it with `make build` and restart it.
 
 When you change a `SASS` file in a theme you don't have to rebuild the server, but you have to rebuild the theme, for example:
 
@@ -101,11 +96,11 @@ Every time you make a change on a site thanks to the client app, the correspondi
 
 You can still trigger a manual rebuild of a static site with this command:
 
-    $ ./kowa build site1 -t `/path/to/kowa-themes` -u `/path/to/kowa-client/public/upload`
+    $ ./kowa build site1
 
 If you modify the code that handles images, you can regenerate all derivatives for a given site with this command:
 
-    $ ./kowa gen_derivatives site1 -u `/path/to/kowa-client/public/upload`
+    $ ./kowa gen_derivatives site1
 
 
 ## Test
