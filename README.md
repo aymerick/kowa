@@ -107,4 +107,4 @@ If you modify the code that handles images, you can regenerate all derivatives f
 
 To launch tests, go to `kowa` root directory, then:
 
-    $ go test ./... -v
+    $ godep go test ./... -v

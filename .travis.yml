@@ -10,8 +10,7 @@ services:
 
 install:
   - go get github.com/stretchr/testify
-  - go get -v ./...
 
 script:
-  - go test ./...
-  - go build
+  - godep go test ./...
+  - make build
