@@ -30,6 +30,8 @@ func runServer(cmd *cobra.Command, args []string) {
 	checkAndOutputsFlags()
 
 	app := server.NewApplication()
+	app.Setup()
+
 	go app.Run()
 
 	// wait for interuption

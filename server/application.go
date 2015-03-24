@@ -10,15 +10,17 @@ import (
 	"github.com/spf13/viper"
 	"github.com/unrolled/render"
 
+	"github.com/aymerick/kowa/core"
 	"github.com/aymerick/kowa/models"
 )
 
 type Application struct {
-	port        string
-	render      *render.Render
-	dbSession   *models.DBSession
-	oauthServer *osin.Server
-	buildMaster *BuildMaster
+	port         string
+	render       *render.Render
+	dbSession    *models.DBSession
+	oauthStorage *OAuthStorage
+	oauthServer  *osin.Server
+	buildMaster  *BuildMaster
 }
 
 func NewApplication() *Application {
@@ -32,14 +34,26 @@ func NewApplication() *Application {
 	osinConfig.AllowedAccessTypes = osin.AllowedAccessType{osin.PASSWORD, osin.REFRESH_TOKEN}
 	osinConfig.ErrorStatusCode = 401
 
-	oauthServer := osin.NewServer(osinConfig, NewOAuthStorage())
+	oauthStorage := NewOAuthStorage()
+	oauthServer := osin.NewServer(osinConfig, oauthStorage)
 
 	return &Application{
-		port:        viper.GetString("port"),
-		render:      render.New(render.Options{}),
-		dbSession:   dbSession,
-		oauthServer: oauthServer,
-		buildMaster: NewBuildMaster(),
+		port:         viper.GetString("port"),
+		render:       render.New(render.Options{}),
+		dbSession:    dbSession,
+		oauthStorage: oauthStorage,
+		oauthServer:  oauthServer,
+		buildMaster:  NewBuildMaster(),
+	}
+}
+
+// Setup application server
+func (app *Application) Setup() {
+	core.EnsureUploadDir()
+
+	// Ensure oauth client
+	if err := app.oauthStorage.EnsureOAuthClient(); err != nil {
+		panic(err)
 	}
 }
 

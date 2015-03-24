@@ -66,10 +66,6 @@ Build kowa:
     $ cd $GOPATH/src/github.com/aymerick/kowa
     $ make build
 
-Setup the database and the upload dir:
-
-    $ ./kowa setup
-
 Add a user with two sites:
 
     $ ./kowa add_user mike mike@asso.ninja Michelangelo TMNT pizzaword

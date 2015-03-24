@@ -32,9 +32,9 @@ const (
 )
 
 const (
-	REFRESHTOKEN  = "refreshtoken"
-	CLIENT_ID     = "kowa"
-	CLIENT_SECRET = "none"
+	REFRESHTOKEN        = "refreshtoken"
+	OAUTH_CLIENT_ID     = "kowa"
+	OAUTH_CLIENT_SECRET = "none"
 )
 
 func NewOAuthStorage() *OAuthStorage {
@@ -59,75 +59,74 @@ func NewOAuthStorage() *OAuthStorage {
 	return storage
 }
 
-func (this *OAuthStorage) DB() *mgo.Database {
-	return this.session.DB(OAUTH_DBNAME)
-}
-
-func (this *OAuthStorage) clientsCol() *mgo.Collection {
-	return this.DB().C(CLIENTS_COL)
-}
-
-func (this *OAuthStorage) authorizationsCol() *mgo.Collection {
-	return this.DB().C(AUTHORIZATIONS_COL)
-}
-
-func (this *OAuthStorage) accessesCol() *mgo.Collection {
-	return this.DB().C(ACCESSES_COL)
-}
-
-func (this *OAuthStorage) SetClient(id string, client osin.Client) error {
-	_, err := this.clientsCol().UpsertId(id, client)
-	return err
-}
-
-func (this *OAuthStorage) SetupDefaultClient() (osin.Client, error) {
+func (storage *OAuthStorage) EnsureOAuthClient() error {
 	client := &osin.DefaultClient{
-		Id:          CLIENT_ID,
-		Secret:      CLIENT_SECRET,
+		Id:          OAUTH_CLIENT_ID,
+		Secret:      OAUTH_CLIENT_SECRET,
 		RedirectUri: "http://localhost:35830/", // @todo Check that
 	}
-	err := this.SetClient("kowa", client)
 
-	return client, err
+	return storage.SetClient("kowa", client)
+}
+
+func (storage *OAuthStorage) DB() *mgo.Database {
+	return storage.session.DB(OAUTH_DBNAME)
+}
+
+func (storage *OAuthStorage) clientsCol() *mgo.Collection {
+	return storage.DB().C(CLIENTS_COL)
+}
+
+func (storage *OAuthStorage) authorizationsCol() *mgo.Collection {
+	return storage.DB().C(AUTHORIZATIONS_COL)
+}
+
+func (storage *OAuthStorage) accessesCol() *mgo.Collection {
+	return storage.DB().C(ACCESSES_COL)
+}
+
+func (storage *OAuthStorage) SetClient(id string, client osin.Client) error {
+	_, err := storage.clientsCol().UpsertId(id, client)
+	return err
 }
 
 //
 // Implements osin.Storage interface
 //
 
-func (this *OAuthStorage) Clone() osin.Storage {
-	return &OAuthStorage{session: this.session.Copy()}
+func (storage *OAuthStorage) Clone() osin.Storage {
+	return &OAuthStorage{session: storage.session.Copy()}
 }
 
-func (this *OAuthStorage) Close() {
-	this.session.Close()
+func (storage *OAuthStorage) Close() {
+	storage.session.Close()
 }
 
-func (this *OAuthStorage) GetClient(id string) (osin.Client, error) {
+func (storage *OAuthStorage) GetClient(id string) (osin.Client, error) {
 	client := &osin.DefaultClient{}
-	err := this.clientsCol().FindId(id).One(client)
+	err := storage.clientsCol().FindId(id).One(client)
 	return client, err
 }
 
 // NOT USED
-func (this *OAuthStorage) SaveAuthorize(data *osin.AuthorizeData) error {
-	_, err := this.authorizationsCol().UpsertId(data.Code, data)
+func (storage *OAuthStorage) SaveAuthorize(data *osin.AuthorizeData) error {
+	_, err := storage.authorizationsCol().UpsertId(data.Code, data)
 	return err
 }
 
 // NOT USED
-func (this *OAuthStorage) LoadAuthorize(code string) (*osin.AuthorizeData, error) {
+func (storage *OAuthStorage) LoadAuthorize(code string) (*osin.AuthorizeData, error) {
 	authData := &osin.AuthorizeData{}
-	err := this.authorizationsCol().FindId(code).One(authData)
+	err := storage.authorizationsCol().FindId(code).One(authData)
 	return authData, err
 }
 
 // NOT USED
-func (this *OAuthStorage) RemoveAuthorize(code string) error {
-	return this.authorizationsCol().RemoveId(code)
+func (storage *OAuthStorage) RemoveAuthorize(code string) error {
+	return storage.authorizationsCol().RemoveId(code)
 }
 
-func (this *OAuthStorage) SaveAccess(data *osin.AccessData) error {
+func (storage *OAuthStorage) SaveAccess(data *osin.AccessData) error {
 	doc := &AccessDoc{
 		ClientId:     data.Client.GetId(),
 		AccessToken:  data.AccessToken,
@@ -137,16 +136,16 @@ func (this *OAuthStorage) SaveAccess(data *osin.AccessData) error {
 		CreatedAt:    data.CreatedAt,
 		UserData:     data.UserData,
 	}
-	_, err := this.accessesCol().UpsertId(data.AccessToken, doc)
+	_, err := storage.accessesCol().UpsertId(data.AccessToken, doc)
 	return err
 }
 
-func (this *OAuthStorage) docToAccessData(doc *AccessDoc) (*osin.AccessData, error) {
+func (storage *OAuthStorage) docToAccessData(doc *AccessDoc) (*osin.AccessData, error) {
 	var result *osin.AccessData
 	var err error
 
 	var client osin.Client
-	client, err = this.GetClient(doc.ClientId)
+	client, err = storage.GetClient(doc.ClientId)
 	if err == nil {
 		result = &osin.AccessData{
 			Client:       client,
@@ -162,39 +161,39 @@ func (this *OAuthStorage) docToAccessData(doc *AccessDoc) (*osin.AccessData, err
 	return result, err
 }
 
-func (this *OAuthStorage) LoadAccess(token string) (*osin.AccessData, error) {
+func (storage *OAuthStorage) LoadAccess(token string) (*osin.AccessData, error) {
 	var result *osin.AccessData
 	var err error
 
 	doc := &AccessDoc{}
-	err = this.accessesCol().FindId(token).One(doc)
+	err = storage.accessesCol().FindId(token).One(doc)
 	if err == nil {
-		result, err = this.docToAccessData(doc)
+		result, err = storage.docToAccessData(doc)
 	}
 
 	return result, err
 }
 
-func (this *OAuthStorage) RemoveAccess(token string) error {
-	return this.accessesCol().RemoveId(token)
+func (storage *OAuthStorage) RemoveAccess(token string) error {
+	return storage.accessesCol().RemoveId(token)
 }
 
-func (this *OAuthStorage) LoadRefresh(token string) (*osin.AccessData, error) {
+func (storage *OAuthStorage) LoadRefresh(token string) (*osin.AccessData, error) {
 	var result *osin.AccessData
 	var err error
 
 	doc := &AccessDoc{}
-	err = this.accessesCol().Find(bson.M{REFRESHTOKEN: token}).One(doc)
+	err = storage.accessesCol().Find(bson.M{REFRESHTOKEN: token}).One(doc)
 	if err == nil {
-		result, err = this.docToAccessData(doc)
+		result, err = storage.docToAccessData(doc)
 	}
 
 	return result, err
 }
 
-func (this *OAuthStorage) RemoveRefresh(token string) error {
+func (storage *OAuthStorage) RemoveRefresh(token string) error {
 	selector := bson.M{REFRESHTOKEN: token}
 	modifier := bson.M{"$unset": bson.M{REFRESHTOKEN: 1}}
 
-	return this.accessesCol().Update(selector, modifier)
+	return storage.accessesCol().Update(selector, modifier)
 }
