@@ -6,8 +6,8 @@ LDFLAGS=-ldflags "-X github.com/aymerick/kowa/core.Version ${VERSION} -X github.
 all: build
 
 build:
-	godep go build ${LDFLAGS} -o kowa kowa.go
+	godep go build ${LDFLAGS}
 
-build-from-docker:
+build-from-scratch:
 	go get github.com/tools/godep
-	godep go build ${LDFLAGS} -o kowa kowa.go
+	godep go build ${LDFLAGS} -o kowa-${VERSION}
