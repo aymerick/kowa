@@ -60,13 +60,14 @@ func NewOAuthStorage() *OAuthStorage {
 }
 
 func (storage *OAuthStorage) EnsureOAuthClient() error {
-	client := &osin.DefaultClient{
+	client := &OAuthClient{
 		Id:          OAUTH_CLIENT_ID,
 		Secret:      OAUTH_CLIENT_SECRET,
 		RedirectUri: "http://localhost:35830/", // @todo Check that
 	}
 
-	return storage.SetClient("kowa", client)
+	_, err := storage.clientsCol().UpsertId(client.Id, client)
+	return err
 }
 
 func (storage *OAuthStorage) DB() *mgo.Database {
@@ -85,11 +86,6 @@ func (storage *OAuthStorage) accessesCol() *mgo.Collection {
 	return storage.DB().C(ACCESSES_COL)
 }
 
-func (storage *OAuthStorage) SetClient(id string, client osin.Client) error {
-	_, err := storage.clientsCol().UpsertId(id, client)
-	return err
-}
-
 //
 // Implements osin.Storage interface
 //
@@ -103,7 +99,7 @@ func (storage *OAuthStorage) Close() {
 }
 
 func (storage *OAuthStorage) GetClient(id string) (osin.Client, error) {
-	client := &osin.DefaultClient{}
+	client := &OAuthClient{}
 	err := storage.clientsCol().FindId(id).One(client)
 	return client, err
 }
