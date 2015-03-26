@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"net/url"
 	"os"
 	"path"
 	"path/filepath"
@@ -187,8 +188,14 @@ func (builder *SiteBuilder) activitiesVars() []*ActivityVars {
 
 // Return site base path
 func (builder *SiteBuilder) basePath() string {
-	_, result := path.Split(builder.site.BaseUrl)
-	return path.Join("/", result)
+	u, err := url.Parse(builder.site.BaseUrl)
+	if err != nil {
+		return ""
+	}
+
+	path := strings.TrimSuffix(u.Path, "/")
+
+	return path
 }
 
 // Fill site variables
