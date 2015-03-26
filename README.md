@@ -46,11 +46,11 @@ You need a running mongodb server running on standard port.
 
 It is tedious to pass flags to `kowa` commands, so let's create a `$HOME/.kowa/config.toml` config file, with [TomML](https://github.com/toml-lang/toml) syntax like that:
 
-    upload_dir = "/path/to/kowa-client/public/upload"
+    upload_dir = "/path/to/kowa-client/upload"
     themes_dir = "/path/to/kowa-themes"
     serve_output = true
 
-  - The `upload_dir` setting indicates where uploaded files are stored (ie. the `/public/upload` directory of `kowa-client`).
+  - The `upload_dir` setting indicates where uploaded files are stored (ie. the `/upload` directory of `kowa-client`).
   - The `themes_dir` setting points to the `kowa-themes` directory that you previously cloned.
   - The `serve_output` setting activates serving of static sites for the `server` and `build` commands.
 
