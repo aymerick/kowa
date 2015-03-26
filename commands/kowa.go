@@ -18,7 +18,6 @@ const (
 	DEFAULT_SERVE          = false
 	DEFAULT_SERVE_PORT     = 48910
 
-	DEFAULT_THEMES_DIR = "themes"
 	DEFAULT_OUTPUT_DIR = "_sites"
 )
 
@@ -37,7 +36,7 @@ func initKowaConf() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.kowa/config.toml)")
 
 	// client app
-	rootCmd.PersistentFlags().StringP("upload_dir", "u", "", "Uploaded files are stored in that directory")
+	rootCmd.PersistentFlags().StringP("upload_dir", "u", "", "Uploaded files are stored in that directory (MANDATORY)")
 	viper.BindPFlag("upload_dir", rootCmd.PersistentFlags().Lookup("upload_dir"))
 
 	// mongodb database
@@ -48,7 +47,7 @@ func initKowaConf() {
 	viper.BindPFlag("mongodb_dbname", rootCmd.PersistentFlags().Lookup("mongodb_dbname"))
 
 	// builder
-	rootCmd.PersistentFlags().StringP("themes_dir", "t", defaultThemesDir(), "Themes directory")
+	rootCmd.PersistentFlags().StringP("themes_dir", "t", "", "Themes directory (MANDATORY)")
 	viper.BindPFlag("themes_dir", rootCmd.PersistentFlags().Lookup("themes_dir"))
 
 	rootCmd.PersistentFlags().StringP("output_dir", "o", defaultOutputDir(), "Output directory")
@@ -61,10 +60,6 @@ func initKowaConf() {
 	viper.BindPFlag("serve_output_port", rootCmd.PersistentFlags().Lookup("serve_output_port"))
 }
 
-func defaultThemesDir() string {
-	return path.Join(helpers.WorkingDir(), DEFAULT_THEMES_DIR)
-}
-
 func defaultOutputDir() string {
 	return path.Join(helpers.WorkingDir(), DEFAULT_OUTPUT_DIR)
 }
@@ -72,6 +67,10 @@ func defaultOutputDir() string {
 func checkAndOutputsFlags() {
 	if viper.GetString("upload_dir") == "" {
 		log.Fatalln("ERROR: The upload_dir setting is mandatory")
+	}
+
+	if viper.GetString("themes_dir") == "" {
+		log.Fatalln("ERROR: The themes_dir setting is mandatory")
 	}
 
 	log.Printf("Upload dir: %s", viper.GetString("upload_dir"))
