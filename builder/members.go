@@ -50,6 +50,7 @@ func (builder *MembersBuilder) Load() {
 	// fetch members
 	membersVars := builder.members()
 	if len(membersVars) == 0 {
+		return
 	}
 
 	// get page settings
