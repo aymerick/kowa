@@ -72,6 +72,22 @@ func (app *Application) corsMiddleware() func(next http.Handler) http.Handler {
 	return result.Handler
 }
 
+// middleware: ensures user is NOT authenticated
+func (app *Application) ensureNotAuthMiddleware(next http.Handler) http.Handler {
+	fn := func(rw http.ResponseWriter, req *http.Request) {
+		// ex: Authorization: Bearer Zjg5ZmEwNDYtNGI3NS00MTk4LWFhYzgtZmVlNGRkZDQ3YzAx
+		authValue := req.Header.Get("Authorization")
+		if len(authValue) > 0 {
+			unauthorized(rw)
+			return
+		}
+
+		next.ServeHTTP(rw, req)
+	}
+
+	return http.HandlerFunc(fn)
+}
+
 // middleware: ensures user is authenticated and injects 'currentUser' in context
 func (app *Application) ensureAuthMiddleware(next http.Handler) http.Handler {
 	fn := func(rw http.ResponseWriter, req *http.Request) {

@@ -19,6 +19,11 @@ func (app *Application) newWebRouter() *mux.Router {
 	router := mux.NewRouter()
 	apiRouter := router.PathPrefix("/api").Subrouter()
 
+	notAuthChain := baseChain.Append(app.ensureNotAuthMiddleware)
+
+	// /api/signup
+	apiRouter.Methods("POST").Path("/signup").Handler(notAuthChain.ThenFunc(app.handleSignupUser))
+
 	// /api/oauth
 	oauthRouter := apiRouter.PathPrefix("/oauth").Subrouter()
 	oauthRouter.Methods("POST").Path("/token").Handler(baseChain.ThenFunc(app.handleOauthToken))
@@ -36,7 +41,7 @@ func (app *Application) newWebRouter() *mux.Router {
 	apiRouter.Methods("PUT").Path("/users/{user_id}").Handler(curUserChain.ThenFunc(app.handleUpdateUser))
 	apiRouter.Methods("GET").Path("/users/{user_id}/sites").Handler(curUserChain.ThenFunc(app.handleGetUserSites))
 
-	// midllewares
+	// middlewares
 	curSiteOwnerChain := authChain.Append(app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
 	curPostOwnerChain := authChain.Append(app.ensurePostMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
 	curEventOwnerChain := authChain.Append(app.ensureEventMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)

@@ -24,7 +24,7 @@ func RandomAlphaNumString(size int) string {
 }
 
 func Pathify(s string) string {
-	return strings.ToLower(NormalizeToASCII(strings.Replace(strings.TrimSpace(s), " ", "-", -1)))
+	return strings.ToLower(NormalizeToPath(strings.Replace(strings.TrimSpace(s), " ", "-", -1)))
 }
 
 // Returns a string than can be used in an URL
@@ -38,8 +38,8 @@ func Urlify(str string) string {
 	return parsedUri.String()
 }
 
-// Normalize unicode string to ASCII
-func NormalizeToASCII(str string) string {
+// Normalize unicode string to a string that can be a file or URL path
+func NormalizeToPath(str string) string {
 	isNotOk := func(r rune) bool {
 		isOk := (r == 35) || // '#'
 			(r == 45) || // '-'
@@ -49,6 +49,23 @@ func NormalizeToASCII(str string) string {
 			((r >= 65) && (r <= 90)) || // 'A'..'Z'
 			((r >= 97) && (r <= 122)) || // 'a'..'z'
 			(r == 95) // '_'
+
+		return !isOk
+	}
+
+	t := transform.Chain(norm.NFKD, transform.RemoveFunc(isNotOk))
+
+	result, _, _ := transform.String(t, str)
+
+	return result
+}
+
+// Normalise unicode string to a string that can be a username
+func NormalizeToUsername(str string) string {
+	isNotOk := func(r rune) bool {
+		isOk := ((r >= 48) && (r <= 57)) || // '0'..'9'
+			((r >= 65) && (r <= 90)) || // 'A'..'Z'
+			((r >= 97) && (r <= 122)) // 'a'..'z'
 
 		return !isOk
 	}

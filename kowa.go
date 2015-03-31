@@ -6,6 +6,7 @@ import (
 	"github.com/nicksnyder/go-i18n/i18n"
 
 	"github.com/aymerick/kowa/commands"
+	"github.com/aymerick/kowa/core"
 )
 
 func main() {
@@ -17,9 +18,7 @@ func main() {
 
 // load i18n locales
 func loadLocales() {
-	langs := []string{"en", "fr"}
-
-	for _, lang := range langs {
+	for _, lang := range core.Langs {
 		filePath := fmt.Sprintf("locales/%s.json", lang)
 
 		// fetch file from embedded assets

@@ -4,14 +4,108 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"net/mail"
+
+	"code.google.com/p/go.crypto/bcrypt"
 
 	"github.com/gorilla/mux"
+	"github.com/nicksnyder/go-i18n/i18n"
 
+	"github.com/aymerick/kowa/core"
+	"github.com/aymerick/kowa/helpers"
 	"github.com/aymerick/kowa/models"
 )
 
 type userJson struct {
 	User models.User `json:"user"`
+}
+
+// POST /api/signup
+func (app *Application) handleSignupUser(rw http.ResponseWriter, req *http.Request) {
+	T := i18n.MustTfunc("en") // @todo FIXME detect browser lang
+
+	currentDBSession := app.getCurrentDBSession(req)
+
+	if err := req.ParseForm(); err != nil {
+		http.Error(rw, "Failed to parse form data", http.StatusBadRequest)
+		return
+	}
+
+	// get form data
+	email := req.Form.Get("email")
+	username := req.Form.Get("username")
+	password := req.Form.Get("password")
+	lang := req.Form.Get("lang")
+
+	// check email format
+	emailAddr, err := mail.ParseAddress(email)
+	if err != nil || emailAddr.Address == "" {
+		http.Error(rw, T("This email address is invalid."), http.StatusBadRequest)
+		return
+	}
+
+	// check username format
+	if username != helpers.NormalizeToUsername(username) {
+		http.Error(rw, T("Your username is invalid, please choose a username that contains only letters and numbers."), http.StatusBadRequest)
+		return
+	}
+
+	// check username length
+	if len(username) < 4 {
+		http.Error(rw, T("Your username is too short, please choose a username that contains at least four characters."), http.StatusBadRequest)
+		return
+	}
+
+	// check password length
+	if len(password) < 8 {
+		http.Error(rw, T("Your password is too weak, please enter at least height characters."), http.StatusBadRequest)
+		return
+	}
+
+	// encrypt password
+	encryptedPassword, errPass := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if errPass != nil {
+		http.Error(rw, "Failed to encrypt password", http.StatusInternalServerError)
+		return
+	}
+
+	// check lang
+	userLang := core.DEFAULT_LANG
+	if lang != "" {
+		for _, availableLang := range core.Langs {
+			if lang == availableLang {
+				userLang = lang
+				break
+			}
+		}
+	}
+
+	// check if email is already taken
+	if user := currentDBSession.FindUserByEmail(emailAddr.Address); user != nil {
+		http.Error(rw, T("This email is already registered."), http.StatusForbidden)
+		return
+	}
+
+	// check if username is already taken
+	if user := currentDBSession.FindUser(username); user != nil {
+		http.Error(rw, T("This username is already registered, please choose another one."), http.StatusForbidden)
+		return
+	}
+
+	// insert user
+	user := &models.User{
+		Id:       username,
+		Email:    emailAddr.Address,
+		Lang:     userLang,
+		Password: string(encryptedPassword),
+	}
+
+	if err := currentDBSession.CreateUser(user); err != nil {
+		http.Error(rw, "Failed to create user", http.StatusInternalServerError)
+		return
+	}
+
+	app.render.JSON(rw, http.StatusCreated, renderMap{"user": user})
 }
 
 // GET /api/me
