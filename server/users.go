@@ -22,8 +22,6 @@ type userJson struct {
 
 // POST /api/signup
 func (app *Application) handleSignupUser(rw http.ResponseWriter, req *http.Request) {
-	T := i18n.MustTfunc("en") // @todo FIXME detect browser lang
-
 	currentDBSession := app.getCurrentDBSession(req)
 
 	if err := req.ParseForm(); err != nil {
@@ -37,38 +35,6 @@ func (app *Application) handleSignupUser(rw http.ResponseWriter, req *http.Reque
 	password := req.Form.Get("password")
 	lang := req.Form.Get("lang")
 
-	// check email format
-	emailAddr, err := mail.ParseAddress(email)
-	if err != nil || emailAddr.Address == "" {
-		http.Error(rw, T("This email address is invalid."), http.StatusBadRequest)
-		return
-	}
-
-	// check username format
-	if username != helpers.NormalizeToUsername(username) {
-		http.Error(rw, T("Your username is invalid, please choose a username that contains only letters and numbers."), http.StatusBadRequest)
-		return
-	}
-
-	// check username length
-	if len(username) < 4 {
-		http.Error(rw, T("Your username is too short, please choose a username that contains at least four characters."), http.StatusBadRequest)
-		return
-	}
-
-	// check password length
-	if len(password) < 8 {
-		http.Error(rw, T("Your password is too weak, please enter at least height characters."), http.StatusBadRequest)
-		return
-	}
-
-	// encrypt password
-	encryptedPassword, errPass := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if errPass != nil {
-		http.Error(rw, "Failed to encrypt password", http.StatusInternalServerError)
-		return
-	}
-
 	// check lang
 	userLang := core.DEFAULT_LANG
 	if lang != "" {
@@ -80,15 +46,54 @@ func (app *Application) handleSignupUser(rw http.ResponseWriter, req *http.Reque
 		}
 	}
 
-	// check if email is already taken
-	if user := currentDBSession.FindUserByEmail(emailAddr.Address); user != nil {
-		http.Error(rw, T("This email is already registered."), http.StatusForbidden)
+	T := i18n.MustTfunc(userLang)
+
+	errors := make(map[string]string)
+
+	// check email format
+	emailAddr, err := mail.ParseAddress(email)
+	if err != nil || emailAddr.Address == "" {
+		errors["email"] = T("This email address is invalid.")
+	}
+
+	// check username format
+	if username != helpers.NormalizeToUsername(username) {
+		errors["username"] = T("Your username is invalid, please choose a username that contains only letters and numbers.")
+	}
+
+	// check username length
+	if len(username) < 4 {
+		errors["username"] = T("Your username is too short, please choose a username that contains at least four characters.")
+	}
+
+	// check password length
+	if len(password) < 8 {
+		errors["password"] = T("Your password is too weak, please enter at least height characters.")
+	}
+
+	if errors["email"] == "" {
+		// check if email is already taken
+		if user := currentDBSession.FindUserByEmail(emailAddr.Address); user != nil {
+			errors["email"] = T("This email is already registered.")
+		}
+	}
+
+	if errors["username"] == "" {
+		// check if username is already taken
+		if user := currentDBSession.FindUser(username); user != nil {
+			errors["username"] = T("This username is already registered, please choose another one.")
+		}
+	}
+
+	if len(errors) > 0 {
+		app.render.JSON(rw, http.StatusBadRequest, renderMap{"errors": errors})
 		return
 	}
 
-	// check if username is already taken
-	if user := currentDBSession.FindUser(username); user != nil {
-		http.Error(rw, T("This username is already registered, please choose another one."), http.StatusForbidden)
+	// encrypt password
+	encryptedPassword, errPass := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if errPass != nil {
+		http.Error(rw, "Failed to encrypt password", http.StatusInternalServerError)
 		return
 	}
 
