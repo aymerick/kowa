@@ -66,9 +66,9 @@ Build kowa:
     $ cd $GOPATH/src/github.com/aymerick/kowa
     $ make build
 
-Add a user with two sites:
+Add an administrator user with two sites:
 
-    $ ./kowa add_user mike mike@asso.ninja Michelangelo TMNT pizzaword
+    $ ./kowa add_user mike mike@asso.ninja Michelangelo TMNT pizzaword true
     $ ./kowa add_site site1 'My First Site' mike
     $ ./kowa add_site site2 'My Second Site' mike
 

@@ -26,7 +26,7 @@ func (app *Application) handleOauthToken(rw http.ResponseWriter, req *http.Reque
 				user = currentDBSession.FindUserByEmail(ar.Username)
 			}
 
-			if user != nil {
+			if (user != nil) && (user.Status == models.USER_STATUS_ACTIVE) {
 				err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(ar.Password))
 				if err == nil {
 					ar.UserData = user.Id

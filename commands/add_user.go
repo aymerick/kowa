@@ -13,7 +13,7 @@ import (
 )
 
 var addUserCmd = &cobra.Command{
-	Use:   "add_user [id] [email] [firstname] [lastname] [password]",
+	Use:   "add_user [id] [email] [firstname] [lastname] [password] [admin]",
 	Short: "Add a new user",
 	Long:  `Insert a new user in database.`,
 	Run:   addUser,
@@ -40,11 +40,15 @@ func addUser(cmd *cobra.Command, args []string) {
 		panic("Arg")
 	}
 
+	isAdmin := (len(args) >= 5) && (args[4] == "true")
+
 	user := &models.User{
 		Id:        args[0],
 		Email:     args[1],
 		FirstName: args[2],
 		LastName:  args[3],
+		Admin:     isAdmin,
+		Status:    models.USER_STATUS_ACTIVE,
 		Lang:      core.DEFAULT_LANG,
 		Password:  string(password),
 	}

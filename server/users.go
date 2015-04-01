@@ -101,6 +101,7 @@ func (app *Application) handleSignupUser(rw http.ResponseWriter, req *http.Reque
 	user := &models.User{
 		Id:       username,
 		Email:    emailAddr.Address,
+		Status:   models.USER_STATUS_PENDING,
 		Lang:     userLang,
 		Password: string(encryptedPassword),
 	}
@@ -109,6 +110,8 @@ func (app *Application) handleSignupUser(rw http.ResponseWriter, req *http.Reque
 		http.Error(rw, "Failed to create user", http.StatusInternalServerError)
 		return
 	}
+
+	// @todo Send signup confirmation email
 
 	app.render.JSON(rw, http.StatusCreated, renderMap{"user": user})
 }

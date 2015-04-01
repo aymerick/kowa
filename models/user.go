@@ -11,14 +11,23 @@ import (
 
 const (
 	USERS_COL_NAME = "users"
+
+	// signed up but not confirmed
+	USER_STATUS_PENDING = "pending"
+
+	// signed up and confirmed
+	USER_STATUS_ACTIVE = "active"
 )
 
 type User struct {
 	dbSession *DBSession `bson:"-" json:"-"`
 
-	Id        string    `bson:"_id,omitempty" json:"id"`
-	CreatedAt time.Time `bson:"created_at"    json:"createdAt"`
-	UpdatedAt time.Time `bson:"updated_at"    json:"updatedAt"`
+	Id          string    `bson:"_id,omitempty" json:"id"`
+	CreatedAt   time.Time `bson:"created_at"    json:"createdAt"`
+	UpdatedAt   time.Time `bson:"updated_at"    json:"updatedAt"`
+	ConfirmedAt time.Time `bson:"confirmed_at"  json:"confirmedAt"`
+	Admin       bool      `bson:"admin"         json:"admin"`
+	Status      string    `bson:"status"        json:"status"`
 
 	Email     string `bson:"email"      json:"email"`
 	FirstName string `bson:"first_name" json:"firstName"`
