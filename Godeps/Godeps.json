@@ -13,21 +13,6 @@
 			"Rev": "841f0a993ddddfbf3648cac422c219d0752b280a"
 		},
 		{
-			"ImportPath": "code.google.com/p/go.crypto/blowfish",
-			"Comment": "null-229",
-			"Rev": "841f0a993ddddfbf3648cac422c219d0752b280a"
-		},
-		{
-			"ImportPath": "code.google.com/p/go.crypto/cast5",
-			"Comment": "null-229",
-			"Rev": "841f0a993ddddfbf3648cac422c219d0752b280a"
-		},
-		{
-			"ImportPath": "code.google.com/p/go.crypto/openpgp",
-			"Comment": "null-229",
-			"Rev": "841f0a993ddddfbf3648cac422c219d0752b280a"
-		},
-		{
 			"ImportPath": "github.com/BurntSushi/toml",
 			"Comment": "v0.1.0-9-g3883ac1",
 			"Rev": "3883ac1ce943878302255f538fce319d23226223"
@@ -39,6 +24,16 @@
 		{
 			"ImportPath": "github.com/armon/consul-api",
 			"Rev": "1b81c8e0c4cbf1d382310e4c0dc11221632e79d1"
+		},
+		{
+			"ImportPath": "github.com/coreos/etcd/etcdserver/etcdhttp/httptypes",
+			"Comment": "v2.0.4-354-g3963385",
+			"Rev": "39633850d133b6ff83159e6ee13d11fc332c7b50"
+		},
+		{
+			"ImportPath": "github.com/coreos/etcd/pkg/types",
+			"Comment": "v2.0.4-354-g3963385",
+			"Rev": "39633850d133b6ff83159e6ee13d11fc332c7b50"
 		},
 		{
 			"ImportPath": "github.com/coreos/go-etcd/etcd",
@@ -56,6 +51,10 @@
 		{
 			"ImportPath": "github.com/gorilla/mux",
 			"Rev": "e444e69cbd2e2e3e0749a2f3c717cec491552bbf"
+		},
+		{
+			"ImportPath": "github.com/jordan-wright/email",
+			"Rev": "9c459b245c20bee2cc7adbd1e27e4e716f98ad88"
 		},
 		{
 			"ImportPath": "github.com/justinas/alice",
@@ -139,6 +138,18 @@
 			"Rev": "0d6dc8c093c1c191f00effdfc3b2f858973f0271"
 		},
 		{
+			"ImportPath": "golang.org/x/crypto/blowfish",
+			"Rev": "c57d4a71915a248dbad846d60825145062b4c18e"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/cast5",
+			"Rev": "c57d4a71915a248dbad846d60825145062b4c18e"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/openpgp",
+			"Rev": "c57d4a71915a248dbad846d60825145062b4c18e"
+		},
+		{
 			"ImportPath": "golang.org/x/image/bmp",
 			"Rev": "b0cc87690b1d9e05b7a6f2971199f71efba4194c"
 		},
@@ -163,8 +174,8 @@
 			"Rev": "e2e914857713db7497cca2bd7fc0b030fc9cb22d"
 		},
 		{
-			"ImportPath": "gopkg.in/yaml.v1",
-			"Rev": "9f9df34309c04878acc86042b16630b0f696e1de"
+			"ImportPath": "gopkg.in/yaml.v2",
+			"Rev": "49c95bdc21843256fb6c4e0d370a05f24a0bf213"
 		}
 	]
 }
