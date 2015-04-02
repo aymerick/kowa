@@ -87,7 +87,7 @@ Install `go-bindata` package:
 
 When you modify translations, you have to regenerate `bindata.go` file with:
 
-    $ go-bindata locales/
+    $ go-bindata -o core/bindata.go locales/
 
 
 ## Development workflow
@@ -108,7 +108,6 @@ You can still trigger a manual rebuild of a static site with this command:
 If you modify the code that handles images, you can regenerate all derivatives for a given site with this command:
 
     $ ./kowa gen_derivatives site1
-
 
 ## Test
 

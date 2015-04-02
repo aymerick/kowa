@@ -18,14 +18,6 @@ const (
 	DEFAULT_BASEURL = "http://127.0.0.1"
 )
 
-var (
-	Langs []string
-)
-
-func init() {
-	Langs = []string{"en", "fr"}
-}
-
 func UploadDir() string {
 	dir := viper.GetString("upload_dir")
 	if dir == "" {
