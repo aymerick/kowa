@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 	"sort"
+	"strings"
 	"testing"
 	"time"
 
@@ -60,6 +61,49 @@ var remoteExample = []byte(`{
 "newkey":"remote"
 }`)
 
+func initConfigs() {
+	Reset()
+	SetConfigType("yaml")
+	r := bytes.NewReader(yamlExample)
+	marshalReader(r, v.config)
+
+	SetConfigType("json")
+	r = bytes.NewReader(jsonExample)
+	marshalReader(r, v.config)
+
+	SetConfigType("toml")
+	r = bytes.NewReader(tomlExample)
+	marshalReader(r, v.config)
+
+	SetConfigType("json")
+	remote := bytes.NewReader(remoteExample)
+	marshalReader(remote, v.kvstore)
+}
+
+func initYAML() {
+	Reset()
+	SetConfigType("yaml")
+	r := bytes.NewReader(yamlExample)
+
+	marshalReader(r, v.config)
+}
+
+func initJSON() {
+	Reset()
+	SetConfigType("json")
+	r := bytes.NewReader(jsonExample)
+
+	marshalReader(r, v.config)
+}
+
+func initTOML() {
+	Reset()
+	SetConfigType("toml")
+	r := bytes.NewReader(tomlExample)
+
+	marshalReader(r, v.config)
+}
+
 //stubs for PFlag Values
 type stringValue string
 
@@ -83,7 +127,7 @@ func (s *stringValue) String() string {
 
 func TestBasics(t *testing.T) {
 	SetConfigFile("/tmp/config.yaml")
-	assert.Equal(t, "/tmp/config.yaml", getConfigFile())
+	assert.Equal(t, "/tmp/config.yaml", v.getConfigFile())
 }
 
 func TestDefault(t *testing.T) {
@@ -95,7 +139,7 @@ func TestMarshalling(t *testing.T) {
 	SetConfigType("yaml")
 	r := bytes.NewReader(yamlExample)
 
-	MarshallReader(r, config)
+	marshalReader(r, v.config)
 	assert.True(t, InConfig("name"))
 	assert.False(t, InConfig("state"))
 	assert.Equal(t, "steve", Get("name"))
@@ -132,37 +176,26 @@ func TestAliasInConfigFile(t *testing.T) {
 }
 
 func TestYML(t *testing.T) {
-	Reset()
-	SetConfigType("yml")
-	r := bytes.NewReader(yamlExample)
-
-	MarshallReader(r, config)
+	initYAML()
 	assert.Equal(t, "steve", Get("name"))
 }
 
 func TestJSON(t *testing.T) {
-	SetConfigType("json")
-	r := bytes.NewReader(jsonExample)
-
-	MarshallReader(r, config)
+	initJSON()
 	assert.Equal(t, "0001", Get("id"))
 }
 
 func TestTOML(t *testing.T) {
-	SetConfigType("toml")
-	r := bytes.NewReader(tomlExample)
-
-	MarshallReader(r, config)
+	initTOML()
 	assert.Equal(t, "TOML Example", Get("title"))
 }
 
 func TestRemotePrecedence(t *testing.T) {
-	SetConfigType("json")
-	r := bytes.NewReader(jsonExample)
-	MarshallReader(r, config)
+	initJSON()
+
 	remote := bytes.NewReader(remoteExample)
 	assert.Equal(t, "0001", Get("id"))
-	MarshallReader(remote, kvstore)
+	marshalReader(remote, v.kvstore)
 	assert.Equal(t, "0001", Get("id"))
 	assert.NotEqual(t, "cronut", Get("type"))
 	assert.Equal(t, "remote", Get("newkey"))
@@ -173,9 +206,8 @@ func TestRemotePrecedence(t *testing.T) {
 }
 
 func TestEnv(t *testing.T) {
-	SetConfigType("json")
-	r := bytes.NewReader(jsonExample)
-	MarshallReader(r, config)
+	initJSON()
+
 	BindEnv("id")
 	BindEnv("f", "FOOD")
 
@@ -190,12 +222,64 @@ func TestEnv(t *testing.T) {
 	AutomaticEnv()
 
 	assert.Equal(t, "crunk", Get("name"))
+
+}
+
+func TestEnvPrefix(t *testing.T) {
+	initJSON()
+
+	SetEnvPrefix("foo") // will be uppercased automatically
+	BindEnv("id")
+	BindEnv("f", "FOOD") // not using prefix
+
+	os.Setenv("FOO_ID", "13")
+	os.Setenv("FOOD", "apple")
+	os.Setenv("FOO_NAME", "crunk")
+
+	assert.Equal(t, "13", Get("id"))
+	assert.Equal(t, "apple", Get("f"))
+	assert.Equal(t, "Cake", Get("name"))
+
+	AutomaticEnv()
+
+	assert.Equal(t, "crunk", Get("name"))
+}
+
+func TestAutoEnv(t *testing.T) {
+	Reset()
+
+	AutomaticEnv()
+	os.Setenv("FOO_BAR", "13")
+	assert.Equal(t, "13", Get("foo_bar"))
+}
+
+func TestAutoEnvWithPrefix(t *testing.T) {
+	Reset()
+
+	AutomaticEnv()
+	SetEnvPrefix("Baz")
+	os.Setenv("BAZ_BAR", "13")
+	assert.Equal(t, "13", Get("bar"))
+}
+
+func TestSetEnvReplacer(t *testing.T) {
+	Reset()
+
+	AutomaticEnv()
+	os.Setenv("REFRESH_INTERVAL", "30s")
+
+	replacer := strings.NewReplacer("-", "_")
+	SetEnvKeyReplacer(replacer)
+
+	assert.Equal(t, "30s", Get("refresh-interval"))
 }
 
 func TestAllKeys(t *testing.T) {
+	initConfigs()
+
 	ks := sort.StringSlice{"title", "newkey", "owner", "name", "beard", "ppu", "batters", "hobbies", "clothing", "age", "hacker", "id", "type", "eyes"}
 	dob, _ := time.Parse(time.RFC3339, "1979-05-27T07:32:00Z")
-	all := map[string]interface{}{"hacker": true, "beard": true, "newkey": "remote", "batters": map[string]interface{}{"batter": []interface{}{map[string]interface{}{"type": "Regular"}, map[string]interface{}{"type": "Chocolate"}, map[string]interface{}{"type": "Blueberry"}, map[string]interface{}{"type": "Devil's Food"}}}, "hobbies": []interface{}{"skateboarding", "snowboarding", "go"}, "ppu": 0.55, "clothing": map[interface{}]interface{}{"jacket": "leather", "trousers": "denim"}, "name": "crunk", "owner": map[string]interface{}{"organization": "MongoDB", "Bio": "MongoDB Chief Developer Advocate & Hacker at Large", "dob": dob}, "id": "13", "title": "TOML Example", "age": 35, "type": "donut", "eyes": "brown"}
+	all := map[string]interface{}{"owner": map[string]interface{}{"organization": "MongoDB", "Bio": "MongoDB Chief Developer Advocate & Hacker at Large", "dob": dob}, "title": "TOML Example", "ppu": 0.55, "eyes": "brown", "clothing": map[interface{}]interface{}{"trousers": "denim", "jacket": "leather"}, "id": "0001", "batters": map[string]interface{}{"batter": []interface{}{map[string]interface{}{"type": "Regular"}, map[string]interface{}{"type": "Chocolate"}, map[string]interface{}{"type": "Blueberry"}, map[string]interface{}{"type": "Devil's Food"}}}, "hacker": true, "beard": true, "hobbies": []interface{}{"skateboarding", "snowboarding", "go"}, "age": 35, "type": "donut", "newkey": "remote", "name": "Cake"}
 
 	var allkeys sort.StringSlice
 	allkeys = AllKeys()
@@ -291,4 +375,21 @@ func TestBoundCaseSensitivity(t *testing.T) {
 	BindPFlag("eYEs", flag)
 	assert.Equal(t, "green", Get("eyes"))
 
+}
+
+func TestSizeInBytes(t *testing.T) {
+	input := map[string]uint{
+		"":               0,
+		"b":              0,
+		"12 bytes":       0,
+		"200000000000gb": 0,
+		"12 b":           12,
+		"43 MB":          43 * (1 << 20),
+		"10mb":           10 * (1 << 20),
+		"1gb":            1 << 30,
+	}
+
+	for str, expected := range input {
+		assert.Equal(t, expected, parseSizeInBytes(str), str)
+	}
 }

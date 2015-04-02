@@ -97,11 +97,11 @@
 		},
 		{
 			"ImportPath": "github.com/spf13/cast",
-			"Rev": "770890fb156e3654a3aaa7e696971f7e5a73df4a"
+			"Rev": "2c4fdb5416dd394ff5e61fcdb8eb4f09e46a2ed8"
 		},
 		{
 			"ImportPath": "github.com/spf13/cobra",
-			"Rev": "b1e90a7943957b51bb96a13b44b844475bcf95c0"
+			"Rev": "be3cf39f80b0c6e68be7d3cfe16cb454e4e25872"
 		},
 		{
 			"ImportPath": "github.com/spf13/fsync",
@@ -113,11 +113,11 @@
 		},
 		{
 			"ImportPath": "github.com/spf13/pflag",
-			"Rev": "463bdc838f2b35e9307e91d480878bda5fff7232"
+			"Rev": "18d831e92d67eafd1b0db8af9ffddbd04f7ae1f4"
 		},
 		{
 			"ImportPath": "github.com/spf13/viper",
-			"Rev": "77144270da4a139bc4554f0488514f4212312ac3"
+			"Rev": "ac722f39d36b2f539be797713e89b1c684b60b9a"
 		},
 		{
 			"ImportPath": "github.com/unrolled/render",
