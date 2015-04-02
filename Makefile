@@ -14,3 +14,6 @@ build-from-scratch:
 
 test:
 	godep go test ./... -v
+
+gen:
+	go-bindata -o core/bindata.go -pkg="core" locales/

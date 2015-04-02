@@ -87,7 +87,7 @@ Install `go-bindata` package:
 
 When you modify translations, you have to regenerate `core/bindata.go` file with:
 
-    $ go-bindata -o core/bindata.go -pkg="core" locales/
+    $ make gen
 
 
 ## Development workflow
