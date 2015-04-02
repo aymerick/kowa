@@ -79,6 +79,12 @@ func checkAndOutputsFlags() {
 }
 
 func setupConfig() {
+	// setup environment variables
+	// eg: KOWA_SMTP_AUTH_PASS
+	viper.SetEnvPrefix("kowa")
+	viper.AutomaticEnv()
+
+	// setup config file
 	if cfgFile != "" {
 		viper.SetConfigFile(cfgFile)
 	}
