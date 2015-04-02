@@ -79,15 +79,15 @@ Start server:
 The server is now waiting for API requests on port `35830` and serves generated sites on port `48910`.
 
 
-### Locales
+### Embedded data
 
 Install `go-bindata` package:
 
     $ go get -u github.com/jteeuwen/go-bindata/...
 
-When you modify translations, you have to regenerate `bindata.go` file with:
+When you modify translations, you have to regenerate `core/bindata.go` file with:
 
-    $ go-bindata -o core/bindata.go locales/
+    $ go-bindata -o core/bindata.go -pkg="core" locales/
 
 
 ## Development workflow
