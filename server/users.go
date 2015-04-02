@@ -111,7 +111,9 @@ func (app *Application) handleSignupUser(rw http.ResponseWriter, req *http.Reque
 		return
 	}
 
-	// @todo Send signup confirmation email
+	// send signup confirmation email
+	// @todo Use a goroutine
+	// mailers.NewSignupMailer(user).Send()
 
 	app.render.JSON(rw, http.StatusCreated, renderMap{"user": user})
 }

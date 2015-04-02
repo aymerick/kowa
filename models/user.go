@@ -112,8 +112,31 @@ func (session *DBSession) CreateUser(user *User) error {
 // User
 //
 
-func (user *User) Fullname() string {
-	return fmt.Sprintf("%s %s", user.FirstName, user.LastName)
+// Returns user fullname
+func (user *User) FullName() string {
+	if user.FirstName == "" {
+		return user.LastName
+	} else if user.LastName == "" {
+		return user.FirstName
+	} else {
+		return fmt.Sprintf("%s %s", user.FirstName, user.LastName)
+	}
+}
+
+// Returns user display name, usefull if fullname is empty
+func (user *User) DisplayName() string {
+	result := user.FullName()
+
+	if result == "" {
+		result = user.Id
+	}
+
+	return result
+}
+
+// Returns user mail address with format: User Name <email@addre.ss>
+func (user *User) MailAddress() string {
+	return fmt.Sprintf("%s <%s>", user.DisplayName(), user.Email)
 }
 
 // Implements json.MarshalJSON
