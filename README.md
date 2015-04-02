@@ -122,4 +122,4 @@ To update a dependency:
 
 To launch tests, go to `kowa` root directory, then:
 
-    $ godep go test ./... -v
+    $ make test

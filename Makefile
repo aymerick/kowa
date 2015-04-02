@@ -11,3 +11,6 @@ build:
 build-from-scratch:
 	go get github.com/tools/godep
 	godep go build ${LDFLAGS} -o kowa-${VERSION}
+
+test:
+	godep go test ./... -v
