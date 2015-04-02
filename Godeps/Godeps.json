@@ -9,13 +9,13 @@
 		},
 		{
 			"ImportPath": "code.google.com/p/go.crypto/bcrypt",
-			"Comment": "null-229",
-			"Rev": "841f0a993ddddfbf3648cac422c219d0752b280a"
+			"Comment": "null-236",
+			"Rev": "69e2a90ed92d03812364aeb947b7068dc42e561e"
 		},
 		{
 			"ImportPath": "github.com/BurntSushi/toml",
-			"Comment": "v0.1.0-9-g3883ac1",
-			"Rev": "3883ac1ce943878302255f538fce319d23226223"
+			"Comment": "v0.1.0-18-g443a628",
+			"Rev": "443a628bc233f634a75bcbdd71fe5350789f1afa"
 		},
 		{
 			"ImportPath": "github.com/RangelReale/osin",
@@ -23,7 +23,7 @@
 		},
 		{
 			"ImportPath": "github.com/armon/consul-api",
-			"Rev": "1b81c8e0c4cbf1d382310e4c0dc11221632e79d1"
+			"Rev": "dcfedd50ed5334f96adee43fc88518a4f095e15c"
 		},
 		{
 			"ImportPath": "github.com/coreos/etcd/etcdserver/etcdhttp/httptypes",
@@ -37,8 +37,8 @@
 		},
 		{
 			"ImportPath": "github.com/coreos/go-etcd/etcd",
-			"Comment": "v0.2.0-rc1-127-g6fe04d5",
-			"Rev": "6fe04d580dfb71c9e34cbce2f4df9eefd1e1241e"
+			"Comment": "v0.4.6-12-gbf30eb7",
+			"Rev": "bf30eb7162940ff9aa35d55b23e49ba69322963d"
 		},
 		{
 			"ImportPath": "github.com/disintegration/imaging",
@@ -62,8 +62,8 @@
 		},
 		{
 			"ImportPath": "github.com/kr/pretty",
-			"Comment": "go.weekly.2011-12-22-24-gf31442d",
-			"Rev": "f31442d60e51465c69811e2107ae978868dbea5c"
+			"Comment": "go.weekly.2011-12-22-26-gcb0850c",
+			"Rev": "cb0850c1681cbca3233e84f7e6ec3e4c3f352085"
 		},
 		{
 			"ImportPath": "github.com/kr/text",
@@ -75,7 +75,7 @@
 		},
 		{
 			"ImportPath": "github.com/mitchellh/mapstructure",
-			"Rev": "740c764bc6149d3f1806231418adb9f52c11bcbf"
+			"Rev": "442e588f213303bec7936deba67901f8fc8f18b1"
 		},
 		{
 			"ImportPath": "github.com/nicksnyder/go-i18n/i18n",
@@ -108,7 +108,7 @@
 		},
 		{
 			"ImportPath": "github.com/spf13/jwalterweatherman",
-			"Rev": "e3682f3b5526cf86abc2d415aa312cd5531e3d0a"
+			"Rev": "3d60171a64319ef63c78bd45bd60e6eab1e75f8b"
 		},
 		{
 			"ImportPath": "github.com/spf13/pflag",
@@ -124,18 +124,18 @@
 		},
 		{
 			"ImportPath": "github.com/xordataexchange/crypt/backend",
-			"Comment": "v0.0.2",
-			"Rev": "0d6dc8c093c1c191f00effdfc3b2f858973f0271"
+			"Comment": "v0.0.2-15-g93de656",
+			"Rev": "93de65664ef094aa5acff4f5201ac17580370af7"
 		},
 		{
 			"ImportPath": "github.com/xordataexchange/crypt/config",
-			"Comment": "v0.0.2",
-			"Rev": "0d6dc8c093c1c191f00effdfc3b2f858973f0271"
+			"Comment": "v0.0.2-15-g93de656",
+			"Rev": "93de65664ef094aa5acff4f5201ac17580370af7"
 		},
 		{
 			"ImportPath": "github.com/xordataexchange/crypt/encoding/secconf",
-			"Comment": "v0.0.2",
-			"Rev": "0d6dc8c093c1c191f00effdfc3b2f858973f0271"
+			"Comment": "v0.0.2-15-g93de656",
+			"Rev": "93de65664ef094aa5acff4f5201ac17580370af7"
 		},
 		{
 			"ImportPath": "golang.org/x/crypto/blowfish",
