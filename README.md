@@ -116,6 +116,7 @@ To update a dependency:
 
     $ go get -u foo/bar
     $ godep update foo/bar
+    $ godep save
 
 
 ## Test
