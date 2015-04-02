@@ -109,6 +109,15 @@ If you modify the code that handles images, you can regenerate all derivatives f
 
     $ ./kowa gen_derivatives site1
 
+
+## Dependencies
+
+To update a dependency:
+
+    $ go get -u foo/bar
+    $ godep update foo/bar
+
+
 ## Test
 
 To launch tests, go to `kowa` root directory, then:
