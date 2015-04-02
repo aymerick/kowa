@@ -184,6 +184,30 @@
     "translation": "{{.Year}} {{.Month}} {{.Day}}"
   },
   {
+    "id": "signup_email_invalid",
+    "translation": "This email address is invalid."
+  },
+  {
+    "id": "signup_email_not_available",
+    "translation": "This email is already registered."
+  },
+  {
+    "id": "signup_password_too_weak",
+    "translation": "Your password is too weak, please enter at least height characters."
+  },
+  {
+    "id": "signup_username_invalid",
+    "translation": "Your username is invalid, please choose a username that contains only letters and numbers."
+  },
+  {
+    "id": "signup_username_not_available",
+    "translation": "This username is already registered, please choose another one."
+  },
+  {
+    "id": "signup_username_too_short",
+    "translation": "Your username is too short, please choose a username that contains at least four characters."
+  },
+  {
     "id": "toogle_navigation",
     "translation": "Toggle navigation"
   },

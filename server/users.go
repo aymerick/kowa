@@ -53,35 +53,35 @@ func (app *Application) handleSignupUser(rw http.ResponseWriter, req *http.Reque
 	// check email format
 	emailAddr, err := mail.ParseAddress(email)
 	if err != nil || emailAddr.Address == "" {
-		errors["email"] = T("This email address is invalid.")
+		errors["email"] = T("signup_email_invalid")
 	}
 
 	// check username format
 	if username != helpers.NormalizeToUsername(username) {
-		errors["username"] = T("Your username is invalid, please choose a username that contains only letters and numbers.")
+		errors["username"] = T("signup_username_invalid")
 	}
 
 	// check username length
 	if len(username) < 4 {
-		errors["username"] = T("Your username is too short, please choose a username that contains at least four characters.")
+		errors["username"] = T("signup_username_too_short")
 	}
 
 	// check password length
 	if len(password) < 8 {
-		errors["password"] = T("Your password is too weak, please enter at least height characters.")
+		errors["password"] = T("signup_password_too_weak")
 	}
 
 	if errors["email"] == "" {
 		// check if email is already taken
 		if user := currentDBSession.FindUserByEmail(emailAddr.Address); user != nil {
-			errors["email"] = T("This email is already registered.")
+			errors["email"] = T("signup_email_not_available")
 		}
 	}
 
 	if errors["username"] == "" {
 		// check if username is already taken
 		if user := currentDBSession.FindUser(username); user != nil {
-			errors["username"] = T("This username is already registered, please choose another one.")
+			errors["username"] = T("signup_username_not_available")
 		}
 	}
 

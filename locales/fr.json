@@ -184,6 +184,30 @@
     "translation": "{{.Day}} {{.Month}} {{.Year}}"
   },
   {
+    "id": "signup_email_invalid",
+    "translation": "Cet email est invalide."
+  },
+  {
+    "id": "signup_email_not_available",
+    "translation": "Cet email est déjà utilisé."
+  },
+  {
+    "id": "signup_password_too_weak",
+    "translation": "Votre mot de passe est trop faible, veuillez entrer au moins huit caractères."
+  },
+  {
+    "id": "signup_username_invalid",
+    "translation": "Votre identifiant est invalid, veuillez n'utiliser que lettres et des chiffres."
+  },
+  {
+    "id": "signup_username_not_available",
+    "translation": "Cet identifiant est déjà utilisé, veuille en choisir un autre."
+  },
+  {
+    "id": "signup_username_too_short",
+    "translation": "Votre identifiant est trop court, veuillez entrer au moins quatre caractères."
+  },
+  {
     "id": "toogle_navigation",
     "translation": "Menu"
   },
