@@ -118,7 +118,6 @@ func (app *Application) ensureAuthMiddleware(next http.Handler) http.Handler {
 		currentDBSession := app.getCurrentDBSession(req)
 
 		if currentUser := currentDBSession.FindUser(userId); currentUser != nil {
-			// log.Printf("Current user is: %s [%s]\n", currentUser.Fullname(), userId)
 			context.Set(req, "currentUser", currentUser)
 		} else {
 			unauthorized(rw)
