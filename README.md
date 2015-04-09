@@ -59,7 +59,7 @@ It is tedious to pass flags to `kowa` commands, so let's create a `$HOME/.kowa/c
 
 Fetch kowa:
 
-    $ go get git@github.com:aymerick/kowa
+    $ go get github.com/aymerick/kowa
 
 Build kowa:
 
