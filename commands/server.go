@@ -29,7 +29,9 @@ func initServerConf() {
 	serverCmd.Flags().IntP("port", "p", DEFAULT_PORT, "Port to run Kowa server on")
 	viper.BindPFlag("port", serverCmd.Flags().Lookup("port"))
 
-	// SMTP
+	// Mail
+	serverCmd.Flags().String("mail_tpl_dir", "", "Mail templates directory. If not provided, default templates are used.")
+	viper.BindPFlag("mail_tpl_dir", serverCmd.Flags().Lookup("mail_tpl_dir"))
 
 	serverCmd.Flags().String("smtp_from", DEFAULT_SMTP_FROM, "'from' email address to use when sending mails")
 	viper.BindPFlag("smtp_from", serverCmd.Flags().Lookup("smtp_from"))

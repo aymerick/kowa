@@ -192,6 +192,10 @@
     "translation": "Cet email est déjà utilisé."
   },
   {
+    "id": "signup_email_subject",
+    "translation": "Activez votre compte {{.ServiceName}}."
+  },
+  {
     "id": "signup_password_too_weak",
     "translation": "Votre mot de passe est trop faible, veuillez entrer au moins huit caractères."
   },

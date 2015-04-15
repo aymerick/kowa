@@ -192,6 +192,10 @@
     "translation": "This email is already registered."
   },
   {
+    "id": "signup_email_subject",
+    "translation": "Activate your {{.ServiceName}} account."
+  },
+  {
     "id": "signup_password_too_weak",
     "translation": "Your password is too weak, please enter at least height characters."
   },

@@ -1,0 +1,7 @@
+Thanks for joining {{ .ServiceName}}.
+
+Just one more step...
+
+-------------------
+Activate Your Account: {{ .ActivationLink }}
+-------------------

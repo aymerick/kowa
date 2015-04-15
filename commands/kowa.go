@@ -18,6 +18,10 @@ const (
 	DEFAULT_SERVE          = false
 	DEFAULT_SERVE_PORT     = 48910
 
+	DEFAULT_SERVICE_NAME      = "Kowa"
+	DEFAULT_SERVICE_URL       = "https://github.com/aymerick/kowa" // @todo FIXME
+	DEFAULT_SERVICE_COPYRIGHT = "Copyright @ 2015 Kowa - All rights reserved"
+
 	DEFAULT_OUTPUT_DIR = "_sites"
 )
 
@@ -58,6 +62,19 @@ func initKowaConf() {
 
 	rootCmd.PersistentFlags().IntP("serve_output_port", "T", DEFAULT_SERVE_PORT, "Port to serve built sites")
 	viper.BindPFlag("serve_output_port", rootCmd.PersistentFlags().Lookup("serve_output_port"))
+
+	// service
+	rootCmd.PersistentFlags().String("service_name", DEFAULT_SERVICE_NAME, "Service name")
+	viper.BindPFlag("service_name", rootCmd.PersistentFlags().Lookup("service_name"))
+
+	rootCmd.PersistentFlags().String("service_logo", "", "Service logo image url")
+	viper.BindPFlag("service_logo", rootCmd.PersistentFlags().Lookup("service_logo"))
+
+	rootCmd.PersistentFlags().String("service_url", DEFAULT_SERVICE_URL, "Service URL")
+	viper.BindPFlag("service_url", rootCmd.PersistentFlags().Lookup("service_url"))
+
+	rootCmd.PersistentFlags().String("service_copyright_notice", DEFAULT_SERVICE_COPYRIGHT, "Service copyright notice")
+	viper.BindPFlag("service_copyright_notice", rootCmd.PersistentFlags().Lookup("service_copyright_notice"))
 }
 
 func defaultOutputDir() string {

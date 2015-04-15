@@ -11,6 +11,7 @@ import (
 	"github.com/unrolled/render"
 
 	"github.com/aymerick/kowa/core"
+	"github.com/aymerick/kowa/mailers"
 	"github.com/aymerick/kowa/models"
 )
 
@@ -55,6 +56,9 @@ func (app *Application) Setup() {
 	if err := app.oauthStorage.EnsureOAuthClient(); err != nil {
 		panic(err)
 	}
+
+	// Set templates dir for mails
+	mailers.SetTemplatesDir(viper.GetString("mail_tpl_dir"))
 }
 
 // Run application server

@@ -8,17 +8,32 @@ import (
 
 // Implements Mailer
 type SignupMailer struct {
+	*BaseMailer
+
 	user *models.User
 	T    i18n.TranslateFunc
+
+	// Template variables
+	Username       string
+	Email          string
+	ActivationLink string
 }
 
 func NewSignupMailer(user *models.User) *SignupMailer {
 	return &SignupMailer{
+		BaseMailer: NewBaseMailer("signup"),
+
 		user: user,
 		T:    i18n.MustTfunc(user.Lang),
+
+		// Template variables
+		Username:       user.Id,
+		Email:          user.Email,
+		ActivationLink: user.ActivationLink(),
 	}
 }
 
+// Send mail
 func (mailer *SignupMailer) Send() error {
 	return NewSender(mailer).Send()
 }
@@ -32,13 +47,5 @@ func (mailer *SignupMailer) To() string {
 }
 
 func (mailer *SignupMailer) Subject() string {
-	return mailer.T("Please confirm your signup")
-}
-
-func (mailer *SignupMailer) Html() string {
-	return "@todo HTML content"
-}
-
-func (mailer *SignupMailer) Text() string {
-	return "@todo Text content"
+	return mailer.T("signup_email_subject", map[string]interface{}{"ServiceName": mailer.ServiceName})
 }

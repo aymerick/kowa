@@ -5,6 +5,7 @@ import (
 	"net/smtp"
 	"net/textproto"
 
+	"github.com/aymerick/douceur/inliner"
 	"github.com/jordan-wright/email"
 	"github.com/spf13/viper"
 )
@@ -12,62 +13,87 @@ import (
 type Sender struct {
 	mailer   Mailer
 	smtpConf *SMTPConf
-}
-
-// provides mail data to Sender
-type Mailer interface {
-	To() string
-	Subject() string
-	Html() string
-	Text() string
+	noop     bool
 }
 
 type SMTPConf struct {
-	from string
-	host string
-	port int
-	user string
-	pass string
+	From string
+	Host string
+	Port int
+	User string
+	Pass string
 }
 
 func NewSender(mailer Mailer) *Sender {
 	return &Sender{
 		mailer: mailer,
 		smtpConf: &SMTPConf{
-			from: viper.GetString("smtp_from"),
-			host: viper.GetString("smtp_host"),
-			port: viper.GetInt("smtp_port"),
-			user: viper.GetString("smtp_auth_user"),
-			pass: viper.GetString("smtp_auth_pass"),
+			From: viper.GetString("smtp_from"),
+			Host: viper.GetString("smtp_host"),
+			Port: viper.GetInt("smtp_port"),
+			User: viper.GetString("smtp_auth_user"),
+			Pass: viper.GetString("smtp_auth_pass"),
 		},
 	}
 }
 
 func (sender *Sender) smtpAddr() string {
-	return fmt.Sprintf("%s:%d", sender.smtpConf.host, sender.smtpConf.port)
+	return fmt.Sprintf("%s:%d", sender.smtpConf.Host, sender.smtpConf.Port)
 }
 
-func (sender *Sender) auth() smtp.Auth {
-	if sender.smtpConf.user != "" {
-		return smtp.PlainAuth("", sender.smtpConf.user, sender.smtpConf.pass, sender.smtpConf.host)
+func (sender *Sender) smtpAuth() smtp.Auth {
+	if sender.smtpConf.User != "" {
+		return smtp.PlainAuth("", sender.smtpConf.User, sender.smtpConf.Pass, sender.smtpConf.Host)
 	} else {
 		return nil
 	}
 }
 
+func (sender *Sender) SetSMTPConf(conf *SMTPConf) {
+	sender.smtpConf = conf
+}
+
+func (sender *Sender) SetNoop(isNoop bool) {
+	sender.noop = isNoop
+}
+
 func (sender *Sender) NewEmail() *email.Email {
+	// generate HTML
+	rawHtml := sender.Content(TPL_HTML)
+
+	// inline CSS
+	htmlContent, err := inliner.Inline(rawHtml)
+	if err != nil {
+		panic(err)
+	}
+
 	return &email.Email{
 		To:      []string{sender.mailer.To()},
-		From:    sender.smtpConf.from,
+		From:    sender.smtpConf.From,
 		Subject: sender.mailer.Subject(),
-		HTML:    []byte(sender.mailer.Html()),
-		Text:    []byte(sender.mailer.Text()),
+		HTML:    []byte(htmlContent),
+		Text:    []byte(sender.Content(TPL_TEXT)),
 		Headers: textproto.MIMEHeader{},
 	}
 }
 
+func (sender *Sender) Content(tplKind TplKind) string {
+	result, err := templater.generate(sender.mailer.Kind(), tplKind, sender.mailer)
+	if err != nil {
+		panic(err)
+	}
+
+	return result
+}
+
 func (sender *Sender) Send() error {
+	var result error
+
 	mail := sender.NewEmail()
 
-	return mail.Send(sender.smtpAddr(), sender.auth())
+	if !sender.noop {
+		result = mail.Send(sender.smtpAddr(), sender.smtpAuth())
+	}
+
+	return result
 }
