@@ -18,12 +18,33 @@
 			"Rev": "443a628bc233f634a75bcbdd71fe5350789f1afa"
 		},
 		{
+			"ImportPath": "github.com/PuerkitoBio/goquery",
+			"Comment": "v0.3.2-74-g5203bc0",
+			"Rev": "5203bc06dacf2192e0f4a9879010b9f14c861d14"
+		},
+		{
 			"ImportPath": "github.com/RangelReale/osin",
 			"Rev": "d51e23416093e4cad7edf0839283dd72da897571"
 		},
 		{
+			"ImportPath": "github.com/andybalholm/cascadia",
+			"Rev": "54abbbf07a45a3ef346ebe903e0715d9a3c19352"
+		},
+		{
 			"ImportPath": "github.com/armon/consul-api",
 			"Rev": "dcfedd50ed5334f96adee43fc88518a4f095e15c"
+		},
+		{
+			"ImportPath": "github.com/aymerick/douceur/css",
+			"Rev": "a86569bfc4716a27b417339049dc579a79593f3d"
+		},
+		{
+			"ImportPath": "github.com/aymerick/douceur/inliner",
+			"Rev": "a86569bfc4716a27b417339049dc579a79593f3d"
+		},
+		{
+			"ImportPath": "github.com/aymerick/douceur/parser",
+			"Rev": "a86569bfc4716a27b417339049dc579a79593f3d"
 		},
 		{
 			"ImportPath": "github.com/coreos/etcd/etcdserver/etcdhttp/httptypes",
@@ -47,6 +68,10 @@
 		{
 			"ImportPath": "github.com/gorilla/context",
 			"Rev": "14f550f51af52180c2eefed15e5fd18d63c0a64a"
+		},
+		{
+			"ImportPath": "github.com/gorilla/css/scanner",
+			"Rev": "a80e24ada2699166544311f07c26ef37eaf64012"
 		},
 		{
 			"ImportPath": "github.com/gorilla/mux",
