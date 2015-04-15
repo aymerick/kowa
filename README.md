@@ -112,7 +112,15 @@ If you modify the code that handles images, you can regenerate all derivatives f
 
 ## Dependencies
 
-To update a dependency:
+### To add a dependcy:
+
+    $ go get foo/bar
+
+Edit your code to import foo/bar, then:
+
+    $ godep save
+
+### To update a dependency:
 
     $ go get -u foo/bar
     $ godep update foo/bar
