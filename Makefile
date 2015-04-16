@@ -16,4 +16,4 @@ test:
 	godep go test ./... -v
 
 gen:
-	go-bindata -o core/bindata.go -pkg="core" locales/
+	go-bindata -o core/bindata.go -pkg="core" locales/ mailers/templates/

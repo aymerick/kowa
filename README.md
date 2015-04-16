@@ -85,7 +85,7 @@ Install `go-bindata` package:
 
     $ go get -u github.com/jteeuwen/go-bindata/...
 
-When you modify translations, you have to regenerate `core/bindata.go` file with:
+When you modify translations files in `locales/` or mailers templates in `mailers/templates/`, you have to regenerate `core/bindata.go` file with:
 
     $ make gen
 
