@@ -57,8 +57,10 @@ func (app *Application) Setup() {
 		panic(err)
 	}
 
-	// Set templates dir for mails
-	mailers.SetTemplatesDir(viper.GetString("mail_tpl_dir"))
+	if viper.GetString("mail_tpl_dir") != "" {
+		// Set templates dir for mails
+		mailers.SetTemplatesDir(viper.GetString("mail_tpl_dir"))
+	}
 }
 
 // Run application server
