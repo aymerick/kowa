@@ -2,6 +2,7 @@ package mailers
 
 import (
 	"fmt"
+	"log"
 	"net/smtp"
 	"net/textproto"
 
@@ -51,7 +52,13 @@ func (sender *Sender) Send() error {
 	mail := sender.newEmail()
 
 	if !sender.noop {
+		log.Printf("Sending email to: %v", mail.To)
 		result = mail.Send(sender.smtpAddr(), sender.smtpAuth())
+		if result == nil {
+			log.Printf("Mail successfully sent to: %v", mail.To)
+		} else {
+			log.Printf("Failed to send email to: %v - %s", mail.To, result)
+		}
 	}
 
 	return result
