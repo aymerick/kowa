@@ -184,6 +184,18 @@
     "translation": "{{.Day}} {{.Month}} {{.Year}}"
   },
   {
+    "id": "signup_email_activate_account",
+    "translation": "Activer le compte"
+  },
+  {
+    "id": "signup_email_activate_your_account",
+    "translation": "Activez votre compte: {{ .ActivationLink }}"
+  },
+  {
+    "id": "signup_email_click_button",
+    "translation": "Cliquez sur le bouton pour activer votre compte."
+  },
+  {
     "id": "signup_email_invalid",
     "translation": "Cet email est invalide."
   },
@@ -192,8 +204,16 @@
     "translation": "Cet email est déjà utilisé."
   },
   {
+    "id": "signup_email_one_more_step",
+    "translation": "Plus qu'une dernière étape..."
+  },
+  {
     "id": "signup_email_subject",
     "translation": "Activez votre compte {{.ServiceName}}."
+  },
+  {
+    "id": "signup_email_thanks",
+    "translation": "Merci de vous être inscrits sur {{.ServiceName}}."
   },
   {
     "id": "signup_password_too_weak",

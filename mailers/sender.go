@@ -37,18 +37,6 @@ func NewSender(mailer Mailer) *Sender {
 	}
 }
 
-func (sender *Sender) smtpAddr() string {
-	return fmt.Sprintf("%s:%d", sender.smtpConf.Host, sender.smtpConf.Port)
-}
-
-func (sender *Sender) smtpAuth() smtp.Auth {
-	if sender.smtpConf.User != "" {
-		return smtp.PlainAuth("", sender.smtpConf.User, sender.smtpConf.Pass, sender.smtpConf.Host)
-	} else {
-		return nil
-	}
-}
-
 func (sender *Sender) SetSMTPConf(conf *SMTPConf) {
 	sender.smtpConf = conf
 }
@@ -57,9 +45,21 @@ func (sender *Sender) SetNoop(isNoop bool) {
 	sender.noop = isNoop
 }
 
-func (sender *Sender) NewEmail() *email.Email {
+func (sender *Sender) Send() error {
+	var result error
+
+	mail := sender.newEmail()
+
+	if !sender.noop {
+		result = mail.Send(sender.smtpAddr(), sender.smtpAuth())
+	}
+
+	return result
+}
+
+func (sender *Sender) newEmail() *email.Email {
 	// generate HTML
-	rawHtml := sender.Content(TPL_HTML)
+	rawHtml := sender.content(TPL_HTML)
 
 	// inline CSS
 	htmlContent, err := inliner.Inline(rawHtml)
@@ -72,13 +72,13 @@ func (sender *Sender) NewEmail() *email.Email {
 		From:    sender.smtpConf.From,
 		Subject: sender.mailer.Subject(),
 		HTML:    []byte(htmlContent),
-		Text:    []byte(sender.Content(TPL_TEXT)),
+		Text:    []byte(sender.content(TPL_TEXT)),
 		Headers: textproto.MIMEHeader{},
 	}
 }
 
-func (sender *Sender) Content(tplKind TplKind) string {
-	result, err := templater.generate(sender.mailer.Kind(), tplKind, sender.mailer)
+func (sender *Sender) content(tplKind TplKind) string {
+	result, err := templater.Generate(sender.mailer.Kind(), tplKind, sender.mailer)
 	if err != nil {
 		panic(err)
 	}
@@ -86,14 +86,14 @@ func (sender *Sender) Content(tplKind TplKind) string {
 	return result
 }
 
-func (sender *Sender) Send() error {
-	var result error
+func (sender *Sender) smtpAddr() string {
+	return fmt.Sprintf("%s:%d", sender.smtpConf.Host, sender.smtpConf.Port)
+}
 
-	mail := sender.NewEmail()
-
-	if !sender.noop {
-		result = mail.Send(sender.smtpAddr(), sender.smtpAuth())
+func (sender *Sender) smtpAuth() smtp.Auth {
+	if sender.smtpConf.User != "" {
+		return smtp.PlainAuth("", sender.smtpConf.User, sender.smtpConf.Pass, sender.smtpConf.Host)
+	} else {
+		return nil
 	}
-
-	return result
 }

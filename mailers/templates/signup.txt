@@ -1,7 +1,9 @@
-Thanks for joining {{ .ServiceName}}.
+{{ .I18n.thanks }}
 
-Just one more step...
+{{ .I18n.one_more_step }}
+
+{{ .Email }}
 
 -------------------
-Activate Your Account: {{ .ActivationLink }}
+{{ .I18n.activate_your_account }}
 -------------------

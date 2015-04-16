@@ -1,8 +1,7 @@
 package mailers
 
 import (
-	"github.com/nicksnyder/go-i18n/i18n"
-
+	"github.com/aymerick/kowa/core"
 	"github.com/aymerick/kowa/models"
 )
 
@@ -10,32 +9,39 @@ import (
 type SignupMailer struct {
 	*BaseMailer
 
-	user *models.User
-	T    i18n.TranslateFunc
-
 	// Template variables
-	Username       string
 	Email          string
 	ActivationLink string
 }
 
 func NewSignupMailer(user *models.User) *SignupMailer {
-	return &SignupMailer{
-		BaseMailer: NewBaseMailer("signup"),
-
-		user: user,
-		T:    i18n.MustTfunc(user.Lang),
+	result := &SignupMailer{
+		BaseMailer: NewBaseMailer("signup", user),
 
 		// Template variables
-		Username:       user.Id,
 		Email:          user.Email,
 		ActivationLink: user.ActivationLink(),
 	}
+
+	result.I18n = result.computeI18n()
+
+	return result
 }
 
 // Send mail
 func (mailer *SignupMailer) Send() error {
 	return NewSender(mailer).Send()
+}
+
+// Computes translations
+func (mailer *SignupMailer) computeI18n() map[string]string {
+	return map[string]string{
+		"thanks":                mailer.T("signup_email_thanks", core.P{"ServiceName": mailer.ServiceName}),
+		"one_more_step":         mailer.T("signup_email_one_more_step"),
+		"activate_your_account": mailer.T("signup_email_activate_your_account", core.P{"ActivationLink": mailer.ActivationLink}),
+		"click_button":          mailer.T("signup_email_click_button"),
+		"activate_account":      mailer.T("signup_email_activate_account"),
+	}
 }
 
 //
@@ -47,5 +53,5 @@ func (mailer *SignupMailer) To() string {
 }
 
 func (mailer *SignupMailer) Subject() string {
-	return mailer.T("signup_email_subject", map[string]interface{}{"ServiceName": mailer.ServiceName})
+	return mailer.T("signup_email_subject", core.P{"ServiceName": mailer.ServiceName})
 }
