@@ -56,7 +56,7 @@ func (builder *SiteBuilder) UrlFor(dest interface{}) (string, error) {
 	case reflect.String:
 		destStr = destValue.String()
 	default:
-		return "", errors.New("LinkTo operator needs a string argument")
+		return "", errors.New("urlFor operator needs a string argument")
 	}
 
 	var result string
@@ -105,14 +105,14 @@ func (builder *SiteBuilder) StartsWith(check interface{}, prefix interface{}) (b
 	case reflect.String:
 		checkStr = checkValue.String()
 	default:
-		return false, errors.New("StartsWith operator needs string arguments")
+		return false, errors.New("startsWith operator needs string arguments")
 	}
 
 	switch prefixValue.Kind() {
 	case reflect.String:
 		prefixStr = prefixValue.String()
 	default:
-		return false, errors.New("StartsWith operator needs string arguments")
+		return false, errors.New("startsWith operator needs string arguments")
 	}
 
 	return strings.HasPrefix(checkStr, prefixStr), nil
@@ -122,7 +122,7 @@ func (builder *SiteBuilder) Translate(sentence interface{}) (string, error) {
 	sentenceValue := reflect.ValueOf(sentence)
 
 	if sentenceValue.Kind() != reflect.String {
-		return "", errors.New("StartsWith operator needs string arguments")
+		return "", errors.New("Translate operator needs a string argument")
 	}
 
 	sentenceStr := sentenceValue.String()

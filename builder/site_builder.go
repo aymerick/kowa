@@ -428,6 +428,8 @@ func (builder *SiteBuilder) partialsPath() string {
 	return path.Join(builder.themeTemplatesDir(), PARTIALS_DIR)
 }
 
+// @todo In production: load all layout files only once on startup, then for each builder instance:
+//       clone layout and setup FuncMap
 func (builder *SiteBuilder) setupLayout() *template.Template {
 	errStep := "template init"
 
