@@ -5,6 +5,10 @@ go:
   - 1.3
   - tip
 
+env:
+  - KOWA_TEST_WITH_ASSETS=true
+  - KOWA_TEST_WITH_ASSETS=false
+
 services:
   - mongodb
 

@@ -6,6 +6,8 @@ import (
 	"mime"
 	"mime/multipart"
 	"net/mail"
+	"os"
+	"path"
 	"testing"
 	"time"
 
@@ -14,6 +16,7 @@ import (
 	"github.com/stretchr/testify/suite"
 
 	"github.com/aymerick/kowa/core"
+	"github.com/aymerick/kowa/helpers"
 	"github.com/aymerick/kowa/models"
 )
 
@@ -25,7 +28,9 @@ type SignupTestSuite struct {
 func (suite *SignupTestSuite) SetupSuite() {
 	core.LoadLocales()
 
-	// SetTemplatesDir(path.Join(helpers.WorkingDir(), "templates"))
+	if os.Getenv("KOWA_TEST_EMBED_ASSETS") != "true" {
+		SetTemplatesDir(path.Join(helpers.WorkingDir(), "templates"))
+	}
 
 	viper.Set("smtp_from", "test@test.com")
 	viper.Set("service_name", "My Service")
