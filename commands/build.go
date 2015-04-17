@@ -27,7 +27,7 @@ func buildSiteCmd(cmd *cobra.Command, args []string) {
 		log.Fatalln("ERROR: No site id argument provided")
 	}
 
-	checkAndOutputsFlags()
+	checkAndOutputsGlobalFlags()
 
 	// get site
 	site := models.NewDBSession().FindSite(args[0])

@@ -139,11 +139,6 @@ func (user *User) MailAddress() string {
 	return fmt.Sprintf("%s <%s>", user.DisplayName(), user.Email)
 }
 
-// Returns the account activation link
-func (user *User) ActivationLink() string {
-	return "@todo Activation Link"
-}
-
 // Implements json.MarshalJSON
 func (user *User) MarshalJSON() ([]byte, error) {
 	// inject 'links' needed by Ember Data

@@ -32,6 +32,8 @@ func (suite *SignupTestSuite) SetupSuite() {
 		SetTemplatesDir(path.Join(helpers.WorkingDir(), "templates"))
 	}
 
+	viper.Set("secret_key", "my_so_secure_key")
+
 	viper.Set("smtp_from", "test@test.com")
 	viper.Set("service_name", "My Service")
 	// viper.Set("service_logo", "http://www.myservice.bar/logo.png")
@@ -191,6 +193,8 @@ func (suite *SignupTestSuite) TestSignupFr() {
 	// check mail generation
 	rawMail, errGen := email.Bytes()
 	assert.Nil(t, errGen)
+
+	// log.Printf("Raw mail: %s", string(rawMail))
 
 	// parse generated mail
 	msg, errRead := mail.ReadMessage(bytes.NewBuffer(rawMail))

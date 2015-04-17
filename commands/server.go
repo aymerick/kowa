@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"log"
 	"os"
 	"os/signal"
 
@@ -29,6 +30,9 @@ func initServerConf() {
 	serverCmd.Flags().IntP("port", "p", DEFAULT_PORT, "Port to run Kowa server on")
 	viper.BindPFlag("port", serverCmd.Flags().Lookup("port"))
 
+	serverCmd.Flags().String("secret_key", "", "Secret key used to sign tokens")
+	viper.BindPFlag("secret_key", serverCmd.Flags().Lookup("secret_key"))
+
 	// Mail
 	serverCmd.Flags().String("mail_tpl_dir", "", "Mail templates directory. If not provided, default templates are used.")
 	viper.BindPFlag("mail_tpl_dir", serverCmd.Flags().Lookup("mail_tpl_dir"))
@@ -50,7 +54,9 @@ func initServerConf() {
 }
 
 func runServer(cmd *cobra.Command, args []string) {
-	checkAndOutputsFlags()
+	checkAndOutputsGlobalFlags()
+
+	checkServerFlags()
 
 	app := server.NewApplication()
 	app.Setup()
@@ -63,4 +69,10 @@ func runServer(cmd *cobra.Command, args []string) {
 	<-sigChan
 
 	app.Stop()
+}
+
+func checkServerFlags() {
+	if viper.GetString("secret_key") == "" {
+		log.Fatalln("ERROR: The secret_key setting is mandatory")
+	}
 }

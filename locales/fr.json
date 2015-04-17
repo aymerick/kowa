@@ -189,7 +189,7 @@
   },
   {
     "id": "signup_email_activate_your_account",
-    "translation": "Activez votre compte: {{ .ActivationLink }}"
+    "translation": "Activez votre compte: {{ .ActivationUrl }}"
   },
   {
     "id": "signup_email_click_button",

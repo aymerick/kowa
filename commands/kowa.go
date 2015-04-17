@@ -19,7 +19,7 @@ const (
 	DEFAULT_SERVE_PORT     = 48910
 
 	DEFAULT_SERVICE_NAME      = "Kowa"
-	DEFAULT_SERVICE_URL       = "https://github.com/aymerick/kowa" // @todo FIXME
+	DEFAULT_SERVICE_URL       = "http://127.0.0.1" // @todo FIXME
 	DEFAULT_SERVICE_COPYRIGHT = "Copyright @ 2015 Kowa - All rights reserved"
 
 	DEFAULT_OUTPUT_DIR = "_sites"
@@ -81,13 +81,17 @@ func defaultOutputDir() string {
 	return path.Join(helpers.WorkingDir(), DEFAULT_OUTPUT_DIR)
 }
 
-func checkAndOutputsFlags() {
+func checkAndOutputsGlobalFlags() {
 	if viper.GetString("upload_dir") == "" {
 		log.Fatalln("ERROR: The upload_dir setting is mandatory")
 	}
 
 	if viper.GetString("themes_dir") == "" {
 		log.Fatalln("ERROR: The themes_dir setting is mandatory")
+	}
+
+	if viper.GetString("service_url") == "" {
+		log.Fatalln("ERROR: The service_url setting is mandatory")
 	}
 
 	log.Printf("Upload dir: %s", viper.GetString("upload_dir"))
