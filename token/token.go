@@ -11,9 +11,9 @@ import (
 )
 
 type Token struct {
-	Kind   string
-	Value  interface{}
-	Expiry int64
+	Kind       string
+	Value      interface{}
+	Expiration int64
 }
 
 var signingKey []byte
@@ -37,12 +37,16 @@ func NewToken(kind string, value interface{}) *Token {
 	}
 }
 
-func (token *Token) SetExpiration(exp time.Time) {
-	token.Expiry = exp.Unix()
+func (token *Token) SetExpirationTime(exp time.Time) {
+	token.Expiration = exp.Unix()
 }
 
-func (token *Token) Expiration() time.Time {
-	return time.Unix(int64(token.Expiry), 0)
+func (token *Token) ExpirationTime() time.Time {
+	return time.Unix(int64(token.Expiration), 0)
+}
+
+func (token *Token) Expired() bool {
+	return (token.Expiration != 0) && time.Now().After(token.ExpirationTime())
 }
 
 func (token *Token) Encode() string {
@@ -52,8 +56,8 @@ func (token *Token) Encode() string {
 	t.Claims["k"] = token.Kind
 	t.Claims["v"] = token.Value
 
-	if token.Expiry != 0 {
-		t.Claims["e"] = token.Expiry
+	if token.Expiration != 0 {
+		t.Claims["e"] = token.Expiration
 	}
 
 	// sign token
@@ -95,7 +99,7 @@ func Decode(encoded string) *Token {
 	// get token expiry
 	expiry, isFloat := t.Claims["e"].(float64)
 	if isFloat {
-		result.Expiry = int64(expiry)
+		result.Expiration = int64(expiry)
 	}
 
 	return result

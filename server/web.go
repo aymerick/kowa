@@ -23,6 +23,8 @@ func (app *Application) newWebRouter() *mux.Router {
 
 	// /api/signup
 	apiRouter.Methods("POST").Path("/signup").Handler(notAuthChain.ThenFunc(app.handleSignupUser))
+	apiRouter.Methods("POST").Path("/signup/validate").Handler(notAuthChain.ThenFunc(app.handleSignupValidate))
+	apiRouter.Methods("POST").Path("/signup/sendmail").Handler(notAuthChain.ThenFunc(app.handleSignupSendMail))
 
 	// /api/oauth
 	oauthRouter := apiRouter.PathPrefix("/oauth").Subrouter()

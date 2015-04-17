@@ -811,13 +811,14 @@ func (site *Site) Update(newSite *Site) (bool, error) {
 	}
 }
 
-func (site *Site) SetValues(values bson.D) error {
+func (site *Site) SetValues(values bson.M) error {
+	// @todo Set UpdatedAt field
 	return site.dbSession.SitesCol().UpdateId(site.Id, bson.D{{"$set", values}})
 }
 
 // Set the ChangedAt value
 func (site *Site) SetChangedAt(value time.Time) error {
-	if err := site.SetValues(bson.D{{"changed_at", value}}); err != nil {
+	if err := site.SetValues(bson.M{"changed_at": value}); err != nil {
 		return err
 	}
 
@@ -827,7 +828,7 @@ func (site *Site) SetChangedAt(value time.Time) error {
 
 // Set the BuiltAt value
 func (site *Site) SetBuiltAt(value time.Time) error {
-	if err := site.SetValues(bson.D{{"built_at", value}}); err != nil {
+	if err := site.SetValues(bson.M{"built_at": value}); err != nil {
 		return err
 	}
 

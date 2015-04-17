@@ -46,7 +46,7 @@ func (suite *TokenUserTestSuite) TestAccountActivationUrl() {
 	url := AccountActivationUrl(user)
 	assert.NotNil(t, url)
 
-	expectedPrefix := "http://www.myservice.bar/api/users/trucmush/validate?token="
+	expectedPrefix := "http://www.myservice.bar/signup/validate?token="
 
 	assert.True(t, strings.HasPrefix(url, expectedPrefix))
 	encoded := url[len(expectedPrefix):len(url)]
@@ -54,7 +54,7 @@ func (suite *TokenUserTestSuite) TestAccountActivationUrl() {
 	decoded := Decode(encoded)
 	assert.NotNil(t, decoded)
 
-	assert.NotNil(t, decoded.Expiration())
+	assert.NotNil(t, decoded.ExpirationTime())
 	assert.Equal(t, TOKEN_ACCOUNT_VALIDATION, decoded.Kind)
 	assert.Equal(t, user.Id, decoded.Value)
 }

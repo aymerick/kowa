@@ -13,7 +13,9 @@ import (
 
 	"github.com/aymerick/kowa/core"
 	"github.com/aymerick/kowa/helpers"
+	"github.com/aymerick/kowa/mailers"
 	"github.com/aymerick/kowa/models"
+	"github.com/aymerick/kowa/token"
 )
 
 type userJson struct {
@@ -112,10 +114,90 @@ func (app *Application) handleSignupUser(rw http.ResponseWriter, req *http.Reque
 	}
 
 	// send signup confirmation email
-	// @todo Use a goroutine
-	// mailers.NewSignupMailer(user).Send()
+	go mailers.NewSignupMailer(user).Send()
 
 	app.render.JSON(rw, http.StatusCreated, renderMap{"user": user})
+}
+
+func (app *Application) userFromSignupValidationToken(rw http.ResponseWriter, req *http.Request, checkExpiration bool) *models.User {
+	currentDBSession := app.getCurrentDBSession(req)
+
+	if err := req.ParseForm(); err != nil {
+		http.Error(rw, "Failed to parse form data", http.StatusBadRequest)
+		return nil
+	}
+
+	tokenStr := req.Form.Get("token")
+	if tokenStr == "" {
+		// Missing token
+		unauthorized(rw)
+		return nil
+	}
+
+	tok := token.Decode(tokenStr)
+	if tok == nil {
+		// Invalid token
+		unauthorized(rw)
+		return nil
+	}
+
+	userId := tok.AccountValidationUser()
+	if userId == "" {
+		// Erroneous token
+		unauthorized(rw)
+		return nil
+	}
+
+	if checkExpiration && tok.Expired() {
+		http.Error(rw, "Signup validation token expired", http.StatusUnauthorized)
+		return nil
+	}
+
+	// fetch user
+	user := currentDBSession.FindUser(userId)
+	if user == nil {
+		http.NotFound(rw, req)
+		return nil
+	}
+
+	return user
+}
+
+// POST /api/signup/validate
+func (app *Application) handleSignupValidate(rw http.ResponseWriter, req *http.Request) {
+	// get user
+	user := app.userFromSignupValidationToken(rw, req, true)
+	if user == nil {
+		// there was an error
+		return
+	}
+
+	// check if user was already validated
+	if !user.AccountValidated() {
+		// mark user as validated
+		user.SetAccountValidated()
+	}
+
+	// @todo Auto login ?
+
+	// @todo Send Welcome email
+
+	app.render.JSON(rw, http.StatusOK, renderMap{"user": user})
+}
+
+// POST /api/signup/sendmail
+func (app *Application) handleSignupSendMail(rw http.ResponseWriter, req *http.Request) {
+	// get user without checking token expiration
+	user := app.userFromSignupValidationToken(rw, req, false)
+	if user == nil {
+		// there was an error
+		return
+	}
+
+	// send signup confirmation email
+	go mailers.NewSignupMailer(user).Send()
+
+	app.render.JSON(rw, http.StatusOK, renderMap{"response": "ok"})
 }
 
 // GET /api/me

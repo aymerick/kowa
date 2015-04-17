@@ -25,7 +25,7 @@ type User struct {
 	Id          string    `bson:"_id,omitempty" json:"id"`
 	CreatedAt   time.Time `bson:"created_at"    json:"createdAt"`
 	UpdatedAt   time.Time `bson:"updated_at"    json:"updatedAt"`
-	ConfirmedAt time.Time `bson:"confirmed_at"  json:"confirmedAt"`
+	ValidatedAt time.Time `bson:"validated_at"  json:"validatedAt"`
 	Admin       bool      `bson:"admin"         json:"admin"`
 	Status      string    `bson:"status"        json:"status"`
 
@@ -111,6 +111,16 @@ func (session *DBSession) CreateUser(user *User) error {
 //
 // User
 //
+
+// Returns true if user have an active account
+func (user *User) Active() bool {
+	return user.Status == USER_STATUS_ACTIVE
+}
+
+// Returns true if user account has been validated
+func (user *User) AccountValidated() bool {
+	return !user.ValidatedAt.IsZero()
+}
 
 // Returns user fullname
 func (user *User) FullName() string {
@@ -219,4 +229,28 @@ func (user *User) Update(newUser *User) (bool, error) {
 	} else {
 		return false, nil
 	}
+}
+
+func (user *User) SetValues(values bson.M) error {
+	// @todo Set UpdatedAt field
+	return user.dbSession.UsersCol().UpdateId(user.Id, bson.D{{"$set", values}})
+}
+
+// Set user account as validated
+func (user *User) SetAccountValidated() error {
+	now := time.Now()
+
+	fields := bson.M{
+		"validated_at": now,
+		"status":       USER_STATUS_ACTIVE,
+	}
+
+	if err := user.SetValues(fields); err != nil {
+		return err
+	}
+
+	user.ValidatedAt = now
+	user.Status = USER_STATUS_ACTIVE
+
+	return nil
 }
