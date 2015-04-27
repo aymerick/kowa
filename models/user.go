@@ -162,7 +162,7 @@ func (user *User) MarshalJSON() ([]byte, error) {
 	return json.Marshal(userJson)
 }
 
-// Fetch from database: all sites belonging to user
+// Fetch from database all active sites belonging to user
 func (user *User) FindSites() *SitesList {
 	result := SitesList{}
 
