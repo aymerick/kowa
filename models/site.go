@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
+	"github.com/aymerick/kowa/core"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -845,6 +847,41 @@ func (site *Site) DeleteFields(fields []string) error {
 	}
 
 	return site.dbSession.SitesCol().UpdateId(site.Id, bson.M{"$unset": unset})
+}
+
+// Delete site from database
+func (site *Site) Delete() error {
+	// delete site
+	if err := site.dbSession.SitesCol().RemoveId(site.Id); err != nil {
+		return err
+	}
+
+	// delete site content
+	// @todo Catch and report errors
+	site.dbSession.ActivitiesCol().RemoveAll(bson.M{"site_id": site.Id})
+	site.dbSession.EventsCol().RemoveAll(bson.M{"site_id": site.Id})
+	site.dbSession.ImagesCol().RemoveAll(bson.M{"site_id": site.Id})
+	site.dbSession.MembersCol().RemoveAll(bson.M{"site_id": site.Id})
+	site.dbSession.PagesCol().RemoveAll(bson.M{"site_id": site.Id})
+	site.dbSession.PostsCol().RemoveAll(bson.M{"site_id": site.Id})
+
+	// delete site images
+	// @todo Catch and report error
+	site.deleteImagesFiles()
+
+	return nil
+}
+
+// Delete all images files
+func (site *Site) deleteImagesFiles() error {
+	dirPath := core.UploadSiteDir(site.Id)
+	if _, err := os.Stat(dirPath); !os.IsNotExist(err) {
+		if errRem := os.RemoveAll(dirPath); errRem != nil {
+			return errRem
+		}
+	}
+
+	return nil
 }
 
 // Insert/update page settings to database

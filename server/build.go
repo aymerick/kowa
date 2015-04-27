@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"path"
 	"sync"
 	"time"
@@ -17,6 +18,10 @@ const (
 	WORKERS_NB        = 10
 	JOBS_QUEUE_LEN    = 100
 	WORKERS_QUEUE_LEN = 100
+
+	// job kinds
+	JOB_KIND_BUILD  = "build"
+	JOB_KIND_DELETE = "delete"
 )
 
 type BuildMaster struct {
@@ -34,6 +39,7 @@ type BuildMaster struct {
 }
 
 type BuildJob struct {
+	kind   string
 	siteId string
 	failed bool
 }
@@ -66,8 +72,9 @@ func NewBuildMaster() *BuildMaster {
 	return result
 }
 
-func (master *BuildMaster) NewBuildJob(siteId string) *BuildJob {
+func (master *BuildMaster) NewBuildJob(kind string, siteId string) *BuildJob {
 	return &BuildJob{
+		kind:   kind,
 		siteId: siteId,
 	}
 }
@@ -107,7 +114,7 @@ func (master *BuildMaster) run() {
 				jobKey := job.key()
 
 				if master.currentJobs[jobKey] != nil {
-					log.Printf("[build] Job %s throttled", jobKey)
+					log.Printf("[build] %s job %s throttled", job.kind, jobKey)
 
 					// a worker is already processing that job
 					master.throttledJobs[jobKey] = job
@@ -122,7 +129,7 @@ func (master *BuildMaster) run() {
 				// build job ended
 				jobKey := job.key()
 
-				log.Printf("[build] Job %s done", jobKey)
+				log.Printf("[build] %s job %s done", job.kind, jobKey)
 
 				// remove from current jobs
 				delete(master.currentJobs, jobKey)
@@ -203,7 +210,11 @@ func (master *BuildMaster) enqueueJob(job *BuildJob) {
 }
 
 func (master *BuildMaster) launchSiteBuild(site *models.Site) {
-	master.enqueueJob(master.NewBuildJob(site.Id))
+	master.enqueueJob(master.NewBuildJob(JOB_KIND_BUILD, site.Id))
+}
+
+func (master *BuildMaster) launchSiteDeletion(site *models.Site) {
+	master.enqueueJob(master.NewBuildJob(JOB_KIND_DELETE, site.Id))
 }
 
 //
@@ -228,7 +239,7 @@ func (worker *BuildWorker) run(wg *sync.WaitGroup) {
 
 	// run
 	go func() {
-		// add oursel to workgroup and release on exit
+		// add ourself to workgroup and release on exit
 		wg.Add(1)
 		defer wg.Done()
 
@@ -241,7 +252,7 @@ func (worker *BuildWorker) run(wg *sync.WaitGroup) {
 		for !ended {
 			select {
 			case job := <-worker.inputChan:
-				log.Printf("[build] Job %s taken by worker %d", job.key(), worker.id)
+				log.Printf("[build] %s job %s taken by worker %d", job.kind, job.key(), worker.id)
 
 				// execute job
 				worker.executeJob(job)
@@ -262,10 +273,21 @@ func (worker *BuildWorker) run(wg *sync.WaitGroup) {
 
 // Execute Job
 func (worker *BuildWorker) executeJob(job *BuildJob) {
+	switch job.kind {
+	case JOB_KIND_BUILD:
+		worker.buildSite(job)
+	case JOB_KIND_DELETE:
+		worker.deleteSite(job)
+	default:
+		panic("wat")
+	}
+}
+
+func (worker *BuildWorker) buildSite(job *BuildJob) {
 	// get site
 	site := models.NewDBSession().FindSite(job.siteId)
 	if site == nil {
-		log.Printf("[build] Job %s failed with worker %d: site not found", job.key(), worker.id)
+		log.Printf("[build] %s job %s failed with worker %d: site not found", job.kind, job.key(), worker.id)
 
 		job.failed = true
 		return
@@ -285,6 +307,15 @@ func (worker *BuildWorker) executeJob(job *BuildJob) {
 	} else {
 		// update BuiltAt anchor
 		site.SetBuiltAt(time.Now())
+	}
+}
+
+func (worker *BuildWorker) deleteSite(job *BuildJob) {
+	dirPath := path.Join(viper.GetString("output_dir"), job.siteId)
+	if _, err := os.Stat(dirPath); !os.IsNotExist(err) {
+		if errRem := os.RemoveAll(dirPath); errRem != nil {
+			job.failed = true
+		}
 	}
 }
 

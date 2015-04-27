@@ -81,7 +81,7 @@ func (app *Application) handlePostSite(rw http.ResponseWriter, req *http.Request
 	// check if site id is already taken
 	if errors["id"] == "" {
 		if exSite := currentDBSession.FindSite(site.Id); exSite != nil {
-			errors["id"] = T("setup_id_not_available")
+			errors["id"] = T("signup_id_not_available")
 		}
 	}
 
@@ -150,6 +150,24 @@ func (app *Application) handleUpdateSite(rw http.ResponseWriter, req *http.Reque
 			app.onSiteChange(site)
 		}
 
+		app.render.JSON(rw, http.StatusOK, renderMap{"site": site})
+	} else {
+		http.NotFound(rw, req)
+	}
+}
+
+// DELETE /sites/{site_id}
+func (app *Application) handleDeleteSite(rw http.ResponseWriter, req *http.Request) {
+	site := app.getCurrentSite(req)
+	if site != nil {
+		if err := site.Delete(); err != nil {
+			http.Error(rw, "Failed to delete site", http.StatusInternalServerError)
+			return
+		}
+
+		app.onSiteDeletion(site)
+
+		// returns deleted site
 		app.render.JSON(rw, http.StatusOK, renderMap{"site": site})
 	} else {
 		http.NotFound(rw, req)
