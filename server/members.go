@@ -55,6 +55,7 @@ func (app *Application) handlePostMembers(rw http.ResponseWriter, req *http.Requ
 		return
 	}
 
+	// @todo [security] Check all fields !
 	member := &reqJson.Member
 
 	if member.SiteId == "" {
@@ -108,6 +109,7 @@ func (app *Application) handleUpdateMember(rw http.ResponseWriter, req *http.Req
 			return
 		}
 
+		// @todo [security] Check all fields !
 		updated, err := member.Update(&reqJson.Member)
 		if err != nil {
 			log.Printf("ERROR: %v", err)

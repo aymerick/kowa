@@ -55,6 +55,7 @@ func (app *Application) handlePostActivities(rw http.ResponseWriter, req *http.R
 		return
 	}
 
+	// @todo [security] Check all fields !
 	activity := &reqJson.Activity
 
 	if activity.SiteId == "" {
@@ -108,6 +109,7 @@ func (app *Application) handleUpdateActivity(rw http.ResponseWriter, req *http.R
 			return
 		}
 
+		// @todo [security] Check all fields !
 		updated, err := activity.Update(&reqJson.Activity)
 		if err != nil {
 			log.Printf("ERROR: %v", err)

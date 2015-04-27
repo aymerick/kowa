@@ -184,6 +184,22 @@
     "translation": "{{.Day}} {{.Month}} {{.Year}}"
   },
   {
+    "id": "signup_id_invalid",
+    "translation": "Cet identifiant est invalide, veuillez n'utiliser que lettres et des chiffres."
+  },
+  {
+    "id": "signup_id_not_available",
+    "translation": "Cet identifiant est déjà utilisé"
+  },
+  {
+    "id": "setup_missing_id",
+    "translation": "Veuillez entrer un identifiant pour votre site"
+  },
+  {
+    "id": "setup_missing_name",
+    "translation": "Veuillez entrer un nom pour votre site"
+  },
+  {
     "id": "signup_email_activate_account",
     "translation": "Activer le compte"
   },
@@ -221,7 +237,7 @@
   },
   {
     "id": "signup_username_invalid",
-    "translation": "Votre identifiant est invalid, veuillez n'utiliser que lettres et des chiffres."
+    "translation": "Votre identifiant est invalide, veuillez n'utiliser que lettres et des chiffres."
   },
   {
     "id": "signup_username_not_available",

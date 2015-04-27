@@ -59,7 +59,7 @@ func (app *Application) handleSignupUser(rw http.ResponseWriter, req *http.Reque
 	}
 
 	// check username format
-	if username != helpers.NormalizeToUsername(username) {
+	if username != helpers.NormalizeToPathPart(username) {
 		errors["username"] = T("signup_username_invalid")
 	}
 
@@ -240,6 +240,7 @@ func (app *Application) handleUpdateUser(rw http.ResponseWriter, req *http.Reque
 			return
 		}
 
+		// @todo [security] Check all fields !
 		_, err := user.Update(&reqJson.User)
 		if err != nil {
 			log.Printf("ERROR: %v", err)

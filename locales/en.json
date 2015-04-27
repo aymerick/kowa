@@ -184,6 +184,22 @@
     "translation": "{{.Year}} {{.Month}} {{.Day}}"
   },
   {
+    "id": "signup_id_invalid",
+    "translation": "This identifier is invalid, please choose an identifier that contains only letters and numbers."
+  },
+  {
+    "id": "signup_id_not_available",
+    "translation": "This identifier is not available"
+  },
+  {
+    "id": "setup_missing_id",
+    "translation": "Please enter an identifier for your site"
+  },
+  {
+    "id": "setup_missing_name",
+    "translation": "Please enter your site name"
+  },
+  {
     "id": "signup_email_activate_account",
     "translation": "Activate account"
   },

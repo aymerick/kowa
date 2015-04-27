@@ -55,6 +55,7 @@ func (app *Application) handlePostPages(rw http.ResponseWriter, req *http.Reques
 		return
 	}
 
+	// @todo [security] Check all fields !
 	page := &reqJson.Page
 
 	if page.SiteId == "" {
@@ -108,6 +109,7 @@ func (app *Application) handleUpdatePage(rw http.ResponseWriter, req *http.Reque
 			return
 		}
 
+		// @todo [security] Check all fields !
 		updated, err := page.Update(&reqJson.Page)
 		if err != nil {
 			log.Printf("ERROR: %v", err)

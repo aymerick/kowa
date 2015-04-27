@@ -60,8 +60,8 @@ func NormalizeToPath(str string) string {
 	return result
 }
 
-// Normalise unicode string to a string that can be a username
-func NormalizeToUsername(str string) string {
+// Normalise unicode string to a string that can be a path part
+func NormalizeToPathPart(str string) string {
 	isNotOk := func(r rune) bool {
 		isOk := ((r >= 48) && (r <= 57)) || // '0'..'9'
 			((r >= 65) && (r <= 90)) || // 'A'..'Z'
