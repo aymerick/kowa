@@ -246,10 +246,8 @@ func (img *Image) MarshalJSON() ([]byte, error) {
 }
 
 func (img *Image) Delete() error {
-	var err error
-
 	// delete from database
-	if err = img.dbSession.ImagesCol().RemoveId(img.Id); err != nil {
+	if err := img.dbSession.ImagesCol().RemoveId(img.Id); err != nil {
 		return err
 	}
 
@@ -263,7 +261,7 @@ func (img *Image) Delete() error {
 	}
 
 	originalPath := img.OriginalFilePath()
-	if err = os.Remove(originalPath); err != nil {
+	if err := os.Remove(originalPath); err != nil {
 		log.Printf("Failed to delete image: %s", originalPath)
 	}
 

@@ -115,10 +115,8 @@ func (post *Post) FindCover() *Image {
 
 // Delete post from database
 func (post *Post) Delete() error {
-	var err error
-
 	// delete from database
-	if err = post.dbSession.PostsCol().RemoveId(post.Id); err != nil {
+	if err := post.dbSession.PostsCol().RemoveId(post.Id); err != nil {
 		return err
 	}
 
