@@ -118,11 +118,6 @@ func (tpl *Templater) templateContent(name string, kind TplKind) string {
 	return tpl.templates[tplKey]
 }
 
-// Returns template file path
-// func (tpl *Templater) templatePath(name string, kind TplKind) string {
-// 	return path.Join(tpl.templatesDir, fmt.Sprintf("%s.%s", name, kind))
-// }
-
 // Setup layouts
 func (tpl *Templater) setupLayouts() error {
 	// fetch html layout
