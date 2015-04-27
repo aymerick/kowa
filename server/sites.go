@@ -65,13 +65,24 @@ func (app *Application) handlePostSite(rw http.ResponseWriter, req *http.Request
 	}
 
 	// check site id format
-	if site.Id != helpers.NormalizeToPathPart(site.Id) {
-		errors["id"] = T("signup_id_invalid")
+	if errors["id"] == "" {
+		if site.Id != helpers.NormalizeToPathPart(site.Id) {
+			errors["id"] = T("signup_id_invalid")
+		}
+	}
+
+	// check site id length
+	if errors["id"] == "" {
+		if len(site.Id) < 3 {
+			errors["id"] = T("signup_id_too_short")
+		}
 	}
 
 	// check if site id is already taken
-	if exSite := currentDBSession.FindSite(site.Id); exSite != nil {
-		errors["id"] = T("setup_id_not_available")
+	if errors["id"] == "" {
+		if exSite := currentDBSession.FindSite(site.Id); exSite != nil {
+			errors["id"] = T("setup_id_not_available")
+		}
 	}
 
 	site.Tagline = strings.TrimSpace(site.Tagline)

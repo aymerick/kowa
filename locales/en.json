@@ -192,6 +192,10 @@
     "translation": "This identifier is not available"
   },
   {
+    "id": "signup_id_too_short",
+    "translation": "This identifier is too short, please enter at least three characters."
+  },
+  {
     "id": "setup_missing_id",
     "translation": "Please enter an identifier for your site"
   },
