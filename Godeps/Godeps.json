@@ -1,6 +1,6 @@
 {
 	"ImportPath": "github.com/aymerick/kowa",
-	"GoVersion": "go1.3.3",
+	"GoVersion": "go1.4.2",
 	"Deps": [
 		{
 			"ImportPath": "code.google.com/p/go-uuid/uuid",
@@ -60,6 +60,11 @@
 			"ImportPath": "github.com/coreos/go-etcd/etcd",
 			"Comment": "v0.4.6-12-gbf30eb7",
 			"Rev": "bf30eb7162940ff9aa35d55b23e49ba69322963d"
+		},
+		{
+			"ImportPath": "github.com/dgrijalva/jwt-go",
+			"Comment": "v2.2.0-20-ge430b18",
+			"Rev": "e430b188c03effea9a80c53f0c2d4a1220f270fd"
 		},
 		{
 			"ImportPath": "github.com/disintegration/imaging",
