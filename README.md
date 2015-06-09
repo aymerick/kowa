@@ -2,6 +2,8 @@
 
 The static website manager.
 
+![Kowa Logo](https://github.com/aymerick/kowa/blob/master/kowa.png?raw=true "Kowa")
+
 **WARNING: This is a work in progress, tests are missing, documentation is missing... a lot of stuff is missing, and it has NOT been deployed in production yet.**
 
 Build a typical showcase website thanks to a modern admin web app. You website is generated statically everytime you make a change to it.
