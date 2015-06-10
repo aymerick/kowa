@@ -13,7 +13,7 @@ build-from-scratch:
 	godep go build ${LDFLAGS} -o kowa-${VERSION}
 
 test:
-	godep go test ./... -v
+	godep go test ./...
 
 gen:
 	go-bindata -o core/bindata.go -pkg="core" locales/ mailers/templates/
