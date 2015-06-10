@@ -47,6 +47,10 @@
 			"Rev": "a86569bfc4716a27b417339049dc579a79593f3d"
 		},
 		{
+			"ImportPath": "github.com/aymerick/raymond",
+			"Rev": "14b11e8e0c359a3808cd9704f50ad57f2b5b37a9"
+		},
+		{
 			"ImportPath": "github.com/coreos/etcd/etcdserver/etcdhttp/httptypes",
 			"Comment": "v2.0.4-354-g3963385",
 			"Rev": "39633850d133b6ff83159e6ee13d11fc332c7b50"
