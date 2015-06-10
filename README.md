@@ -63,6 +63,7 @@ Fetch kowa:
 
     $ go get github.com/aymerick/kowa
     $ go get github.com/tools/godep
+    $ go get github.com/jteeuwen/go-bindata/...
 
 Build kowa:
 
