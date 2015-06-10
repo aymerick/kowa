@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width"/>
 
-    <title>{{ .Subject }}</title>
+    <title>{{subject}}</title>
 
     <style type="text/css">
 
@@ -768,12 +768,12 @@
                             <td class="center">
                               <center>
 
-                              <a href="{{ .ServiceUrl }}">
-                                {{ if .ServiceLogo }}
-                                  <img width="150" src="{{ .ServiceLogo }}" class="logo" alt="{{ .ServiceName }}" />
-                                {{ else }}
-                                  {{ .ServiceName }}
-                                {{ end }}
+                              <a href="{{serviceUrl}}">
+                                {{#if serviceLogo}}
+                                  <img width="150" src="{{serviceLogo}}" class="logo" alt="{{serviceName}}" />
+                                {{else}}
+                                  {{serviceName}}
+                                {{/if}}
                               </a>
 
                               </center>
@@ -787,7 +787,7 @@
                   </table>
 
                   <!-- Email Content -->
-                  {{ template "content" . }}
+                  {{> content}}
 
                   <table class="row footer">
                     <tr>
@@ -798,15 +798,15 @@
                             <td class="text-pad">
 
                               <p>
-                                {{ if .ServiceCopyrightNotice }}
-                                  {{ .ServiceCopyrightNotice }}
-                                {{ else }}
-                                  {{ .ServiceName }}
-                                {{ end }}
+                                {{#if serviceCopyrightNotice}}
+                                  {{serviceCopyrightNotice}}
+                                {{else}}
+                                  {{serviceName}}
+                                {{/if}}
                                 <br />
-                                {{ if .ServicePostalAddress }}
-                                  {{ .ServicePostalAddress }}<br />
-                                {{ end }}
+                                {{#if servicePostalAddress}}
+                                  {{servicePostalAddress}}<br />
+                                {{/if}}
                               </p>
 
                             </td>

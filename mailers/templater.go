@@ -1,13 +1,13 @@
 package mailers
 
 import (
-	"bytes"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"path"
-	"text/template"
 
 	"github.com/aymerick/kowa/core"
+	"github.com/aymerick/raymond"
 )
 
 type TplKind string
@@ -21,14 +21,14 @@ var templater *Templater
 
 type Templater struct {
 	templatesDir string
-	layouts      map[TplKind]*template.Template
-	templates    map[string]string
+	layouts      map[TplKind]*raymond.Template
+	templates    map[string]*raymond.Template
 }
 
 func init() {
 	templater = &Templater{
-		layouts:   make(map[TplKind]*template.Template),
-		templates: make(map[string]string),
+		layouts:   make(map[TplKind]*raymond.Template),
+		templates: make(map[string]*raymond.Template),
 	}
 }
 
@@ -42,21 +42,21 @@ func SetTemplatesDir(dir string) {
 
 // Generates template
 func (tpl *Templater) Generate(name string, kind TplKind, mailer Mailer) (string, error) {
-	var result bytes.Buffer
-
-	// get template instance
-	tplInstance := template.Must(template.Must(tpl.getTemplate(name, kind, mailer)).Clone())
-
-	// execute template
-	if err := tplInstance.Execute(&result, mailer); err != nil {
-		return "", err
-	} else {
-		return result.String(), nil
+	template, errT := tpl.getTemplate(name, kind)
+	if errT != nil {
+		return "", errT
 	}
+
+	result, err := template.Exec(mailer)
+	if err != nil {
+		return "", err
+	}
+
+	return result, nil
 }
 
 // Get a layout
-func (tpl *Templater) layout(name string, kind TplKind) *template.Template {
+func (tpl *Templater) layout(kind TplKind) *raymond.Template {
 	if tpl.layouts[kind] == nil {
 		tpl.setupLayouts()
 	}
@@ -65,78 +65,78 @@ func (tpl *Templater) layout(name string, kind TplKind) *template.Template {
 }
 
 // Returns a new template instance
-func (tpl *Templater) getTemplate(name string, kind TplKind, mailer Mailer) (*template.Template, error) {
-	// clone layout
-	result, errL := tpl.layout(name, kind).Clone()
-	if errL != nil {
-		return nil, errL
+func (tpl *Templater) getTemplate(name string, kind TplKind) (*raymond.Template, error) {
+	tplKey := fmt.Sprintf("%s:%s", name, kind)
+
+	if tpl.templates[tplKey] == nil {
+		// clone layout
+		template := tpl.layout(kind).Clone()
+
+		// adds content partial
+		content, err := tpl.templateContent(name, kind)
+		if err != nil {
+			return nil, err
+		}
+
+		template.RegisterPartial("content", content)
+
+		tpl.templates[tplKey] = template
 	}
 
-	// @todo setup FuncMap
-	// result.Funcs(mailer.FuncMap())
-
-	// parse template
-	_, err := result.New("content").Parse(tpl.templateContent(name, kind))
-	if err != nil {
-		return nil, err
-	}
-
-	return result, err
+	return tpl.templates[tplKey], nil
 }
 
 // Fetch template content
-func (tpl *Templater) templateContent(name string, kind TplKind) string {
-	tplKey := fmt.Sprintf("%s:%s", name, kind)
+func (tpl *Templater) templateContent(name string, kind TplKind) (string, error) {
+	var err error
+	var data []byte
 
-	if tpl.templates[tplKey] == "" {
-		var err error
-		var data []byte
+	if tpl.templatesDir != "" {
+		// fetch from file system
+		filePath := path.Join(tpl.templatesDir, fmt.Sprintf("%s.%s", name, kind))
 
-		if tpl.templatesDir != "" {
-			// fetch from file system
-			filePath := path.Join(tpl.templatesDir, fmt.Sprintf("%s.%s", name, kind))
-
-			data, err = ioutil.ReadFile(filePath)
-			if err != nil {
-				panic(err)
-			}
-		} else {
-			// fetch from embeded assets
-			assetPath := fmt.Sprintf("mailers/templates/%s.%s", name, kind)
-
-			data, err = core.Asset(assetPath)
-			if err != nil {
-				panic(err)
-			} else if len(data) == 0 {
-				panic("Mailer template not found in assets: " + assetPath)
-			}
+		data, err = ioutil.ReadFile(filePath)
+		if err != nil {
+			return "", err
 		}
+	} else {
+		// fetch from embeded assets
+		assetPath := fmt.Sprintf("mailers/templates/%s.%s", name, kind)
 
-		tpl.templates[tplKey] = string(data)
+		data, err = core.Asset(assetPath)
+		if err != nil {
+			return "", err
+		} else if len(data) == 0 {
+			return "", errors.New("Mailer template not found in assets: " + assetPath)
+		}
 	}
 
-	return tpl.templates[tplKey]
+	return string(data), nil
 }
 
 // Setup layouts
 func (tpl *Templater) setupLayouts() error {
-	// fetch html layout
-	htmlLayout, err := template.New("layout").Parse(tpl.templateContent("layout", TPL_HTML))
+	for _, kind := range []TplKind{TPL_HTML, TPL_TEXT} {
+		if err := tpl.setupLayout(kind); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (tpl *Templater) setupLayout(kind TplKind) error {
+	content, err := tpl.templateContent("layout", kind)
 	if err != nil {
 		return err
 	}
 
-	tpl.layouts[TPL_HTML] = htmlLayout
-
-	// fetch text layout
-	textLayout, errT := template.New("layout").Parse(tpl.templateContent("layout", TPL_TEXT))
-	if errT != nil {
-		return errT
+	layout, err := raymond.Parse(content)
+	if err != nil {
+		return err
 	}
 
-	tpl.layouts[TPL_TEXT] = textLayout
-
-	// @todo load partials
+	tpl.layouts[kind] = layout
 
 	return nil
 }

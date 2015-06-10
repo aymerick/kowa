@@ -7,16 +7,16 @@
           <td class="center text-pad" align="center">
 
             <center>
-              <h2 class="title">{{ .I18n.one_more_step }}</h2>
+              <h2 class="title">{{i18n.one_more_step}}</h2>
 
-              <p><a href="mailto:{{ .Email }}">{{ .Email }}</a></p>
+              <p><a href="mailto:{{email}}">{{email}}</a></p>
 
-              <p>{{ .I18n.click_button }}</p>
+              <p>{{i18n.click_button}}</p>
 
               <table class="medium-button main-action radius">
                 <tr>
                   <td>
-                    <a href="{{ .ActivationUrl }}">{{ .I18n.activate_account }}</a>
+                    <a href="{{activationUrl}}">{{i18n.activate_account}}</a>
                   </td>
                 </tr>
               </table>

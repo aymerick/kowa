@@ -1,9 +1,9 @@
-{{ .I18n.thanks }}
+{{{i18n.thanks}}}
 
-{{ .I18n.one_more_step }}
+{{{i18n.one_more_step}}}
 
-{{ .Email }}
+{{{email}}}
 
 -------------------
-{{ .I18n.activate_your_account }}
+{{{i18n.activate_your_account}}}
 -------------------
