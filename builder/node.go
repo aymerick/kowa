@@ -129,13 +129,18 @@ func (node *Node) template(layout *raymond.Template) (*raymond.Template, error) 
 }
 
 // Generate node
-func (node *Node) generate(wr io.Writer, layout *raymond.Template) error {
+func (node *Node) generate(wr io.Writer, layout *raymond.Template, site *SiteVars) error {
 	tpl, err := node.template(layout)
 	if err != nil {
 		return err
 	}
 
-	output, err := tpl.Exec(node)
+	// inject @site private data
+	data := raymond.NewDataFrame()
+	data.Set("site", site)
+
+	// evaluate template
+	output, err := tpl.ExecWith(node, data)
 	if err != nil {
 		return err
 	}

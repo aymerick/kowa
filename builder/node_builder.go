@@ -127,8 +127,6 @@ func (builder *NodeBuilderBase) pageSettings(kind string) (string, string, *Imag
 
 // Fill node with more data
 func (builder *NodeBuilderBase) fillNodeBeforeGeneration(node *Node) {
-	node.Site = builder.siteBuilder.siteVars
-
 	if node.Meta.Title == "" {
 		// @todo Filter characters ?
 		node.Meta.Title = fmt.Sprintf("%s - %s", node.Title, builder.site().Name)
@@ -167,7 +165,7 @@ func (builder *NodeBuilderBase) generateNode(node *Node) string {
 
 	// write to file
 	// log.Printf("[DBG] Writing file: %s", osFilePath)
-	if err := node.generate(outputFile, builder.siteBuilder.layout()); err != nil {
+	if err := node.generate(outputFile, builder.siteBuilder.layout(), builder.siteBuilder.siteVars); err != nil {
 		builder.addError(err)
 		return ""
 	}
