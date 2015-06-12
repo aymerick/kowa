@@ -93,7 +93,7 @@ func (tpl *Templater) templateContent(name string, kind TplKind) (string, error)
 
 	if tpl.templatesDir != "" {
 		// fetch from file system
-		filePath := path.Join(tpl.templatesDir, fmt.Sprintf("%s.%s", name, kind))
+		filePath := path.Join(tpl.templatesDir, fmt.Sprintf("%s.%s.hbs", name, kind))
 
 		data, err = ioutil.ReadFile(filePath)
 		if err != nil {
@@ -101,7 +101,7 @@ func (tpl *Templater) templateContent(name string, kind TplKind) (string, error)
 		}
 	} else {
 		// fetch from embeded assets
-		assetPath := fmt.Sprintf("mailers/templates/%s.%s", name, kind)
+		assetPath := fmt.Sprintf("mailers/templates/%s.%s.hbs", name, kind)
 
 		data, err = core.Asset(assetPath)
 		if err != nil {
