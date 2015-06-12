@@ -103,7 +103,7 @@ func (builder *PostsBuilder) loadPost(post *models.Post) {
 	node.Meta = &NodeMeta{
 		Title:       fmt.Sprintf("%s - %s", post.Title, builder.site().Name),
 		Description: tagline,
-		OGType:      "article",
+		Type:        "article",
 	}
 
 	postContent := builder.NewPostContent(post, node)

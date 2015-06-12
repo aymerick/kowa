@@ -134,7 +134,7 @@ func (builder *EventsBuilder) loadEvent(event *models.Event) {
 	node.Meta = &NodeMeta{
 		Title:       fmt.Sprintf("%s - %s", event.Title, builder.site().Name),
 		Description: tagline,
-		OGType:      "article",
+		Type:        "article",
 	}
 
 	eventContent := builder.NewEventContent(event, node)

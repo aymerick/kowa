@@ -43,7 +43,7 @@ type NodeMeta struct {
 
 	// @todo article:published_time and article:modified_time
 
-	OGType      string
+	Type        string
 	TwitterCard string
 }
 

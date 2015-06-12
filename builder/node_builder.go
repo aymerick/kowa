@@ -134,8 +134,8 @@ func (builder *NodeBuilderBase) fillNodeBeforeGeneration(node *Node) {
 		node.Meta.Title = fmt.Sprintf("%s - %s", node.Title, builder.site().Name)
 	}
 
-	if node.Meta.OGType == "" {
-		node.Meta.OGType = "website"
+	if node.Meta.Type == "" {
+		node.Meta.Type = "website"
 	}
 
 	if node.Meta.TwitterCard == "" {
