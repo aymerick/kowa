@@ -121,7 +121,7 @@ func (node *Node) template(layout *raymond.Template) (*raymond.Template, error) 
 
 	filePath := node.builder.SiteBuilder().templatePath(node.Kind)
 
-	if err := result.RegisterPartialFile(filePath, "content"); err != nil {
+	if err := result.RegisterPartialFile(filePath, "body"); err != nil {
 		return nil, err
 	}
 
