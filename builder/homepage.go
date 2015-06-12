@@ -1,11 +1,10 @@
 package builder
 
 import (
-	"html/template"
-
 	"github.com/nicksnyder/go-i18n/i18n"
 
 	"github.com/aymerick/kowa/models"
+	"github.com/aymerick/raymond"
 )
 
 // Homepage node builder
@@ -17,11 +16,11 @@ type HomepageBuilder struct {
 type HomepageContent struct {
 	Node *Node
 
-	Description template.HTML // Site description
-	MoreDesc    template.HTML // Site additional description
-	JoinText    template.HTML // Site join text
-	Logo        *ImageVars    // Site logo
-	Cover       *ImageVars    // Site cover
+	Description raymond.SafeString // Site description
+	MoreDesc    raymond.SafeString // Site additional description
+	JoinText    raymond.SafeString // Site join text
+	Logo        *ImageVars         // Site logo
+	Cover       *ImageVars         // Site cover
 
 	Activities []*ActivityVars // Activities
 }

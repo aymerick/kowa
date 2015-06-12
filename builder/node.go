@@ -3,12 +3,11 @@ package builder
 import (
 	"errors"
 	"fmt"
-	"html/template"
 	"io"
-	"io/ioutil"
 	"path"
 
 	"github.com/aymerick/kowa/helpers"
+	"github.com/aymerick/raymond"
 )
 
 // Node vars
@@ -113,25 +112,37 @@ func (node *Node) fillUrl(slug string) {
 }
 
 // Compute node template
-func (node *Node) template(layout *template.Template) (*template.Template, error) {
+func (node *Node) template(layout *raymond.Template) (*raymond.Template, error) {
 	if layout == nil {
 		return nil, errors.New("Can't generate node without a layout template")
-	} else {
-		result := template.Must(layout.Clone())
-
-		// add "content" template to main layout
-		binData, err := ioutil.ReadFile(node.builder.SiteBuilder().templatePath(node.Kind))
-		if err == nil {
-			_, err = result.New("content").Parse(string(binData))
-		}
-
-		return result, err
 	}
+
+	result := layout.Clone()
+
+	filePath := node.builder.SiteBuilder().templatePath(node.Kind)
+
+	if err := result.RegisterPartialFile(filePath, "content"); err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 // Generate node
-func (node *Node) generate(wr io.Writer, layout *template.Template) error {
-	tpl := template.Must(node.template(layout))
+func (node *Node) generate(wr io.Writer, layout *raymond.Template) error {
+	tpl, err := node.template(layout)
+	if err != nil {
+		return err
+	}
 
-	return tpl.Execute(wr, node)
+	output, err := tpl.Exec(node)
+	if err != nil {
+		return err
+	}
+
+	if _, err := wr.Write([]byte(output)); err != nil {
+		return err
+	}
+
+	return nil
 }

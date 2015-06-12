@@ -2,12 +2,12 @@ package builder
 
 import (
 	"fmt"
-	"html/template"
 	"path"
 
 	"github.com/nicksnyder/go-i18n/i18n"
 
 	"github.com/aymerick/kowa/models"
+	"github.com/aymerick/raymond"
 )
 
 // Post nodes builder
@@ -25,7 +25,7 @@ type PostContent struct {
 	Date  string
 	Cover *ImageVars
 	Title string
-	Body  template.HTML
+	Body  raymond.SafeString
 	Url   string
 }
 

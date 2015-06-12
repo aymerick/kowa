@@ -2,7 +2,6 @@ package builder
 
 import (
 	"fmt"
-	"html/template"
 	"io"
 	"io/ioutil"
 	"log"
@@ -18,6 +17,7 @@ import (
 
 	"github.com/aymerick/kowa/helpers"
 	"github.com/aymerick/kowa/models"
+	"github.com/aymerick/raymond"
 )
 
 const (
@@ -54,7 +54,7 @@ type SiteBuilder struct {
 	nodeSlugs map[string]bool
 
 	// cache for #layout method
-	masterLayout *template.Template
+	masterLayout *raymond.Template
 
 	// internal vars
 	nodeBuilders map[string]NodeBuilder
@@ -428,70 +428,61 @@ func (builder *SiteBuilder) partialsPath() string {
 	return path.Join(builder.themeTemplatesDir(), PARTIALS_DIR)
 }
 
+func (builder *SiteBuilder) partialPaths() ([]string, error) {
+	result := []string{}
+
+	partialDir := builder.partialsPath()
+
+	files, err := ioutil.ReadDir(partialDir)
+	if err != nil && err != os.ErrExist {
+		return result, err
+	}
+
+	for _, file := range files {
+		fileName := file.Name()
+
+		if !file.IsDir() && strings.HasSuffix(fileName, ".html") {
+			result = append(result, path.Join(partialDir, fileName))
+		}
+	}
+
+	return result, nil
+}
+
 // @todo In production: load all layout files only once on startup, then for each builder instance:
-//       clone layout and setup FuncMap
-func (builder *SiteBuilder) setupLayout() *template.Template {
-	errStep := "template init"
+//       clone layout and register helpers
+func (builder *SiteBuilder) setupLayout() *raymond.Template {
+	errStep := "Layout setup"
 
 	// parse layout
-	result, err := template.ParseFiles(builder.templatePath("layout"))
+	result, err := raymond.ParseFile(builder.templatePath("layout"))
 	if err != nil {
 		builder.addError(errStep, err)
 		return nil
 	}
 
-	// setup FuncMap
-	result.Funcs(builder.FuncMap())
+	// register helpers
+	result.RegisterHelpers(builder.helpers())
 
-	// load partials
-	partialDir := builder.partialsPath()
-
-	files, err := ioutil.ReadDir(partialDir)
-	if err != nil && err != os.ErrExist {
+	// register partials
+	filePaths, err := builder.partialPaths()
+	if err != nil {
 		builder.addError(errStep, err)
-	} else {
-		for _, file := range files {
-			fileName := file.Name()
-
-			if !file.IsDir() && strings.HasSuffix(fileName, ".html") {
-				filePath := path.Join(partialDir, fileName)
-
-				// read partial
-				binData, err := ioutil.ReadFile(filePath)
-				if err != nil {
-					builder.addError(errStep, err)
-				} else {
-					// eg: partials/navbar
-					tplName := fmt.Sprintf("%s/%s", PARTIALS_DIR, helpers.FileBase(fileName))
-
-					// add partial to layout
-					_, err := result.New(tplName).Parse(string(binData))
-					if err != nil {
-						builder.addError(errStep, err)
-					}
-				}
-			}
-		}
+		return nil
 	}
+
+	result.RegisterPartialFiles(filePaths...)
 
 	return result
 }
 
 // Get master layout template
-func (builder *SiteBuilder) layout() *template.Template {
+func (builder *SiteBuilder) layout() *raymond.Template {
 	if builder.masterLayout == nil {
 		builder.masterLayout = builder.setupLayout()
 	}
 
 	return builder.masterLayout
-}
-
-// Dump templates
-func (builder *SiteBuilder) DumpLayout() {
-	log.Printf("Layout templates:")
-	for _, tpl := range builder.masterLayout.Templates() {
-		log.Printf("  -> %s", tpl.Name())
-	}
 }
 
 // Prune directories for given absolute dir path

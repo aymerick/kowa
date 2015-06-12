@@ -40,7 +40,6 @@ func buildSiteCmd(cmd *cobra.Command, args []string) {
 	siteBuilder := buildSite(site)
 	if siteBuilder.HaveError() {
 		siteBuilder.DumpErrors()
-		siteBuilder.DumpLayout()
 	} else {
 		if viper.GetBool("serve_output") {
 			// server site

@@ -2,7 +2,6 @@ package builder
 
 import (
 	"fmt"
-	"html/template"
 	"path"
 	"sort"
 	"time"
@@ -10,6 +9,7 @@ import (
 	"github.com/nicksnyder/go-i18n/i18n"
 
 	"github.com/aymerick/kowa/models"
+	"github.com/aymerick/raymond"
 )
 
 // Event nodes builder
@@ -28,7 +28,7 @@ type EventContent struct {
 	Cover *ImageVars
 	Title string
 	Place string
-	Body  template.HTML
+	Body  raymond.SafeString
 	Url   string
 
 	Dates string

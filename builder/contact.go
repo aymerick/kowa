@@ -1,10 +1,10 @@
 package builder
 
 import (
-	"html/template"
 	"strings"
 
 	"github.com/aymerick/kowa/models"
+	"github.com/aymerick/raymond"
 	"github.com/nicksnyder/go-i18n/i18n"
 )
 
@@ -19,7 +19,7 @@ type ContactContent struct {
 
 	HaveContact bool
 	Email       string
-	Address     template.HTML
+	Address     raymond.SafeString
 
 	HaveSocial bool
 	Facebook   string
@@ -87,8 +87,8 @@ func (builder *ContactBuilder) NewContactContent() *ContactContent {
 
 	result.Email = site.Email
 
-	addrSafe := template.HTMLEscapeString(site.Address)
-	result.Address = template.HTML(strings.Replace(addrSafe, "\n", "<br />\n", -1))
+	addrSafe := raymond.Escape(site.Address)
+	result.Address = raymond.SafeString(strings.Replace(addrSafe, "\n", "<br />\n", -1))
 
 	if result.Email != "" || result.Address != "" {
 		result.HaveContact = true

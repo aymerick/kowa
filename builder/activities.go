@@ -1,12 +1,12 @@
 package builder
 
 import (
-	"html/template"
 	"time"
 
 	"github.com/nicksnyder/go-i18n/i18n"
 
 	"github.com/aymerick/kowa/models"
+	"github.com/aymerick/raymond"
 )
 
 // Activities node builder
@@ -29,8 +29,8 @@ type ActivityVars struct {
 	Date    time.Time
 	Cover   *ImageVars
 	Title   string
-	Summary template.HTML
-	Body    template.HTML
+	Summary raymond.SafeString
+	Body    raymond.SafeString
 }
 
 func init() {

@@ -1,10 +1,10 @@
 package builder
 
 import (
-	"html/template"
 	"time"
 
 	"github.com/aymerick/kowa/models"
+	"github.com/aymerick/raymond"
 )
 
 // Page nodes builder
@@ -19,7 +19,7 @@ type PageContent struct {
 
 	Date  time.Time
 	Cover *ImageVars
-	Body  template.HTML
+	Body  raymond.SafeString
 	Url   string
 }
 
