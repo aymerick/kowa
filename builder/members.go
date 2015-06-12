@@ -18,8 +18,6 @@ type MembersBuilder struct {
 
 // Members node content
 type MembersContent struct {
-	Node *Node
-
 	Members []*MemberVars
 }
 
@@ -80,7 +78,6 @@ func (builder *MembersBuilder) Load() {
 	node.NavBarOrder = 15
 
 	node.Content = &MembersContent{
-		Node:    node,
 		Members: membersVars,
 	}
 

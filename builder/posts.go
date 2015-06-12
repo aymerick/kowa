@@ -19,7 +19,6 @@ type PostsBuilder struct {
 
 // Post node content
 type PostContent struct {
-	Node  *Node
 	Model *models.Post
 
 	Date  string
@@ -31,8 +30,6 @@ type PostContent struct {
 
 // Posts node content
 type PostsContent struct {
-	Node *Node
-
 	Posts []*PostContent
 	// PrevPage string
 	// NextPage string
@@ -125,7 +122,6 @@ func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *Post
 	T := i18n.MustTfunc(builder.siteLang())
 
 	result := &PostContent{
-		Node:  node,
 		Model: post,
 
 		Title: post.Title,
@@ -182,7 +178,6 @@ func (builder *PostsBuilder) loadPostsLists() {
 	node.NavBarOrder = 5
 
 	node.Content = &PostsContent{
-		Node:  node,
 		Posts: builder.posts,
 	}
 

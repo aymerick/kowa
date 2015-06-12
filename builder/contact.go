@@ -15,8 +15,6 @@ type ContactBuilder struct {
 
 // Contact node content
 type ContactContent struct {
-	Node *Node
-
 	HaveContact bool
 	Email       string
 	Address     raymond.SafeString
@@ -74,7 +72,6 @@ func (builder *ContactBuilder) Load() {
 	node.InNavBar = true
 	node.NavBarOrder = 20
 
-	contactContent.Node = node
 	node.Content = contactContent
 
 	builder.addNode(node)

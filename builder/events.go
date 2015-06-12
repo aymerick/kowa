@@ -22,7 +22,6 @@ type EventsBuilder struct {
 
 // Event node content
 type EventContent struct {
-	Node  *Node
 	Model *models.Event
 
 	Cover *ImageVars
@@ -61,8 +60,6 @@ type EventContentsByStartDate []*EventContent
 
 // Events node content
 type EventsContent struct {
-	Node *Node
-
 	Events     []*EventContent
 	PastEvents []*EventContent
 
@@ -160,7 +157,6 @@ func (builder *EventsBuilder) NewEventContent(event *models.Event, node *Node) *
 	T := i18n.MustTfunc(builder.siteLang())
 
 	result := &EventContent{
-		Node:  node,
 		Model: event,
 
 		Title: event.Title,
@@ -282,7 +278,6 @@ func (builder *EventsBuilder) loadEventsLists() {
 	}
 
 	node.Content = &EventsContent{
-		Node:       node,
 		Events:     events,
 		PastEvents: pastEvents,
 	}

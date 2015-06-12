@@ -14,8 +14,6 @@ type HomepageBuilder struct {
 
 // Homepage node content
 type HomepageContent struct {
-	Node *Node
-
 	Description raymond.SafeString // Site description
 	MoreDesc    raymond.SafeString // Site additional description
 	JoinText    raymond.SafeString // Site join text
@@ -73,9 +71,7 @@ func (builder *HomepageBuilder) Load() {
 func (builder *HomepageBuilder) NewHomepageContent(node *Node) *HomepageContent {
 	site := builder.site()
 
-	result := &HomepageContent{
-		Node: node,
-	}
+	result := &HomepageContent{}
 
 	result.Description = generateHTML(models.FORMAT_HTML, site.Description)
 	result.MoreDesc = generateHTML(models.FORMAT_HTML, site.MoreDesc)

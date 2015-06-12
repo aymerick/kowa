@@ -19,8 +19,6 @@ type ActivitiesBuilder struct {
 
 // Activities node content
 type ActivitiesContent struct {
-	Node *Node
-
 	Activities []*ActivityVars
 }
 
@@ -81,7 +79,6 @@ func (builder *ActivitiesBuilder) Load() {
 	node.NavBarOrder = 1
 
 	node.Content = &ActivitiesContent{
-		Node:       node,
 		Activities: activitiesVars,
 	}
 

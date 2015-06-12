@@ -14,7 +14,6 @@ type PagesBuilder struct {
 
 // Page node content
 type PageContent struct {
-	Node  *Node
 	Model *models.Page
 
 	Date  time.Time
@@ -66,7 +65,6 @@ func (builder *PagesBuilder) loadPage(page *models.Page) {
 // Instanciate a new page content
 func (builder *PagesBuilder) NewPageContent(page *models.Page, node *Node) *PageContent {
 	result := &PageContent{
-		Node:  node,
 		Model: page,
 
 		Date: page.CreatedAt,
