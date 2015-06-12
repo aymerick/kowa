@@ -420,7 +420,7 @@ func (builder *SiteBuilder) genAssetsDir() string {
 
 // Compute template path for given template name
 func (builder *SiteBuilder) templatePath(tplName string) string {
-	return path.Join(builder.themeTemplatesDir(), fmt.Sprintf("%s.html", tplName))
+	return path.Join(builder.themeTemplatesDir(), fmt.Sprintf("%s.hbs", tplName))
 }
 
 // Returns partials directory path
@@ -441,7 +441,7 @@ func (builder *SiteBuilder) partialPaths() ([]string, error) {
 	for _, file := range files {
 		fileName := file.Name()
 
-		if !file.IsDir() && strings.HasSuffix(fileName, ".html") {
+		if !file.IsDir() && strings.HasSuffix(fileName, ".hbs") {
 			result = append(result, path.Join(partialDir, fileName))
 		}
 	}
