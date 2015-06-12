@@ -48,7 +48,8 @@
 		},
 		{
 			"ImportPath": "github.com/aymerick/raymond",
-			"Rev": "14b11e8e0c359a3808cd9704f50ad57f2b5b37a9"
+			"Comment": "v1.0.0-14-g26a1c2e",
+			"Rev": "26a1c2e197a6640358dd47f0fabcdb17ed1dcd88"
 		},
 		{
 			"ImportPath": "github.com/coreos/etcd/etcdserver/etcdhttp/httptypes",

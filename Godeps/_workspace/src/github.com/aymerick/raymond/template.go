@@ -2,6 +2,7 @@ package raymond
 
 import (
 	"fmt"
+	"io/ioutil"
 	"reflect"
 	"runtime"
 
@@ -47,6 +48,16 @@ func MustParse(source string) *Template {
 	return result
 }
 
+// ParseFile reads given file and returns parsed template.
+func ParseFile(filePath string) (*Template, error) {
+	b, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return nil, err
+	}
+
+	return Parse(string(b))
+}
+
 // parse parses the template
 //
 // It can be called several times, the parsing will be done only once.
@@ -70,7 +81,7 @@ func (tpl *Template) Clone() *Template {
 	result.program = tpl.program
 
 	for name, helper := range tpl.helpers {
-		result.RegisterHelper(name, helper)
+		result.RegisterHelper(name, helper.Interface())
 	}
 
 	for name, partial := range tpl.partials {
@@ -117,6 +128,35 @@ func (tpl *Template) RegisterPartials(partials map[string]string) {
 	for name, partial := range partials {
 		tpl.RegisterPartial(name, partial)
 	}
+}
+
+// RegisterPartialFile reads given file and registers its content as a partial with given name.
+func (tpl *Template) RegisterPartialFile(filePath string, name string) error {
+	b, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return err
+	}
+
+	tpl.RegisterPartial(name, string(b))
+
+	return nil
+}
+
+// RegisterPartialFiles reads several files and registers them as partials, the filename base is used as the partial name.
+func (tpl *Template) RegisterPartialFiles(filePaths ...string) error {
+	if len(filePaths) == 0 {
+		return nil
+	}
+
+	for _, filePath := range filePaths {
+		name := fileBase(filePath)
+
+		if err := tpl.RegisterPartialFile(filePath, name); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // RegisterPartial registers an already parsed partial for that template.
