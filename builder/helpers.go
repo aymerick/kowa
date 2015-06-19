@@ -1,6 +1,7 @@
 package builder
 
 import (
+	"log"
 	"reflect"
 	"strings"
 
@@ -8,24 +9,25 @@ import (
 )
 
 // Build FuncMap for template
-func (builder *SiteBuilder) helpers() map[string]interface{} {
+func (site *SiteBuilder) helpers() map[string]interface{} {
 	return map[string]interface{}{
-		"urlFor":     builder.UrlFor,
-		"startsWith": builder.StartsWith,
-		"t":          builder.Translate,
-		"mod":        builder.Mod,
-		"modBool":    builder.ModBool,
+		"urlFor": site.UrlFor,
+		"t":      site.Translate,
+
+		"startsWith": StartsWith,
+		"mod":        Mod,
+		"modBool":    ModBool,
 	}
 }
 
 // UrlFor returns an URL to an internal page.
-func (builder *SiteBuilder) UrlFor(dest string) string {
+func (site *SiteBuilder) UrlFor(dest string) string {
 	var result string
 
 	switch dest {
 	case KIND_ACTIVITIES, KIND_MEMBERS, KIND_CONTACT, KIND_HOMEPAGE:
 		// find uniq node
-		nodes := builder.nodeBuilder(dest).Nodes()
+		nodes := site.nodeBuilder(dest).Nodes()
 		if len(nodes) == 0 {
 			panic("No node loaded yet")
 		}
@@ -38,7 +40,7 @@ func (builder *SiteBuilder) UrlFor(dest string) string {
 
 	case KIND_POSTS, KIND_EVENTS:
 		// find correct node
-		nodes := builder.nodeBuilder(dest).Nodes()
+		nodes := site.nodeBuilder(dest).Nodes()
 
 		for _, node := range nodes {
 			if node.Kind == dest {
@@ -55,20 +57,21 @@ func (builder *SiteBuilder) UrlFor(dest string) string {
 	return result
 }
 
-// StartsWith returns true if check has prefix.
-func (builder *SiteBuilder) StartsWith(check string, prefix string) bool {
-	return strings.HasPrefix(check, prefix)
-}
-
 // Translate translates given sentence.
-func (builder *SiteBuilder) Translate(sentence string) string {
-	T := i18n.MustTfunc(builder.site.Lang)
+func (site *SiteBuilder) Translate(sentence string) string {
+	T := i18n.MustTfunc(site.site.Lang)
 
 	return T(sentence)
 }
 
+// StartsWith returns true if check has prefix.
+func StartsWith(check string, prefix string) bool {
+	log.Printf("StartsWith(%q, %q)", check, prefix)
+	return strings.HasPrefix(check, prefix)
+}
+
 // @todo Replace interface{}
-func (builder *SiteBuilder) Mod(a, b interface{}) int64 {
+func Mod(a, b interface{}) int64 {
 	av := reflect.ValueOf(a)
 	bv := reflect.ValueOf(b)
 	var ai, bi int64
@@ -94,6 +97,6 @@ func (builder *SiteBuilder) Mod(a, b interface{}) int64 {
 	return ai % bi
 }
 
-func (builder *SiteBuilder) ModBool(a, b interface{}) bool {
-	return builder.Mod(a, b) == int64(0)
+func ModBool(a, b interface{}) bool {
+	return Mod(a, b) == int64(0)
 }
