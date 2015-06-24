@@ -21,6 +21,9 @@ func (app *Application) newWebRouter() *mux.Router {
 
 	notAuthChain := baseChain.Append(app.ensureNotAuthMiddleware)
 
+	// /api/configuration
+	apiRouter.Methods("GET").Path("/configuration").Handler(notAuthChain.ThenFunc(app.handleGetConfig))
+
 	// /api/signup
 	apiRouter.Methods("POST").Path("/signup").Handler(notAuthChain.ThenFunc(app.handleSignupUser))
 	apiRouter.Methods("POST").Path("/signup/validate").Handler(notAuthChain.ThenFunc(app.handleSignupValidate))
