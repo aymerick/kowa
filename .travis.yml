@@ -6,8 +6,8 @@ go:
   - tip
 
 env:
-  - KOWA_TEST_WITH_ASSETS=true
-  - KOWA_TEST_WITH_ASSETS=false
+  - KOWA_TEST_EMBED_ASSETS=true
+  - KOWA_TEST_EMBED_ASSETS=false
 
 services:
   - mongodb
