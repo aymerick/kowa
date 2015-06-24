@@ -1,7 +1,6 @@
 package builder
 
 import (
-	"log"
 	"reflect"
 	"strings"
 
@@ -66,7 +65,6 @@ func (site *SiteBuilder) Translate(sentence string) string {
 
 // StartsWith returns true if check has prefix.
 func StartsWith(check string, prefix string) bool {
-	log.Printf("StartsWith(%q, %q)", check, prefix)
 	return strings.HasPrefix(check, prefix)
 }
 
