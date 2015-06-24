@@ -2,14 +2,12 @@ package server
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/nicksnyder/go-i18n/i18n"
-	"github.com/spf13/viper"
 
 	"github.com/aymerick/kowa/core"
 	"github.com/aymerick/kowa/helpers"
@@ -85,6 +83,14 @@ func (app *Application) handlePostSite(rw http.ResponseWriter, req *http.Request
 		}
 	}
 
+	// check site domain
+	site.Domain = strings.TrimSpace(site.Domain)
+	if site.Domain == "" {
+		site.CustomUrl = core.BaseUrl(site.Id)
+	} else if !core.ValidDomain(site.Domain) {
+		http.Error(rw, "Invalid domain provided", http.StatusBadRequest)
+	}
+
 	site.Tagline = strings.TrimSpace(site.Tagline)
 	site.Description = strings.TrimSpace(site.Description)
 
@@ -97,9 +103,6 @@ func (app *Application) handlePostSite(rw http.ResponseWriter, req *http.Request
 	site.Lang = currentUser.Lang
 	site.Theme = core.DEFAULT_THEME
 	site.NameInNavBar = true
-
-	// @todo FIXME !
-	site.BaseUrl = fmt.Sprintf("%s:%d/%s", core.DEFAULT_BASEURL, viper.GetInt("serve_output_port"), site.Id)
 
 	if err := currentDBSession.CreateSite(site); err != nil {
 		log.Printf("ERROR: %v", err)

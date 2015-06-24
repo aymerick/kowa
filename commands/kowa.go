@@ -75,6 +75,9 @@ func initKowaConf() {
 
 	rootCmd.PersistentFlags().String("service_copyright_notice", DEFAULT_SERVICE_COPYRIGHT, "Service copyright notice")
 	viper.BindPFlag("service_copyright_notice", rootCmd.PersistentFlags().Lookup("service_copyright_notice"))
+
+	rootCmd.PersistentFlags().String("service_domains", "", "Service domains list")
+	viper.BindPFlag("service_domains", rootCmd.PersistentFlags().Lookup("service_domains"))
 }
 
 func defaultOutputDir() string {

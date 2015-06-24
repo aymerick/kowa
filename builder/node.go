@@ -108,7 +108,7 @@ func (node *Node) fillUrl(slug string) {
 	node.Url = helpers.Urlify(path.Join(siteBuilder.basePath(), lastPart))
 
 	// AbsoluteUrl
-	node.AbsoluteUrl = helpers.Urlify(fmt.Sprintf("%s%s", siteBuilder.site.BaseUrl, lastPart))
+	node.AbsoluteUrl = helpers.Urlify(fmt.Sprintf("%s%s", siteBuilder.site.BaseUrl(), lastPart))
 }
 
 // Compute node template

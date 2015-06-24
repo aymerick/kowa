@@ -188,7 +188,7 @@ func (builder *SiteBuilder) activitiesVars() []*ActivityVars {
 
 // Return site base path
 func (builder *SiteBuilder) basePath() string {
-	u, err := url.Parse(builder.site.BaseUrl)
+	u, err := url.Parse(builder.site.BaseUrl())
 	if err != nil {
 		return ""
 	}
@@ -365,7 +365,7 @@ func (builder *SiteBuilder) syncFavicon() {
 func (builder *SiteBuilder) addImage(img *models.Image) *ImageVars {
 	builder.images = append(builder.images, img)
 
-	return NewImageVars(img, builder.basePath(), builder.site.BaseUrl)
+	return NewImageVars(img, builder.basePath(), builder.site.BaseUrl())
 }
 
 // Check if builder have error

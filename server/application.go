@@ -185,7 +185,7 @@ func (app *Application) getCurrentImage(req *http.Request) *models.Image {
 
 // GET /api/configuration
 func (app *Application) handleGetConfig(rw http.ResponseWriter, req *http.Request) {
-	app.render.JSON(rw, http.StatusOK, renderMap{
+	result := renderMap{
 		"langs": []map[string]string{
 			{"id": "en", "name": "English"},
 			{"id": "fr", "name": "Français"},
@@ -194,6 +194,9 @@ func (app *Application) handleGetConfig(rw http.ResponseWriter, req *http.Reques
 			{"id": "html", "name": "Rich Text"},
 			{"id": "md", "name": "Markdown"},
 		},
-		"themes": []string{"ailes", "willy"},
-	})
+		"themes":  []string{"ailes", "willy"},
+		"domains": viper.GetStringSlice("service_domains"),
+	}
+
+	app.render.JSON(rw, http.StatusOK, result)
 }

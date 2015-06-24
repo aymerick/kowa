@@ -62,9 +62,10 @@ type Site struct {
 	PageSettings map[string]*SitePageSettings `bson:"page_settings" json:"pageSettings,omitempty"`
 
 	// build settings
-	Theme   string `bson:"theme"    json:"theme"`
-	BaseUrl string `bson:"base_url" json:"baseUrl"`
-	UglyUrl bool   `bson:"ugly_url" json:"uglyUrl"`
+	Theme     string `bson:"theme"      json:"theme"`
+	Domain    string `bson:"domain"     json:"domain"`
+	CustomUrl string `bson:"custom_url" json:"customUrl"`
+	UglyUrl   bool   `bson:"ugly_url"   json:"uglyUrl"`
 
 	// theme settings
 	NameInNavBar bool `bson:"name_in_navbar" json:"nameInNavBar"`
@@ -186,6 +187,19 @@ func (site *Site) MarshalJSON() ([]byte, error) {
 	}
 
 	return json.Marshal(siteJson)
+}
+
+// BaseUrl returns base URL for that site.
+func (site *Site) BaseUrl() string {
+	if site.CustomUrl != "" {
+		return site.CustomUrl
+	}
+
+	if site.Domain != "" {
+		return core.BaseUrlForDomain(site.Id, site.Domain)
+	}
+
+	return core.BaseUrl(site.Id)
 }
 
 //
@@ -763,13 +777,23 @@ func (site *Site) Update(newSite *Site) (bool, error) {
 		}
 	}
 
-	if site.BaseUrl != newSite.BaseUrl {
-		site.BaseUrl = newSite.BaseUrl
+	if site.Domain != newSite.Domain {
+		site.Domain = newSite.Domain
 
-		if site.BaseUrl == "" {
-			unset = append(unset, bson.DocElem{"base_url", 1})
+		if site.Domain == "" {
+			unset = append(unset, bson.DocElem{"domain", 1})
 		} else {
-			set = append(set, bson.DocElem{"base_url", site.BaseUrl})
+			set = append(set, bson.DocElem{"domain", site.Domain})
+		}
+	}
+
+	if site.CustomUrl != newSite.CustomUrl {
+		site.CustomUrl = newSite.CustomUrl
+
+		if site.CustomUrl == "" {
+			unset = append(unset, bson.DocElem{"custom_url", 1})
+		} else {
+			set = append(set, bson.DocElem{"custom_url", site.CustomUrl})
 		}
 	}
 

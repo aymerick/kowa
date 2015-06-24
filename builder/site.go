@@ -54,7 +54,7 @@ func (vars *SiteVars) fill() {
 	}
 
 	vars.Name = name
-	vars.BaseUrl = site.BaseUrl
+	vars.BaseUrl = site.BaseUrl()
 	vars.BasePath = vars.builder.basePath()
 	vars.Tagline = site.Tagline
 	vars.NameInNavBar = site.NameInNavBar
