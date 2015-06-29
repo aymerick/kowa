@@ -27,15 +27,9 @@ func (site *SiteBuilder) UrlFor(dest string) string {
 	case KIND_ACTIVITIES, KIND_MEMBERS, KIND_CONTACT, KIND_HOMEPAGE:
 		// find uniq node
 		nodes := site.nodeBuilder(dest).Nodes()
-		if len(nodes) == 0 {
-			panic("No node loaded yet")
+		if len(nodes) == 1 {
+			result = nodes[0].Url
 		}
-
-		if len(nodes) > 1 {
-			panic("That method logic is broken, fix it!")
-		}
-
-		result = nodes[0].Url
 
 	case KIND_POSTS, KIND_EVENTS:
 		// find correct node
