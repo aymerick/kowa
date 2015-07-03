@@ -3,6 +3,7 @@ package builder
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/aymerick/kowa/core"
 	"github.com/aymerick/kowa/models"
@@ -100,6 +101,11 @@ func (builder *NodeBuilderBase) siteLang() string {
 	}
 
 	return result
+}
+
+// siteTZLocation returns site TZ infos
+func (builder *NodeBuilderBase) siteTZLocation() *time.Location {
+	return builder.SiteBuilder().site.TZLocation()
 }
 
 // Computes page settings

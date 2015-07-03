@@ -101,6 +101,7 @@ func (app *Application) handlePostSite(rw http.ResponseWriter, req *http.Request
 
 	site.UserId = currentUser.Id
 	site.Lang = currentUser.Lang
+	site.TZ = currentUser.TZ
 	site.Theme = core.DEFAULT_THEME
 	site.NameInNavBar = true
 

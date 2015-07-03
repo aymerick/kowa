@@ -152,9 +152,17 @@ func (builder *EventsBuilder) loadEvent(event *models.Event) {
 	}
 }
 
+// siteTime returns given time expressed in site timezone
+func (builder *EventsBuilder) siteTime(t time.Time) time.Time {
+	return t.In(builder.siteTZLocation())
+}
+
 // Instanciate a new event content
 func (builder *EventsBuilder) NewEventContent(event *models.Event, node *Node) *EventContent {
 	T := i18n.MustTfunc(builder.siteLang())
+
+	startDate := builder.siteTime(event.StartDate)
+	endDate := builder.siteTime(event.EndDate)
 
 	result := &EventContent{
 		Model: event,
@@ -163,23 +171,23 @@ func (builder *EventsBuilder) NewEventContent(event *models.Event, node *Node) *
 		Place: event.Place,
 		Url:   node.Url,
 
-		StartDateRFC3339:  event.StartDate.Format(time.RFC3339),
-		StartWeekday:      T("weekday_" + event.StartDate.Format("Monday")),
-		StartWeekdayShort: T("weekday_short_" + event.StartDate.Format("Mon")),
-		StartDay:          event.StartDate.Format("02"),
-		StartMonth:        T("month_" + event.StartDate.Format("January")),
-		StartMonthShort:   T("month_short_" + event.StartDate.Format("Jan")),
-		StartYear:         event.StartDate.Format("2006"),
-		StartTime:         event.StartDate.Format(T("format_time")),
+		StartDateRFC3339:  startDate.Format(time.RFC3339),
+		StartWeekday:      T("weekday_" + startDate.Format("Monday")),
+		StartWeekdayShort: T("weekday_short_" + startDate.Format("Mon")),
+		StartDay:          startDate.Format("02"),
+		StartMonth:        T("month_" + startDate.Format("January")),
+		StartMonthShort:   T("month_short_" + startDate.Format("Jan")),
+		StartYear:         startDate.Format("2006"),
+		StartTime:         startDate.Format(T("format_time")),
 
-		EndDateRFC3339:  event.EndDate.Format(time.RFC3339),
-		EndWeekday:      T("weekday_" + event.EndDate.Format("Monday")),
-		EndWeekdayShort: T("weekday_short_" + event.EndDate.Format("Mon")),
-		EndDay:          event.EndDate.Format("02"),
-		EndMonth:        T("month_" + event.EndDate.Format("January")),
-		EndMonthShort:   T("month_short_" + event.EndDate.Format("Jan")),
-		EndYear:         event.EndDate.Format("2006"),
-		EndTime:         event.EndDate.Format(T("format_time")),
+		EndDateRFC3339:  endDate.Format(time.RFC3339),
+		EndWeekday:      T("weekday_" + endDate.Format("Monday")),
+		EndWeekdayShort: T("weekday_short_" + endDate.Format("Mon")),
+		EndDay:          endDate.Format("02"),
+		EndMonth:        T("month_" + endDate.Format("January")),
+		EndMonthShort:   T("month_short_" + endDate.Format("Jan")),
+		EndYear:         endDate.Format("2006"),
+		EndTime:         endDate.Format(T("format_time")),
 	}
 
 	result.StartDateTime = T("event_format_datetime", map[string]interface{}{

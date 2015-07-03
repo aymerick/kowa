@@ -36,6 +36,7 @@ func (app *Application) handleSignupUser(rw http.ResponseWriter, req *http.Reque
 	username := req.Form.Get("username")
 	password := req.Form.Get("password")
 	lang := req.Form.Get("lang")
+	tz := req.Form.Get("tz")
 
 	// check lang
 	userLang := core.DEFAULT_LANG
@@ -51,6 +52,11 @@ func (app *Application) handleSignupUser(rw http.ResponseWriter, req *http.Reque
 	T := i18n.MustTfunc(userLang)
 
 	errors := make(map[string]string)
+
+	// check timezone
+	if (tz == "") || !core.ValidTZ(tz) {
+		tz = core.DEFAULT_TZ
+	}
 
 	// check email format
 	emailAddr, err := mail.ParseAddress(email)

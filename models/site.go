@@ -39,6 +39,7 @@ type Site struct {
 	BuiltAt   time.Time `bson:"built_at,omitempty"    json:"builtAt,omitempty"`
 	UserId    string    `bson:"user_id"               json:"user"`
 	Lang      string    `bson:"lang"                  json:"lang"`
+	TZ        string    `bson:"tz"                    json:"tz"`
 
 	Name        string `bson:"name"        json:"name"`
 	Tagline     string `bson:"tagline"     json:"tagline"`
@@ -200,6 +201,16 @@ func (site *Site) BaseUrl() string {
 	}
 
 	return core.BaseUrl(site.Id)
+}
+
+// TZLocation returns timezone Location
+func (site *Site) TZLocation() *time.Location {
+	result, err := time.LoadLocation(site.TZ)
+	if err != nil {
+		// return time.UTC
+		panic(err)
+	}
+	return result
 }
 
 //
@@ -624,6 +635,16 @@ func (site *Site) Update(newSite *Site) (bool, error) {
 			unset = append(unset, bson.DocElem{"lang", 1})
 		} else {
 			set = append(set, bson.DocElem{"lang", site.Lang})
+		}
+	}
+
+	if site.TZ != newSite.TZ {
+		site.TZ = newSite.TZ
+
+		if site.TZ == "" {
+			unset = append(unset, bson.DocElem{"tz", 1})
+		} else {
+			set = append(set, bson.DocElem{"tz", site.TZ})
 		}
 	}
 

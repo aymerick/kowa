@@ -33,6 +33,7 @@ type User struct {
 	FirstName string `bson:"first_name" json:"firstName"`
 	LastName  string `bson:"last_name"  json:"lastName"`
 	Lang      string `bson:"lang"       json:"lang"`
+	TZ        string `bson:"tz"         json:"tz"`
 	Password  string `bson:"password"   json:"-"`
 }
 
@@ -210,6 +211,17 @@ func (user *User) Update(newUser *User) (bool, error) {
 			unset = append(unset, bson.DocElem{"lang", 1})
 		} else {
 			set = append(set, bson.DocElem{"lang", user.Lang})
+		}
+	}
+
+	// TZ
+	if user.TZ != newUser.TZ {
+		user.TZ = newUser.TZ
+
+		if user.TZ == "" {
+			unset = append(unset, bson.DocElem{"tz", 1})
+		} else {
+			set = append(set, bson.DocElem{"tz", user.TZ})
 		}
 	}
 

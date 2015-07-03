@@ -13,6 +13,7 @@ const (
 	UPLOAD_URL_PATH = "/upload"
 
 	DEFAULT_LANG  = "en"
+	DEFAULT_TZ    = "Europe/Paris"
 	DEFAULT_THEME = "willy"
 
 	DEFAULT_BASEURL = "http://127.0.0.1"
