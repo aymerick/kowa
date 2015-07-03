@@ -205,11 +205,16 @@ func (site *Site) BaseUrl() string {
 
 // TZLocation returns timezone Location
 func (site *Site) TZLocation() *time.Location {
-	result, err := time.LoadLocation(site.TZ)
-	if err != nil {
-		// return time.UTC
-		panic(err)
+	tz := site.TZ
+	if tz == "" {
+		tz = core.DEFAULT_TZ
 	}
+
+	result, err := time.LoadLocation(tz)
+	if err != nil {
+		return time.UTC
+	}
+
 	return result
 }
 
