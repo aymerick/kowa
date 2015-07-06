@@ -55,17 +55,16 @@ func (builder *PostsBuilder) Load() {
 	builder.loadPostsLists()
 }
 
-// Build all posts
+// Build published posts
 func (builder *PostsBuilder) loadPosts() {
-	for _, post := range *builder.site().FindAllPosts() {
+	for _, post := range *builder.site().FindPublishedPosts() {
 		builder.loadPost(post)
 	}
 }
 
 // Computes slug
 func postSlug(post *models.Post) string {
-	// @todo Should use PublishedAt
-	year, month, day := post.CreatedAt.Date()
+	year, month, day := post.PublishedAt.Date()
 
 	title := post.Title
 	if len(title) > MAX_SLUG {
@@ -128,10 +127,10 @@ func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *Post
 		Url:   node.Url,
 	}
 
-	year, _, day := post.CreatedAt.Date()
+	year, _, day := post.PublishedAt.Date()
 	result.Date = T("post_format_date", map[string]interface{}{
 		"Year":  year,
-		"Month": T("month_" + post.CreatedAt.Format("January")),
+		"Month": T("month_" + post.PublishedAt.Format("January")),
 		"Day":   day,
 	})
 

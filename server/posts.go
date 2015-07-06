@@ -26,7 +26,7 @@ func (app *Application) handleGetPosts(rw http.ResponseWriter, req *http.Request
 
 		pagination.Total = site.PostsNb()
 
-		posts := site.FindPosts(pagination.Skip, pagination.PerPage)
+		posts := site.FindPosts(pagination.Skip, pagination.PerPage, false)
 
 		// fetch covers
 		images := []*models.Image{}

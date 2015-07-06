@@ -19,7 +19,8 @@ type Post struct {
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
 	SiteId    string        `bson:"site_id"       json:"site"`
 
-	PublishedAt *time.Time    `bson:"published_at"    json:"publishedAt,omitempty"`
+	Published   bool          `bson:"published"       json:"published"`
+	PublishedAt time.Time     `bson:"published_at"    json:"publishedAt,omitempty"`
 	Title       string        `bson:"title"           json:"title"`
 	Body        string        `bson:"body"            json:"body"`
 	Format      string        `bson:"format"          json:"format"`
@@ -40,7 +41,7 @@ func (session *DBSession) PostsCol() *mgo.Collection {
 // Ensure indexes on Posts collection
 func (session *DBSession) EnsurePostsIndexes() {
 	index := mgo.Index{
-		Key:        []string{"site_id"},
+		Key:        []string{"site_id", "published"},
 		Background: true,
 	}
 
@@ -126,6 +127,25 @@ func (post *Post) Delete() error {
 // Update post in database
 func (post *Post) Update(newPost *Post) (bool, error) {
 	var set, unset, modifier bson.D
+
+	// Published
+	if post.Published != newPost.Published {
+		post.Published = newPost.Published
+
+		set = append(set, bson.DocElem{"published", post.Published})
+
+		// PublishedAt
+		if post.Published {
+			post.PublishedAt = time.Now()
+
+			set = append(set, bson.DocElem{"published_at", post.PublishedAt})
+		}
+	} else if post.Published && (post.PublishedAt != newPost.PublishedAt) {
+		// PublishedAt
+		post.PublishedAt = newPost.PublishedAt
+
+		set = append(set, bson.DocElem{"published_at", post.PublishedAt})
+	}
 
 	// Title
 	if post.Title != newPost.Title {

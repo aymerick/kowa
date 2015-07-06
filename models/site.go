@@ -222,13 +222,19 @@ func (site *Site) TZLocation() *time.Location {
 // Site posts
 //
 
-func (site *Site) postsBaseQuery() *mgo.Query {
-	return site.dbSession.PostsCol().Find(bson.M{"site_id": site.Id})
+func (site *Site) postsBaseQuery(onlyPub bool) *mgo.Query {
+	selector := bson.M{"site_id": site.Id}
+
+	if onlyPub {
+		selector["published"] = true
+	}
+
+	return site.dbSession.PostsCol().Find(selector)
 }
 
 // Returns the total number of posts
 func (site *Site) PostsNb() int {
-	result, err := site.postsBaseQuery().Count()
+	result, err := site.postsBaseQuery(false).Count()
 	if err != nil {
 		panic(err)
 	}
@@ -237,10 +243,10 @@ func (site *Site) PostsNb() int {
 }
 
 // Fetch from database: all posts belonging to site
-func (site *Site) FindPosts(skip int, limit int) *PostsList {
+func (site *Site) FindPosts(skip int, limit int, onlyPub bool) *PostsList {
 	result := PostsList{}
 
-	query := site.postsBaseQuery().Sort("-created_at")
+	query := site.postsBaseQuery(onlyPub).Sort("-published_at")
 
 	if skip > 0 {
 		query = query.Skip(skip)
@@ -263,7 +269,11 @@ func (site *Site) FindPosts(skip int, limit int) *PostsList {
 }
 
 func (site *Site) FindAllPosts() *PostsList {
-	return site.FindPosts(0, 0)
+	return site.FindPosts(0, 0, false)
+}
+
+func (site *Site) FindPublishedPosts() *PostsList {
+	return site.FindPosts(0, 0, true)
 }
 
 //
