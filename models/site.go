@@ -246,7 +246,7 @@ func (site *Site) PostsNb() int {
 func (site *Site) FindPosts(skip int, limit int, onlyPub bool) *PostsList {
 	result := PostsList{}
 
-	query := site.postsBaseQuery(onlyPub).Sort("-published_at")
+	query := site.postsBaseQuery(onlyPub).Sort("published", "-published_at", "-updated_at")
 
 	if skip > 0 {
 		query = query.Skip(skip)
