@@ -104,6 +104,7 @@ func (app *Application) newWebRouter() *mux.Router {
 	apiRouter.Methods("GET").Path("/members").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetMembers))
 	apiRouter.Methods("POST").Path("/members").Handler(authChain.ThenFunc(app.handlePostMembers))
 	apiRouter.Methods("GET").Path("/members/{member_id}").Handler(curMemberOwnerChain.ThenFunc(app.handleGetMember))
+	apiRouter.Methods("PUT").Path("/members/order").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handlePutMembersOrder))
 	apiRouter.Methods("PUT").Path("/members/{member_id}").Handler(curMemberOwnerChain.ThenFunc(app.handleUpdateMember))
 	apiRouter.Methods("DELETE").Path("/members/{member_id}").Handler(curMemberOwnerChain.ThenFunc(app.handleDeleteMember))
 
@@ -111,8 +112,6 @@ func (app *Application) newWebRouter() *mux.Router {
 	apiRouter.Methods("GET").Path("/images").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetImages))
 	apiRouter.Methods("GET").Path("/images/{image_id}").Handler(curImageOwnerChain.ThenFunc(app.handleGetImage))
 	apiRouter.Methods("DELETE").Path("/images/{image_id}").Handler(curImageOwnerChain.ThenFunc(app.handleDeleteImage))
-
-	// upload image
 	apiRouter.Methods("POST").Path("/images/upload").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleUploadImage))
 
 	return router

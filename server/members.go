@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 
+	"gopkg.in/mgo.v2/bson"
+
 	"github.com/aymerick/kowa/models"
 )
 
@@ -148,4 +150,28 @@ func (app *Application) handleDeleteMember(rw http.ResponseWriter, req *http.Req
 	} else {
 		http.NotFound(rw, req)
 	}
+}
+
+// PUT /membersorder
+func (app *Application) handlePutMembersOrder(rw http.ResponseWriter, req *http.Request) {
+	var ids []bson.ObjectId
+
+	if err := json.NewDecoder(req.Body).Decode(&ids); err != nil {
+		log.Printf("ERROR: %v", err)
+		http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
+		return
+	}
+
+	site := app.getCurrentSite(req)
+
+	order := 1
+	for _, id := range ids {
+		site.UpdateMemberOrder(id, order)
+		order += 1
+	}
+
+	// site content has changed
+	app.onSiteChange(site)
+
+	app.render.JSON(rw, http.StatusOK, renderMap{})
 }

@@ -468,6 +468,14 @@ func (site *Site) FindAllMembers() *MembersList {
 	return site.FindMembers(0, 0)
 }
 
+func (site *Site) UpdateMemberOrder(id bson.ObjectId, order int) {
+	// specify site_id in selector to prevent unprivileged users access
+	selector := bson.M{"site_id": site.Id, "_id": id}
+	modifier := bson.M{"$set": bson.M{"order": order}}
+
+	site.dbSession.MembersCol().Update(selector, modifier)
+}
+
 //
 // Site images
 //
