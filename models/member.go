@@ -23,6 +23,7 @@ type Member struct {
 	Role        string        `bson:"role"            json:"role"`
 	Description string        `bson:"description"     json:"description"`
 	Photo       bson.ObjectId `bson:"photo,omitempty" json:"photo,omitempty"`
+	Order       int           `bson:"order"           json:"order"`
 }
 
 type MembersList []*Member
@@ -39,7 +40,7 @@ func (session *DBSession) MembersCol() *mgo.Collection {
 // Ensure indexes on Members collection
 func (session *DBSession) EnsureMembersIndexes() {
 	index := mgo.Index{
-		Key:        []string{"site_id"},
+		Key:        []string{"site_id", "order"},
 		Background: true,
 	}
 
@@ -170,6 +171,13 @@ func (member *Member) Update(newMember *Member) (bool, error) {
 		} else {
 			set = append(set, bson.DocElem{"photo", member.Photo})
 		}
+	}
+
+	// Order
+	if member.Order != newMember.Order {
+		member.Order = newMember.Order
+
+		set = append(set, bson.DocElem{"order", member.Order})
 	}
 
 	if len(unset) > 0 {
