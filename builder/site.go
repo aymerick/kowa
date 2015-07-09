@@ -14,6 +14,8 @@ type SiteVars struct {
 	NameInNavBar bool
 	Favicon      bool
 
+	Membership string
+
 	BaseUrl  string
 	BasePath string
 
@@ -61,6 +63,10 @@ func (vars *SiteVars) fill() {
 
 	if img := site.FindFavicon(); img != nil {
 		vars.Favicon = true
+	}
+
+	if file := site.FindMembership(); file != nil {
+		vars.Membership = vars.builder.addFile(file)
 	}
 
 	vars.Facebook = site.Facebook

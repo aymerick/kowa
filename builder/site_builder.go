@@ -21,16 +21,21 @@ import (
 )
 
 const (
-	IMAGES_DIR    = "img"
+	// static site
+	ASSETS_DIR       = "assets"
+	IMAGES_DIR       = "img"
+	FILES_DIR        = "files"
+	FAVICON_FILENAME = "favicon.png"
+
+	// themes
 	TEMPLATES_DIR = "templates"
 	PARTIALS_DIR  = "partials"
-	ASSETS_DIR    = "assets"
-
-	FAVICON_FILENAME = "favicon.png"
 
 	MAX_SLUG        = 50
 	MAX_PAST_EVENTS = 5
 )
+
+var generatedPaths = []string{ASSETS_DIR, IMAGES_DIR, FILES_DIR, FAVICON_FILENAME}
 
 var registeredNodeBuilders = make(map[string]func(*SiteBuilder) NodeBuilder)
 
@@ -48,6 +53,7 @@ type SiteBuilder struct {
 	config *SiteBuilderConfig
 
 	images         []*models.Image
+	files          []*models.File
 	errorCollector *ErrorCollector
 
 	// all nodes slugs
@@ -106,7 +112,10 @@ func (builder *SiteBuilder) Build() {
 	builder.syncNodes()
 
 	// sync images
-	builder.syncImages()
+	builder.syncFiles(builder.genImagesDir(), builder.imagesToSync)
+
+	// sync files
+	builder.syncFiles(builder.genFilesDir(), builder.filesToSync)
 
 	// sync assets
 	builder.syncAssets()
@@ -235,10 +244,11 @@ func (builder *SiteBuilder) syncNodes() {
 	// delete deprecated nodes
 	filesToDelete := make(map[string]bool)
 
-	// ignore assets and img dirs
-	ignoreDirs := []string{
-		path.Join(builder.config.OutputDir, "assets"),
-		path.Join(builder.config.OutputDir, "img"),
+	// ignore generated dirs
+	var ignoreDirs []string
+
+	for _, genPath := range generatedPaths {
+		ignoreDirs = append(ignoreDirs, path.Join(builder.config.OutputDir, genPath))
 	}
 
 	err := filepath.Walk(builder.config.OutputDir, func(path string, f os.FileInfo, err error) error {
@@ -265,19 +275,7 @@ func (builder *SiteBuilder) syncNodes() {
 	}
 }
 
-// Copy images
-func (builder *SiteBuilder) syncImages() {
-	errStep := "Sync images"
-
-	imgDir := builder.genImagesDir()
-
-	// ensure img dir
-	if err := builder.ensureDir(imgDir); err != nil {
-		builder.addError(errStep, err)
-		return
-	}
-
-	// copy images to img dir
+func (builder *SiteBuilder) imagesToSync() ([]string, map[string]bool) {
 	sourceFiles := make(map[string]bool)
 
 	var files []string
@@ -293,17 +291,50 @@ func (builder *SiteBuilder) syncImages() {
 		}
 	}
 
-	if len(files) > 0 {
-		log.Printf("Syncing %d images", len(files))
+	return files, sourceFiles
+}
 
-		if err := fsync.SyncTo(imgDir, files...); err != nil {
+func (builder *SiteBuilder) filesToSync() ([]string, map[string]bool) {
+	sourceFiles := make(map[string]bool)
+
+	var files []string
+	for _, file := range builder.files {
+		filePath := file.FilePath()
+
+		if !sourceFiles[path.Base(filePath)] {
+			files = append(files, filePath)
+
+			sourceFiles[path.Base(filePath)] = true
+		}
+	}
+
+	return files, sourceFiles
+}
+
+// Sync files
+func (builder *SiteBuilder) syncFiles(destDir string, grabber func() ([]string, map[string]bool)) {
+	errStep := "Sync " + destDir
+
+	// ensure dir
+	if err := builder.ensureDir(destDir); err != nil {
+		builder.addError(errStep, err)
+		return
+	}
+
+	// grab files to sync
+	files, sourceFiles := grabber()
+
+	if len(files) > 0 {
+		log.Printf("Syncing %d files", len(files))
+
+		if err := fsync.SyncTo(destDir, files...); err != nil {
 			builder.addError(errStep, err)
 		}
 	}
 
-	// delete deprecated images
+	// delete deprecated files
 	destFs := new(afero.OsFs)
-	destfiles, err := afero.ReadDir(imgDir, destFs)
+	destfiles, err := afero.ReadDir(destDir, destFs)
 	if err != nil {
 		builder.addError(errStep, err)
 		return
@@ -311,9 +342,9 @@ func (builder *SiteBuilder) syncImages() {
 
 	for _, destfile := range destfiles {
 		if !sourceFiles[destfile.Name()] {
-			log.Printf("Deleting deprecated image: %s", destfile.Name())
+			log.Printf("Deleting deprecated file: %s", destfile.Name())
 
-			if err := destFs.RemoveAll(path.Join(imgDir, destfile.Name())); err != nil {
+			if err := destFs.RemoveAll(path.Join(destDir, destfile.Name())); err != nil {
 				builder.addError(errStep, err)
 			}
 		}
@@ -368,6 +399,13 @@ func (builder *SiteBuilder) addImage(img *models.Image) *ImageVars {
 	return NewImageVars(img, builder.basePath(), builder.site.BaseUrl())
 }
 
+// Collect file, and returns the URL for that file
+func (builder *SiteBuilder) addFile(file *models.File) string {
+	builder.files = append(builder.files, file)
+
+	return builder.site.BaseUrl() + path.Join("/", FILES_DIR, file.Path)
+}
+
 // Check if builder have error
 func (builder *SiteBuilder) HaveError() bool {
 	return builder.errorCollector.ErrorsNb > 0
@@ -411,6 +449,11 @@ func (builder *SiteBuilder) themeAssetsDir() string {
 // Computes directory where images are copied
 func (builder *SiteBuilder) genImagesDir() string {
 	return path.Join(builder.config.OutputDir, IMAGES_DIR)
+}
+
+// Computes directory where files are copied
+func (builder *SiteBuilder) genFilesDir() string {
+	return path.Join(builder.config.OutputDir, FILES_DIR)
 }
 
 // Computes directory where assets are copied

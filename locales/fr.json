@@ -5,7 +5,7 @@
   },
   {
     "id": "address",
-    "translation": "Addresse"
+    "translation": "Adresse"
   },
   {
     "id": "back_to_events",
@@ -70,6 +70,10 @@
   {
     "id": "members",
     "translation": "Équipe"
+  },
+  {
+    "id": "membership_form",
+    "translation": "Bulletin d'adhésion"
   },
   {
     "id": "month_January",
