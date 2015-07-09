@@ -152,7 +152,7 @@ func (app *Application) handleDeleteMember(rw http.ResponseWriter, req *http.Req
 	}
 }
 
-// PUT /membersorder
+// PUT /members/order
 func (app *Application) handlePutMembersOrder(rw http.ResponseWriter, req *http.Request) {
 	var ids []bson.ObjectId
 

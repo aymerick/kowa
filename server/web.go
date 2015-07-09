@@ -54,6 +54,7 @@ func (app *Application) newWebRouter() *mux.Router {
 	curActivityOwnerChain := authChain.Append(app.ensureActivityMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
 	curMemberOwnerChain := authChain.Append(app.ensureMemberMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
 	curImageOwnerChain := authChain.Append(app.ensureImageMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
+	curFileOwnerChain := authChain.Append(app.ensureFileMiddleware, app.ensureSiteMiddleware, app.ensureSiteOwnerAccessMiddleware)
 
 	// /api/sites
 	apiRouter.Methods("POST").Path("/sites").Handler(authChain.ThenFunc(app.handlePostSite))
@@ -68,6 +69,7 @@ func (app *Application) newWebRouter() *mux.Router {
 	apiRouter.Methods("GET").Path("/sites/{site_id}/pages").Handler(curSiteOwnerChain.ThenFunc(app.handleGetPages))
 	apiRouter.Methods("GET").Path("/sites/{site_id}/activities").Handler(curSiteOwnerChain.ThenFunc(app.handleGetActivities))
 	apiRouter.Methods("GET").Path("/sites/{site_id}/images").Handler(curSiteOwnerChain.ThenFunc(app.handleGetImages))
+	apiRouter.Methods("GET").Path("/sites/{site_id}/files").Handler(curSiteOwnerChain.ThenFunc(app.handleGetFiles))
 
 	apiRouter.Methods("POST").Path("/sites/{site_id}/page-settings").Handler(curSiteOwnerChain.ThenFunc(app.handleSetPageSettings))
 	apiRouter.Methods("PUT").Path("/sites/{site_id}/page-settings/{setting_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleSetPageSettings))
@@ -113,6 +115,12 @@ func (app *Application) newWebRouter() *mux.Router {
 	apiRouter.Methods("GET").Path("/images/{image_id}").Handler(curImageOwnerChain.ThenFunc(app.handleGetImage))
 	apiRouter.Methods("DELETE").Path("/images/{image_id}").Handler(curImageOwnerChain.ThenFunc(app.handleDeleteImage))
 	apiRouter.Methods("POST").Path("/images/upload").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleUploadImage))
+
+	// /api/files?site={site_id}
+	apiRouter.Methods("GET").Path("/files").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetFiles))
+	apiRouter.Methods("GET").Path("/files/{file_id}").Handler(curFileOwnerChain.ThenFunc(app.handleGetFile))
+	apiRouter.Methods("DELETE").Path("/files/{file_id}").Handler(curFileOwnerChain.ThenFunc(app.handleDeleteFile))
+	apiRouter.Methods("POST").Path("/files/upload").Queries("kind", "{kind}", "site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleUploadFile))
 
 	return router
 }

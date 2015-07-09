@@ -56,9 +56,13 @@ type Site struct {
 
 	GoogleAnalytics string `bson:"google_analytics" json:"googleAnalytics"`
 
+	// images
 	Logo    bson.ObjectId `bson:"logo,omitempty"    json:"logo,omitempty"`
 	Cover   bson.ObjectId `bson:"cover,omitempty"   json:"cover,omitempty"`
 	Favicon bson.ObjectId `bson:"favicon,omitempty" json:"favicon,omitempty"`
+
+	// files
+	Membership bson.ObjectId `bson:"membership,omitempty" json:"membership,omitempty"`
 
 	PageSettings map[string]*SitePageSettings `bson:"page_settings" json:"pageSettings,omitempty"`
 
@@ -173,6 +177,7 @@ func (site *Site) MarshalJSON() ([]byte, error) {
 		"activities": fmt.Sprintf("/api/sites/%s/activities", site.Id),
 		"members":    fmt.Sprintf("/api/sites/%s/members", site.Id),
 		"images":     fmt.Sprintf("/api/sites/%s/images", site.Id),
+		"files":      fmt.Sprintf("/api/sites/%s/files", site.Id),
 	}
 
 	// convert hash of embedded docs into an array of doc ids, as needed by Ember Data
@@ -521,6 +526,50 @@ func (site *Site) FindAllImages() *ImagesList {
 }
 
 //
+// Site files
+//
+
+func (site *Site) filesBaseQuery() *mgo.Query {
+	return site.dbSession.FilesCol().Find(bson.M{"site_id": site.Id})
+}
+
+func (site *Site) FilesNb() int {
+	result, err := site.filesBaseQuery().Count()
+	if err != nil {
+		panic(err)
+	}
+
+	return result
+}
+
+// Fetch from database: all files belonging to site
+func (site *Site) FindFiles(skip int, limit int) *FilesList {
+	result := FilesList{}
+
+	query := site.filesBaseQuery().Sort("-created_at")
+
+	if skip > 0 {
+		query = query.Skip(skip)
+	}
+
+	if limit > 0 {
+		query = query.Limit(limit)
+	}
+
+	if err := query.All(&result); err != nil {
+		panic(err)
+	}
+
+	// @todo Inject dbSession in all result items
+
+	return &result
+}
+
+func (site *Site) FindAllFiles() *FilesList {
+	return site.FindFiles(0, 0)
+}
+
+//
 // Site fields
 //
 
@@ -564,6 +613,23 @@ func (site *Site) FindFavicon() *Image {
 		var result Image
 
 		if err := site.dbSession.ImagesCol().FindId(site.Favicon).One(&result); err != nil {
+			return nil
+		}
+
+		result.dbSession = site.dbSession
+
+		return &result
+	}
+
+	return nil
+}
+
+// Fetch Membership from database
+func (site *Site) FindMembership() *File {
+	if site.Membership != "" {
+		var result File
+
+		if err := site.dbSession.FilesCol().FindId(site.Membership).One(&result); err != nil {
 			return nil
 		}
 
@@ -642,6 +708,22 @@ func (site *Site) RemoveImageReferences(image *Image) error {
 	// remove image references from activities
 	if err := site.dbSession.RemoveImageReferencesFromMembers(image); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+// Remove all references to given file from database
+func (site *Site) RemoveFileReferences(file *File) error {
+	// remove image reference from site settings
+	fieldsToDelete := []string{}
+
+	if site.Membership == file.Id {
+		fieldsToDelete = append(fieldsToDelete, "membership")
+	}
+
+	if len(fieldsToDelete) > 0 {
+		site.DeleteFields(fieldsToDelete)
 	}
 
 	return nil
@@ -811,6 +893,16 @@ func (site *Site) Update(newSite *Site) (bool, error) {
 		}
 	}
 
+	if site.Membership != newSite.Membership {
+		site.Membership = newSite.Membership
+
+		if site.Membership == "" {
+			unset = append(unset, bson.DocElem{"membership", 1})
+		} else {
+			set = append(set, bson.DocElem{"membership", site.Membership})
+		}
+	}
+
 	if site.Theme != newSite.Theme {
 		site.Theme = newSite.Theme
 
@@ -903,6 +995,16 @@ func (site *Site) SetBuiltAt(value time.Time) error {
 	}
 
 	site.BuiltAt = value
+	return nil
+}
+
+// Set the Membership value
+func (site *Site) SetMembership(value bson.ObjectId) error {
+	if err := site.SetValues(bson.M{"membership": value}); err != nil {
+		return err
+	}
+
+	site.Membership = value
 	return nil
 }
 

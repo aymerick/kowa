@@ -179,6 +179,13 @@ func (app *Application) getCurrentImage(req *http.Request) *models.Image {
 	return nil
 }
 
+func (app *Application) getCurrentFile(req *http.Request) *models.File {
+	if currentFile := context.Get(req, "currentFile"); currentFile != nil {
+		return currentFile.(*models.File)
+	}
+	return nil
+}
+
 //
 // Endpoints
 //

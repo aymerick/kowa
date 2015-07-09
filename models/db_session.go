@@ -73,12 +73,15 @@ func (session *DBSession) Close() {
 
 // ensure indexes on all collections
 func (session *DBSession) EnsureIndexes() {
-	session.EnsureUsersIndexes()
-	session.EnsureSitesIndexes()
-	session.EnsurePostsIndexes()
-	session.EnsureEventsIndexes()
-	session.EnsurePagesIndexes()
 	session.EnsureActivitiesIndexes()
+	session.EnsureEventsIndexes()
+	session.EnsureFilesIndexes()
+	session.EnsureImagesIndexes()
+	session.EnsureMembersIndexes()
+	session.EnsurePagesIndexes()
+	session.EnsurePostsIndexes()
+	session.EnsureSitesIndexes()
+	session.EnsureUsersIndexes()
 }
 
 // returns a database handler

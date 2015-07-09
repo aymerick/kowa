@@ -218,6 +218,14 @@ func (app *Application) ensureSiteMiddleware(next http.Handler) http.Handler {
 			}
 		}
 
+		// file
+		if currentSite == nil {
+			currentFile := app.getCurrentFile(req)
+			if currentFile != nil {
+				currentSite = currentFile.FindSite()
+			}
+		}
+
 		if currentSite != nil {
 			// log.Printf("Current site is: %s [%s]\n", currentSite.Name, siteId)
 			context.Set(req, "currentSite", currentSite)
@@ -391,6 +399,30 @@ func (app *Application) ensureImageMiddleware(next http.Handler) http.Handler {
 
 		if currentImage := currentDBSession.FindImage(bson.ObjectIdHex(imageId)); currentImage != nil {
 			context.Set(req, "currentImage", currentImage)
+		} else {
+			http.NotFound(rw, req)
+			return
+		}
+
+		next.ServeHTTP(rw, req)
+	}
+
+	return http.HandlerFunc(fn)
+}
+
+// middleware: ensures file exists and injects 'currentFile' in context
+func (app *Application) ensureFileMiddleware(next http.Handler) http.Handler {
+	fn := func(rw http.ResponseWriter, req *http.Request) {
+		currentDBSession := app.getCurrentDBSession(req)
+
+		vars := mux.Vars(req)
+		fileId := vars["file_id"]
+		if fileId == "" {
+			panic("Should have file_id")
+		}
+
+		if currentFile := currentDBSession.FindFile(bson.ObjectIdHex(fileId)); currentFile != nil {
+			context.Set(req, "currentFile", currentFile)
 		} else {
 			http.NotFound(rw, req)
 			return

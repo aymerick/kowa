@@ -1,14 +1,9 @@
 package server
 
 import (
-	"io"
 	"log"
 	"net/http"
-	"os"
-	"strings"
 
-	"github.com/aymerick/kowa/core"
-	"github.com/aymerick/kowa/helpers"
 	"github.com/aymerick/kowa/models"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -17,22 +12,7 @@ const (
 	IMAGE_CT_PREFIX = "image/"
 )
 
-var AcceptedImageContentTypes []string
-
-func init() {
-	AcceptedImageContentTypes = []string{"image/jpeg", "image/png", "image/gif"}
-}
-
-// Check if given content type is an allowed image
-func allowedImageContentType(ct string) bool {
-	for _, allowedCT := range AcceptedImageContentTypes {
-		if ct == allowedCT {
-			return true
-		}
-	}
-
-	return false
-}
+var acceptedImageContentTypes = []string{"image/jpeg", "image/png", "image/gif"}
 
 // GET /images?site={site_id}
 // GET /sites/{site_id}/images
@@ -53,6 +33,7 @@ func (app *Application) handleGetImages(rw http.ResponseWriter, req *http.Reques
 	}
 }
 
+// GET /images/{image_id}
 func (app *Application) handleGetImage(rw http.ResponseWriter, req *http.Request) {
 	image := app.getCurrentImage(req)
 	if image != nil {
@@ -62,6 +43,7 @@ func (app *Application) handleGetImage(rw http.ResponseWriter, req *http.Request
 	}
 }
 
+// DELETE /images/{image_id}
 func (app *Application) handleDeleteImage(rw http.ResponseWriter, req *http.Request) {
 	image := app.getCurrentImage(req)
 	if image != nil {
@@ -88,6 +70,7 @@ func (app *Application) handleDeleteImage(rw http.ResponseWriter, req *http.Requ
 	}
 }
 
+// POST /images/upload
 func (app *Application) handleUploadImage(rw http.ResponseWriter, req *http.Request) {
 	currentDBSession := app.getCurrentDBSession(req)
 
@@ -96,92 +79,34 @@ func (app *Application) handleUploadImage(rw http.ResponseWriter, req *http.Requ
 		panic("Site should be set")
 	}
 
-	reader, err := req.MultipartReader()
-	if err != nil {
-		log.Printf("Multipart error: %v", err.Error())
-		http.Error(rw, "Failed to parse multipart data", http.StatusBadRequest)
+	// get uploaded file
+	upload := handleUpload(rw, req, site, acceptedImageContentTypes)
+	if upload == nil {
+		// error is already handled by handleUpload() function
 		return
 	}
 
-	var fileName string
-	var fileType string
-	var fileInfo os.FileInfo
-
-	for fileName == "" {
-		part, err := reader.NextPart()
-		if err == io.EOF {
-			break
-		}
-
-		fileName = part.FileName()
-		if fileName == "" {
-			continue
-		}
-
-		// Check content type
-		fileType = part.Header.Get("Content-Type")
-
-		if !allowedImageContentType(fileType) {
-			log.Printf("Expected image content type but got: %v", fileType)
-			http.Error(rw, "Unsupported image type", http.StatusBadRequest)
-			return
-		}
-
-		fileType = strings.TrimPrefix(fileType, IMAGE_CT_PREFIX)
-
-		// copy uploaded file
-		log.Printf("Handling uploaded file: %s", fileName)
-
-		dstPath := helpers.AvailableFilePath(core.UploadSiteFilePath(site.Id, fileName))
-
-		dst, err := os.Create(dstPath)
-		if err != nil {
-			log.Printf("Can't create file: %s - %v", dstPath, err.Error())
-			http.Error(rw, "Failed to create uploaded file", http.StatusInternalServerError)
-			return
-		}
-
-		defer dst.Close()
-
-		if _, err := io.Copy(dst, part); err != nil {
-			log.Printf("Can't save file: %s - %v", dstPath, err.Error())
-			http.Error(rw, "Failed to save uploaded file", http.StatusInternalServerError)
-			return
-		}
-
-		var errStat error
-		fileInfo, errStat = os.Stat(dstPath)
-		if os.IsNotExist(errStat) {
-			http.Error(rw, "Failed to create uploaded file", http.StatusInternalServerError)
-			return
-		}
+	// create image model
+	img := &models.Image{
+		Id:     bson.NewObjectId(),
+		SiteId: site.Id,
+		Path:   upload.info.Name(),
+		Name:   upload.name,
+		Size:   upload.info.Size(),
+		Type:   upload.ctype,
 	}
 
-	if fileName == "" {
-		http.Error(rw, "Image not found in multipart", http.StatusBadRequest)
-	} else {
-		// create image model
-		img := &models.Image{
-			Id:     bson.NewObjectId(),
-			SiteId: site.Id,
-			Path:   fileInfo.Name(),
-			Name:   fileName,
-			Size:   fileInfo.Size(),
-			Type:   fileType,
-		}
-
-		if err := currentDBSession.CreateImage(img); err != nil {
-			log.Printf("Can't create record: %v - %v", img, err.Error())
-			http.Error(rw, "Failed to create image record", http.StatusInternalServerError)
-			return
-		}
-
-		// @todo Async that the day it becomes problematic
-		if err := img.GenerateDerivatives(true); err != nil {
-			log.Printf("Failed to generate image derivatives: %s - %v", img.Path, err.Error())
-		}
-
-		// returns uploaded file path
-		app.render.JSON(rw, http.StatusCreated, renderMap{"image": img})
+	if err := currentDBSession.CreateImage(img); err != nil {
+		log.Printf("Can't create record: %v - %v", img, err.Error())
+		http.Error(rw, "Failed to create image record", http.StatusInternalServerError)
+		return
 	}
+
+	// @todo Async that the day it becomes problematic
+	if err := img.GenerateDerivatives(true); err != nil {
+		log.Printf("Failed to generate image derivatives: %s - %v", img.Path, err.Error())
+	}
+
+	// returns uploaded file path
+	app.render.JSON(rw, http.StatusCreated, renderMap{"image": img})
 }
