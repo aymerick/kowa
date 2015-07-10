@@ -39,9 +39,10 @@ type BuildMaster struct {
 }
 
 type BuildJob struct {
-	kind   string
-	siteId string
-	failed bool
+	kind     string
+	siteId   string
+	buildDir string
+	failed   bool
 }
 
 type BuildWorker struct {
@@ -72,10 +73,11 @@ func NewBuildMaster() *BuildMaster {
 	return result
 }
 
-func (master *BuildMaster) NewBuildJob(kind string, siteId string) *BuildJob {
+func (master *BuildMaster) NewBuildJob(kind string, siteId string, buildDir string) *BuildJob {
 	return &BuildJob{
-		kind:   kind,
-		siteId: siteId,
+		kind:     kind,
+		siteId:   siteId,
+		buildDir: buildDir,
 	}
 }
 
@@ -210,11 +212,11 @@ func (master *BuildMaster) enqueueJob(job *BuildJob) {
 }
 
 func (master *BuildMaster) launchSiteBuild(site *models.Site) {
-	master.enqueueJob(master.NewBuildJob(JOB_KIND_BUILD, site.Id))
+	master.enqueueJob(master.NewBuildJob(JOB_KIND_BUILD, site.Id, ""))
 }
 
-func (master *BuildMaster) launchSiteDeletion(site *models.Site) {
-	master.enqueueJob(master.NewBuildJob(JOB_KIND_DELETE, site.Id))
+func (master *BuildMaster) launchSiteDeletion(site *models.Site, buildDir string) {
+	master.enqueueJob(master.NewBuildJob(JOB_KIND_DELETE, site.Id, buildDir))
 }
 
 //
@@ -311,7 +313,7 @@ func (worker *BuildWorker) buildSite(job *BuildJob) {
 }
 
 func (worker *BuildWorker) deleteSite(job *BuildJob) {
-	dirPath := path.Join(viper.GetString("output_dir"), job.siteId)
+	dirPath := path.Join(viper.GetString("output_dir"), job.buildDir)
 	if _, err := os.Stat(dirPath); !os.IsNotExist(err) {
 		if errRem := os.RemoveAll(dirPath); errRem != nil {
 			job.failed = true

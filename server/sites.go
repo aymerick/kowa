@@ -141,12 +141,18 @@ func (app *Application) handleUpdateSite(rw http.ResponseWriter, req *http.Reque
 			return
 		}
 
+		prevBuildDir := site.BuildDir()
+
 		// @todo [security] Check all fields !
 		updated, err := site.Update(&respJson.Site)
 		if err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to update site", http.StatusInternalServerError)
 			return
+		}
+
+		if site.BuildDir() != prevBuildDir {
+			app.deleteBuild(site, prevBuildDir)
 		}
 
 		if updated {

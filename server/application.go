@@ -93,8 +93,8 @@ func (app *Application) buildSite(site *models.Site) {
 }
 
 // Delete built site
-func (app *Application) deleteBuild(site *models.Site) {
-	app.buildMaster.launchSiteDeletion(site)
+func (app *Application) deleteBuild(site *models.Site, buildDir string) {
+	app.buildMaster.launchSiteDeletion(site, buildDir)
 }
 
 // Called when some content changed on given site
@@ -109,7 +109,7 @@ func (app *Application) onSiteChange(site *models.Site) {
 // Called when site is deleted
 func (app *Application) onSiteDeletion(site *models.Site) {
 	// delete build
-	app.deleteBuild(site)
+	app.deleteBuild(site, site.BuildDir())
 }
 
 //
