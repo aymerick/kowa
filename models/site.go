@@ -69,10 +69,11 @@ type Site struct {
 	PageSettings map[string]*SitePageSettings `bson:"page_settings" json:"pageSettings,omitempty"`
 
 	// build settings
-	Theme     string `bson:"theme"      json:"theme"`
-	Domain    string `bson:"domain"     json:"domain"`
-	CustomUrl string `bson:"custom_url" json:"customUrl"`
-	UglyUrl   bool   `bson:"ugly_url"   json:"uglyUrl"`
+	Theme        string `bson:"theme"         json:"theme"`
+	Domain       string `bson:"domain"        json:"domain"`
+	CustomDomain string `bson:"custom_domain" json:"customDomain"`
+	CustomUrl    string `bson:"custom_url"    json:"customUrl"`
+	UglyUrl      bool   `bson:"ugly_url"      json:"uglyUrl"`
 
 	// theme settings
 	NameInNavBar bool `bson:"name_in_navbar" json:"nameInNavBar"`
@@ -203,6 +204,10 @@ func (site *Site) BaseUrl() string {
 		return site.CustomUrl
 	}
 
+	if site.CustomDomain != "" {
+		return core.BaseUrlForCustomDomain(site.CustomDomain)
+	}
+
 	if site.Domain != "" {
 		return core.BaseUrlForDomain(site.Id, site.Domain)
 	}
@@ -223,6 +228,11 @@ func (site *Site) BuildDir() string {
 			// eg: 3ailes.org
 			return u.Host
 		}
+	}
+
+	if site.CustomDomain != "" {
+		// eg: 3ailes.org
+		return site.CustomDomain
 	}
 
 	if site.Domain != "" {
@@ -949,13 +959,13 @@ func (site *Site) Update(newSite *Site) (bool, error) {
 		}
 	}
 
-	if site.CustomUrl != newSite.CustomUrl {
-		site.CustomUrl = newSite.CustomUrl
+	if site.CustomDomain != newSite.CustomDomain {
+		site.CustomDomain = newSite.CustomDomain
 
-		if site.CustomUrl == "" {
-			unset = append(unset, bson.DocElem{"custom_url", 1})
+		if site.CustomDomain == "" {
+			unset = append(unset, bson.DocElem{"custom_domain", 1})
 		} else {
-			set = append(set, bson.DocElem{"custom_url", site.CustomUrl})
+			set = append(set, bson.DocElem{"custom_domain", site.CustomDomain})
 		}
 	}
 

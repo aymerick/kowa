@@ -54,6 +54,11 @@ func BaseUrlForDomain(siteId string, domain string) string {
 	return fmt.Sprintf("http://%s.%s", siteId, domain)
 }
 
+// BaseUrlForCustomDomain computes a base url for given custom domain.
+func BaseUrlForCustomDomain(domain string) string {
+	return fmt.Sprintf("http://%s", domain)
+}
+
 func UploadDir() string {
 	dir := viper.GetString("upload_dir")
 	if dir == "" {
