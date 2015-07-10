@@ -52,7 +52,7 @@ func buildSite(site *models.Site) *builder.SiteBuilder {
 	// builder config
 	config := &builder.SiteBuilderConfig{
 		ThemesDir: viper.GetString("themes_dir"),
-		OutputDir: path.Join(viper.GetString("output_dir"), site.Id),
+		OutputDir: path.Join(viper.GetString("output_dir"), site.BuildDir()),
 	}
 
 	siteBuilder := builder.NewSiteBuilder(site, config)

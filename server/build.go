@@ -296,7 +296,7 @@ func (worker *BuildWorker) buildSite(job *BuildJob) {
 	// builder config
 	config := &builder.SiteBuilderConfig{
 		ThemesDir: viper.GetString("themes_dir"),
-		OutputDir: path.Join(viper.GetString("output_dir"), site.Id),
+		OutputDir: path.Join(viper.GetString("output_dir"), site.BuildDir()),
 	}
 
 	builder := builder.NewSiteBuilder(site, config)

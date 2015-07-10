@@ -4,11 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/url"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/aymerick/kowa/core"
+	"github.com/aymerick/kowa/helpers"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -206,6 +208,30 @@ func (site *Site) BaseUrl() string {
 	}
 
 	return core.BaseUrl(site.Id)
+}
+
+// BuildDir returns build directory for that site.
+func (site *Site) BuildDir() string {
+	if site.CustomUrl != "" {
+		u, err := url.Parse(site.CustomUrl)
+		if err == nil {
+			if helpers.HasOnePrefix(u.Host, []string{"127.0.0.1", "localhost"}) || u.Host == "" {
+				// eg: 3ailes
+				return site.Id
+			}
+
+			// eg: 3ailes.org
+			return u.Host
+		}
+	}
+
+	if site.Domain != "" {
+		// eg: 3ailes.asso.ninja
+		return site.Id + "." + site.Domain
+	}
+
+	// eg: 3ailes
+	return site.Id
 }
 
 // TZLocation returns timezone Location
