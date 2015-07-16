@@ -19,10 +19,10 @@ func (app *Application) newWebRouter() *mux.Router {
 	router := mux.NewRouter()
 	apiRouter := router.PathPrefix("/api").Subrouter()
 
-	notAuthChain := baseChain.Append(app.ensureNotAuthMiddleware)
-
 	// /api/configuration
-	apiRouter.Methods("GET").Path("/configuration").Handler(notAuthChain.ThenFunc(app.handleGetConfig))
+	apiRouter.Methods("GET").Path("/configuration").Handler(baseChain.ThenFunc(app.handleGetConfig))
+
+	notAuthChain := baseChain.Append(app.ensureNotAuthMiddleware)
 
 	// /api/signup
 	apiRouter.Methods("POST").Path("/signup").Handler(notAuthChain.ThenFunc(app.handleSignupUser))
