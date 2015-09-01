@@ -14,6 +14,7 @@ import (
 	"github.com/disintegration/imaging"
 	"github.com/spf13/afero"
 	"github.com/spf13/fsync"
+	libsass "github.com/wellington/go-libsass"
 
 	"github.com/aymerick/kowa/helpers"
 	"github.com/aymerick/kowa/models"
@@ -119,6 +120,9 @@ func (builder *SiteBuilder) Build() {
 
 	// sync assets
 	builder.syncAssets()
+
+	// compile SASS files into CSS
+	builder.buildSass()
 
 	// sync favicon
 	builder.syncFavicon()
@@ -351,6 +355,72 @@ func (builder *SiteBuilder) syncFiles(destDir string, grabber func() ([]string, 
 	}
 }
 
+// Compile theme SASS files into CSS
+func (builder *SiteBuilder) buildSass() {
+	errStep := "Build SASS"
+
+	// check if theme have a sass dir
+	sassDir := path.Join(builder.themeDir(), "sass")
+
+	files, err := ioutil.ReadDir(sassDir)
+	if err != nil && !os.IsNotExist(err) {
+		builder.addError(errStep, err)
+		return
+	}
+
+	if os.IsNotExist(err) {
+		// no sass dir
+		return
+	}
+
+	log.Printf("Compiling SASS file(s)")
+
+	for _, file := range files {
+		sassPath := path.Join(sassDir, file.Name())
+		baseName := helpers.FileBase(sassPath)
+
+		cssRelativePath := path.Join("css", helpers.FileBase(sassPath)+".css")
+
+		// if CSS file exists in theme, do NOT overwrite it
+		if builder.themeAssetExist(cssRelativePath) {
+			log.Printf("Skipping SASS file '%s' because that CSS file is present in theme: %s", sassPath, cssRelativePath)
+		} else {
+			outPath := path.Join(builder.genAssetsDir(), cssRelativePath)
+
+			// skip directories and partials
+			if strings.HasSuffix(sassPath, ".scss") && !file.IsDir() && !strings.HasPrefix(baseName, "_") {
+				if err := builder.compileSassFile(sassPath, outPath); err != nil {
+					builder.addError(errStep, err)
+				}
+			}
+		}
+	}
+}
+
+func (builder *SiteBuilder) compileSassFile(sassFile string, outFile string) error {
+	ctx := libsass.Context{
+		BuildDir:     filepath.Dir(outFile),
+		MainFile:     sassFile,
+		IncludePaths: []string{filepath.Dir(sassFile)},
+	}
+
+	ctx.Imports.Init()
+
+	// create output file
+	out, err := os.Create(outFile)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	// compile to CSS
+	if err := ctx.FileCompile(sassFile, out); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // Copy theme assets
 func (builder *SiteBuilder) syncAssets() {
 	errStep := "Sync assets"
@@ -439,6 +509,13 @@ func (builder *SiteBuilder) themeTemplatesDir() string {
 	}
 
 	return builder.tplDir
+}
+
+// Returns true if theme asset file exists
+func (builder *SiteBuilder) themeAssetExist(relativePath string) bool {
+	_, err := os.Stat(path.Join(builder.themeAssetsDir(), relativePath))
+
+	return !os.IsNotExist(err)
 }
 
 // Computes theme assets directory
