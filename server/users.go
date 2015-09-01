@@ -65,7 +65,7 @@ func (app *Application) handleSignupUser(rw http.ResponseWriter, req *http.Reque
 	}
 
 	// check username format
-	if username != helpers.NormalizeToPathPart(username) {
+	if username != helpers.NormalizeToUsername(username) {
 		errors["username"] = T("signup_username_invalid")
 	}
 
