@@ -158,6 +158,11 @@
 			"Rev": "344f85e13ccf75f3d53a27adfcd553f84f05b855"
 		},
 		{
+			"ImportPath": "github.com/wellington/go-libsass",
+			"Comment": "v0.9.0-148-g7539fe6",
+			"Rev": "7539fe6f2a1ccc17949b046ad0835b8cc6a9ddc6"
+		},
+		{
 			"ImportPath": "github.com/xordataexchange/crypt/backend",
 			"Comment": "v0.0.2-15-g93de656",
 			"Rev": "93de65664ef094aa5acff4f5201ac17580370af7"
