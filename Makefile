@@ -6,7 +6,7 @@ LDFLAGS=-ldflags "-X github.com/aymerick/kowa/core.Version ${VERSION} -X github.
 all: gen build
 
 build:
-	godep go build ${LDFLAGS}
+	godep go build ${LDFLAGS} -tags dev
 
 build-from-scratch:
 	go get github.com/tools/godep
