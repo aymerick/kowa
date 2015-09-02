@@ -387,12 +387,8 @@ func (builder *SiteBuilder) buildSass() {
 		} else {
 			outPath := path.Join(builder.genAssetsDir(), cssRelativePath)
 
-			log.Printf("sassPath: '%s' / baseName: %s", sassPath, baseName)
-
 			// skip directories and partials
 			if strings.HasSuffix(sassPath, ".scss") && !file.IsDir() && !strings.HasPrefix(baseName, "_") {
-				log.Printf("compiling '%s' to: %s", sassPath, outPath)
-
 				if err := builder.compileSassFile(sassPath, outPath); err != nil {
 					builder.addError(errStep, err)
 				}
@@ -410,15 +406,24 @@ func (builder *SiteBuilder) compileSassFile(sassFile string, outFile string) err
 
 	ctx.Imports.Init()
 
+	// create directory
+	dirPath, _ := path.Split(outFile)
+	if err := os.MkdirAll(dirPath, 0755); (err != nil) && !os.IsExist(err) {
+		log.Printf("Failed to create dir: '%s'", dirPath)
+		return err
+	}
+
 	// create output file
 	out, err := os.Create(outFile)
 	if err != nil {
+		log.Printf("Failed to create file: '%s'", outFile)
 		return err
 	}
 	defer out.Close()
 
 	// compile to CSS
 	if err := ctx.FileCompile(sassFile, out); err != nil {
+		log.Printf("Failed to compile sass file: '%s'", sassFile)
 		return err
 	}
 
