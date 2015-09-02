@@ -387,8 +387,12 @@ func (builder *SiteBuilder) buildSass() {
 		} else {
 			outPath := path.Join(builder.genAssetsDir(), cssRelativePath)
 
+			log.Printf("sassPath: '%s' / baseName: %s", sassPath, baseName)
+
 			// skip directories and partials
 			if strings.HasSuffix(sassPath, ".scss") && !file.IsDir() && !strings.HasPrefix(baseName, "_") {
+				log.Printf("compiling '%s' to: %s", sassPath, outPath)
+
 				if err := builder.compileSassFile(sassPath, outPath); err != nil {
 					builder.addError(errStep, err)
 				}
