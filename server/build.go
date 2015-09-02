@@ -306,6 +306,8 @@ func (worker *BuildWorker) buildSite(job *BuildJob) {
 	if builder.Build(); builder.HaveError() {
 		// job failed
 		job.failed = true
+
+		builder.DumpErrors()
 	} else {
 		// update BuiltAt anchor
 		site.SetBuiltAt(time.Now())
