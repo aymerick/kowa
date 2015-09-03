@@ -74,6 +74,9 @@ func (app *Application) newWebRouter() *mux.Router {
 	apiRouter.Methods("POST").Path("/sites/{site_id}/page-settings").Handler(curSiteOwnerChain.ThenFunc(app.handleSetPageSettings))
 	apiRouter.Methods("PUT").Path("/sites/{site_id}/page-settings/{setting_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleSetPageSettings))
 
+	apiRouter.Methods("POST").Path("/sites/{site_id}/theme-settings").Handler(curSiteOwnerChain.ThenFunc(app.handleSetThemeSettings))
+	apiRouter.Methods("PUT").Path("/sites/{site_id}/theme-settings/{setting_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleSetThemeSettings))
+
 	// /api/posts?site={site_id}
 	apiRouter.Methods("GET").Path("/posts").Queries("site", "{site_id}").Handler(curSiteOwnerChain.ThenFunc(app.handleGetPosts))
 	apiRouter.Methods("POST").Path("/posts").Handler(authChain.ThenFunc(app.handlePostPosts))

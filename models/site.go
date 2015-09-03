@@ -31,6 +31,27 @@ type SitePageSettings struct {
 	Disabled bool          `bson:"disabled"        json:"disabled"`
 }
 
+// SiteThemeSassVar represents a SASS variable
+type SiteThemeSassVar struct {
+	Name  string `bson:"name" json:"name"`
+	Value string `bson:"value" json:"value"`
+	Desc  string `bson:"desc" json:"desc"`
+}
+
+// SiteThemeSettings represents settings for given theme
+type SiteThemeSettings struct {
+	Id   bson.ObjectId      `bson:"_id,omitempty" json:"id"`
+	Sass []SiteThemeSassVar `bson:"sass" json:"-"` // SASS variables
+}
+
+// SiteThemeSettingsJson is the JSON representation of SiteThemeSettings
+type SiteThemeSettingsJson struct {
+	SiteThemeSettings
+
+	// overrides the Sass field to provide a JSON string instead of an array of embedded documents
+	Sass string `json:"sass,omitempty"`
+}
+
 type Site struct {
 	dbSession *DBSession `bson:"-" json:"-"`
 
@@ -66,7 +87,8 @@ type Site struct {
 	// files
 	Membership bson.ObjectId `bson:"membership,omitempty" json:"membership,omitempty"`
 
-	PageSettings map[string]*SitePageSettings `bson:"page_settings" json:"pageSettings,omitempty"`
+	PageSettings  map[string]*SitePageSettings  `bson:"page_settings" json:"-"`
+	ThemeSettings map[string]*SiteThemeSettings `bson:"theme_settings" json:"-"`
 
 	// build settings
 	Theme        string `bson:"theme"         json:"theme"`
@@ -83,9 +105,10 @@ type SiteJson struct {
 	Site
 	Links map[string]interface{} `json:"links"`
 
-	// overrides the PageSettings field from Site to provide to client an array
+	// overrides the PageSettings and ThemeSettings fields to provide an array
 	// of ids (as needed by Ember Data) instead of a hash of embedded documents
-	PageSettings []string `json:"pageSettings,omitempty"`
+	PageSettings  []string `json:"pageSettings,omitempty"`
+	ThemeSettings []string `json:"themeSettings,omitempty"`
 }
 
 type SitesList []*Site
@@ -166,10 +189,29 @@ func (session *DBSession) RemoveImageReferencesFromSitePageSettings(image *Image
 }
 
 //
+// SiteThemeSettings
+//
+
+// MarshalJSON implements json.MarshalJSON
+func (settings *SiteThemeSettings) MarshalJSON() ([]byte, error) {
+	sassField, err := json.Marshal(settings.Sass)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	settingsJson := SiteThemeSettingsJson{
+		SiteThemeSettings: *settings,
+		Sass:              string(sassField),
+	}
+
+	return json.Marshal(settingsJson)
+}
+
+//
 // Site
 //
 
-// Implements json.MarshalJSON
+// MarshalJSON implements json.MarshalJSON
 func (site *Site) MarshalJSON() ([]byte, error) {
 	// inject 'links' needed by Ember Data
 	// @todo Remove that ?
@@ -189,10 +231,17 @@ func (site *Site) MarshalJSON() ([]byte, error) {
 		pageSettingsIds = append(pageSettingsIds, settings.Id.Hex())
 	}
 
+	// convert hash of embedded docs into an array of doc ids, as needed by Ember Data
+	themeSettingsIds := []string{}
+	for _, settings := range site.ThemeSettings {
+		themeSettingsIds = append(themeSettingsIds, settings.Id.Hex())
+	}
+
 	siteJson := SiteJson{
-		Site:         *site,
-		Links:        links,
-		PageSettings: pageSettingsIds,
+		Site:          *site,
+		Links:         links,
+		PageSettings:  pageSettingsIds,
+		ThemeSettings: themeSettingsIds,
 	}
 
 	return json.Marshal(siteJson)

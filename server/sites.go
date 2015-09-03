@@ -238,3 +238,15 @@ func (app *Application) handleSetPageSettings(rw http.ResponseWriter, req *http.
 		http.NotFound(rw, req)
 	}
 }
+
+// POST /sites/{site_id}/theme-settings
+// PUT /sites/{site_id}/theme-settings/{setting_id}
+func (app *Application) handleSetThemeSettings(rw http.ResponseWriter, req *http.Request) {
+	site := app.getCurrentSite(req)
+	if site != nil {
+		// @todo handleSetThemeSettings (and unserialize sass field from a JSON string into an array of models.SiteThemeSassVar)
+		panic("NOT IMPLEMENTED")
+	} else {
+		http.NotFound(rw, req)
+	}
+}

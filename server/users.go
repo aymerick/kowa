@@ -284,6 +284,7 @@ func (app *Application) handleGetUserSites(rw http.ResponseWriter, req *http.Req
 		images := []*models.Image{}
 
 		pageSettingsArray := []*models.SitePageSettings{}
+		themeSettingsArray := []*models.SiteThemeSettings{}
 
 		sites := user.FindSites()
 		for _, site := range *sites {
@@ -302,9 +303,18 @@ func (app *Application) handleGetUserSites(rw http.ResponseWriter, req *http.Req
 					images = append(images, image)
 				}
 			}
+
+			for _, themeSettings := range site.ThemeSettings {
+				themeSettingsArray = append(themeSettingsArray, themeSettings)
+			}
 		}
 
-		app.render.JSON(rw, http.StatusOK, renderMap{"sites": sites, "images": images, "sitePageSettings": pageSettingsArray})
+		app.render.JSON(rw, http.StatusOK, renderMap{
+			"sites":             sites,
+			"images":            images,
+			"sitePageSettings":  pageSettingsArray,
+			"siteThemeSettings": themeSettingsArray,
+		})
 	} else {
 		http.NotFound(rw, req)
 	}
