@@ -1,6 +1,7 @@
 package builder
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -375,6 +376,13 @@ func (builder *SiteBuilder) buildSass() {
 
 	log.Printf("Compiling SASS file(s)")
 
+	// computes sass vars
+	sassVars, err := builder.computeSassVars(sassDir)
+	if err != nil {
+		builder.addError(errStep, err)
+		return
+	}
+
 	for _, file := range files {
 		sassPath := path.Join(sassDir, file.Name())
 		baseName := helpers.FileBase(sassPath)
@@ -389,7 +397,7 @@ func (builder *SiteBuilder) buildSass() {
 
 			// skip directories and partials
 			if strings.HasSuffix(sassPath, ".scss") && !file.IsDir() && !strings.HasPrefix(baseName, "_") {
-				if err := builder.compileSassFile(sassPath, outPath); err != nil {
+				if err := builder.compileSassFile(sassPath, sassVars, outPath); err != nil {
 					builder.addError(errStep, err)
 				}
 			}
@@ -397,32 +405,126 @@ func (builder *SiteBuilder) buildSass() {
 	}
 }
 
-func (builder *SiteBuilder) compileSassFile(sassFile string, outFile string) error {
+// computes SASS variables for current site and theme
+func (builder *SiteBuilder) computeSassVars(sassDir string) (string, error) {
+	result := ""
+
+	// get theme variables
+	themeVars, err := builder.themeVariables(sassDir)
+	if err != nil {
+		return "", err
+	}
+
+	// fetch sass variables from database
+	siteVars := builder.siteSassVariables()
+
+	// computes all variables
+	for name, value := range themeVars {
+		result += "$" + name + ": "
+
+		if siteVars[name] != "" {
+			// custom value
+			value = siteVars[name]
+		}
+
+		result += value + ";\n"
+	}
+
+	return result, nil
+}
+
+func (builder *SiteBuilder) themeVariables(sassDir string) (map[string]string, error) {
+	result := map[string]string{}
+
+	// @todo Memoize result, and recompute on file change
+
+	// parse variables file from theme
+	file, err := os.Open(path.Join(sassDir, "_variables.scss"))
+	if err != nil {
+		if os.IsNotExist(err) {
+			// that's ok, theme have no variables file, so we have nothing to overwrite
+			return result, nil
+		}
+		return result, err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+
+		if strings.HasPrefix(line, "$") {
+			if pair := strings.SplitN(line, ":", 2); len(pair) == 2 {
+				name := strings.TrimSpace(pair[0][1:len(pair[0])])
+				value := strings.TrimSpace(pair[1])
+
+				if value[len(value)-1] == ';' {
+					value = strings.TrimSpace(value[0 : len(value)-1])
+					result[name] = value
+				}
+			}
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return result, err
+	}
+
+	return result, nil
+}
+
+// Fetches SASS variables from database
+func (builder *SiteBuilder) siteSassVariables() map[string]string {
+	result := map[string]string{}
+
+	if settings := builder.site.ThemeSettings[builder.site.Theme]; settings != nil {
+		for _, sassVar := range settings.Sass {
+			result[sassVar.Name] = sassVar.Value
+		}
+	}
+
+	return result
+}
+
+// Compile given sass file
+func (builder *SiteBuilder) compileSassFile(sassFilePath string, sassVars string, outPath string) error {
 	ctx := libsass.Context{
-		BuildDir:     filepath.Dir(outFile),
-		MainFile:     sassFile,
-		IncludePaths: []string{filepath.Dir(sassFile)},
+		BuildDir:     filepath.Dir(outPath),
+		MainFile:     sassFilePath,
+		IncludePaths: []string{filepath.Dir(sassFilePath)},
 	}
 
 	ctx.Imports.Init()
 
+	if sassVars != "" {
+		// overwrite _variables.scss partial with given sass code
+		ctx.Imports.Add("", "variables", []byte(sassVars))
+	}
+
 	// create directory
-	dirPath, _ := path.Split(outFile)
+	dirPath, _ := path.Split(outPath)
 	if err := os.MkdirAll(dirPath, 0755); (err != nil) && !os.IsExist(err) {
 		log.Printf("Failed to create dir: '%s'", dirPath)
 		return err
 	}
 
 	// create output file
-	out, err := os.Create(outFile)
+	out, err := os.Create(outPath)
 	if err != nil {
-		log.Printf("Failed to create file: '%s'", outFile)
+		log.Printf("Failed to create file: '%s'", outPath)
 		return err
 	}
 	defer out.Close()
 
+	// open sass file
+	sassFile, err := os.Open(sassFilePath)
+	if err != nil {
+		return err
+	}
+	defer sassFile.Close()
+
 	// compile to CSS
-	if err := ctx.FileCompile(sassFile, out); err != nil {
+	if err := ctx.Compile(sassFile, out); err != nil {
 		log.Printf("Failed to compile sass file: '%s'", sassFile)
 		return err
 	}
