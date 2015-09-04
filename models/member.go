@@ -8,11 +8,12 @@ import (
 )
 
 const (
-	MEMBERS_COL_NAME = "members"
+	membersColName = "members"
 )
 
+// Member represents a member
 type Member struct {
-	dbSession *DBSession `bson:"-" json:"-"`
+	dbSession *DBSession `bson:"-"`
 
 	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
@@ -26,18 +27,19 @@ type Member struct {
 	Order       int           `bson:"order"           json:"order"`
 }
 
+// MembersList represents a list of Member
 type MembersList []*Member
 
 //
 // DBSession
 //
 
-// Member collection
+// MembersCol returns members collection
 func (session *DBSession) MembersCol() *mgo.Collection {
-	return session.DB().C(MEMBERS_COL_NAME)
+	return session.DB().C(membersColName)
 }
 
-// Ensure indexes on Members collection
+// EnsureMembersIndexes ensure indexes on members collection
 func (session *DBSession) EnsureMembersIndexes() {
 	index := mgo.Index{
 		Key:        []string{"site_id", "order"},
@@ -50,11 +52,11 @@ func (session *DBSession) EnsureMembersIndexes() {
 	}
 }
 
-// Find member by id
-func (session *DBSession) FindMember(memberId bson.ObjectId) *Member {
+// FindMember finds member by id
+func (session *DBSession) FindMember(memberID bson.ObjectId) *Member {
 	var result Member
 
-	if err := session.MembersCol().FindId(memberId).One(&result); err != nil {
+	if err := session.MembersCol().FindId(memberID).One(&result); err != nil {
 		return nil
 	}
 
@@ -63,7 +65,7 @@ func (session *DBSession) FindMember(memberId bson.ObjectId) *Member {
 	return &result
 }
 
-// Persists a new member in database
+// CreateMember creates a new member in database
 // Side effect: 'Id', 'CreatedAt' and 'UpdatedAt' fields are set on member record
 func (session *DBSession) CreateMember(member *Member) error {
 	member.Id = bson.NewObjectId()
@@ -81,7 +83,7 @@ func (session *DBSession) CreateMember(member *Member) error {
 	return nil
 }
 
-// Remove all references to given image from all members
+// RemoveImageReferencesFromMembers removes all references to given image from all members
 func (session *DBSession) RemoveImageReferencesFromMembers(image *Image) error {
 	// @todo
 	return nil
@@ -91,12 +93,12 @@ func (session *DBSession) RemoveImageReferencesFromMembers(image *Image) error {
 // Member
 //
 
-// Fetch from database: site that member belongs to
+// FindSite fetches site that member belongs to
 func (member *Member) FindSite() *Site {
 	return member.dbSession.FindSite(member.SiteId)
 }
 
-// Fetch Photo from database
+// FindPhoto fetches Photo from database
 func (member *Member) FindPhoto() *Image {
 	if member.Photo != "" {
 		var result Image
@@ -113,7 +115,7 @@ func (member *Member) FindPhoto() *Image {
 	return nil
 }
 
-// Delete member from database
+// Delete deletes member from database
 func (member *Member) Delete() error {
 	var err error
 
@@ -125,7 +127,7 @@ func (member *Member) Delete() error {
 	return nil
 }
 
-// Update member in database
+// Update updates member in database
 func (member *Member) Update(newMember *Member) (bool, error) {
 	var set, unset, modifier bson.D
 
@@ -193,7 +195,7 @@ func (member *Member) Update(newMember *Member) (bool, error) {
 		set = append(set, bson.DocElem{"updated_at", member.UpdatedAt})
 
 		return true, member.dbSession.MembersCol().UpdateId(member.Id, modifier)
-	} else {
-		return false, nil
 	}
+
+	return false, nil
 }

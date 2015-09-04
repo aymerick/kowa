@@ -7,13 +7,14 @@ import (
 	"github.com/aymerick/kowa/models"
 )
 
-// provides mail data to Sender
+// Mailer is the interface to all mailers
 type Mailer interface {
 	Kind() string
 	To() string
 	Subject() string
 }
 
+// BaseMailer is a base for all mailers
 type BaseMailer struct {
 	kind string
 	user *models.User
@@ -29,6 +30,7 @@ type BaseMailer struct {
 	ServiceCopyrightNotice string
 }
 
+// NewBaseMailer instanciates a new BaseMailer
 func NewBaseMailer(kind string, user *models.User) *BaseMailer {
 	return &BaseMailer{
 		kind: kind,
@@ -49,6 +51,7 @@ func NewBaseMailer(kind string, user *models.User) *BaseMailer {
 // Mailer interface
 //
 
+// Kind is part of Mailer interface
 func (mailer *BaseMailer) Kind() string {
 	return mailer.kind
 }

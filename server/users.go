@@ -109,7 +109,7 @@ func (app *Application) handleSignupUser(rw http.ResponseWriter, req *http.Reque
 	user := &models.User{
 		Id:       username,
 		Email:    emailAddr.Address,
-		Status:   models.USER_STATUS_PENDING,
+		Status:   models.UserStatusPending,
 		Lang:     userLang,
 		Password: string(encryptedPassword),
 	}

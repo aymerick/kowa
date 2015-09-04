@@ -64,7 +64,7 @@ func (app *Application) handlePostSite(rw http.ResponseWriter, req *http.Request
 
 	// check site id format
 	if errors["id"] == "" {
-		if site.Id != helpers.NormalizeToSiteId(site.Id) {
+		if site.Id != helpers.NormalizeToSiteID(site.Id) {
 			errors["id"] = T("signup_id_invalid")
 		}
 	}

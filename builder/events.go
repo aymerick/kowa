@@ -109,7 +109,7 @@ func eventSlug(event *models.Event) string {
 // Build event page
 func (builder *EventsBuilder) loadEvent(event *models.Event) {
 	// get page settings
-	title, tagline, cover, disabled := builder.pageSettings(models.PAGE_KIND_EVENTS)
+	title, tagline, cover, disabled := builder.pageSettings(models.PageKindEvents)
 	if disabled {
 		return
 	}
@@ -251,7 +251,7 @@ func (builder *EventsBuilder) loadEventsLists() {
 	}
 
 	// get page settings
-	title, tagline, cover, disabled := builder.pageSettings(models.PAGE_KIND_EVENTS)
+	title, tagline, cover, disabled := builder.pageSettings(models.PageKindEvents)
 	if disabled {
 		return
 	}

@@ -53,7 +53,7 @@ func (builder *MembersBuilder) Load() {
 	}
 
 	// get page settings
-	title, tagline, cover, disabled := builder.pageSettings(models.PAGE_KIND_MEMBERS)
+	title, tagline, cover, disabled := builder.pageSettings(models.PageKindMembers)
 	if disabled {
 		return
 	}

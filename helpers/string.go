@@ -10,9 +10,10 @@ import (
 	"golang.org/x/text/unicode/norm"
 )
 
+// AlphaNumChars holds all alphanumeric runes
 var AlphaNumChars = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
-// Generates a random alphanumeric string
+// RandomAlphaNumString generates a random alphanumeric string
 func RandomAlphaNumString(size int) string {
 	rand.Seed(time.Now().UTC().UnixNano())
 
@@ -23,22 +24,23 @@ func RandomAlphaNumString(size int) string {
 	return string(bytes)
 }
 
+// Pathify normalizes argument so that we can use it in a path
 func Pathify(s string) string {
 	return strings.ToLower(NormalizeToPath(strings.Replace(strings.TrimSpace(s), " ", "-", -1)))
 }
 
-// Returns a string than can be used in an URL
+// Urlify normalizes argument so that it can be a URL
 func Urlify(str string) string {
 	// escape unicode letters
-	parsedUri, err := url.Parse(str)
+	parsedURI, err := url.Parse(str)
 	if err != nil {
 		panic(err)
 	}
 
-	return parsedUri.String()
+	return parsedURI.String()
 }
 
-// Normalize unicode string to a string that can be a file or URL path
+// NormalizeToPath normalizes argument to a string that can be a file or URL path
 func NormalizeToPath(str string) string {
 	isNotOk := func(r rune) bool {
 		isOk := (r == 35) || // '#'
@@ -60,7 +62,7 @@ func NormalizeToPath(str string) string {
 	return result
 }
 
-// Normalise unicode string to a string that can be a username
+// NormalizeToUsername normalizes argument to a string that can be a username
 func NormalizeToUsername(str string) string {
 	isNotOk := func(r rune) bool {
 		isOk := ((r >= 48) && (r <= 57)) || // '0'..'9'
@@ -77,8 +79,8 @@ func NormalizeToUsername(str string) string {
 	return result
 }
 
-// Normalise unicode string to a string that can be a site id
-func NormalizeToSiteId(str string) string {
+// NormalizeToSiteID normalizes argument to a string that can be a site id
+func NormalizeToSiteID(str string) string {
 	isNotOk := func(r rune) bool {
 		isOk := (r == 45) || // '-'
 			((r >= 48) && (r <= 57)) || // '0'..'9'
@@ -95,7 +97,7 @@ func NormalizeToSiteId(str string) string {
 	return result
 }
 
-// Returns true is string has one of given prefixes
+// HasOnePrefix returns true if string has one of given prefixes
 func HasOnePrefix(s string, prefixes []string) bool {
 	for _, prefix := range prefixes {
 		if strings.HasPrefix(s, prefix) {

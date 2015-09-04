@@ -11,12 +11,14 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Sender send mail via SMTP
 type Sender struct {
 	mailer   Mailer
 	smtpConf *SMTPConf
 	noop     bool
 }
 
+// SMTPConf holds SMTP configuration
 type SMTPConf struct {
 	From string
 	Host string
@@ -25,6 +27,7 @@ type SMTPConf struct {
 	Pass string
 }
 
+// NewSender instanciates a new Sender
 func NewSender(mailer Mailer) *Sender {
 	return &Sender{
 		mailer: mailer,
@@ -38,14 +41,17 @@ func NewSender(mailer Mailer) *Sender {
 	}
 }
 
+// SetSMTPConf sets the SMTP configuration
 func (sender *Sender) SetSMTPConf(conf *SMTPConf) {
 	sender.smtpConf = conf
 }
 
+// SetNoop sets sender in NOOP mode
 func (sender *Sender) SetNoop(isNoop bool) {
 	sender.noop = isNoop
 }
 
+// Send triggers mail sending
 func (sender *Sender) Send() error {
 	var result error
 
@@ -66,10 +72,10 @@ func (sender *Sender) Send() error {
 
 func (sender *Sender) newEmail() *email.Email {
 	// generate HTML
-	rawHtml := sender.content(TPL_HTML)
+	rawHTML := sender.content(tplHTML)
 
 	// inline CSS
-	htmlContent, err := inliner.Inline(rawHtml)
+	htmlContent, err := inliner.Inline(rawHTML)
 	if err != nil {
 		panic(err)
 	}
@@ -79,7 +85,7 @@ func (sender *Sender) newEmail() *email.Email {
 		From:    sender.smtpConf.From,
 		Subject: sender.mailer.Subject(),
 		HTML:    []byte(htmlContent),
-		Text:    []byte(sender.content(TPL_TEXT)),
+		Text:    []byte(sender.content(tplText)),
 		Headers: textproto.MIMEHeader{},
 	}
 }
@@ -100,7 +106,7 @@ func (sender *Sender) smtpAddr() string {
 func (sender *Sender) smtpAuth() smtp.Auth {
 	if sender.smtpConf.User != "" {
 		return smtp.PlainAuth("", sender.smtpConf.User, sender.smtpConf.Pass, sender.smtpConf.Host)
-	} else {
-		return nil
 	}
+
+	return nil
 }

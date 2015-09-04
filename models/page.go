@@ -8,11 +8,12 @@ import (
 )
 
 const (
-	PAGES_COL_NAME = "pages"
+	pagesColName = "pages"
 )
 
+// Page represents a page
 type Page struct {
-	dbSession *DBSession `bson:"-" json:"-"`
+	dbSession *DBSession `bson:"-"`
 
 	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
@@ -28,18 +29,19 @@ type Page struct {
 	InNavBar bool `bson:"in_nav_bar" json:"inNavBar"`
 }
 
+// PagesList represents a list of pages
 type PagesList []*Page
 
 //
 // DBSession
 //
 
-// Pages collection
+// PagesCol returns pages collection
 func (session *DBSession) PagesCol() *mgo.Collection {
-	return session.DB().C(PAGES_COL_NAME)
+	return session.DB().C(pagesColName)
 }
 
-// Ensure indexes on Pages collection
+// EnsurePagesIndexes ensure indexes on pages collection
 func (session *DBSession) EnsurePagesIndexes() {
 	index := mgo.Index{
 		Key:        []string{"site_id"},
@@ -52,11 +54,11 @@ func (session *DBSession) EnsurePagesIndexes() {
 	}
 }
 
-// Find page by id
-func (session *DBSession) FindPage(pageId bson.ObjectId) *Page {
+// FindPage finds a page by id
+func (session *DBSession) FindPage(pageID bson.ObjectId) *Page {
 	var result Page
 
-	if err := session.PagesCol().FindId(pageId).One(&result); err != nil {
+	if err := session.PagesCol().FindId(pageID).One(&result); err != nil {
 		return nil
 	}
 
@@ -65,7 +67,7 @@ func (session *DBSession) FindPage(pageId bson.ObjectId) *Page {
 	return &result
 }
 
-// Persists a new page in database
+// CreatePage creates a new page in database
 // Side effect: 'Id', 'CreatedAt' and 'UpdatedAt' fields are set on page record
 func (session *DBSession) CreatePage(page *Page) error {
 	page.Id = bson.NewObjectId()
@@ -83,7 +85,7 @@ func (session *DBSession) CreatePage(page *Page) error {
 	return nil
 }
 
-// Remove all references to given image from all pages
+// RemoveImageReferencesFromPages removes all references to given image from all pages
 func (session *DBSession) RemoveImageReferencesFromPages(image *Image) error {
 	// @todo
 	return nil
@@ -93,12 +95,12 @@ func (session *DBSession) RemoveImageReferencesFromPages(image *Image) error {
 // Page
 //
 
-// Fetch from database: site that page belongs to
+// FindSite fetches site that page belongs to
 func (page *Page) FindSite() *Site {
 	return page.dbSession.FindSite(page.SiteId)
 }
 
-// Fetch Cover from database
+// FindCover fetches cover from database
 func (page *Page) FindCover() *Image {
 	if page.Cover != "" {
 		var result Image
@@ -167,7 +169,7 @@ func (page *Page) Update(newPage *Page) (bool, error) {
 	// Format
 	newFormat := newPage.Format
 	if newFormat == "" {
-		newFormat = DEFAULT_FORMAT
+		newFormat = DefaultFormat
 	}
 
 	if page.Format != newFormat {
@@ -211,7 +213,7 @@ func (page *Page) Update(newPage *Page) (bool, error) {
 		set = append(set, bson.DocElem{"updated_at", page.UpdatedAt})
 
 		return true, page.dbSession.PagesCol().UpdateId(page.Id, modifier)
-	} else {
-		return false, nil
 	}
+
+	return false, nil
 }

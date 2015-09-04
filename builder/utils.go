@@ -11,7 +11,7 @@ import (
 func generateHTML(inputFormat string, input string) raymond.SafeString {
 	var result raymond.SafeString
 
-	if inputFormat == models.FORMAT_MARKDOWN {
+	if inputFormat == models.FormatMarkdown {
 		html := blackfriday.MarkdownCommon([]byte(input))
 
 		result = raymond.SafeString(bluemonday.UGCPolicy().SanitizeBytes(html))

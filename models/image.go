@@ -2,7 +2,6 @@ package models
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"image"
 	"log"
@@ -20,52 +19,53 @@ import (
 )
 
 const (
-	IMAGES_COL_NAME = "images"
+	imagesColName = "images"
 
 	// derivatives transformations kinds
-	DERIVATIVE_FIT  = "fit"
-	DERIVATIVE_FILL = "fill"
+	derivativeFit  = "fit"
+	derivativeFill = "fill"
 
 	// derivatives
-	THUMB_KIND   = "thumb"
-	THUMB_SCALE  = DERIVATIVE_FILL
-	THUMB_SUFFIX = "_t"
-	THUMB_WIDTH  = 100
-	THUMB_HEIGHT = 75
+	thumbKind   = "thumb"
+	thumbScale  = derivativeFill
+	thumbSuffix = "_t"
+	thumbWidth  = 100
+	thumbHeight = 75
 
-	SQUARE_KIND   = "square"
-	SQUARE_SCALE  = DERIVATIVE_FILL
-	SQUARE_SUFFIX = "_q"
-	SQUARE_WIDTH  = 200
-	SQUARE_HEIGHT = 200
+	squareKind   = "square"
+	squareScale  = derivativeFill
+	squareSuffix = "_q"
+	squareWidth  = 200
+	squareHeight = 200
 
-	SMALL_KIND   = "small"
-	SMALL_SCALE  = DERIVATIVE_FIT
-	SMALL_SUFFIX = "_s"
-	SMALL_WIDTH  = 300
-	SMALL_HEIGHT = 225
+	smallKind   = "small"
+	smallScale  = derivativeFit
+	smallSuffix = "_s"
+	smallWidth  = 300
+	smallHeight = 225
 
-	SMALL_FILL_KIND   = "small_fill"
-	SMALL_FILL_SCALE  = DERIVATIVE_FILL
-	SMALL_FILL_SUFFIX = "_sf"
-	SMALL_FILL_WIDTH  = 300
-	SMALL_FILL_HEIGHT = 225
+	smallFillKind   = "small_fill"
+	smallFillScale  = derivativeFill
+	smallFillSuffix = "_sf"
+	smallFillWidth  = 300
+	smallFillHeight = 225
 
-	PORTRAIT_FILL_KIND   = "portrait_fill"
-	PORTRAIT_FILL_SCALE  = DERIVATIVE_FILL
-	PORTRAIT_FILL_SUFFIX = "_pf"
-	PORTRAIT_FILL_WIDTH  = 225
-	PORTRAIT_FILL_HEIGHT = 300
+	portraitFillKind   = "portrait_fill"
+	portraitFillScale  = derivativeFill
+	portraitFillSuffix = "_pf"
+	portraitFillWidth  = 225
+	portraitFillHeight = 300
 
-	LARGE_KIND   = "large"
-	LARGE_SCALE  = DERIVATIVE_FIT
-	LARGE_SUFFIX = "_l"
-	LARGE_WIDTH  = 1920
-	LARGE_HEIGHT = 1440
+	largeKind   = "large"
+	largeScale  = derivativeFit
+	largeSuffix = "_l"
+	largeWidth  = 1920
+	largeHeight = 1440
 )
 
+// Image represents an image
 type Image struct {
-	dbSession *DBSession `bson:"-" json:"-"`
+	dbSession *DBSession `bson:"-"`
 
 	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
@@ -79,9 +79,11 @@ type Image struct {
 	original *image.Image
 }
 
+// ImagesList represents an list of images
 type ImagesList []*Image
 
-type ImageJson struct {
+// ImageJSON represents the json version of an image
+type ImageJSON struct {
 	Image
 	URL string `json:"url"`
 
@@ -93,6 +95,7 @@ type ImageJson struct {
 	LargeURL        string `json:"largeUrl"`
 }
 
+// Derivative represents an image derivative
 type Derivative struct {
 	kind   string
 	scale  string
@@ -101,56 +104,57 @@ type Derivative struct {
 	height int
 }
 
+// Derivatives represents a list of image derivatives
 var Derivatives []*Derivative
 
 func init() {
 	Derivatives = []*Derivative{
 		&Derivative{
-			kind:   THUMB_KIND,
-			scale:  THUMB_SCALE,
-			suffix: THUMB_SUFFIX,
-			width:  THUMB_WIDTH,
-			height: THUMB_HEIGHT,
+			kind:   thumbKind,
+			scale:  thumbScale,
+			suffix: thumbSuffix,
+			width:  thumbWidth,
+			height: thumbHeight,
 		},
 		&Derivative{
-			kind:   SQUARE_KIND,
-			scale:  SQUARE_SCALE,
-			suffix: SQUARE_SUFFIX,
-			width:  SQUARE_WIDTH,
-			height: SQUARE_HEIGHT,
+			kind:   squareKind,
+			scale:  squareScale,
+			suffix: squareSuffix,
+			width:  squareWidth,
+			height: squareHeight,
 		},
 		&Derivative{
-			kind:   SMALL_KIND,
-			scale:  SMALL_SCALE,
-			suffix: SMALL_SUFFIX,
-			width:  SMALL_WIDTH,
-			height: SMALL_HEIGHT,
+			kind:   smallKind,
+			scale:  smallScale,
+			suffix: smallSuffix,
+			width:  smallWidth,
+			height: smallHeight,
 		},
 		&Derivative{
-			kind:   SMALL_FILL_KIND,
-			scale:  SMALL_FILL_SCALE,
-			suffix: SMALL_FILL_SUFFIX,
-			width:  SMALL_FILL_WIDTH,
-			height: SMALL_FILL_HEIGHT,
+			kind:   smallFillKind,
+			scale:  smallFillScale,
+			suffix: smallFillSuffix,
+			width:  smallFillWidth,
+			height: smallFillHeight,
 		},
 		&Derivative{
-			kind:   PORTRAIT_FILL_KIND,
-			scale:  PORTRAIT_FILL_SCALE,
-			suffix: PORTRAIT_FILL_SUFFIX,
-			width:  PORTRAIT_FILL_WIDTH,
-			height: PORTRAIT_FILL_HEIGHT,
+			kind:   portraitFillKind,
+			scale:  portraitFillScale,
+			suffix: portraitFillSuffix,
+			width:  portraitFillWidth,
+			height: portraitFillHeight,
 		},
 		&Derivative{
-			kind:   LARGE_KIND,
-			scale:  LARGE_SCALE,
-			suffix: LARGE_SUFFIX,
-			width:  LARGE_WIDTH,
-			height: LARGE_HEIGHT,
+			kind:   largeKind,
+			scale:  largeScale,
+			suffix: largeSuffix,
+			width:  largeWidth,
+			height: largeHeight,
 		},
 	}
 }
 
-// return a derivative definition
+// DerivativeForKind returns a derivative definition
 func DerivativeForKind(kind string) *Derivative {
 	for _, derivative := range Derivatives {
 		if derivative.kind == kind {
@@ -161,7 +165,7 @@ func DerivativeForKind(kind string) *Derivative {
 	return nil
 }
 
-// returns true if given path is an image derivative
+// IsDerivativePath returns true if given path is an image derivative
 func IsDerivativePath(path string) bool {
 	for _, derivative := range Derivatives {
 		fileBase := helpers.FileBase(path)
@@ -177,12 +181,12 @@ func IsDerivativePath(path string) bool {
 // DBSession
 //
 
-// Images collection
+// ImagesCol returns images collection
 func (session *DBSession) ImagesCol() *mgo.Collection {
-	return session.DB().C(IMAGES_COL_NAME)
+	return session.DB().C(imagesColName)
 }
 
-// Ensure indexes on Images collection
+// EnsureImagesIndexes ensures indexes on images collection
 func (session *DBSession) EnsureImagesIndexes() {
 	index := mgo.Index{
 		Key:        []string{"site_id"},
@@ -195,11 +199,11 @@ func (session *DBSession) EnsureImagesIndexes() {
 	}
 }
 
-// Find image by id
-func (session *DBSession) FindImage(imageId bson.ObjectId) *Image {
+// FindImage finds an image by id
+func (session *DBSession) FindImage(imageID bson.ObjectId) *Image {
 	var result Image
 
-	if err := session.ImagesCol().FindId(imageId).One(&result); err != nil {
+	if err := session.ImagesCol().FindId(imageID).One(&result); err != nil {
 		return nil
 	}
 
@@ -208,7 +212,7 @@ func (session *DBSession) FindImage(imageId bson.ObjectId) *Image {
 	return &result
 }
 
-// Persists a new image in database
+// CreateImage creates a new image in database
 func (session *DBSession) CreateImage(img *Image) error {
 	now := time.Now()
 	img.CreatedAt = now
@@ -227,10 +231,9 @@ func (session *DBSession) CreateImage(img *Image) error {
 // Image
 //
 
-// Implements json.MarshalJSON
+// MarshalJSON implements the json.Marshaler interface
 func (img *Image) MarshalJSON() ([]byte, error) {
-
-	imageJson := ImageJson{
+	imageJSON := ImageJSON{
 		Image: *img,
 		URL:   img.URL(),
 
@@ -242,9 +245,10 @@ func (img *Image) MarshalJSON() ([]byte, error) {
 		LargeURL:        img.LargeURL(),
 	}
 
-	return json.Marshal(imageJson)
+	return json.Marshal(imageJSON)
 }
 
+// Delete deletes image from database
 func (img *Image) Delete() error {
 	// delete from database
 	if err := img.dbSession.ImagesCol().RemoveId(img.Id); err != nil {
@@ -268,12 +272,12 @@ func (img *Image) Delete() error {
 	return nil
 }
 
-// Fetch from database: site that image belongs to
+// FindSite fetches site that image belongs to
 func (img *Image) FindSite() *Site {
 	return img.dbSession.FindSite(img.SiteId)
 }
 
-// Returns memoized image original image
+// Original returns memoized image original image
 func (img *Image) Original() *image.Image {
 	if img.original == nil {
 		originalPath := img.OriginalFilePath()
@@ -290,11 +294,12 @@ func (img *Image) Original() *image.Image {
 	return img.original
 }
 
+// OriginalFilePath returns file path to original image
 func (img *Image) OriginalFilePath() string {
 	return core.UploadSiteFilePath(img.SiteId, img.Path)
 }
 
-// Returns image URL
+// URL returns image URL
 func (img *Image) URL() string {
 	return core.UploadSiteUrlPath(img.SiteId, img.Path)
 }
@@ -303,74 +308,77 @@ func (img *Image) URL() string {
 // Derivatives
 //
 
-// Returns Thumb derivative path
+// ThumbPath returns Thumb derivative path
 func (img *Image) ThumbPath() string {
-	return img.DerivativePath(DerivativeForKind(THUMB_KIND))
+	return img.DerivativePath(DerivativeForKind(thumbKind))
 }
 
-// Returns Thumb derivative URL
+// ThumbURL returns Thumb derivative URL
 func (img *Image) ThumbURL() string {
-	return img.DerivativeURL(DerivativeForKind(THUMB_KIND))
+	return img.DerivativeURL(DerivativeForKind(thumbKind))
 }
 
-// Returns Square derivative path
+// SquarePath returns Square derivative path
 func (img *Image) SquarePath() string {
-	return img.DerivativePath(DerivativeForKind(SQUARE_KIND))
+	return img.DerivativePath(DerivativeForKind(squareKind))
 }
 
-// Returns Square derivative URL
+// SquareURL returns Square derivative URL
 func (img *Image) SquareURL() string {
-	return img.DerivativeURL(DerivativeForKind(SQUARE_KIND))
+	return img.DerivativeURL(DerivativeForKind(squareKind))
 }
 
-// Returns Small derivative path
+// SmallPath returns Small derivative path
 func (img *Image) SmallPath() string {
-	return img.DerivativePath(DerivativeForKind(SMALL_KIND))
+	return img.DerivativePath(DerivativeForKind(smallKind))
 }
 
-// Returns Small derivative URL
+// SmallURL returns Small derivative URL
 func (img *Image) SmallURL() string {
-	return img.DerivativeURL(DerivativeForKind(SMALL_KIND))
+	return img.DerivativeURL(DerivativeForKind(smallKind))
 }
 
-// Returns SmallFill derivative path
+// SmallFillPath returns SmallFill derivative path
 func (img *Image) SmallFillPath() string {
-	return img.DerivativePath(DerivativeForKind(SMALL_FILL_KIND))
+	return img.DerivativePath(DerivativeForKind(smallFillKind))
 }
 
-// Returns Small Fill derivative URL
+// SmallFillURL returns Small Fill derivative URL
 func (img *Image) SmallFillURL() string {
-	return img.DerivativeURL(DerivativeForKind(SMALL_FILL_KIND))
+	return img.DerivativeURL(DerivativeForKind(smallFillKind))
 }
 
-// Returns PortraitFill derivative path
+// PortraitFillPath returns PortraitFill derivative path
 func (img *Image) PortraitFillPath() string {
-	return img.DerivativePath(DerivativeForKind(PORTRAIT_FILL_KIND))
+	return img.DerivativePath(DerivativeForKind(portraitFillKind))
 }
 
-// Returns Portrait Fill derivative URL
+// PortraitFillURL returns Portrait Fill derivative URL
 func (img *Image) PortraitFillURL() string {
-	return img.DerivativeURL(DerivativeForKind(PORTRAIT_FILL_KIND))
+	return img.DerivativeURL(DerivativeForKind(portraitFillKind))
 }
 
-// Returns Large derivative path
+// LargePath returns Large derivative path
 func (img *Image) LargePath() string {
-	return img.DerivativePath(DerivativeForKind(LARGE_KIND))
+	return img.DerivativePath(DerivativeForKind(largeKind))
 }
 
-// Returns Large derivative URL
+// LargeURL returns Large derivative URL
 func (img *Image) LargeURL() string {
-	return img.DerivativeURL(DerivativeForKind(LARGE_KIND))
+	return img.DerivativeURL(DerivativeForKind(largeKind))
 }
 
+// DerivativePath returns given derivative path
 func (img *Image) DerivativePath(derivative *Derivative) string {
 	return fmt.Sprintf("%s%s%s", helpers.FileBase(img.Path), derivative.suffix, path.Ext(img.Path))
 }
 
+// DerivativeURL returns given derivative URL
 func (img *Image) DerivativeURL(derivative *Derivative) string {
 	return core.UploadSiteUrlPath(img.SiteId, img.DerivativePath(derivative))
 }
 
+// DerivativeFilePath returns given derivative file path
 func (img *Image) DerivativeFilePath(derivative *Derivative) string {
 	return core.UploadSiteFilePath(img.SiteId, img.DerivativePath(derivative))
 }
@@ -391,10 +399,10 @@ func (img *Image) generateDerivative(derivative *Derivative, force bool) error {
 	var result *image.NRGBA
 
 	switch derivative.scale {
-	case DERIVATIVE_FIT:
+	case derivativeFit:
 		result = imaging.Fit(*img.Original(), derivative.width, derivative.height, imaging.Lanczos)
 
-	case DERIVATIVE_FILL:
+	case derivativeFill:
 		result = imaging.Thumbnail(*img.Original(), derivative.width, derivative.height, imaging.Lanczos)
 
 	default:
@@ -405,12 +413,12 @@ func (img *Image) generateDerivative(derivative *Derivative, force bool) error {
 	return imaging.Save(result, derivativePath)
 }
 
-// Generate all derivatives that were not generated yet
+// GenerateDerivatives generates all derivatives that were not generated yet
 func (img *Image) GenerateDerivatives(force bool) error {
 	var err error
 
 	if img.Original() == nil {
-		return errors.New(fmt.Sprintf("Failed to load original image: %v", img.Path))
+		return fmt.Errorf("Failed to load original image: %v", img.Path)
 	}
 
 	for _, derivative := range Derivatives {

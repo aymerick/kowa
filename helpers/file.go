@@ -7,7 +7,7 @@ import (
 	"path"
 )
 
-// Returns base file name
+// FileBase returns base file name
 // Example: /foo/bar/baz.png => baz
 func FileBase(filePath string) string {
 	fileName := path.Base(filePath)
@@ -16,7 +16,7 @@ func FileBase(filePath string) string {
 	return fileName[:len(fileName)-len(fileExt)]
 }
 
-// Returns filePath is available, otherwise returns a path with a random filename
+// AvailableFilePath returns filePath is available, otherwise returns a path with a random filename
 func AvailableFilePath(filePath string) string {
 	// check if file does not exists
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
@@ -38,6 +38,7 @@ func AvailableFilePath(filePath string) string {
 	return newFilePath
 }
 
+// EnsureDirectory ensures that given directory exists
 func EnsureDirectory(dirPath string) {
 	log.Printf("[DBG] Ensuring dir: %s", dirPath)
 
@@ -47,6 +48,7 @@ func EnsureDirectory(dirPath string) {
 	}
 }
 
+// WorkingDir returns current working directory
 func WorkingDir() string {
 	result, _ := os.Getwd()
 

@@ -77,7 +77,7 @@ func postSlug(post *models.Post) string {
 // Build post page
 func (builder *PostsBuilder) loadPost(post *models.Post) {
 	// get page settings
-	title, tagline, cover, disabled := builder.pageSettings(models.PAGE_KIND_POSTS)
+	title, tagline, cover, disabled := builder.pageSettings(models.PageKindPosts)
 	if disabled {
 		return
 	}
@@ -152,7 +152,7 @@ func (builder *PostsBuilder) loadPostsLists() {
 	}
 
 	// get page settings
-	title, tagline, cover, disabled := builder.pageSettings(models.PAGE_KIND_POSTS)
+	title, tagline, cover, disabled := builder.pageSettings(models.PageKindPosts)
 	if disabled {
 		return
 	}

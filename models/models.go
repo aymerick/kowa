@@ -1,8 +1,12 @@
 package models
 
 const (
-	FORMAT_HTML     = "html"
-	FORMAT_MARKDOWN = "md"
+	// FormatHTML represents the HTML content format
+	FormatHTML = "html"
 
-	DEFAULT_FORMAT = FORMAT_HTML
+	// FormatMarkdown represents the Markdown content format
+	FormatMarkdown = "md"
+
+	// DefaultFormat is the default content format
+	DefaultFormat = FormatHTML
 )

@@ -12,14 +12,18 @@ import (
 )
 
 const (
-	FILES_COL_NAME  = "files"
-	FILE_MEMBERSHIP = "membership"
+	// FileMembership represents a membership file kind
+	FileMembership = "membership"
+
+	filesColName = "files"
 )
 
-var FileKinds = []string{FILE_MEMBERSHIP}
+// FileKinds all possible file kinds
+var FileKinds = []string{FileMembership}
 
+// File represents a file
 type File struct {
-	dbSession *DBSession `bson:"-" json:"-"`
+	dbSession *DBSession `bson:"-"`
 
 	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
@@ -33,13 +37,16 @@ type File struct {
 	Type string `bson:"type" json:"type"` // content type
 }
 
+// FilesList represents a list of files
 type FilesList []*File
 
-type FileJson struct {
+// FileJSON represents the json version of a file
+type FileJSON struct {
 	File
 	URL string `json:"url"`
 }
 
+// IsValidFileKind returns true if argument is a file kind
 func IsValidFileKind(kind string) bool {
 	for _, k := range FileKinds {
 		if k == kind {
@@ -54,12 +61,12 @@ func IsValidFileKind(kind string) bool {
 // DBSession
 //
 
-// Files collection
+// FilesCol returns files collection
 func (session *DBSession) FilesCol() *mgo.Collection {
-	return session.DB().C(FILES_COL_NAME)
+	return session.DB().C(filesColName)
 }
 
-// Ensure indexes on Files collection
+// EnsureFilesIndexes ensure indexes on files collection
 func (session *DBSession) EnsureFilesIndexes() {
 	index := mgo.Index{
 		Key:        []string{"site_id"},
@@ -72,11 +79,11 @@ func (session *DBSession) EnsureFilesIndexes() {
 	}
 }
 
-// Find file by id
-func (session *DBSession) FindFile(fileId bson.ObjectId) *File {
+// FindFile finds a file by id
+func (session *DBSession) FindFile(fileID bson.ObjectId) *File {
 	var result File
 
-	if err := session.FilesCol().FindId(fileId).One(&result); err != nil {
+	if err := session.FilesCol().FindId(fileID).One(&result); err != nil {
 		return nil
 	}
 
@@ -85,7 +92,7 @@ func (session *DBSession) FindFile(fileId bson.ObjectId) *File {
 	return &result
 }
 
-// Persists a new file in database
+// CreateFile creates a new file in database
 func (session *DBSession) CreateFile(f *File) error {
 	now := time.Now()
 	f.CreatedAt = now
@@ -104,17 +111,18 @@ func (session *DBSession) CreateFile(f *File) error {
 // File
 //
 
-// Implements json.MarshalJSON
+// MarshalJSON implements the json.Marshaler interface
 func (f *File) MarshalJSON() ([]byte, error) {
 
-	fileJson := FileJson{
+	fileJSON := FileJSON{
 		File: *f,
 		URL:  f.URL(),
 	}
 
-	return json.Marshal(fileJson)
+	return json.Marshal(fileJSON)
 }
 
+// Delete deletes file from database
 func (f *File) Delete() error {
 	// delete from database
 	if err := f.dbSession.FilesCol().RemoveId(f.Id); err != nil {
@@ -129,17 +137,17 @@ func (f *File) Delete() error {
 	return nil
 }
 
-// Fetch from database: site that file belongs to
+// FindSite fetches site that file belongs to
 func (f *File) FindSite() *Site {
 	return f.dbSession.FindSite(f.SiteId)
 }
 
-// Returns file path
+// FilePath returns file path
 func (f *File) FilePath() string {
 	return core.UploadSiteFilePath(f.SiteId, f.Path)
 }
 
-// Returns file URL
+// URL returns file URL
 func (f *File) URL() string {
 	return core.UploadSiteUrlPath(f.SiteId, f.Path)
 }

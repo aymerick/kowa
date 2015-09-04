@@ -8,6 +8,7 @@ import (
 	"gopkg.in/mgo.v2"
 )
 
+// DBSession represents a database session
 type DBSession struct {
 	mongoSession *mgo.Session
 	dbName       string
@@ -20,14 +21,14 @@ func init() {
 	// mgo.SetDebug(true)
 }
 
-// returns a database session
+// NewDBSession instanciates a new DBSession
 func NewDBSession() *DBSession {
 	return &DBSession{
 		mongoSession: NewMongoDBSession(),
 	}
 }
 
-// returns a new mongodb session
+// NewMongoDBSession returns a new mongodb session
 func NewMongoDBSession() *mgo.Session {
 	// get URI
 	uri := os.Getenv("MONGODB_URI")
@@ -42,7 +43,7 @@ func NewMongoDBSession() *mgo.Session {
 	return MongoDBSessionForURI(uri)
 }
 
-// returns a specific mongodb session
+// MongoDBSessionForURI returns a new mongodb session with given uri
 func MongoDBSessionForURI(uri string) *mgo.Session {
 	// create session
 	result, err := mgo.Dial(uri)
@@ -60,6 +61,7 @@ func MongoDBSessionForURI(uri string) *mgo.Session {
 // DBSession
 //
 
+// Copy returns a copy of database session
 func (session *DBSession) Copy() *DBSession {
 	return &DBSession{
 		mongoSession: session.mongoSession.Copy(),
@@ -67,11 +69,12 @@ func (session *DBSession) Copy() *DBSession {
 	}
 }
 
+// Close closes the database session
 func (session *DBSession) Close() {
 	session.mongoSession.Close()
 }
 
-// ensure indexes on all collections
+// EnsureIndexes ensures indexes on all collections
 func (session *DBSession) EnsureIndexes() {
 	session.EnsureActivitiesIndexes()
 	session.EnsureEventsIndexes()
@@ -84,17 +87,17 @@ func (session *DBSession) EnsureIndexes() {
 	session.EnsureUsersIndexes()
 }
 
-// returns a database handler
+// DB returns a database handler
 func (session *DBSession) DB() *mgo.Database {
 	return session.mongoSession.DB(session.DBName())
 }
 
-// set database name
+// SetDBName sets database name
 func (session *DBSession) SetDBName(name string) {
 	session.dbName = name
 }
 
-// get database name
+// DBName returns database name
 func (session *DBSession) DBName() string {
 	if session.dbName == "" {
 		session.dbName = viper.GetString("mongodb_dbname")

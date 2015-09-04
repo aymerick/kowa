@@ -54,7 +54,7 @@ func (builder *ActivitiesBuilder) Load() {
 	}
 
 	// get page settings
-	title, tagline, cover, disabled := builder.pageSettings(models.PAGE_KIND_ACTIVITIES)
+	title, tagline, cover, disabled := builder.pageSettings(models.PageKindActivities)
 	if disabled {
 		return
 	}
@@ -122,8 +122,8 @@ func (builder *ActivitiesBuilder) NewActivityVars(activity *models.Activity) *Ac
 		result.Cover = builder.addImage(cover)
 	}
 
-	result.Summary = generateHTML(models.FORMAT_HTML, activity.Summary)
-	result.Body = generateHTML(models.FORMAT_HTML, activity.Body)
+	result.Summary = generateHTML(models.FormatHTML, activity.Summary)
+	result.Body = generateHTML(models.FormatHTML, activity.Body)
 
 	return result
 }

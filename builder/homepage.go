@@ -74,9 +74,9 @@ func (builder *HomepageBuilder) NewHomepageContent(node *Node) *HomepageContent 
 
 	result := &HomepageContent{}
 
-	result.Description = generateHTML(models.FORMAT_HTML, site.Description)
-	result.MoreDesc = generateHTML(models.FORMAT_HTML, site.MoreDesc)
-	result.JoinText = generateHTML(models.FORMAT_HTML, site.JoinText)
+	result.Description = generateHTML(models.FormatHTML, site.Description)
+	result.MoreDesc = generateHTML(models.FormatHTML, site.MoreDesc)
+	result.JoinText = generateHTML(models.FormatHTML, site.JoinText)
 
 	logo := site.FindLogo()
 	if logo != nil {

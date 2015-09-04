@@ -10,15 +10,17 @@ import (
 	"github.com/aymerick/raymond"
 )
 
+// TplKind represents a mail template kind
 type TplKind string
 
 const (
-	TPL_HTML = TplKind("html")
-	TPL_TEXT = TplKind("txt")
+	tplHTML = TplKind("html")
+	tplText = TplKind("txt")
 )
 
 var templater *Templater
 
+// Templater handles mail templating
 type Templater struct {
 	templatesDir string
 	layouts      map[TplKind]*raymond.Template
@@ -32,6 +34,7 @@ func init() {
 	}
 }
 
+// SetTemplatesDir sets the mail templates directory
 func SetTemplatesDir(dir string) {
 	templater.templatesDir = dir
 
@@ -40,7 +43,7 @@ func SetTemplatesDir(dir string) {
 	}
 }
 
-// Generates template
+// Generate generates a mail template
 func (tpl *Templater) Generate(name string, kind TplKind, mailer Mailer) (string, error) {
 	template, errT := tpl.getTemplate(name, kind)
 	if errT != nil {
@@ -55,7 +58,7 @@ func (tpl *Templater) Generate(name string, kind TplKind, mailer Mailer) (string
 	return result, nil
 }
 
-// Get a layout
+// layout returns a layout
 func (tpl *Templater) layout(kind TplKind) *raymond.Template {
 	if tpl.layouts[kind] == nil {
 		tpl.setupLayouts()
@@ -64,7 +67,7 @@ func (tpl *Templater) layout(kind TplKind) *raymond.Template {
 	return tpl.layouts[kind]
 }
 
-// Returns a new template instance
+// getTemplate returns a new template instance
 func (tpl *Templater) getTemplate(name string, kind TplKind) (*raymond.Template, error) {
 	tplKey := fmt.Sprintf("%s:%s", name, kind)
 
@@ -86,7 +89,7 @@ func (tpl *Templater) getTemplate(name string, kind TplKind) (*raymond.Template,
 	return tpl.templates[tplKey], nil
 }
 
-// Fetch template content
+// templateContent fetches template content
 func (tpl *Templater) templateContent(name string, kind TplKind) (string, error) {
 	var err error
 	var data []byte
@@ -114,9 +117,9 @@ func (tpl *Templater) templateContent(name string, kind TplKind) (string, error)
 	return string(data), nil
 }
 
-// Setup layouts
+// setupLayouts setups layouts
 func (tpl *Templater) setupLayouts() error {
-	for _, kind := range []TplKind{TPL_HTML, TPL_TEXT} {
+	for _, kind := range []TplKind{tplHTML, tplText} {
 		if err := tpl.setupLayout(kind); err != nil {
 			return err
 		}

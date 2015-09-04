@@ -8,11 +8,12 @@ import (
 )
 
 const (
-	POSTS_COL_NAME = "posts"
+	postsColName = "posts"
 )
 
+// Post represents a post
 type Post struct {
-	dbSession *DBSession `bson:"-" json:"-"`
+	dbSession *DBSession `bson:"-"`
 
 	Id        bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
@@ -27,18 +28,19 @@ type Post struct {
 	Cover       bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
 }
 
+// PostsList represents a list of posts
 type PostsList []*Post
 
 //
 // DBSession
 //
 
-// Posts collection
+// PostsCol returns posts collection
 func (session *DBSession) PostsCol() *mgo.Collection {
-	return session.DB().C(POSTS_COL_NAME)
+	return session.DB().C(postsColName)
 }
 
-// Ensure indexes on Posts collection
+// EnsurePostsIndexes ensures indexes on posts collection
 func (session *DBSession) EnsurePostsIndexes() {
 	index := mgo.Index{
 		Key:        []string{"site_id", "published"},
@@ -51,11 +53,11 @@ func (session *DBSession) EnsurePostsIndexes() {
 	}
 }
 
-// Find post by id
-func (session *DBSession) FindPost(postId bson.ObjectId) *Post {
+// FindPost finds a post by id
+func (session *DBSession) FindPost(postID bson.ObjectId) *Post {
 	var result Post
 
-	if err := session.PostsCol().FindId(postId).One(&result); err != nil {
+	if err := session.PostsCol().FindId(postID).One(&result); err != nil {
 		return nil
 	}
 
@@ -64,7 +66,7 @@ func (session *DBSession) FindPost(postId bson.ObjectId) *Post {
 	return &result
 }
 
-// Persists a new post in database
+// CreatePost creates a new post in database
 // Side effect: 'Id', 'CreatedAt' and 'UpdatedAt' fields are set on post record
 func (session *DBSession) CreatePost(post *Post) error {
 	post.Id = bson.NewObjectId()
@@ -82,7 +84,7 @@ func (session *DBSession) CreatePost(post *Post) error {
 	return nil
 }
 
-// Remove all references to given image from all posts
+// RemoveImageReferencesFromPosts removes all references to given image from all posts
 func (session *DBSession) RemoveImageReferencesFromPosts(image *Image) error {
 	// @todo
 	return nil
@@ -92,12 +94,12 @@ func (session *DBSession) RemoveImageReferencesFromPosts(image *Image) error {
 // Post
 //
 
-// Fetch from database: site that post belongs to
+// FindSite fetches site that post belongs to
 func (post *Post) FindSite() *Site {
 	return post.dbSession.FindSite(post.SiteId)
 }
 
-// Fetch Cover from database
+// FindCover fetches cover from database
 func (post *Post) FindCover() *Image {
 	if post.Cover != "" {
 		var result Image
@@ -114,7 +116,7 @@ func (post *Post) FindCover() *Image {
 	return nil
 }
 
-// Delete post from database
+// Delete deletes post from database
 func (post *Post) Delete() error {
 	// delete from database
 	if err := post.dbSession.PostsCol().RemoveId(post.Id); err != nil {
@@ -124,7 +126,7 @@ func (post *Post) Delete() error {
 	return nil
 }
 
-// Update post in database
+// Update updates post in database
 func (post *Post) Update(newPost *Post) (bool, error) {
 	var set, unset, modifier bson.D
 
@@ -172,7 +174,7 @@ func (post *Post) Update(newPost *Post) (bool, error) {
 	// Format
 	newFormat := newPost.Format
 	if newFormat == "" {
-		newFormat = DEFAULT_FORMAT
+		newFormat = DefaultFormat
 	}
 
 	if post.Format != newFormat {
@@ -205,7 +207,7 @@ func (post *Post) Update(newPost *Post) (bool, error) {
 		set = append(set, bson.DocElem{"updated_at", post.UpdatedAt})
 
 		return true, post.dbSession.PostsCol().UpdateId(post.Id, modifier)
-	} else {
-		return false, nil
 	}
+
+	return false, nil
 }

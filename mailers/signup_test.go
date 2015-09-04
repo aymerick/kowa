@@ -90,7 +90,7 @@ func (suite *SignupTestSuite) TestSignup() {
 		Pass: "troudku",
 	})
 
-	// log.Printf("HTML MAIL:\n\n%v", sender.Content(TPL_HTML))
+	// log.Printf("HTML MAIL:\n\n%v", sender.Content(tplHTML))
 
 	email := sender.newEmail()
 	assert.NotNil(t, email)

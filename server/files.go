@@ -116,7 +116,7 @@ func (app *Application) handleUploadFile(rw http.ResponseWriter, req *http.Reque
 	}
 
 	switch kind {
-	case models.FILE_MEMBERSHIP:
+	case models.FileMembership:
 		site.SetMembership(f.Id)
 	}
 

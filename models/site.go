@@ -16,12 +16,13 @@ import (
 )
 
 const (
-	SITES_COL_NAME = "sites"
+	sitesColName = "sites"
 )
 
-// All possible page settings kinds
+// SitePagesSettingsKinds holds all possible page settings kinds
 var SitePagesSettingsKinds map[string]bool
 
+// SitePageSettings represents all the settings for a built-in page
 type SitePageSettings struct {
 	Id       bson.ObjectId `bson:"_id,omitempty"   json:"id"`
 	Kind     string        `bson:"kind"            json:"kind"` // cf. SitePagesSettingsKinds
@@ -44,16 +45,17 @@ type SiteThemeSettings struct {
 	Sass []SiteThemeSassVar `bson:"sass" json:"-"` // SASS variables
 }
 
-// SiteThemeSettingsJson is the JSON representation of SiteThemeSettings
-type SiteThemeSettingsJson struct {
+// SiteThemeSettingsJSON is the JSON representation of SiteThemeSettings
+type SiteThemeSettingsJSON struct {
 	SiteThemeSettings
 
 	// overrides the Sass field to provide a JSON string instead of an array of embedded documents
 	Sass string `json:"sass,omitempty"`
 }
 
+// Site represents a site
 type Site struct {
-	dbSession *DBSession `bson:"-" json:"-"`
+	dbSession *DBSession `bson:"-"`
 
 	Id        string    `bson:"_id,omitempty"         json:"id"`
 	CreatedAt time.Time `bson:"created_at"            json:"createdAt"`
@@ -101,7 +103,8 @@ type Site struct {
 	NameInNavBar bool `bson:"name_in_navbar" json:"nameInNavBar"`
 }
 
-type SiteJson struct {
+// SiteJSON represents the json version of a site
+type SiteJSON struct {
 	Site
 	Links map[string]interface{} `json:"links"`
 
@@ -111,23 +114,33 @@ type SiteJson struct {
 	ThemeSettings []string `json:"themeSettings,omitempty"`
 }
 
+// SitesList represents a list of sites
 type SitesList []*Site
 
 const (
-	PAGE_KIND_CONTACT    = "contact"
-	PAGE_KIND_ACTIVITIES = "activities"
-	PAGE_KIND_MEMBERS    = "members"
-	PAGE_KIND_POSTS      = "posts"
-	PAGE_KIND_EVENTS     = "events"
+	// PageKindContact represents the contact page
+	PageKindContact = "contact"
+
+	// PageKindActivities represents the activities page
+	PageKindActivities = "activities"
+
+	// PageKindMembers represents the members page
+	PageKindMembers = "members"
+
+	// PageKindPosts represents the contact page
+	PageKindPosts = "posts"
+
+	// PageKindEvents represents the contact page
+	PageKindEvents = "events"
 )
 
 func init() {
 	SitePagesSettingsKinds = map[string]bool{
-		PAGE_KIND_CONTACT:    true,
-		PAGE_KIND_ACTIVITIES: true,
-		PAGE_KIND_MEMBERS:    true,
-		PAGE_KIND_POSTS:      true,
-		PAGE_KIND_EVENTS:     true,
+		PageKindContact:    true,
+		PageKindActivities: true,
+		PageKindMembers:    true,
+		PageKindPosts:      true,
+		PageKindEvents:     true,
 	}
 }
 
@@ -135,12 +148,12 @@ func init() {
 // DBSession
 //
 
-// Sites collection
+// SitesCol returns the sites collection
 func (session *DBSession) SitesCol() *mgo.Collection {
-	return session.DB().C(SITES_COL_NAME)
+	return session.DB().C(sitesColName)
 }
 
-// Ensure indexes on Users collection
+// EnsureSitesIndexes ensures indexes on sites collection
 func (session *DBSession) EnsureSitesIndexes() {
 	index := mgo.Index{
 		Key:        []string{"user_id"},
@@ -153,11 +166,11 @@ func (session *DBSession) EnsureSitesIndexes() {
 	}
 }
 
-// Find site by id
-func (session *DBSession) FindSite(siteId string) *Site {
+// FindSite finds a site by id
+func (session *DBSession) FindSite(siteID string) *Site {
 	var result Site
 
-	if err := session.SitesCol().FindId(siteId).One(&result); err != nil {
+	if err := session.SitesCol().FindId(siteID).One(&result); err != nil {
 		return nil
 	}
 
@@ -166,7 +179,7 @@ func (session *DBSession) FindSite(siteId string) *Site {
 	return &result
 }
 
-// Persists a new site in database
+// CreateSite creates a new site in database
 // Side effect: 'CreatedAt' and 'UpdatedAt' fields are set on site record
 func (session *DBSession) CreateSite(site *Site) error {
 	now := time.Now()
@@ -182,7 +195,7 @@ func (session *DBSession) CreateSite(site *Site) error {
 	return nil
 }
 
-// Remove all references to given image from site page settings
+// RemoveImageReferencesFromSitePageSettings removes all references to given image from site page settings
 func (session *DBSession) RemoveImageReferencesFromSitePageSettings(image *Image) error {
 	// @todo
 	return nil
@@ -192,19 +205,19 @@ func (session *DBSession) RemoveImageReferencesFromSitePageSettings(image *Image
 // SiteThemeSettings
 //
 
-// MarshalJSON implements json.MarshalJSON
+// MarshalJSON implements the json.Marshaler interface
 func (settings *SiteThemeSettings) MarshalJSON() ([]byte, error) {
 	sassField, err := json.Marshal(settings.Sass)
 	if err != nil {
 		return []byte{}, err
 	}
 
-	settingsJson := SiteThemeSettingsJson{
+	settingsJSON := SiteThemeSettingsJSON{
 		SiteThemeSettings: *settings,
 		Sass:              string(sassField),
 	}
 
-	return json.Marshal(settingsJson)
+	return json.Marshal(settingsJSON)
 }
 
 //
@@ -237,14 +250,14 @@ func (site *Site) MarshalJSON() ([]byte, error) {
 		themeSettingsIds = append(themeSettingsIds, settings.Id.Hex())
 	}
 
-	siteJson := SiteJson{
+	siteJSON := SiteJSON{
 		Site:          *site,
 		Links:         links,
 		PageSettings:  pageSettingsIds,
 		ThemeSettings: themeSettingsIds,
 	}
 
-	return json.Marshal(siteJson)
+	return json.Marshal(siteJSON)
 }
 
 // BaseUrl returns base URL for that site.
@@ -322,7 +335,7 @@ func (site *Site) postsBaseQuery(onlyPub bool) *mgo.Query {
 	return site.dbSession.PostsCol().Find(selector)
 }
 
-// Returns the total number of posts
+// PostsNb returns the total number of posts
 func (site *Site) PostsNb() int {
 	result, err := site.postsBaseQuery(false).Count()
 	if err != nil {
@@ -332,7 +345,7 @@ func (site *Site) PostsNb() int {
 	return result
 }
 
-// Fetch from database: all posts belonging to site
+// FindPosts fetches posts belonging to site
 func (site *Site) FindPosts(skip int, limit int, onlyPub bool) *PostsList {
 	result := PostsList{}
 
@@ -358,10 +371,12 @@ func (site *Site) FindPosts(skip int, limit int, onlyPub bool) *PostsList {
 	return &result
 }
 
+// FindAllPosts fetches all posts belonging to site
 func (site *Site) FindAllPosts() *PostsList {
 	return site.FindPosts(0, 0, false)
 }
 
+// FindPublishedPosts fetches all published posts belonging to site
 func (site *Site) FindPublishedPosts() *PostsList {
 	return site.FindPosts(0, 0, true)
 }
@@ -374,7 +389,7 @@ func (site *Site) eventsBaseQuery() *mgo.Query {
 	return site.dbSession.EventsCol().Find(bson.M{"site_id": site.Id})
 }
 
-// Returns the total number of events
+// EventsNb returns the total number of events
 func (site *Site) EventsNb() int {
 	result, err := site.eventsBaseQuery().Count()
 	if err != nil {
@@ -384,7 +399,7 @@ func (site *Site) EventsNb() int {
 	return result
 }
 
-// Fetch from database: all events belonging to site
+// FindEvents fetches events belonging to site
 func (site *Site) FindEvents(skip int, limit int) *EventsList {
 	result := EventsList{}
 
@@ -410,6 +425,7 @@ func (site *Site) FindEvents(skip int, limit int) *EventsList {
 	return &result
 }
 
+// FindAllEvents fetches all events belonging to site
 func (site *Site) FindAllEvents() *EventsList {
 	return site.FindEvents(0, 0)
 }
@@ -422,7 +438,7 @@ func (site *Site) pagesBaseQuery() *mgo.Query {
 	return site.dbSession.PagesCol().Find(bson.M{"site_id": site.Id})
 }
 
-// Returns the total number of pages
+// PagesNb returns the total number of pages
 func (site *Site) PagesNb() int {
 	result, err := site.pagesBaseQuery().Count()
 	if err != nil {
@@ -432,7 +448,7 @@ func (site *Site) PagesNb() int {
 	return result
 }
 
-// Fetch from database: all pages belonging to site
+// FindPages fetches pages belonging to site
 func (site *Site) FindPages(skip int, limit int) *PagesList {
 	result := PagesList{}
 
@@ -458,6 +474,7 @@ func (site *Site) FindPages(skip int, limit int) *PagesList {
 	return &result
 }
 
+// FindAllPages fetches all pages belonging to site
 func (site *Site) FindAllPages() *PagesList {
 	return site.FindPages(0, 0)
 }
@@ -470,7 +487,7 @@ func (site *Site) activitiesBaseQuery() *mgo.Query {
 	return site.dbSession.ActivitiesCol().Find(bson.M{"site_id": site.Id})
 }
 
-// Returns the total number of activities
+// ActivitiesNb returns the total number of activities
 func (site *Site) ActivitiesNb() int {
 	result, err := site.activitiesBaseQuery().Count()
 	if err != nil {
@@ -480,7 +497,7 @@ func (site *Site) ActivitiesNb() int {
 	return result
 }
 
-// Fetch from database: all activities belonging to site
+// FindActivities fetches activities belonging to site
 func (site *Site) FindActivities(skip int, limit int) *ActivitiesList {
 	result := ActivitiesList{}
 
@@ -506,6 +523,7 @@ func (site *Site) FindActivities(skip int, limit int) *ActivitiesList {
 	return &result
 }
 
+// FindAllActivities fetches all activities belonging to site
 func (site *Site) FindAllActivities() *ActivitiesList {
 	return site.FindActivities(0, 0)
 }
@@ -518,7 +536,7 @@ func (site *Site) membersBaseQuery() *mgo.Query {
 	return site.dbSession.MembersCol().Find(bson.M{"site_id": site.Id})
 }
 
-// Returns the total number of members
+// MembersNb returns the total number of members
 func (site *Site) MembersNb() int {
 	result, err := site.membersBaseQuery().Count()
 	if err != nil {
@@ -528,7 +546,7 @@ func (site *Site) MembersNb() int {
 	return result
 }
 
-// Fetch from database: all members belonging to site
+// FindMembers fetches members belonging to site
 func (site *Site) FindMembers(skip int, limit int) *MembersList {
 	result := MembersList{}
 
@@ -554,10 +572,12 @@ func (site *Site) FindMembers(skip int, limit int) *MembersList {
 	return &result
 }
 
+// FindAllMembers fetches all members belonging to site
 func (site *Site) FindAllMembers() *MembersList {
 	return site.FindMembers(0, 0)
 }
 
+// UpdateMemberOrder updates a member order in database
 func (site *Site) UpdateMemberOrder(id bson.ObjectId, order int) {
 	// specify site_id in selector to prevent unprivileged users access
 	selector := bson.M{"site_id": site.Id, "_id": id}
@@ -574,6 +594,7 @@ func (site *Site) imagesBaseQuery() *mgo.Query {
 	return site.dbSession.ImagesCol().Find(bson.M{"site_id": site.Id})
 }
 
+// ImagesNb returns the total number of images
 func (site *Site) ImagesNb() int {
 	result, err := site.imagesBaseQuery().Count()
 	if err != nil {
@@ -583,7 +604,7 @@ func (site *Site) ImagesNb() int {
 	return result
 }
 
-// Fetch from database: all images belonging to site
+// FindImages fetches images belonging to site
 func (site *Site) FindImages(skip int, limit int) *ImagesList {
 	result := ImagesList{}
 
@@ -606,6 +627,7 @@ func (site *Site) FindImages(skip int, limit int) *ImagesList {
 	return &result
 }
 
+// FindAllImages fetches all images belonging to site
 func (site *Site) FindAllImages() *ImagesList {
 	return site.FindImages(0, 0)
 }
@@ -618,6 +640,7 @@ func (site *Site) filesBaseQuery() *mgo.Query {
 	return site.dbSession.FilesCol().Find(bson.M{"site_id": site.Id})
 }
 
+// FilesNb returns the total number of files
 func (site *Site) FilesNb() int {
 	result, err := site.filesBaseQuery().Count()
 	if err != nil {
@@ -627,7 +650,7 @@ func (site *Site) FilesNb() int {
 	return result
 }
 
-// Fetch from database: all files belonging to site
+// FindFiles fetches files belonging to site
 func (site *Site) FindFiles(skip int, limit int) *FilesList {
 	result := FilesList{}
 
@@ -650,6 +673,7 @@ func (site *Site) FindFiles(skip int, limit int) *FilesList {
 	return &result
 }
 
+// FindAllFiles fetches all files belonging to site
 func (site *Site) FindAllFiles() *FilesList {
 	return site.FindFiles(0, 0)
 }
@@ -658,7 +682,7 @@ func (site *Site) FindAllFiles() *FilesList {
 // Site fields
 //
 
-// Fetch Logo from database
+// FindLogo fetches logo from database
 func (site *Site) FindLogo() *Image {
 	if site.Logo != "" {
 		var result Image
@@ -675,7 +699,7 @@ func (site *Site) FindLogo() *Image {
 	return nil
 }
 
-// Fetch Cover from database
+// FindCover fetches cover from database
 func (site *Site) FindCover() *Image {
 	if site.Cover != "" {
 		var result Image
@@ -692,7 +716,7 @@ func (site *Site) FindCover() *Image {
 	return nil
 }
 
-// Fetch Favicon from database
+// FindFavicon fetches favicon from database
 func (site *Site) FindFavicon() *Image {
 	if site.Favicon != "" {
 		var result Image
@@ -709,7 +733,7 @@ func (site *Site) FindFavicon() *Image {
 	return nil
 }
 
-// Fetch Membership from database
+// FindMembership fetches membership from database
 func (site *Site) FindMembership() *File {
 	if site.Membership != "" {
 		var result File
@@ -726,7 +750,7 @@ func (site *Site) FindMembership() *File {
 	return nil
 }
 
-// Fetch page settings Cover from database
+// FindPageSettingsCover fetches page settings cover from database
 func (site *Site) FindPageSettingsCover(settingKind string) *Image {
 	pageSettings := site.PageSettings[settingKind]
 	if (pageSettings != nil) && (pageSettings.Cover != "") {
@@ -744,7 +768,7 @@ func (site *Site) FindPageSettingsCover(settingKind string) *Image {
 	return nil
 }
 
-// Remove all references to given image from database
+// RemoveImageReferences removes all references to given image from database
 func (site *Site) RemoveImageReferences(image *Image) error {
 	// remove image reference from site settings
 	fieldsToDelete := []string{}
@@ -798,7 +822,7 @@ func (site *Site) RemoveImageReferences(image *Image) error {
 	return nil
 }
 
-// Remove all references to given file from database
+// RemoveFileReferences removes all references to given file from database
 func (site *Site) RemoveFileReferences(file *File) error {
 	// remove image reference from site settings
 	fieldsToDelete := []string{}
@@ -814,7 +838,7 @@ func (site *Site) RemoveFileReferences(file *File) error {
 	return nil
 }
 
-// Update site in database
+// Update updates site in database
 func (site *Site) Update(newSite *Site) (bool, error) {
 	var set, unset, modifier bson.D
 
@@ -1053,17 +1077,18 @@ func (site *Site) Update(newSite *Site) (bool, error) {
 
 	if len(modifier) > 0 {
 		return true, site.dbSession.SitesCol().UpdateId(site.Id, modifier)
-	} else {
-		return false, nil
 	}
+
+	return false, nil
 }
 
+// SetValues sets given site fields in database
 func (site *Site) SetValues(values bson.M) error {
 	// @todo Set UpdatedAt field
 	return site.dbSession.SitesCol().UpdateId(site.Id, bson.D{{"$set", values}})
 }
 
-// Set the ChangedAt value
+// SetChangedAt sets the ChangedAt value
 func (site *Site) SetChangedAt(value time.Time) error {
 	if err := site.SetValues(bson.M{"changed_at": value}); err != nil {
 		return err
@@ -1073,7 +1098,7 @@ func (site *Site) SetChangedAt(value time.Time) error {
 	return nil
 }
 
-// Set the BuiltAt value
+// SetBuiltAt sets the BuiltAt value
 func (site *Site) SetBuiltAt(value time.Time) error {
 	if err := site.SetValues(bson.M{"built_at": value}); err != nil {
 		return err
@@ -1083,7 +1108,7 @@ func (site *Site) SetBuiltAt(value time.Time) error {
 	return nil
 }
 
-// Set the Membership value
+// SetMembership sets the Membership value
 func (site *Site) SetMembership(value bson.ObjectId) error {
 	if err := site.SetValues(bson.M{"membership": value}); err != nil {
 		return err
@@ -1093,7 +1118,7 @@ func (site *Site) SetMembership(value bson.ObjectId) error {
 	return nil
 }
 
-// Delete site fields from database
+// DeleteFields delete given site fields from database
 func (site *Site) DeleteFields(fields []string) error {
 	var unset bson.D
 
@@ -1139,7 +1164,7 @@ func (site *Site) deleteImagesFiles() error {
 	return nil
 }
 
-// Insert/update page settings to database
+// SetPageSettings inserts (or updates) page settings to database
 // Side effect: 'Id' field is set on record if not already present, and string fields are trimed
 func (site *Site) SetPageSettings(settings *SitePageSettings) error {
 	if !SitePagesSettingsKinds[settings.Kind] {

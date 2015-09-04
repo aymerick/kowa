@@ -48,7 +48,7 @@ func (builder *ContactBuilder) Load() {
 	}
 
 	// get page settings
-	title, tagline, cover, disabled := builder.pageSettings(models.PAGE_KIND_CONTACT)
+	title, tagline, cover, disabled := builder.pageSettings(models.PageKindContact)
 	if disabled {
 		return
 	}

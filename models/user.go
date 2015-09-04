@@ -10,17 +10,18 @@ import (
 )
 
 const (
-	USERS_COL_NAME = "users"
+	usersColName = "users"
 
-	// signed up but not confirmed
-	USER_STATUS_PENDING = "pending"
+	// UserStatusPending represents a user that signed up but did not confirmed
+	UserStatusPending = "pending"
 
-	// signed up and confirmed
-	USER_STATUS_ACTIVE = "active"
+	// UserStatusActive represents a user that signed up and did confirmed
+	UserStatusActive = "active"
 )
 
+// User represents a user
 type User struct {
-	dbSession *DBSession `bson:"-" json:"-"`
+	dbSession *DBSession `bson:"-"`
 
 	Id          string    `bson:"_id,omitempty" json:"id"`
 	CreatedAt   time.Time `bson:"created_at"    json:"createdAt"`
@@ -37,23 +38,25 @@ type User struct {
 	Password  string `bson:"password"   json:"-"`
 }
 
-type UserJson struct {
+// UserJSON represents the json version of a user
+type UserJSON struct {
 	User
 	Links map[string]interface{} `json:"links"`
 }
 
+// UsersList represents a list of users
 type UsersList []*User
 
 //
 // DBSession
 //
 
-// Handler for Users collection
+// UsersCol returns the users collection
 func (session *DBSession) UsersCol() *mgo.Collection {
-	return session.DB().C(USERS_COL_NAME)
+	return session.DB().C(usersColName)
 }
 
-// Ensure indexes on Users collection
+// EnsureUsersIndexes ensures indexes on users collection
 func (session *DBSession) EnsureUsersIndexes() {
 	// Find by email
 	index := mgo.Index{
@@ -67,11 +70,11 @@ func (session *DBSession) EnsureUsersIndexes() {
 	}
 }
 
-// Find user by id
-func (session *DBSession) FindUser(userId string) *User {
+// FindUser finds a user by id
+func (session *DBSession) FindUser(userID string) *User {
 	var result User
 
-	if err := session.UsersCol().FindId(userId).One(&result); err != nil {
+	if err := session.UsersCol().FindId(userID).One(&result); err != nil {
 		return nil
 	}
 
@@ -80,7 +83,7 @@ func (session *DBSession) FindUser(userId string) *User {
 	return &result
 }
 
-// Find user by email
+// FindUserByEmail finds a user by email
 func (session *DBSession) FindUserByEmail(email string) *User {
 	var result User
 
@@ -93,7 +96,7 @@ func (session *DBSession) FindUserByEmail(email string) *User {
 	return &result
 }
 
-// Persists a new user in database
+// CreateUser creates a new user in database
 // Side effect: 'CreatedAt' and 'UpdatedAt' fields are set on user record
 func (session *DBSession) CreateUser(user *User) error {
 	now := time.Now()
@@ -113,17 +116,17 @@ func (session *DBSession) CreateUser(user *User) error {
 // User
 //
 
-// Returns true if user have an active account
+// Active returns true if user have an active account
 func (user *User) Active() bool {
-	return user.Status == USER_STATUS_ACTIVE
+	return user.Status == UserStatusActive
 }
 
-// Returns true if user account has been validated
+// AccountValidated returns true if user account has been validated
 func (user *User) AccountValidated() bool {
 	return !user.ValidatedAt.IsZero()
 }
 
-// Returns user fullname
+// FullName returns user fullname
 func (user *User) FullName() string {
 	if user.FirstName == "" {
 		return user.LastName
@@ -134,7 +137,7 @@ func (user *User) FullName() string {
 	}
 }
 
-// Returns user display name, usefull if fullname is empty
+// DisplayName returns user display name, usefull if fullname is empty
 func (user *User) DisplayName() string {
 	result := user.FullName()
 
@@ -145,25 +148,25 @@ func (user *User) DisplayName() string {
 	return result
 }
 
-// Returns user mail address with format: User Name <email@addre.ss>
+// MailAddress returns user mail address with format: User Name <email@addre.ss>
 func (user *User) MailAddress() string {
 	return fmt.Sprintf("%s <%s>", user.DisplayName(), user.Email)
 }
 
-// Implements json.MarshalJSON
+// MarshalJSON implements the json.Marshaler interface
 func (user *User) MarshalJSON() ([]byte, error) {
 	// inject 'links' needed by Ember Data
 	links := map[string]interface{}{"sites": fmt.Sprintf("/api/users/%s/sites", user.Id)}
 
-	userJson := UserJson{
+	userJSON := UserJSON{
 		User:  *user,
 		Links: links,
 	}
 
-	return json.Marshal(userJson)
+	return json.Marshal(userJSON)
 }
 
-// Fetch from database all active sites belonging to user
+// FindSites fetche all active sites belonging to user
 func (user *User) FindSites() *SitesList {
 	result := SitesList{}
 
@@ -177,7 +180,7 @@ func (user *User) FindSites() *SitesList {
 	return &result
 }
 
-// Update user in database
+// Update updates user in database
 func (user *User) Update(newUser *User) (bool, error) {
 	var set, unset, modifier bson.D
 
@@ -238,23 +241,24 @@ func (user *User) Update(newUser *User) (bool, error) {
 		set = append(set, bson.DocElem{"updated_at", user.UpdatedAt})
 
 		return true, user.dbSession.UsersCol().UpdateId(user.Id, modifier)
-	} else {
-		return false, nil
 	}
+
+	return false, nil
 }
 
+// SetValues sets given user fields values in database
 func (user *User) SetValues(values bson.M) error {
 	// @todo Set UpdatedAt field
 	return user.dbSession.UsersCol().UpdateId(user.Id, bson.D{{"$set", values}})
 }
 
-// Set user account as validated
+// SetAccountValidated sets user account as validated
 func (user *User) SetAccountValidated() error {
 	now := time.Now()
 
 	fields := bson.M{
 		"validated_at": now,
-		"status":       USER_STATUS_ACTIVE,
+		"status":       UserStatusActive,
 	}
 
 	if err := user.SetValues(fields); err != nil {
@@ -262,7 +266,7 @@ func (user *User) SetAccountValidated() error {
 	}
 
 	user.ValidatedAt = now
-	user.Status = USER_STATUS_ACTIVE
+	user.Status = UserStatusActive
 
 	return nil
 }

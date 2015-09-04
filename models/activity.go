@@ -8,11 +8,12 @@ import (
 )
 
 const (
-	ACTIVITIES_COL_NAME = "activities"
+	activitesColName = "activities"
 )
 
+// Activity represents an activity
 type Activity struct {
-	dbSession *DBSession `bson:"-" json:"-"`
+	dbSession *DBSession `bson:"-"`
 
 	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
@@ -25,18 +26,19 @@ type Activity struct {
 	Cover   bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
 }
 
+// ActivitiesList holds a list of Activity
 type ActivitiesList []*Activity
 
 //
 // DBSession
 //
 
-// Activities collection
+// ActivitiesCol returns the activities collection
 func (session *DBSession) ActivitiesCol() *mgo.Collection {
-	return session.DB().C(ACTIVITIES_COL_NAME)
+	return session.DB().C(activitesColName)
 }
 
-// Ensure indexes on Activities collection
+// EnsureActivitiesIndexes ensures indexes on activities collection
 func (session *DBSession) EnsureActivitiesIndexes() {
 	index := mgo.Index{
 		Key:        []string{"site_id"},
@@ -49,11 +51,11 @@ func (session *DBSession) EnsureActivitiesIndexes() {
 	}
 }
 
-// Find activity by id
-func (session *DBSession) FindActivity(activityId bson.ObjectId) *Activity {
+// FindActivity finds an activity by id
+func (session *DBSession) FindActivity(activityID bson.ObjectId) *Activity {
 	var result Activity
 
-	if err := session.ActivitiesCol().FindId(activityId).One(&result); err != nil {
+	if err := session.ActivitiesCol().FindId(activityID).One(&result); err != nil {
 		return nil
 	}
 
@@ -62,7 +64,7 @@ func (session *DBSession) FindActivity(activityId bson.ObjectId) *Activity {
 	return &result
 }
 
-// Persists a new activity in database
+// CreateActivity persists a new activity in database
 // Side effect: 'Id', 'CreatedAt' and 'UpdatedAt' fields are set on activity record
 func (session *DBSession) CreateActivity(activity *Activity) error {
 	activity.Id = bson.NewObjectId()
@@ -80,7 +82,7 @@ func (session *DBSession) CreateActivity(activity *Activity) error {
 	return nil
 }
 
-// Remove all references to given image from all activities
+// RemoveImageReferencesFromActivities removes all references to given image from all activities
 func (session *DBSession) RemoveImageReferencesFromActivities(image *Image) error {
 	// @todo
 	return nil
@@ -90,12 +92,12 @@ func (session *DBSession) RemoveImageReferencesFromActivities(image *Image) erro
 // Activity
 //
 
-// Fetch from database: site that activity belongs to
+// FindSite fetches the site that activity belongs to
 func (activity *Activity) FindSite() *Site {
 	return activity.dbSession.FindSite(activity.SiteId)
 }
 
-// Fetch Cover from database
+// FindCover fetches activity cover
 func (activity *Activity) FindCover() *Image {
 	if activity.Cover != "" {
 		var result Image
@@ -112,7 +114,7 @@ func (activity *Activity) FindCover() *Image {
 	return nil
 }
 
-// Delete activity from database
+// Delete deletes activity from database
 func (activity *Activity) Delete() error {
 	var err error
 
@@ -124,7 +126,7 @@ func (activity *Activity) Delete() error {
 	return nil
 }
 
-// Update activity in database
+// Update updates activity in database
 func (activity *Activity) Update(newActivity *Activity) (bool, error) {
 	var set, unset, modifier bson.D
 
@@ -181,7 +183,7 @@ func (activity *Activity) Update(newActivity *Activity) (bool, error) {
 		set = append(set, bson.DocElem{"updated_at", activity.UpdatedAt})
 
 		return true, activity.dbSession.ActivitiesCol().UpdateId(activity.Id, modifier)
-	} else {
-		return false, nil
 	}
+
+	return false, nil
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/aymerick/kowa/token"
 )
 
-// Implements Mailer
+// SignupMailer implements the signup mailer
 type SignupMailer struct {
 	*BaseMailer
 
@@ -15,6 +15,7 @@ type SignupMailer struct {
 	ActivationUrl string
 }
 
+// NewSignupMailer instanciates a new SignupMailer
 func NewSignupMailer(user *models.User) *SignupMailer {
 	result := &SignupMailer{
 		BaseMailer: NewBaseMailer("signup", user),
@@ -29,12 +30,12 @@ func NewSignupMailer(user *models.User) *SignupMailer {
 	return result
 }
 
-// Send mail
+// Send triggers mail sending
 func (mailer *SignupMailer) Send() error {
 	return NewSender(mailer).Send()
 }
 
-// Computes translations
+// computeI18n computes translations
 func (mailer *SignupMailer) computeI18n() map[string]string {
 	return map[string]string{
 		"thanks":                mailer.T("signup_email_thanks", core.P{"ServiceName": mailer.ServiceName}),
@@ -49,10 +50,12 @@ func (mailer *SignupMailer) computeI18n() map[string]string {
 // Mailer interface
 //
 
+// To is part of Mailer interface
 func (mailer *SignupMailer) To() string {
 	return mailer.user.MailAddress()
 }
 
+// Subject is part of Mailer interface
 func (mailer *SignupMailer) Subject() string {
 	return mailer.T("signup_email_subject", core.P{"ServiceName": mailer.ServiceName})
 }

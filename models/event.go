@@ -8,11 +8,12 @@ import (
 )
 
 const (
-	EVENTS_COL_NAME = "events"
+	eventsColName = "events"
 )
 
+// Event represents an event
 type Event struct {
-	dbSession *DBSession `bson:"-" json:"-"`
+	dbSession *DBSession `bson:"-"`
 
 	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
@@ -28,18 +29,19 @@ type Event struct {
 	Cover     bson.ObjectId `bson:"cover,omitempty" json:"cover,omitempty"`
 }
 
+// EventsList represents a list of events
 type EventsList []*Event
 
 //
 // DBSession
 //
 
-// Events collection
+// EventsCol returns the events collection
 func (session *DBSession) EventsCol() *mgo.Collection {
-	return session.DB().C(EVENTS_COL_NAME)
+	return session.DB().C(eventsColName)
 }
 
-// Ensure indexes on Events collection
+// EnsureEventsIndexes ensures indexes on events collection
 func (session *DBSession) EnsureEventsIndexes() {
 	index := mgo.Index{
 		Key:        []string{"site_id"},
@@ -52,11 +54,11 @@ func (session *DBSession) EnsureEventsIndexes() {
 	}
 }
 
-// Find event by id
-func (session *DBSession) FindEvent(eventId bson.ObjectId) *Event {
+// FindEvent finds an event by id
+func (session *DBSession) FindEvent(eventID bson.ObjectId) *Event {
 	var result Event
 
-	if err := session.EventsCol().FindId(eventId).One(&result); err != nil {
+	if err := session.EventsCol().FindId(eventID).One(&result); err != nil {
 		return nil
 	}
 
@@ -65,7 +67,7 @@ func (session *DBSession) FindEvent(eventId bson.ObjectId) *Event {
 	return &result
 }
 
-// Persists a new event in database
+// CreateEvent creates a new event in database
 // Side effect: 'Id', 'CreatedAt' and 'UpdatedAt' fields are set on event record
 func (session *DBSession) CreateEvent(event *Event) error {
 	event.Id = bson.NewObjectId()
@@ -83,7 +85,7 @@ func (session *DBSession) CreateEvent(event *Event) error {
 	return nil
 }
 
-// Remove all references to given image from all events
+// RemoveImageReferencesFromEvents remove all references to given image from all events
 func (session *DBSession) RemoveImageReferencesFromEvents(image *Image) error {
 	// @todo
 	return nil
@@ -93,12 +95,12 @@ func (session *DBSession) RemoveImageReferencesFromEvents(image *Image) error {
 // Event
 //
 
-// Fetch from database: site that event belongs to
+// FindSite fetch site that event belongs to
 func (event *Event) FindSite() *Site {
 	return event.dbSession.FindSite(event.SiteId)
 }
 
-// Fetch Cover from database
+// FindCover fetches cover from database
 func (event *Event) FindCover() *Image {
 	if event.Cover != "" {
 		var result Image
@@ -115,7 +117,7 @@ func (event *Event) FindCover() *Image {
 	return nil
 }
 
-// Delete event from database
+// Delete deletes event from database
 func (event *Event) Delete() error {
 	var err error
 
@@ -127,7 +129,7 @@ func (event *Event) Delete() error {
 	return nil
 }
 
-// Update event in database
+// Update updates event in database
 func (event *Event) Update(newEvent *Event) (bool, error) {
 	var set, unset, modifier bson.D
 
@@ -178,7 +180,7 @@ func (event *Event) Update(newEvent *Event) (bool, error) {
 	// Format
 	newFormat := newEvent.Format
 	if newFormat == "" {
-		newFormat = DEFAULT_FORMAT
+		newFormat = DefaultFormat
 	}
 
 	if event.Format != newFormat {
@@ -222,7 +224,7 @@ func (event *Event) Update(newEvent *Event) (bool, error) {
 		set = append(set, bson.DocElem{"updated_at", event.UpdatedAt})
 
 		return true, event.dbSession.EventsCol().UpdateId(event.Id, modifier)
-	} else {
-		return false, nil
 	}
+
+	return false, nil
 }
