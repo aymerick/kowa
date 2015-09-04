@@ -10,13 +10,17 @@ import (
 )
 
 const (
-	UPLOAD_URL_PATH = "/upload"
+	// DefaultLang is default language
+	DefaultLang = "en"
 
-	DEFAULT_LANG  = "en"
-	DEFAULT_TZ    = "Europe/Paris"
-	DEFAULT_THEME = "willy"
+	// DefaultTZ is default timezone
+	DefaultTZ = "Europe/Paris"
 
-	DEFAULT_BASEURL = "http://127.0.0.1"
+	// DefaultTheme is default theme
+	DefaultTheme = "willy"
+
+	uploadURLPath  = "/upload"
+	defaultBaseURL = "http://127.0.0.1"
 )
 
 // DefaultDomain returns default domain, or an empty string if no domain found in settings.
@@ -41,17 +45,17 @@ func ValidDomain(domain string) bool {
 }
 
 // BaseUrl computes a base url for given site id.
-func BaseUrl(siteId string) string {
+func BaseUrl(siteID string) string {
 	if domain := DefaultDomain(); domain != "" {
-		return BaseUrlForDomain(siteId, domain)
+		return BaseUrlForDomain(siteID, domain)
 	}
 
-	return fmt.Sprintf("%s:%d/%s", DEFAULT_BASEURL, viper.GetInt("serve_output_port"), siteId)
+	return fmt.Sprintf("%s:%d/%s", defaultBaseURL, viper.GetInt("serve_output_port"), siteID)
 }
 
 // BaseUrlForDomain computes a base url for given site id and domain.
-func BaseUrlForDomain(siteId string, domain string) string {
-	return fmt.Sprintf("http://%s.%s", siteId, domain)
+func BaseUrlForDomain(siteID string, domain string) string {
+	return fmt.Sprintf("http://%s.%s", siteID, domain)
 }
 
 // BaseUrlForCustomDomain computes a base url for given custom domain.
@@ -59,6 +63,7 @@ func BaseUrlForCustomDomain(domain string) string {
 	return fmt.Sprintf("http://%s", domain)
 }
 
+// UploadDir returns the main upload directory path
 func UploadDir() string {
 	dir := viper.GetString("upload_dir")
 	if dir == "" {
@@ -68,18 +73,22 @@ func UploadDir() string {
 	return dir
 }
 
-func UploadSiteDir(siteId string) string {
-	return path.Join(UploadDir(), siteId)
+// UploadSiteDir returns the upload directory path for given site
+func UploadSiteDir(siteID string) string {
+	return path.Join(UploadDir(), siteID)
 }
 
-func UploadSiteFilePath(siteId string, fileName string) string {
-	return path.Join(UploadSiteDir(siteId), fileName)
+// UploadSiteFilePath returns path to uploaded file for given site
+func UploadSiteFilePath(siteID string, fileName string) string {
+	return path.Join(UploadSiteDir(siteID), fileName)
 }
 
-func UploadSiteUrlPath(siteId string, fileName string) string {
-	return path.Join(UPLOAD_URL_PATH, siteId, fileName)
+// UploadSiteUrlPath returns relative URL to uploaded file for given site
+func UploadSiteUrlPath(siteID string, fileName string) string {
+	return path.Join(uploadURLPath, siteID, fileName)
 }
 
+// EnsureUploadDir ensures that main upload directory exists
 func EnsureUploadDir() {
 	dir := UploadDir()
 
@@ -91,8 +100,9 @@ func EnsureUploadDir() {
 	helpers.EnsureDirectory(dir)
 }
 
-func EnsureSiteUploadDir(siteId string) {
+// EnsureUploadDir ensures that the upload directory for given site exists
+func EnsureSiteUploadDir(siteID string) {
 	EnsureUploadDir()
 
-	helpers.EnsureDirectory(UploadSiteDir(siteId))
+	helpers.EnsureDirectory(UploadSiteDir(siteID))
 }

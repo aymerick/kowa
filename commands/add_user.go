@@ -49,7 +49,7 @@ func addUser(cmd *cobra.Command, args []string) {
 		LastName:  args[3],
 		Admin:     isAdmin,
 		Status:    models.USER_STATUS_ACTIVE,
-		Lang:      core.DEFAULT_LANG,
+		Lang:      core.DefaultLang,
 		Password:  string(password),
 	}
 

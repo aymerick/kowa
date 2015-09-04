@@ -7,19 +7,21 @@ import (
 )
 
 var (
+	// Langs holds available languages
 	Langs []string
 )
 
-// sugar to write core.P{} instead of map[string]interface{} for i18n parameters
+// P is a sugar type to write core.P{} instead of map[string]interface{} for i18n parameters
 type P map[string]interface{}
 
+// TranslateFunc represents a translation function
 type TranslateFunc func(translationID string, args ...interface{}) string
 
 func init() {
 	Langs = []string{"en", "fr"}
 }
 
-// load i18n locales
+// LoadLocales loads i18n locales
 func LoadLocales() {
 	for _, lang := range Langs {
 		filePath := fmt.Sprintf("locales/%s.json", lang)
@@ -35,7 +37,7 @@ func LoadLocales() {
 	}
 }
 
-// Our own wrapper around i18n.MustTfunc that converts core.P arguments into map[string]interface{} to please i18n lib
+// MustTfunc is our own wrapper around i18n.MustTfunc that converts core.P arguments into map[string]interface{} to please i18n lib
 func MustTfunc(lang string) TranslateFunc {
 	f := i18n.MustTfunc(lang)
 

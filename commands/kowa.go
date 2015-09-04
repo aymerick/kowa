@@ -13,16 +13,16 @@ import (
 )
 
 const (
-	DEFAULT_MONGODB_URI    = "mongodb://localhost:27017/"
-	DEFAULT_MONGODB_DBNAME = "kowa"
-	DEFAULT_SERVE          = false
-	DEFAULT_SERVE_PORT     = 48910
+	defaultMongodbURI    = "mongodb://localhost:27017/"
+	defaultMongodbDbName = "kowa"
+	defaultServe         = false
+	defaultServePort     = 48910
 
-	DEFAULT_SERVICE_NAME      = "Kowa"
-	DEFAULT_SERVICE_URL       = "http://127.0.0.1" // @todo FIXME
-	DEFAULT_SERVICE_COPYRIGHT = "Copyright @ 2015 Kowa - All rights reserved"
+	defaultServiceName      = "Kowa"
+	defaultServiceURL       = "http://127.0.0.1" // @todo FIXME
+	defaultServiceCopyright = "Copyright @ 2015 Kowa - All rights reserved"
 
-	DEFAULT_OUTPUT_DIR = "_sites"
+	defaultOutputDir = "_sites"
 )
 
 var cfgFile string
@@ -44,44 +44,44 @@ func initKowaConf() {
 	viper.BindPFlag("upload_dir", rootCmd.PersistentFlags().Lookup("upload_dir"))
 
 	// mongodb database
-	rootCmd.PersistentFlags().StringP("mongodb_uri", "d", DEFAULT_MONGODB_URI, "Uri to connect to mongoDB")
+	rootCmd.PersistentFlags().StringP("mongodb_uri", "d", defaultMongodbURI, "Uri to connect to mongoDB")
 	viper.BindPFlag("mongodb_uri", rootCmd.PersistentFlags().Lookup("mongodb_uri"))
 
-	rootCmd.PersistentFlags().StringP("mongodb_dbname", "n", DEFAULT_MONGODB_DBNAME, "MongoDB database name")
+	rootCmd.PersistentFlags().StringP("mongodb_dbname", "n", defaultMongodbDbName, "MongoDB database name")
 	viper.BindPFlag("mongodb_dbname", rootCmd.PersistentFlags().Lookup("mongodb_dbname"))
 
 	// builder
 	rootCmd.PersistentFlags().StringP("themes_dir", "t", "", "Themes directory (MANDATORY)")
 	viper.BindPFlag("themes_dir", rootCmd.PersistentFlags().Lookup("themes_dir"))
 
-	rootCmd.PersistentFlags().StringP("output_dir", "o", defaultOutputDir(), "Output directory")
+	rootCmd.PersistentFlags().StringP("output_dir", "o", defaultOutputDirPath(), "Output directory")
 	viper.BindPFlag("output_dir", rootCmd.PersistentFlags().Lookup("output_dir"))
 
-	rootCmd.PersistentFlags().BoolP("serve_output", "s", DEFAULT_SERVE, "Start a server to serve built sites")
+	rootCmd.PersistentFlags().BoolP("serve_output", "s", defaultServe, "Start a server to serve built sites")
 	viper.BindPFlag("serve_output", rootCmd.PersistentFlags().Lookup("serve_output"))
 
-	rootCmd.PersistentFlags().IntP("serve_output_port", "T", DEFAULT_SERVE_PORT, "Port to serve built sites")
+	rootCmd.PersistentFlags().IntP("serve_output_port", "T", defaultServePort, "Port to serve built sites")
 	viper.BindPFlag("serve_output_port", rootCmd.PersistentFlags().Lookup("serve_output_port"))
 
 	// service
-	rootCmd.PersistentFlags().String("service_name", DEFAULT_SERVICE_NAME, "Service name")
+	rootCmd.PersistentFlags().String("service_name", defaultServiceName, "Service name")
 	viper.BindPFlag("service_name", rootCmd.PersistentFlags().Lookup("service_name"))
 
 	rootCmd.PersistentFlags().String("service_logo", "", "Service logo image url")
 	viper.BindPFlag("service_logo", rootCmd.PersistentFlags().Lookup("service_logo"))
 
-	rootCmd.PersistentFlags().String("service_url", DEFAULT_SERVICE_URL, "Service URL")
+	rootCmd.PersistentFlags().String("service_url", defaultServiceURL, "Service URL")
 	viper.BindPFlag("service_url", rootCmd.PersistentFlags().Lookup("service_url"))
 
-	rootCmd.PersistentFlags().String("service_copyright_notice", DEFAULT_SERVICE_COPYRIGHT, "Service copyright notice")
+	rootCmd.PersistentFlags().String("service_copyright_notice", defaultServiceCopyright, "Service copyright notice")
 	viper.BindPFlag("service_copyright_notice", rootCmd.PersistentFlags().Lookup("service_copyright_notice"))
 
 	rootCmd.PersistentFlags().String("service_domains", "", "Service domains list")
 	viper.BindPFlag("service_domains", rootCmd.PersistentFlags().Lookup("service_domains"))
 }
 
-func defaultOutputDir() string {
-	return path.Join(helpers.WorkingDir(), DEFAULT_OUTPUT_DIR)
+func defaultOutputDirPath() string {
+	return path.Join(helpers.WorkingDir(), defaultOutputDir)
 }
 
 func checkAndOutputsGlobalFlags() {
@@ -133,13 +133,13 @@ func addCommands() {
 // Main API
 //
 
-// Init commands configuration
+// InitConf initializes commands configuration
 func InitConf() {
 	initKowaConf()
 	initServerConf()
 }
 
-// Execute command
+// Execute executes command
 func Execute() {
 	addCommands()
 

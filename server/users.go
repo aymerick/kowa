@@ -39,7 +39,7 @@ func (app *Application) handleSignupUser(rw http.ResponseWriter, req *http.Reque
 	tz := req.Form.Get("tz")
 
 	// check lang
-	userLang := core.DEFAULT_LANG
+	userLang := core.DefaultLang
 	if lang != "" {
 		for _, availableLang := range core.Langs {
 			if lang == availableLang {
@@ -55,7 +55,7 @@ func (app *Application) handleSignupUser(rw http.ResponseWriter, req *http.Reque
 
 	// check timezone
 	if (tz == "") || !core.ValidTZ(tz) {
-		tz = core.DEFAULT_TZ
+		tz = core.DefaultTZ
 	}
 
 	// check email format

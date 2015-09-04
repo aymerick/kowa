@@ -3,11 +3,17 @@ package core
 import "fmt"
 
 var (
-	Version   string
-	GitRev    string
+	// Version is kowa version
+	Version string
+
+	// GitRev is kowa GIT revision
+	GitRev string
+
+	// BuildDate is kowa build date
 	BuildDate string
 )
 
+// FormatVersion returns the human readable kowa version
 func FormatVersion() string {
 	var result string
 

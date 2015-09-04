@@ -297,7 +297,7 @@ func (site *Site) BuildDir() string {
 func (site *Site) TZLocation() *time.Location {
 	tz := site.TZ
 	if tz == "" {
-		tz = core.DEFAULT_TZ
+		tz = core.DefaultTZ
 	}
 
 	result, err := time.LoadLocation(tz)

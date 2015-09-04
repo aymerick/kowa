@@ -12,11 +12,11 @@ import (
 )
 
 const (
-	DEFAULT_PORT = 35830
+	defaultPort = 35830
 
-	DEFAULT_SMTP_FROM = "Kowa Server <kowa@localhost>"
-	DEFAULT_SMTP_HOST = "127.0.0.1"
-	DEFAULT_SMTP_PORT = 25
+	defaultSMTPFrom = "Kowa Server <kowa@localhost>"
+	defaultSMTPHost = "127.0.0.1"
+	defaultSMTPPort = 25
 )
 
 var serverCmd = &cobra.Command{
@@ -27,7 +27,7 @@ var serverCmd = &cobra.Command{
 }
 
 func initServerConf() {
-	serverCmd.Flags().IntP("port", "p", DEFAULT_PORT, "Port to run Kowa server on")
+	serverCmd.Flags().IntP("port", "p", defaultPort, "Port to run Kowa server on")
 	viper.BindPFlag("port", serverCmd.Flags().Lookup("port"))
 
 	serverCmd.Flags().String("secret_key", "", "Secret key used to sign tokens")
@@ -37,13 +37,13 @@ func initServerConf() {
 	serverCmd.Flags().String("mail_tpl_dir", "", "Mail templates directory. If not provided, default templates are used.")
 	viper.BindPFlag("mail_tpl_dir", serverCmd.Flags().Lookup("mail_tpl_dir"))
 
-	serverCmd.Flags().String("smtp_from", DEFAULT_SMTP_FROM, "'from' email address to use when sending mails")
+	serverCmd.Flags().String("smtp_from", defaultSMTPFrom, "'from' email address to use when sending mails")
 	viper.BindPFlag("smtp_from", serverCmd.Flags().Lookup("smtp_from"))
 
-	serverCmd.Flags().String("smtp_host", DEFAULT_SMTP_HOST, "SMTP server host")
+	serverCmd.Flags().String("smtp_host", defaultSMTPHost, "SMTP server host")
 	viper.BindPFlag("smtp_host", serverCmd.Flags().Lookup("smtp_host"))
 
-	serverCmd.Flags().Int("smtp_port", DEFAULT_SMTP_PORT, "SMTP server port")
+	serverCmd.Flags().Int("smtp_port", defaultSMTPPort, "SMTP server port")
 	viper.BindPFlag("smtp_port", serverCmd.Flags().Lookup("smtp_port"))
 
 	serverCmd.Flags().String("smtp_auth_user", "", "SMTP server username")

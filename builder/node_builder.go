@@ -97,7 +97,7 @@ func (builder *NodeBuilderBase) siteLang() string {
 	result := builder.SiteBuilder().site.Lang
 
 	if result == "" {
-		result = core.DEFAULT_LANG
+		result = core.DefaultLang
 	}
 
 	return result
