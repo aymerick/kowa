@@ -1,7 +1,6 @@
 package token
 
 import (
-	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -10,6 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Token represents a JWT token
 type Token struct {
 	Kind       string
 	Value      interface{}
@@ -18,6 +18,7 @@ type Token struct {
 
 var signingKey []byte
 
+// SigningKey returns the secret key setting
 func SigningKey() []byte {
 	if len(signingKey) == 0 {
 		signingKey = []byte(viper.GetString("secret_key"))
@@ -30,6 +31,7 @@ func SigningKey() []byte {
 	return signingKey
 }
 
+// NewToken instanciates a new Token
 func NewToken(kind string, value interface{}) *Token {
 	return &Token{
 		Kind:  kind,
@@ -37,18 +39,22 @@ func NewToken(kind string, value interface{}) *Token {
 	}
 }
 
+// SetExpirationTime sets expiration time on token
 func (token *Token) SetExpirationTime(exp time.Time) {
 	token.Expiration = exp.Unix()
 }
 
+// ExpirationTime returns tokenb expiration time
 func (token *Token) ExpirationTime() time.Time {
 	return time.Unix(int64(token.Expiration), 0)
 }
 
+// Expired returns true if token expired
 func (token *Token) Expired() bool {
 	return (token.Expiration != 0) && time.Now().After(token.ExpirationTime())
 }
 
+// Encode encodes token
 func (token *Token) Encode() string {
 	// create token
 	t := jwt.New(jwt.SigningMethodHS256)
@@ -69,10 +75,11 @@ func (token *Token) Encode() string {
 	return result
 }
 
+// Decode decodes token
 func Decode(encoded string) *Token {
 	t, err := jwt.Parse(encoded, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, errors.New(fmt.Sprintf("Unexpected signing method: %v", t.Header["alg"]))
+			return nil, fmt.Errorf("Unexpected signing method: %v", t.Header["alg"])
 		}
 		return SigningKey(), nil
 	})

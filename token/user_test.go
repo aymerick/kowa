@@ -31,7 +31,7 @@ func TestTokenUserTestSuite(t *testing.T) {
 // Tests
 //
 
-func (suite *TokenUserTestSuite) TestAccountActivationUrl() {
+func (suite *TokenUserTestSuite) TestAccountActivationURL() {
 	t := suite.T()
 
 	user := &models.User{
@@ -43,7 +43,7 @@ func (suite *TokenUserTestSuite) TestAccountActivationUrl() {
 		Lang:      "en",
 	}
 
-	url := AccountActivationUrl(user)
+	url := AccountActivationURL(user)
 	assert.NotNil(t, url)
 
 	expectedPrefix := "http://www.myservice.bar/signup/validate?token="
@@ -55,6 +55,6 @@ func (suite *TokenUserTestSuite) TestAccountActivationUrl() {
 	assert.NotNil(t, decoded)
 
 	assert.NotNil(t, decoded.ExpirationTime())
-	assert.Equal(t, TOKEN_ACCOUNT_VALIDATION, decoded.Kind)
+	assert.Equal(t, tokenAccountValidation, decoded.Kind)
 	assert.Equal(t, user.Id, decoded.Value)
 }

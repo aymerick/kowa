@@ -9,12 +9,12 @@ import (
 )
 
 const (
-	TOKEN_ACCOUNT_VALIDATION = "account_validation"
+	tokenAccountValidation = "account_validation"
 )
 
-// Generate a token for user account activation
-func AccountActivationUrl(user *models.User) string {
-	token := NewToken(TOKEN_ACCOUNT_VALIDATION, user.Id)
+// AccountActivationURL generate a token for user account activation
+func AccountActivationURL(user *models.User) string {
+	token := NewToken(tokenAccountValidation, user.Id)
 
 	// token expires in 3 days
 	token.SetExpirationTime(time.Now().Add(time.Hour * 72))
@@ -34,15 +34,16 @@ func AccountActivationUrl(user *models.User) string {
 	return endpoint.String()
 }
 
+// AccountValidationUser returns user id from token
 func (token *Token) AccountValidationUser() string {
-	if token.Kind != TOKEN_ACCOUNT_VALIDATION {
+	if token.Kind != tokenAccountValidation {
 		return ""
 	}
 
-	userId, ok := token.Value.(string)
+	userID, ok := token.Value.(string)
 	if !ok {
 		return ""
 	}
 
-	return userId
+	return userID
 }

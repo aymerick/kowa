@@ -8,7 +8,7 @@ import (
 	"github.com/aymerick/kowa/models"
 )
 
-type activityJson struct {
+type activityJSON struct {
 	Activity models.Activity `json:"activity"`
 }
 
@@ -18,7 +18,7 @@ func (app *Application) handleGetActivities(rw http.ResponseWriter, req *http.Re
 	site := app.getCurrentSite(req)
 	if site != nil {
 		// fetch paginated records
-		pagination := NewPagination()
+		pagination := newPagination()
 		if err := pagination.fillFromRequest(req); err != nil {
 			http.Error(rw, "Invalid pagination parameters", http.StatusBadRequest)
 			return
@@ -47,16 +47,16 @@ func (app *Application) handleGetActivities(rw http.ResponseWriter, req *http.Re
 func (app *Application) handlePostActivities(rw http.ResponseWriter, req *http.Request) {
 	currentDBSession := app.getCurrentDBSession(req)
 
-	var reqJson activityJson
+	var reqJSON activityJSON
 
-	if err := json.NewDecoder(req.Body).Decode(&reqJson); err != nil {
+	if err := json.NewDecoder(req.Body).Decode(&reqJSON); err != nil {
 		log.Printf("ERROR: %v", err)
 		http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
 		return
 	}
 
 	// @todo [security] Check all fields !
-	activity := &reqJson.Activity
+	activity := &reqJSON.Activity
 
 	if activity.SiteId == "" {
 		http.Error(rw, "Missing site field in activity record", http.StatusBadRequest)
@@ -101,16 +101,16 @@ func (app *Application) handleGetActivity(rw http.ResponseWriter, req *http.Requ
 func (app *Application) handleUpdateActivity(rw http.ResponseWriter, req *http.Request) {
 	activity := app.getCurrentActivity(req)
 	if activity != nil {
-		var reqJson activityJson
+		var reqJSON activityJSON
 
-		if err := json.NewDecoder(req.Body).Decode(&reqJson); err != nil {
+		if err := json.NewDecoder(req.Body).Decode(&reqJSON); err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
 			return
 		}
 
 		// @todo [security] Check all fields !
-		updated, err := activity.Update(&reqJson.Activity)
+		updated, err := activity.Update(&reqJSON.Activity)
 		if err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to update activity", http.StatusInternalServerError)

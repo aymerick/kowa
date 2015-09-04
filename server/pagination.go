@@ -8,9 +8,9 @@ import (
 	"strconv"
 )
 
-const DEFAULT_PER_PAGE = 20
+const defaultPerPage = 20
 
-type Pagination struct {
+type pagination struct {
 	Page       int
 	PerPage    int
 	TotalPages int
@@ -22,8 +22,8 @@ type Pagination struct {
 }
 
 // create pagination params from request
-func NewPagination() *Pagination {
-	return &Pagination{
+func newPagination() *pagination {
+	return &pagination{
 		Page:       -1,
 		PerPage:    -1,
 		TotalPages: -1,
@@ -34,7 +34,7 @@ func NewPagination() *Pagination {
 	}
 }
 
-func (pager *Pagination) fillFromRequest(req *http.Request) error {
+func (pager *pagination) fillFromRequest(req *http.Request) error {
 	var err error
 
 	params := req.URL.Query()
@@ -46,7 +46,7 @@ func (pager *Pagination) fillFromRequest(req *http.Request) error {
 		pager.Page, err = strconv.Atoi(page)
 		if err == nil {
 			if perPage == "" {
-				pager.PerPage = DEFAULT_PER_PAGE
+				pager.PerPage = defaultPerPage
 			} else {
 				pager.PerPage, err = strconv.Atoi(perPage)
 			}
@@ -64,11 +64,11 @@ func (pager *Pagination) fillFromRequest(req *http.Request) error {
 	return err
 }
 
-func (pager *Pagination) computePages() {
+func (pager *pagination) computePages() {
 	if (pager.Page != -1) && (pager.PerPage != -1) && (pager.Total != -1) {
 		pager.TotalPages = pager.Total / pager.PerPage
 		if math.Mod(float64(pager.Total), float64(pager.PerPage)) != 0 {
-			pager.TotalPages += 1
+			pager.TotalPages++
 		}
 
 		if pager.Page < pager.TotalPages {
@@ -81,8 +81,8 @@ func (pager *Pagination) computePages() {
 	}
 }
 
-// Implements json.MarshalJSON
-func (pager *Pagination) MarshalJSON() ([]byte, error) {
+// MarshalJSON implements json.Marshaler
+func (pager *pagination) MarshalJSON() ([]byte, error) {
 	hash := map[string]interface{}{}
 
 	if pager.Page != -1 {

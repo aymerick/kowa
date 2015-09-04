@@ -1,24 +1,24 @@
 package server
 
-type OAuthClient struct {
-	Id          string      `bson:"_id"`
+type oauthClient struct {
+	ID          string      `bson:"_id"`
 	Secret      string      `bson:"secret"`
-	RedirectUri string      `bson:"redirect_uri"`
+	RedirectURI string      `bson:"redirect_uri"`
 	UserData    interface{} `bson:"user_data"`
 }
 
-func (client *OAuthClient) GetId() string {
-	return client.Id
+func (client *oauthClient) GetId() string {
+	return client.ID
 }
 
-func (client *OAuthClient) GetSecret() string {
+func (client *oauthClient) GetSecret() string {
 	return client.Secret
 }
 
-func (client *OAuthClient) GetRedirectUri() string {
-	return client.RedirectUri
+func (client *oauthClient) GetRedirectUri() string {
+	return client.RedirectURI
 }
 
-func (client *OAuthClient) GetUserData() interface{} {
+func (client *oauthClient) GetUserData() interface{} {
 	return client.UserData
 }

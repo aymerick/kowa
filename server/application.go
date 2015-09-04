@@ -15,15 +15,17 @@ import (
 	"github.com/aymerick/kowa/models"
 )
 
+// Application represents the application
 type Application struct {
 	port         string
 	render       *render.Render
 	dbSession    *models.DBSession
-	oauthStorage *OAuthStorage
+	oauthStorage *oauthStorage
 	oauthServer  *osin.Server
 	buildMaster  *BuildMaster
 }
 
+// NewApplication instanciates a new application
 func NewApplication() *Application {
 	dbSession := models.NewDBSession()
 	dbSession.EnsureIndexes()
@@ -35,7 +37,7 @@ func NewApplication() *Application {
 	osinConfig.AllowedAccessTypes = osin.AllowedAccessType{osin.PASSWORD, osin.REFRESH_TOKEN}
 	osinConfig.ErrorStatusCode = 401
 
-	oauthStorage := NewOAuthStorage()
+	oauthStorage := newOAuthStorage()
 	oauthServer := osin.NewServer(osinConfig, oauthStorage)
 
 	return &Application{
@@ -48,7 +50,7 @@ func NewApplication() *Application {
 	}
 }
 
-// Setup application server
+// Setup setups the application server
 func (app *Application) Setup() {
 	core.EnsureUploadDir()
 
@@ -63,7 +65,7 @@ func (app *Application) Setup() {
 	}
 }
 
-// Run application server
+// Run starts the application server
 func (app *Application) Run() {
 	// @todo Build pending sites on startup ?! (The ones with BuiltAt < UpdatedAt)
 	//       And add a command "kowa build_pending" too
@@ -81,23 +83,23 @@ func (app *Application) Run() {
 	http.ListenAndServe(":"+app.port, app.newWebRouter())
 }
 
-// Stop application server
+// Stop stops the application server
 func (app *Application) Stop() {
 	// stop build master
 	app.buildMaster.stop()
 }
 
-// Build site
+// buildSite builds given site
 func (app *Application) buildSite(site *models.Site) {
 	app.buildMaster.launchSiteBuild(site)
 }
 
-// Delete built site
+// deleteBuild deletes given site build
 func (app *Application) deleteBuild(site *models.Site, buildDir string) {
 	app.buildMaster.launchSiteDeletion(site, buildDir)
 }
 
-// Called when some content changed on given site
+// onSiteChange is called when some content changed on given site
 func (app *Application) onSiteChange(site *models.Site) {
 	// update ChangedAt anchor
 	site.SetChangedAt(time.Now())
@@ -106,7 +108,7 @@ func (app *Application) onSiteChange(site *models.Site) {
 	app.buildSite(site)
 }
 
-// Called when site is deleted
+// onSiteDeletion is called when site is deleted
 func (app *Application) onSiteDeletion(site *models.Site) {
 	// delete build
 	app.deleteBuild(site, site.BuildDir())

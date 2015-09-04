@@ -10,12 +10,12 @@ import (
 	"github.com/aymerick/kowa/models"
 )
 
-type OAuthStorage struct {
+type oauthStorage struct {
 	session *mgo.Session
 }
 
-type AccessDoc struct {
-	ClientId     string    // Client id
+type accessDoc struct {
+	ClientID     string    // Client id
 	AccessToken  string    // Access token
 	RefreshToken string    // Refresh Token. Can be blank
 	ExpiresIn    int32     // Token expiration in seconds
@@ -25,32 +25,32 @@ type AccessDoc struct {
 }
 
 const (
-	OAUTH_DBNAME       = "kowa_oauth"
-	CLIENTS_COL        = "clients"
-	AUTHORIZATIONS_COL = "authorizations" // NOT USED
-	ACCESSES_COL       = "accesses"
+	oauthDBName           = "kowa_oauth"
+	clientsCol            = "clients"
+	authorizationsColName = "authorizations" // NOT USED
+	accessesColName       = "accesses"
 )
 
 const (
-	REFRESHTOKEN        = "refreshtoken"
-	OAUTH_CLIENT_ID     = "kowa"
-	OAUTH_CLIENT_SECRET = "none"
+	refreshToken      = "refreshtoken"
+	oauthClientID     = "kowa"
+	oauthClientSecret = "none"
 )
 
-func NewOAuthStorage() *OAuthStorage {
-	storage := &OAuthStorage{
+func newOAuthStorage() *oauthStorage {
+	storage := &oauthStorage{
 		session: models.NewMongoDBSession(),
 	}
 
 	index := mgo.Index{
-		Key:        []string{REFRESHTOKEN},
+		Key:        []string{refreshToken},
 		Unique:     false,
 		DropDups:   false,
 		Background: true,
 		Sparse:     true,
 	}
 
-	accesses := storage.session.DB(OAUTH_DBNAME).C(ACCESSES_COL)
+	accesses := storage.session.DB(oauthDBName).C(accessesColName)
 	err := accesses.EnsureIndex(index)
 	if err != nil {
 		panic(err)
@@ -59,72 +59,72 @@ func NewOAuthStorage() *OAuthStorage {
 	return storage
 }
 
-func (storage *OAuthStorage) EnsureOAuthClient() error {
-	client := &OAuthClient{
-		Id:          OAUTH_CLIENT_ID,
-		Secret:      OAUTH_CLIENT_SECRET,
-		RedirectUri: "http://localhost:35830/", // @todo Check that
+func (storage *oauthStorage) EnsureOAuthClient() error {
+	client := &oauthClient{
+		ID:          oauthClientID,
+		Secret:      oauthClientSecret,
+		RedirectURI: "http://localhost:35830/", // @todo Check that
 	}
 
-	_, err := storage.clientsCol().UpsertId(client.Id, client)
+	_, err := storage.clientsCol().UpsertId(client.ID, client)
 	return err
 }
 
-func (storage *OAuthStorage) DB() *mgo.Database {
-	return storage.session.DB(OAUTH_DBNAME)
+func (storage *oauthStorage) DB() *mgo.Database {
+	return storage.session.DB(oauthDBName)
 }
 
-func (storage *OAuthStorage) clientsCol() *mgo.Collection {
-	return storage.DB().C(CLIENTS_COL)
+func (storage *oauthStorage) clientsCol() *mgo.Collection {
+	return storage.DB().C(clientsCol)
 }
 
-func (storage *OAuthStorage) authorizationsCol() *mgo.Collection {
-	return storage.DB().C(AUTHORIZATIONS_COL)
+func (storage *oauthStorage) authorizationsCol() *mgo.Collection {
+	return storage.DB().C(authorizationsColName)
 }
 
-func (storage *OAuthStorage) accessesCol() *mgo.Collection {
-	return storage.DB().C(ACCESSES_COL)
+func (storage *oauthStorage) accessesCol() *mgo.Collection {
+	return storage.DB().C(accessesColName)
 }
 
 //
 // Implements osin.Storage interface
 //
 
-func (storage *OAuthStorage) Clone() osin.Storage {
-	return &OAuthStorage{session: storage.session.Copy()}
+func (storage *oauthStorage) Clone() osin.Storage {
+	return &oauthStorage{session: storage.session.Copy()}
 }
 
-func (storage *OAuthStorage) Close() {
+func (storage *oauthStorage) Close() {
 	storage.session.Close()
 }
 
-func (storage *OAuthStorage) GetClient(id string) (osin.Client, error) {
-	client := &OAuthClient{}
+func (storage *oauthStorage) GetClient(id string) (osin.Client, error) {
+	client := &oauthClient{}
 	err := storage.clientsCol().FindId(id).One(client)
 	return client, err
 }
 
 // NOT USED
-func (storage *OAuthStorage) SaveAuthorize(data *osin.AuthorizeData) error {
+func (storage *oauthStorage) SaveAuthorize(data *osin.AuthorizeData) error {
 	_, err := storage.authorizationsCol().UpsertId(data.Code, data)
 	return err
 }
 
 // NOT USED
-func (storage *OAuthStorage) LoadAuthorize(code string) (*osin.AuthorizeData, error) {
+func (storage *oauthStorage) LoadAuthorize(code string) (*osin.AuthorizeData, error) {
 	authData := &osin.AuthorizeData{}
 	err := storage.authorizationsCol().FindId(code).One(authData)
 	return authData, err
 }
 
 // NOT USED
-func (storage *OAuthStorage) RemoveAuthorize(code string) error {
+func (storage *oauthStorage) RemoveAuthorize(code string) error {
 	return storage.authorizationsCol().RemoveId(code)
 }
 
-func (storage *OAuthStorage) SaveAccess(data *osin.AccessData) error {
-	doc := &AccessDoc{
-		ClientId:     data.Client.GetId(),
+func (storage *oauthStorage) SaveAccess(data *osin.AccessData) error {
+	doc := &accessDoc{
+		ClientID:     data.Client.GetId(),
 		AccessToken:  data.AccessToken,
 		RefreshToken: data.RefreshToken,
 		ExpiresIn:    data.ExpiresIn,
@@ -136,12 +136,12 @@ func (storage *OAuthStorage) SaveAccess(data *osin.AccessData) error {
 	return err
 }
 
-func (storage *OAuthStorage) docToAccessData(doc *AccessDoc) (*osin.AccessData, error) {
+func (storage *oauthStorage) docToAccessData(doc *accessDoc) (*osin.AccessData, error) {
 	var result *osin.AccessData
 	var err error
 
 	var client osin.Client
-	client, err = storage.GetClient(doc.ClientId)
+	client, err = storage.GetClient(doc.ClientID)
 	if err == nil {
 		result = &osin.AccessData{
 			Client:       client,
@@ -157,11 +157,11 @@ func (storage *OAuthStorage) docToAccessData(doc *AccessDoc) (*osin.AccessData, 
 	return result, err
 }
 
-func (storage *OAuthStorage) LoadAccess(token string) (*osin.AccessData, error) {
+func (storage *oauthStorage) LoadAccess(token string) (*osin.AccessData, error) {
 	var result *osin.AccessData
 	var err error
 
-	doc := &AccessDoc{}
+	doc := &accessDoc{}
 	err = storage.accessesCol().FindId(token).One(doc)
 	if err == nil {
 		result, err = storage.docToAccessData(doc)
@@ -170,16 +170,16 @@ func (storage *OAuthStorage) LoadAccess(token string) (*osin.AccessData, error) 
 	return result, err
 }
 
-func (storage *OAuthStorage) RemoveAccess(token string) error {
+func (storage *oauthStorage) RemoveAccess(token string) error {
 	return storage.accessesCol().RemoveId(token)
 }
 
-func (storage *OAuthStorage) LoadRefresh(token string) (*osin.AccessData, error) {
+func (storage *oauthStorage) LoadRefresh(token string) (*osin.AccessData, error) {
 	var result *osin.AccessData
 	var err error
 
-	doc := &AccessDoc{}
-	err = storage.accessesCol().Find(bson.M{REFRESHTOKEN: token}).One(doc)
+	doc := &accessDoc{}
+	err = storage.accessesCol().Find(bson.M{refreshToken: token}).One(doc)
 	if err == nil {
 		result, err = storage.docToAccessData(doc)
 	}
@@ -187,9 +187,9 @@ func (storage *OAuthStorage) LoadRefresh(token string) (*osin.AccessData, error)
 	return result, err
 }
 
-func (storage *OAuthStorage) RemoveRefresh(token string) error {
-	selector := bson.M{REFRESHTOKEN: token}
-	modifier := bson.M{"$unset": bson.M{REFRESHTOKEN: 1}}
+func (storage *oauthStorage) RemoveRefresh(token string) error {
+	selector := bson.M{refreshToken: token}
+	modifier := bson.M{"$unset": bson.M{refreshToken: 1}}
 
 	return storage.accessesCol().Update(selector, modifier)
 }

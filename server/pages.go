@@ -8,7 +8,7 @@ import (
 	"github.com/aymerick/kowa/models"
 )
 
-type pageJson struct {
+type pageJSON struct {
 	Page models.Page `json:"page"`
 }
 
@@ -18,7 +18,7 @@ func (app *Application) handleGetPages(rw http.ResponseWriter, req *http.Request
 	site := app.getCurrentSite(req)
 	if site != nil {
 		// fetch paginated records
-		pagination := NewPagination()
+		pagination := newPagination()
 		if err := pagination.fillFromRequest(req); err != nil {
 			http.Error(rw, "Invalid pagination parameters", http.StatusBadRequest)
 			return
@@ -47,16 +47,16 @@ func (app *Application) handleGetPages(rw http.ResponseWriter, req *http.Request
 func (app *Application) handlePostPages(rw http.ResponseWriter, req *http.Request) {
 	currentDBSession := app.getCurrentDBSession(req)
 
-	var reqJson pageJson
+	var reqJSON pageJSON
 
-	if err := json.NewDecoder(req.Body).Decode(&reqJson); err != nil {
+	if err := json.NewDecoder(req.Body).Decode(&reqJSON); err != nil {
 		log.Printf("ERROR: %v", err)
 		http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
 		return
 	}
 
 	// @todo [security] Check all fields !
-	page := &reqJson.Page
+	page := &reqJSON.Page
 
 	if page.SiteId == "" {
 		http.Error(rw, "Missing site field in page record", http.StatusBadRequest)
@@ -101,16 +101,16 @@ func (app *Application) handleGetPage(rw http.ResponseWriter, req *http.Request)
 func (app *Application) handleUpdatePage(rw http.ResponseWriter, req *http.Request) {
 	page := app.getCurrentPage(req)
 	if page != nil {
-		var reqJson pageJson
+		var reqJSON pageJSON
 
-		if err := json.NewDecoder(req.Body).Decode(&reqJson); err != nil {
+		if err := json.NewDecoder(req.Body).Decode(&reqJSON); err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
 			return
 		}
 
 		// @todo [security] Check all fields !
-		updated, err := page.Update(&reqJson.Page)
+		updated, err := page.Update(&reqJSON.Page)
 		if err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to update page", http.StatusInternalServerError)

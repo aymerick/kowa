@@ -10,7 +10,7 @@ import (
 	"github.com/aymerick/kowa/models"
 )
 
-type memberJson struct {
+type memberJSON struct {
 	Member models.Member `json:"member"`
 }
 
@@ -20,7 +20,7 @@ func (app *Application) handleGetMembers(rw http.ResponseWriter, req *http.Reque
 	site := app.getCurrentSite(req)
 	if site != nil {
 		// fetch paginated records
-		pagination := NewPagination()
+		pagination := newPagination()
 		if err := pagination.fillFromRequest(req); err != nil {
 			http.Error(rw, "Invalid pagination parameters", http.StatusBadRequest)
 			return
@@ -49,16 +49,16 @@ func (app *Application) handleGetMembers(rw http.ResponseWriter, req *http.Reque
 func (app *Application) handlePostMembers(rw http.ResponseWriter, req *http.Request) {
 	currentDBSession := app.getCurrentDBSession(req)
 
-	var reqJson memberJson
+	var reqJSON memberJSON
 
-	if err := json.NewDecoder(req.Body).Decode(&reqJson); err != nil {
+	if err := json.NewDecoder(req.Body).Decode(&reqJSON); err != nil {
 		log.Printf("ERROR: %v", err)
 		http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
 		return
 	}
 
 	// @todo [security] Check all fields !
-	member := &reqJson.Member
+	member := &reqJSON.Member
 
 	if member.SiteId == "" {
 		http.Error(rw, "Missing site field in member record", http.StatusBadRequest)
@@ -103,16 +103,16 @@ func (app *Application) handleGetMember(rw http.ResponseWriter, req *http.Reques
 func (app *Application) handleUpdateMember(rw http.ResponseWriter, req *http.Request) {
 	member := app.getCurrentMember(req)
 	if member != nil {
-		var reqJson memberJson
+		var reqJSON memberJSON
 
-		if err := json.NewDecoder(req.Body).Decode(&reqJson); err != nil {
+		if err := json.NewDecoder(req.Body).Decode(&reqJSON); err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
 			return
 		}
 
 		// @todo [security] Check all fields !
-		updated, err := member.Update(&reqJson.Member)
+		updated, err := member.Update(&reqJSON.Member)
 		if err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to update member", http.StatusInternalServerError)
@@ -167,7 +167,7 @@ func (app *Application) handlePutMembersOrder(rw http.ResponseWriter, req *http.
 	order := 1
 	for _, id := range ids {
 		site.UpdateMemberOrder(id, order)
-		order += 1
+		order++
 	}
 
 	// site content has changed

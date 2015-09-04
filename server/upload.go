@@ -11,17 +11,17 @@ import (
 	"github.com/aymerick/kowa/models"
 )
 
-type Upload struct {
+type upload struct {
 	name  string
 	ctype string
 	info  os.FileInfo
 }
 
-func NewUpload() *Upload {
-	return &Upload{}
+func newUpload() *upload {
+	return &upload{}
 }
 
-func handleUpload(rw http.ResponseWriter, req *http.Request, site *models.Site, allowedTypes []string) *Upload {
+func handleUpload(rw http.ResponseWriter, req *http.Request, site *models.Site, allowedTypes []string) *upload {
 	reader, err := req.MultipartReader()
 	if err != nil {
 		log.Printf("Multipart error: %v", err.Error())
@@ -29,7 +29,7 @@ func handleUpload(rw http.ResponseWriter, req *http.Request, site *models.Site, 
 		return nil
 	}
 
-	result := NewUpload()
+	result := newUpload()
 
 	for result.name == "" {
 		part, err := reader.NextPart()

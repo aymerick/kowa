@@ -8,7 +8,7 @@ import (
 	"github.com/aymerick/kowa/models"
 )
 
-type postJson struct {
+type postJSON struct {
 	Post models.Post `json:"post"`
 }
 
@@ -18,7 +18,7 @@ func (app *Application) handleGetPosts(rw http.ResponseWriter, req *http.Request
 	site := app.getCurrentSite(req)
 	if site != nil {
 		// fetch paginated posts
-		pagination := NewPagination()
+		pagination := newPagination()
 		if err := pagination.fillFromRequest(req); err != nil {
 			http.Error(rw, "Invalid pagination parameters", http.StatusBadRequest)
 			return
@@ -47,16 +47,16 @@ func (app *Application) handleGetPosts(rw http.ResponseWriter, req *http.Request
 func (app *Application) handlePostPosts(rw http.ResponseWriter, req *http.Request) {
 	currentDBSession := app.getCurrentDBSession(req)
 
-	var reqJson postJson
+	var reqJSON postJSON
 
-	if err := json.NewDecoder(req.Body).Decode(&reqJson); err != nil {
+	if err := json.NewDecoder(req.Body).Decode(&reqJSON); err != nil {
 		log.Printf("ERROR: %v", err)
 		http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
 		return
 	}
 
 	// @todo [security] Check all fields !
-	post := &reqJson.Post
+	post := &reqJSON.Post
 
 	if post.SiteId == "" {
 		http.Error(rw, "Missing site field in post record", http.StatusBadRequest)
@@ -101,16 +101,16 @@ func (app *Application) handleGetPost(rw http.ResponseWriter, req *http.Request)
 func (app *Application) handleUpdatePost(rw http.ResponseWriter, req *http.Request) {
 	post := app.getCurrentPost(req)
 	if post != nil {
-		var reqJson postJson
+		var reqJSON postJSON
 
-		if err := json.NewDecoder(req.Body).Decode(&reqJson); err != nil {
+		if err := json.NewDecoder(req.Body).Decode(&reqJSON); err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
 			return
 		}
 
 		// @todo [security] Check all fields !
-		updated, err := post.Update(&reqJson.Post)
+		updated, err := post.Update(&reqJSON.Post)
 		if err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to update post", http.StatusInternalServerError)

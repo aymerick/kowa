@@ -18,7 +18,7 @@ import (
 	"github.com/aymerick/kowa/token"
 )
 
-type userJson struct {
+type userJSON struct {
 	User models.User `json:"user"`
 }
 
@@ -147,8 +147,8 @@ func (app *Application) userFromSignupValidationToken(rw http.ResponseWriter, re
 		return nil
 	}
 
-	userId := tok.AccountValidationUser()
-	if userId == "" {
+	userID := tok.AccountValidationUser()
+	if userID == "" {
 		// Erroneous token
 		unauthorized(rw)
 		return nil
@@ -160,7 +160,7 @@ func (app *Application) userFromSignupValidationToken(rw http.ResponseWriter, re
 	}
 
 	// fetch user
-	user := currentDBSession.FindUser(userId)
+	user := currentDBSession.FindUser(userID)
 	if user == nil {
 		http.NotFound(rw, req)
 		return nil
@@ -211,9 +211,9 @@ func (app *Application) handleGetMe(rw http.ResponseWriter, req *http.Request) {
 	currentDBSession := app.getCurrentDBSession(req)
 
 	currentUser := app.getCurrentUser(req)
-	userId := currentUser.Id
+	userID := currentUser.Id
 
-	if user := currentDBSession.FindUser(userId); user != nil {
+	if user := currentDBSession.FindUser(userID); user != nil {
 		app.render.JSON(rw, http.StatusOK, renderMap{"user": user})
 	} else {
 		http.NotFound(rw, req)
@@ -225,9 +225,9 @@ func (app *Application) handleGetUser(rw http.ResponseWriter, req *http.Request)
 	currentDBSession := app.getCurrentDBSession(req)
 
 	vars := mux.Vars(req)
-	userId := vars["user_id"]
+	userID := vars["user_id"]
 
-	if user := currentDBSession.FindUser(userId); user != nil {
+	if user := currentDBSession.FindUser(userID); user != nil {
 		app.render.JSON(rw, http.StatusOK, renderMap{"user": user})
 	} else {
 		http.NotFound(rw, req)
@@ -238,16 +238,16 @@ func (app *Application) handleGetUser(rw http.ResponseWriter, req *http.Request)
 func (app *Application) handleUpdateUser(rw http.ResponseWriter, req *http.Request) {
 	user := app.getCurrentUser(req)
 	if user != nil {
-		var reqJson userJson
+		var reqJSON userJSON
 
-		if err := json.NewDecoder(req.Body).Decode(&reqJson); err != nil {
+		if err := json.NewDecoder(req.Body).Decode(&reqJSON); err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
 			return
 		}
 
 		// @todo [security] Check all fields !
-		_, err := user.Update(&reqJson.User)
+		_, err := user.Update(&reqJSON.User)
 		if err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to update user", http.StatusInternalServerError)
@@ -265,7 +265,7 @@ func (app *Application) handleGetUserSites(rw http.ResponseWriter, req *http.Req
 	currentDBSession := app.getCurrentDBSession(req)
 
 	vars := mux.Vars(req)
-	userId := vars["user_id"]
+	userID := vars["user_id"]
 
 	// check current user
 	currentUser := app.getCurrentUser(req)
@@ -274,12 +274,12 @@ func (app *Application) handleGetUserSites(rw http.ResponseWriter, req *http.Req
 		return
 	}
 
-	if currentUser.Id != userId {
+	if currentUser.Id != userID {
 		unauthorized(rw)
 		return
 	}
 
-	if user := currentDBSession.FindUser(userId); user != nil {
+	if user := currentDBSession.FindUser(userID); user != nil {
 		var image *models.Image
 		images := []*models.Image{}
 

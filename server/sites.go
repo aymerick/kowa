@@ -14,11 +14,11 @@ import (
 	"github.com/aymerick/kowa/models"
 )
 
-type siteJson struct {
+type siteJSON struct {
 	Site models.Site `json:"site"`
 }
 
-type sitePageSettingsJson struct {
+type sitePageSettingsJSON struct {
 	SitePageSettings models.SitePageSettings `json:"sitePageSetting"`
 }
 
@@ -34,16 +34,16 @@ func (app *Application) handlePostSite(rw http.ResponseWriter, req *http.Request
 	// 	return
 	// }
 
-	var reqJson siteJson
+	var reqJSON siteJSON
 
-	if err := json.NewDecoder(req.Body).Decode(&reqJson); err != nil {
+	if err := json.NewDecoder(req.Body).Decode(&reqJSON); err != nil {
 		log.Printf("ERROR: %v", err)
 		http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
 		return
 	}
 
 	// @todo [security] Check all fields !
-	site := &reqJson.Site
+	site := &reqJSON.Site
 
 	T := i18n.MustTfunc(currentUser.Lang)
 
@@ -133,9 +133,9 @@ func (app *Application) handleGetSite(rw http.ResponseWriter, req *http.Request)
 func (app *Application) handleUpdateSite(rw http.ResponseWriter, req *http.Request) {
 	site := app.getCurrentSite(req)
 	if site != nil {
-		var respJson siteJson
+		var respJSON siteJSON
 
-		if err := json.NewDecoder(req.Body).Decode(&respJson); err != nil {
+		if err := json.NewDecoder(req.Body).Decode(&respJSON); err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
 			return
@@ -144,7 +144,7 @@ func (app *Application) handleUpdateSite(rw http.ResponseWriter, req *http.Reque
 		prevBuildDir := site.BuildDir()
 
 		// @todo [security] Check all fields !
-		updated, err := site.Update(&respJson.Site)
+		updated, err := site.Update(&respJSON.Site)
 		if err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to update site", http.StatusInternalServerError)
@@ -191,16 +191,16 @@ func (app *Application) handleSetPageSettings(rw http.ResponseWriter, req *http.
 
 	site := app.getCurrentSite(req)
 	if site != nil {
-		var respJson sitePageSettingsJson
+		var respJSON sitePageSettingsJSON
 
-		if err := json.NewDecoder(req.Body).Decode(&respJson); err != nil {
+		if err := json.NewDecoder(req.Body).Decode(&respJSON); err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
 			return
 		}
 
 		// @todo [security] Check all fields !
-		pageSettings := &respJson.SitePageSettings
+		pageSettings := &respJSON.SitePageSettings
 
 		if vars["setting_id"] != "" {
 			// this is an update
@@ -210,12 +210,12 @@ func (app *Application) handleSetPageSettings(rw http.ResponseWriter, req *http.
 				return
 			}
 
-			existingIdStr := existingPageSettings.Id.Hex()
+			existingIDStr := existingPageSettings.Id.Hex()
 
-			badParamId := existingIdStr != vars["setting_id"]
-			badContentId := (pageSettings.Id != "") && (existingIdStr != pageSettings.Id.Hex())
+			badParamID := existingIDStr != vars["setting_id"]
+			badContentID := (pageSettings.Id != "") && (existingIDStr != pageSettings.Id.Hex())
 
-			if badParamId || badContentId {
+			if badParamID || badContentID {
 				http.Error(rw, "Page settings id mismatch", http.StatusBadRequest)
 				return
 			} else if pageSettings.Id == "" {

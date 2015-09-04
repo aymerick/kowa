@@ -109,15 +109,15 @@ func (app *Application) ensureAuthMiddleware(next http.Handler) http.Handler {
 
 		// @todo Check accessData.CreatedAt
 
-		userId, ok := accessData.UserData.(string)
-		if !ok || userId == "" {
+		userID, ok := accessData.UserData.(string)
+		if !ok || userID == "" {
 			unauthorized(rw)
 			return
 		}
 
 		currentDBSession := app.getCurrentDBSession(req)
 
-		if currentUser := currentDBSession.FindUser(userId); currentUser != nil {
+		if currentUser := currentDBSession.FindUser(userID); currentUser != nil {
 			context.Set(req, "currentUser", currentUser)
 		} else {
 			unauthorized(rw)
@@ -141,10 +141,10 @@ func (app *Application) ensureUserAccessMiddleware(next http.Handler) http.Handl
 		}
 
 		vars := mux.Vars(req)
-		userId := vars["user_id"]
+		userID := vars["user_id"]
 
 		// check that current user only access his stuff
-		if userId != currentUser.Id {
+		if userID != currentUser.Id {
 			unauthorized(rw)
 			return
 		}
@@ -165,9 +165,9 @@ func (app *Application) ensureSiteMiddleware(next http.Handler) http.Handler {
 		var currentSite *models.Site
 
 		// site id
-		siteId := vars["site_id"]
-		if siteId != "" {
-			currentSite = currentDBSession.FindSite(siteId)
+		siteID := vars["site_id"]
+		if siteID != "" {
+			currentSite = currentDBSession.FindSite(siteID)
 		}
 
 		// post
@@ -227,7 +227,7 @@ func (app *Application) ensureSiteMiddleware(next http.Handler) http.Handler {
 		}
 
 		if currentSite != nil {
-			// log.Printf("Current site is: %s [%s]\n", currentSite.Name, siteId)
+			// log.Printf("Current site is: %s [%s]\n", currentSite.Name, siteID)
 			context.Set(req, "currentSite", currentSite)
 		} else {
 			http.NotFound(rw, req)
@@ -272,12 +272,12 @@ func (app *Application) ensurePostMiddleware(next http.Handler) http.Handler {
 		currentDBSession := app.getCurrentDBSession(req)
 
 		vars := mux.Vars(req)
-		postId := vars["post_id"]
-		if postId == "" {
+		postID := vars["post_id"]
+		if postID == "" {
 			panic("Should have post_id")
 		}
 
-		if currentPost := currentDBSession.FindPost(bson.ObjectIdHex(postId)); currentPost != nil {
+		if currentPost := currentDBSession.FindPost(bson.ObjectIdHex(postID)); currentPost != nil {
 			context.Set(req, "currentPost", currentPost)
 		} else {
 			http.NotFound(rw, req)
@@ -296,12 +296,12 @@ func (app *Application) ensureEventMiddleware(next http.Handler) http.Handler {
 		currentDBSession := app.getCurrentDBSession(req)
 
 		vars := mux.Vars(req)
-		eventId := vars["event_id"]
-		if eventId == "" {
+		eventID := vars["event_id"]
+		if eventID == "" {
 			panic("Should have event_id")
 		}
 
-		if currentEvent := currentDBSession.FindEvent(bson.ObjectIdHex(eventId)); currentEvent != nil {
+		if currentEvent := currentDBSession.FindEvent(bson.ObjectIdHex(eventID)); currentEvent != nil {
 			context.Set(req, "currentEvent", currentEvent)
 		} else {
 			http.NotFound(rw, req)
@@ -320,12 +320,12 @@ func (app *Application) ensurePageMiddleware(next http.Handler) http.Handler {
 		currentDBSession := app.getCurrentDBSession(req)
 
 		vars := mux.Vars(req)
-		pageId := vars["page_id"]
-		if pageId == "" {
+		pageID := vars["page_id"]
+		if pageID == "" {
 			panic("Should have page_id")
 		}
 
-		if currentPage := currentDBSession.FindPage(bson.ObjectIdHex(pageId)); currentPage != nil {
+		if currentPage := currentDBSession.FindPage(bson.ObjectIdHex(pageID)); currentPage != nil {
 			context.Set(req, "currentPage", currentPage)
 		} else {
 			http.NotFound(rw, req)
@@ -344,12 +344,12 @@ func (app *Application) ensureActivityMiddleware(next http.Handler) http.Handler
 		currentDBSession := app.getCurrentDBSession(req)
 
 		vars := mux.Vars(req)
-		activityId := vars["activity_id"]
-		if activityId == "" {
+		activityID := vars["activity_id"]
+		if activityID == "" {
 			panic("Should have activity_id")
 		}
 
-		if currentActivity := currentDBSession.FindActivity(bson.ObjectIdHex(activityId)); currentActivity != nil {
+		if currentActivity := currentDBSession.FindActivity(bson.ObjectIdHex(activityID)); currentActivity != nil {
 			context.Set(req, "currentActivity", currentActivity)
 		} else {
 			http.NotFound(rw, req)
@@ -368,12 +368,12 @@ func (app *Application) ensureMemberMiddleware(next http.Handler) http.Handler {
 		currentDBSession := app.getCurrentDBSession(req)
 
 		vars := mux.Vars(req)
-		memberId := vars["member_id"]
-		if memberId == "" {
+		memberID := vars["member_id"]
+		if memberID == "" {
 			panic("Should have member_id")
 		}
 
-		if currentMember := currentDBSession.FindMember(bson.ObjectIdHex(memberId)); currentMember != nil {
+		if currentMember := currentDBSession.FindMember(bson.ObjectIdHex(memberID)); currentMember != nil {
 			context.Set(req, "currentMember", currentMember)
 		} else {
 			http.NotFound(rw, req)
@@ -392,12 +392,12 @@ func (app *Application) ensureImageMiddleware(next http.Handler) http.Handler {
 		currentDBSession := app.getCurrentDBSession(req)
 
 		vars := mux.Vars(req)
-		imageId := vars["image_id"]
-		if imageId == "" {
+		imageID := vars["image_id"]
+		if imageID == "" {
 			panic("Should have image_id")
 		}
 
-		if currentImage := currentDBSession.FindImage(bson.ObjectIdHex(imageId)); currentImage != nil {
+		if currentImage := currentDBSession.FindImage(bson.ObjectIdHex(imageID)); currentImage != nil {
 			context.Set(req, "currentImage", currentImage)
 		} else {
 			http.NotFound(rw, req)
@@ -416,12 +416,12 @@ func (app *Application) ensureFileMiddleware(next http.Handler) http.Handler {
 		currentDBSession := app.getCurrentDBSession(req)
 
 		vars := mux.Vars(req)
-		fileId := vars["file_id"]
-		if fileId == "" {
+		fileID := vars["file_id"]
+		if fileID == "" {
 			panic("Should have file_id")
 		}
 
-		if currentFile := currentDBSession.FindFile(bson.ObjectIdHex(fileId)); currentFile != nil {
+		if currentFile := currentDBSession.FindFile(bson.ObjectIdHex(fileID)); currentFile != nil {
 			context.Set(req, "currentFile", currentFile)
 		} else {
 			http.NotFound(rw, req)

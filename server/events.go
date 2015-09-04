@@ -8,7 +8,7 @@ import (
 	"github.com/aymerick/kowa/models"
 )
 
-type eventJson struct {
+type eventJSON struct {
 	Event models.Event `json:"event"`
 }
 
@@ -18,7 +18,7 @@ func (app *Application) handleGetEvents(rw http.ResponseWriter, req *http.Reques
 	site := app.getCurrentSite(req)
 	if site != nil {
 		// fetch paginated events
-		pagination := NewPagination()
+		pagination := newPagination()
 		if err := pagination.fillFromRequest(req); err != nil {
 			http.Error(rw, "Invalid pagination parameters", http.StatusBadRequest)
 			return
@@ -47,16 +47,16 @@ func (app *Application) handleGetEvents(rw http.ResponseWriter, req *http.Reques
 func (app *Application) handlePostEvents(rw http.ResponseWriter, req *http.Request) {
 	currentDBSession := app.getCurrentDBSession(req)
 
-	var reqJson eventJson
+	var reqJSON eventJSON
 
-	if err := json.NewDecoder(req.Body).Decode(&reqJson); err != nil {
+	if err := json.NewDecoder(req.Body).Decode(&reqJSON); err != nil {
 		log.Printf("ERROR: %v", err)
 		http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
 		return
 	}
 
 	// @todo [security] Check all fields !
-	event := &reqJson.Event
+	event := &reqJSON.Event
 
 	if event.SiteId == "" {
 		http.Error(rw, "Missing site field in event record", http.StatusBadRequest)
@@ -101,16 +101,16 @@ func (app *Application) handleGetEvent(rw http.ResponseWriter, req *http.Request
 func (app *Application) handleUpdateEvent(rw http.ResponseWriter, req *http.Request) {
 	event := app.getCurrentEvent(req)
 	if event != nil {
-		var reqJson eventJson
+		var reqJSON eventJSON
 
-		if err := json.NewDecoder(req.Body).Decode(&reqJson); err != nil {
+		if err := json.NewDecoder(req.Body).Decode(&reqJSON); err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
 			return
 		}
 
 		// @todo [security] Check all fields !
-		updated, err := event.Update(&reqJson.Event)
+		updated, err := event.Update(&reqJSON.Event)
 		if err != nil {
 			log.Printf("ERROR: %v", err)
 			http.Error(rw, "Failed to update event", http.StatusInternalServerError)

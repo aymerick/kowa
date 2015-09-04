@@ -22,7 +22,7 @@ func NewSignupMailer(user *models.User) *SignupMailer {
 
 		// Template variables
 		Email:         user.Email,
-		ActivationUrl: token.AccountActivationUrl(user),
+		ActivationUrl: token.AccountActivationURL(user),
 	}
 
 	result.I18n = result.computeI18n()

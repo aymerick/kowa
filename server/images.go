@@ -8,10 +8,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-const (
-	IMAGE_CT_PREFIX = "image/"
-)
-
 var acceptedImageContentTypes = []string{"image/jpeg", "image/png", "image/gif"}
 
 // GET /images?site={site_id}
@@ -19,7 +15,7 @@ var acceptedImageContentTypes = []string{"image/jpeg", "image/png", "image/gif"}
 func (app *Application) handleGetImages(rw http.ResponseWriter, req *http.Request) {
 	site := app.getCurrentSite(req)
 	if site != nil {
-		pagination := NewPagination()
+		pagination := newPagination()
 		if err := pagination.fillFromRequest(req); err != nil {
 			http.Error(rw, "Invalid pagination parameters", http.StatusBadRequest)
 			return

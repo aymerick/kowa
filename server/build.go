@@ -15,41 +15,42 @@ import (
 )
 
 const (
-	WORKERS_NB        = 10
-	JOBS_QUEUE_LEN    = 100
-	WORKERS_QUEUE_LEN = 100
+	workersNb       = 10
+	jobsQueueLen    = 100
+	workersQueueLen = 100
 
 	// job kinds
-	JOB_KIND_BUILD  = "build"
-	JOB_KIND_DELETE = "delete"
+	jobKindBuild  = "build"
+	jobKindDelete = "delete"
 )
 
+// BuildMaster handles build workers
 type BuildMaster struct {
-	workers   []*BuildWorker
+	workers   []*buildWorker
 	workersWG *sync.WaitGroup
 
-	workersChan chan *BuildJob
-	jobsChan    chan *BuildJob
-	resultsChan chan *BuildJob
+	workersChan chan *buildJob
+	jobsChan    chan *buildJob
+	resultsChan chan *buildJob
 
-	currentJobs   map[string]*BuildJob
-	throttledJobs map[string]*BuildJob
+	currentJobs   map[string]*buildJob
+	throttledJobs map[string]*buildJob
 
 	stopChan chan bool
 }
 
-type BuildJob struct {
+type buildJob struct {
 	kind     string
-	siteId   string
+	siteID   string
 	buildDir string
 	failed   bool
 }
 
-type BuildWorker struct {
+type buildWorker struct {
 	id int
 
-	inputChan  chan *BuildJob
-	outputChan chan *BuildJob
+	inputChan  chan *buildJob
+	outputChan chan *buildJob
 	stopChan   chan bool
 }
 
@@ -57,33 +58,34 @@ type BuildWorker struct {
 // BuildMaster
 //
 
+// NewBuildMaster instanciates a new build master
 func NewBuildMaster() *BuildMaster {
 	result := &BuildMaster{
-		workers:   make([]*BuildWorker, WORKERS_NB),
+		workers:   make([]*buildWorker, workersNb),
 		workersWG: &sync.WaitGroup{},
 
-		workersChan: make(chan *BuildJob, WORKERS_QUEUE_LEN),
-		jobsChan:    make(chan *BuildJob, JOBS_QUEUE_LEN),
-		resultsChan: make(chan *BuildJob, WORKERS_QUEUE_LEN),
+		workersChan: make(chan *buildJob, workersQueueLen),
+		jobsChan:    make(chan *buildJob, jobsQueueLen),
+		resultsChan: make(chan *buildJob, workersQueueLen),
 
-		currentJobs:   make(map[string]*BuildJob),
-		throttledJobs: make(map[string]*BuildJob),
+		currentJobs:   make(map[string]*buildJob),
+		throttledJobs: make(map[string]*buildJob),
 	}
 
 	return result
 }
 
-func (master *BuildMaster) NewBuildJob(kind string, siteId string, buildDir string) *BuildJob {
-	return &BuildJob{
+func (master *BuildMaster) newBuildJob(kind string, siteID string, buildDir string) *buildJob {
+	return &buildJob{
 		kind:     kind,
-		siteId:   siteId,
+		siteID:   siteID,
 		buildDir: buildDir,
 	}
 }
 
-func (master *BuildMaster) NewBuildWorker(workerId int) *BuildWorker {
-	return &BuildWorker{
-		id: workerId,
+func (master *BuildMaster) newBuildWorker(workerID int) *buildWorker {
+	return &buildWorker{
+		id: workerID,
 
 		inputChan:  master.workersChan,
 		outputChan: master.resultsChan,
@@ -165,12 +167,12 @@ func (master *BuildMaster) serveSites() {
 
 // Initialize and start all workers
 func (master *BuildMaster) startWorkers() {
-	for i := 0; i < WORKERS_NB; i++ {
-		master.workers[i] = master.NewBuildWorker(i)
+	for i := 0; i < workersNb; i++ {
+		master.workers[i] = master.newBuildWorker(i)
 		master.workers[i].run(master.workersWG)
 	}
 
-	log.Printf("[build] Started %d workers", WORKERS_NB)
+	log.Printf("[build] Started %d workers", workersNb)
 }
 
 // Stop all workers
@@ -205,18 +207,18 @@ func (master *BuildMaster) stop() {
 	close(master.workersChan)
 }
 
-func (master *BuildMaster) enqueueJob(job *BuildJob) {
+func (master *BuildMaster) enqueueJob(job *buildJob) {
 	master.jobsChan <- job
 
 	log.Printf("[build] Job %s enqueued", job.key())
 }
 
 func (master *BuildMaster) launchSiteBuild(site *models.Site) {
-	master.enqueueJob(master.NewBuildJob(JOB_KIND_BUILD, site.Id, ""))
+	master.enqueueJob(master.newBuildJob(jobKindBuild, site.Id, ""))
 }
 
 func (master *BuildMaster) launchSiteDeletion(site *models.Site, buildDir string) {
-	master.enqueueJob(master.NewBuildJob(JOB_KIND_DELETE, site.Id, buildDir))
+	master.enqueueJob(master.newBuildJob(jobKindDelete, site.Id, buildDir))
 }
 
 //
@@ -224,8 +226,8 @@ func (master *BuildMaster) launchSiteDeletion(site *models.Site, buildDir string
 //
 
 // Computes job uniq key
-func (job *BuildJob) key() string {
-	return job.siteId
+func (job *buildJob) key() string {
+	return job.siteID
 }
 
 //
@@ -233,7 +235,7 @@ func (job *BuildJob) key() string {
 //
 
 // Starts worker
-func (worker *BuildWorker) run(wg *sync.WaitGroup) {
+func (worker *buildWorker) run(wg *sync.WaitGroup) {
 	if worker.stopChan != nil {
 		// already running
 		return
@@ -274,20 +276,20 @@ func (worker *BuildWorker) run(wg *sync.WaitGroup) {
 }
 
 // Execute Job
-func (worker *BuildWorker) executeJob(job *BuildJob) {
+func (worker *buildWorker) executeJob(job *buildJob) {
 	switch job.kind {
-	case JOB_KIND_BUILD:
+	case jobKindBuild:
 		worker.buildSite(job)
-	case JOB_KIND_DELETE:
+	case jobKindDelete:
 		worker.deleteSite(job)
 	default:
 		panic("wat")
 	}
 }
 
-func (worker *BuildWorker) buildSite(job *BuildJob) {
+func (worker *buildWorker) buildSite(job *buildJob) {
 	// get site
-	site := models.NewDBSession().FindSite(job.siteId)
+	site := models.NewDBSession().FindSite(job.siteID)
 	if site == nil {
 		log.Printf("[build] %s job %s failed with worker %d: site not found", job.kind, job.key(), worker.id)
 
@@ -314,7 +316,7 @@ func (worker *BuildWorker) buildSite(job *BuildJob) {
 	}
 }
 
-func (worker *BuildWorker) deleteSite(job *BuildJob) {
+func (worker *buildWorker) deleteSite(job *buildJob) {
 	dirPath := path.Join(viper.GetString("output_dir"), job.buildDir)
 	if _, err := os.Stat(dirPath); !os.IsNotExist(err) {
 		if errRem := os.RemoveAll(dirPath); errRem != nil {
@@ -324,7 +326,7 @@ func (worker *BuildWorker) deleteSite(job *BuildJob) {
 }
 
 // Stop worker
-func (worker *BuildWorker) stop() {
+func (worker *buildWorker) stop() {
 	// wait for worker to stop
 	worker.stopChan <- true
 	<-worker.stopChan
