@@ -23,7 +23,7 @@ const (
 type User struct {
 	dbSession *DBSession `bson:"-"`
 
-	Id          string    `bson:"_id,omitempty" json:"id"`
+	ID          string    `bson:"_id,omitempty" json:"id"`
 	CreatedAt   time.Time `bson:"created_at"    json:"createdAt"`
 	UpdatedAt   time.Time `bson:"updated_at"    json:"updatedAt"`
 	ValidatedAt time.Time `bson:"validated_at"  json:"validatedAt"`
@@ -142,7 +142,7 @@ func (user *User) DisplayName() string {
 	result := user.FullName()
 
 	if result == "" {
-		result = user.Id
+		result = user.ID
 	}
 
 	return result
@@ -156,7 +156,7 @@ func (user *User) MailAddress() string {
 // MarshalJSON implements the json.Marshaler interface
 func (user *User) MarshalJSON() ([]byte, error) {
 	// inject 'links' needed by Ember Data
-	links := map[string]interface{}{"sites": fmt.Sprintf("/api/users/%s/sites", user.Id)}
+	links := map[string]interface{}{"sites": fmt.Sprintf("/api/users/%s/sites", user.ID)}
 
 	userJSON := UserJSON{
 		User:  *user,
@@ -171,7 +171,7 @@ func (user *User) FindSites() *SitesList {
 	result := SitesList{}
 
 	// @todo Handle err
-	user.dbSession.SitesCol().Find(bson.M{"user_id": user.Id}).All(&result)
+	user.dbSession.SitesCol().Find(bson.M{"user_id": user.ID}).All(&result)
 
 	for _, site := range result {
 		site.dbSession = user.dbSession
@@ -240,7 +240,7 @@ func (user *User) Update(newUser *User) (bool, error) {
 		user.UpdatedAt = time.Now()
 		set = append(set, bson.DocElem{"updated_at", user.UpdatedAt})
 
-		return true, user.dbSession.UsersCol().UpdateId(user.Id, modifier)
+		return true, user.dbSession.UsersCol().UpdateId(user.ID, modifier)
 	}
 
 	return false, nil
@@ -249,7 +249,7 @@ func (user *User) Update(newUser *User) (bool, error) {
 // SetValues sets given user fields values in database
 func (user *User) SetValues(values bson.M) error {
 	// @todo Set UpdatedAt field
-	return user.dbSession.UsersCol().UpdateId(user.Id, bson.D{{"$set", values}})
+	return user.dbSession.UsersCol().UpdateId(user.ID, bson.D{{"$set", values}})
 }
 
 // SetAccountValidated sets user account as validated

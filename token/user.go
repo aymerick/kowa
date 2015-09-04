@@ -14,7 +14,7 @@ const (
 
 // AccountActivationURL generate a token for user account activation
 func AccountActivationURL(user *models.User) string {
-	token := NewToken(tokenAccountValidation, user.Id)
+	token := NewToken(tokenAccountValidation, user.ID)
 
 	// token expires in 3 days
 	token.SetExpirationTime(time.Now().Add(time.Hour * 72))

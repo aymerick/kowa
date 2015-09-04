@@ -53,7 +53,7 @@ func (suite *SiteTestSuite) TestSite() {
 
 	// Insert user
 	user := User{
-		Id:        "trucmush",
+		ID:        "trucmush",
 		Email:     "trucmush@wanadoo.fr",
 		FirstName: "Jean-Claude",
 		LastName:  "Trucmush",
@@ -64,8 +64,8 @@ func (suite *SiteTestSuite) TestSite() {
 
 	// Insert site
 	site := Site{
-		Id:          "site_1",
-		UserId:      user.Id,
+		ID:          "site_1",
+		UserID:      user.ID,
 		CreatedAt:   time.Now(),
 		Name:        "My site",
 		Tagline:     "So powerfull !",
@@ -83,14 +83,14 @@ func (suite *SiteTestSuite) TestSite() {
 
 	// Fetch site
 	var fetchedSite Site
-	err = suite.db.SitesCol().FindId(site.Id).One(&fetchedSite)
+	err = suite.db.SitesCol().FindId(site.ID).One(&fetchedSite)
 	assert.Nil(t, err)
 
-	assert.Equal(t, fetchedSite.UserId, user.Id)
+	assert.Equal(t, fetchedSite.UserID, user.ID)
 	assert.Equal(t, fetchedSite.Name, "My site")
 	assert.Equal(t, fetchedSite.Tagline, "So powerfull !")
 	assert.Equal(t, fetchedSite.Description, "You will be astonished by what my site is about")
 
-	assert.NotNil(t, fetchedSite.Id)
+	assert.NotNil(t, fetchedSite.ID)
 	assert.NotNil(t, fetchedSite.CreatedAt)
 }

@@ -72,7 +72,7 @@ func (suite *SignupTestSuite) TestSignup() {
 
 	// Instanciate user
 	user := &models.User{
-		Id:        "trucmush",
+		ID:        "trucmush",
 		Email:     "trucmush@wanadoo.fr",
 		FirstName: "Jean-Claude",
 		LastName:  "Trucmush",
@@ -169,7 +169,7 @@ func (suite *SignupTestSuite) TestSignupFr() {
 
 	// Instanciate user
 	user := &models.User{
-		Id:        "trucmush",
+		ID:        "trucmush",
 		Email:     "trucmush@wanadoo.fr",
 		FirstName: "Jean-Claude",
 		LastName:  "Trucmush",

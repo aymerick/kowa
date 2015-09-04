@@ -43,7 +43,7 @@ func addUser(cmd *cobra.Command, args []string) {
 	isAdmin := (len(args) >= 5) && (args[4] == "true")
 
 	user := &models.User{
-		Id:        args[0],
+		ID:        args[0],
 		Email:     args[1],
 		FirstName: args[2],
 		LastName:  args[3],

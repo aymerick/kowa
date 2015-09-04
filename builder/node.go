@@ -79,7 +79,7 @@ func (node *Node) fillURL(slug string) {
 	node.Slug = siteBuilder.addNodeSlug(helpers.Pathify(slug))
 
 	// FilePath
-	if siteBuilder.site.UglyUrl || (node.Slug == "") || (node.Slug == "/") || (node.Slug == "index") {
+	if siteBuilder.site.UglyURL || (node.Slug == "") || (node.Slug == "/") || (node.Slug == "index") {
 		name := node.Slug
 		switch name {
 		case "", "/":

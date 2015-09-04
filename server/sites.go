@@ -57,28 +57,28 @@ func (app *Application) handlePostSite(rw http.ResponseWriter, req *http.Request
 	}
 
 	// check site id
-	site.Id = strings.TrimSpace(site.Id)
-	if site.Id == "" {
+	site.ID = strings.TrimSpace(site.ID)
+	if site.ID == "" {
 		errors["id"] = T("setup_missing_id")
 	}
 
 	// check site id format
 	if errors["id"] == "" {
-		if site.Id != helpers.NormalizeToSiteID(site.Id) {
+		if site.ID != helpers.NormalizeToSiteID(site.ID) {
 			errors["id"] = T("signup_id_invalid")
 		}
 	}
 
 	// check site id length
 	if errors["id"] == "" {
-		if len(site.Id) < 3 {
+		if len(site.ID) < 3 {
 			errors["id"] = T("signup_id_too_short")
 		}
 	}
 
 	// check if site id is already taken
 	if errors["id"] == "" {
-		if exSite := currentDBSession.FindSite(site.Id); exSite != nil {
+		if exSite := currentDBSession.FindSite(site.ID); exSite != nil {
 			errors["id"] = T("signup_id_not_available")
 		}
 	}
@@ -86,7 +86,7 @@ func (app *Application) handlePostSite(rw http.ResponseWriter, req *http.Request
 	// check site domain
 	site.Domain = strings.TrimSpace(site.Domain)
 	if site.Domain == "" {
-		site.CustomUrl = core.BaseUrl(site.Id)
+		site.CustomURL = core.BaseUrl(site.ID)
 	} else if !core.ValidDomain(site.Domain) {
 		http.Error(rw, "Invalid domain provided", http.StatusBadRequest)
 	}
@@ -99,7 +99,7 @@ func (app *Application) handlePostSite(rw http.ResponseWriter, req *http.Request
 		return
 	}
 
-	site.UserId = currentUser.Id
+	site.UserID = currentUser.ID
 	site.Lang = currentUser.Lang
 	site.TZ = currentUser.TZ
 	site.Theme = core.DefaultTheme
@@ -111,7 +111,7 @@ func (app *Application) handlePostSite(rw http.ResponseWriter, req *http.Request
 		return
 	}
 
-	core.EnsureSiteUploadDir(site.Id)
+	core.EnsureSiteUploadDir(site.ID)
 
 	// site content has changed
 	app.onSiteChange(site)
@@ -210,16 +210,16 @@ func (app *Application) handleSetPageSettings(rw http.ResponseWriter, req *http.
 				return
 			}
 
-			existingIDStr := existingPageSettings.Id.Hex()
+			existingIDStr := existingPageSettings.ID.Hex()
 
 			badParamID := existingIDStr != vars["setting_id"]
-			badContentID := (pageSettings.Id != "") && (existingIDStr != pageSettings.Id.Hex())
+			badContentID := (pageSettings.ID != "") && (existingIDStr != pageSettings.ID.Hex())
 
 			if badParamID || badContentID {
 				http.Error(rw, "Page settings id mismatch", http.StatusBadRequest)
 				return
-			} else if pageSettings.Id == "" {
-				pageSettings.Id = existingPageSettings.Id
+			} else if pageSettings.ID == "" {
+				pageSettings.ID = existingPageSettings.ID
 			}
 		}
 

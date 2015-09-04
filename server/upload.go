@@ -54,7 +54,7 @@ func handleUpload(rw http.ResponseWriter, req *http.Request, site *models.Site, 
 		// copy uploaded file
 		log.Printf("Handling uploaded file: %s", result.name)
 
-		dstPath := helpers.AvailableFilePath(core.UploadSiteFilePath(site.Id, result.name))
+		dstPath := helpers.AvailableFilePath(core.UploadSiteFilePath(site.ID, result.name))
 
 		dst, err := os.Create(dstPath)
 		if err != nil {

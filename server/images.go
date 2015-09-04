@@ -84,8 +84,8 @@ func (app *Application) handleUploadImage(rw http.ResponseWriter, req *http.Requ
 
 	// create image model
 	img := &models.Image{
-		Id:     bson.NewObjectId(),
-		SiteId: site.Id,
+		ID:     bson.NewObjectId(),
+		SiteID: site.ID,
 		Path:   upload.info.Name(),
 		Name:   upload.name,
 		Size:   upload.info.Size(),

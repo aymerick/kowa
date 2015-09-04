@@ -15,10 +15,10 @@ const (
 type Activity struct {
 	dbSession *DBSession `bson:"-"`
 
-	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
+	ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
-	SiteId    string        `bson:"site_id"       json:"site"`
+	SiteID    string        `bson:"site_id"       json:"site"`
 
 	Title   string        `bson:"title"           json:"title"`
 	Summary string        `bson:"summary"         json:"summary"`
@@ -67,7 +67,7 @@ func (session *DBSession) FindActivity(activityID bson.ObjectId) *Activity {
 // CreateActivity persists a new activity in database
 // Side effect: 'Id', 'CreatedAt' and 'UpdatedAt' fields are set on activity record
 func (session *DBSession) CreateActivity(activity *Activity) error {
-	activity.Id = bson.NewObjectId()
+	activity.ID = bson.NewObjectId()
 
 	now := time.Now()
 	activity.CreatedAt = now
@@ -94,7 +94,7 @@ func (session *DBSession) RemoveImageReferencesFromActivities(image *Image) erro
 
 // FindSite fetches the site that activity belongs to
 func (activity *Activity) FindSite() *Site {
-	return activity.dbSession.FindSite(activity.SiteId)
+	return activity.dbSession.FindSite(activity.SiteID)
 }
 
 // FindCover fetches activity cover
@@ -119,7 +119,7 @@ func (activity *Activity) Delete() error {
 	var err error
 
 	// delete from database
-	if err = activity.dbSession.ActivitiesCol().RemoveId(activity.Id); err != nil {
+	if err = activity.dbSession.ActivitiesCol().RemoveId(activity.ID); err != nil {
 		return err
 	}
 
@@ -182,7 +182,7 @@ func (activity *Activity) Update(newActivity *Activity) (bool, error) {
 		activity.UpdatedAt = time.Now()
 		set = append(set, bson.DocElem{"updated_at", activity.UpdatedAt})
 
-		return true, activity.dbSession.ActivitiesCol().UpdateId(activity.Id, modifier)
+		return true, activity.dbSession.ActivitiesCol().UpdateId(activity.ID, modifier)
 	}
 
 	return false, nil

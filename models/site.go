@@ -24,7 +24,7 @@ var SitePagesSettingsKinds map[string]bool
 
 // SitePageSettings represents all the settings for a built-in page
 type SitePageSettings struct {
-	Id       bson.ObjectId `bson:"_id,omitempty"   json:"id"`
+	ID       bson.ObjectId `bson:"_id,omitempty"   json:"id"`
 	Kind     string        `bson:"kind"            json:"kind"` // cf. SitePagesSettingsKinds
 	Title    string        `bson:"title"           json:"title"`
 	Tagline  string        `bson:"tagline"         json:"tagline"`
@@ -41,7 +41,7 @@ type SiteThemeSassVar struct {
 
 // SiteThemeSettings represents settings for given theme
 type SiteThemeSettings struct {
-	Id   bson.ObjectId      `bson:"_id,omitempty" json:"id"`
+	ID   bson.ObjectId      `bson:"_id,omitempty" json:"id"`
 	Sass []SiteThemeSassVar `bson:"sass" json:"-"` // SASS variables
 }
 
@@ -57,12 +57,12 @@ type SiteThemeSettingsJSON struct {
 type Site struct {
 	dbSession *DBSession `bson:"-"`
 
-	Id        string    `bson:"_id,omitempty"         json:"id"`
+	ID        string    `bson:"_id,omitempty"         json:"id"`
 	CreatedAt time.Time `bson:"created_at"            json:"createdAt"`
 	UpdatedAt time.Time `bson:"updated_at"            json:"updatedAt"`
 	ChangedAt time.Time `bson:"changed_at,omitempty"  json:"changedAt,omitempty"`
 	BuiltAt   time.Time `bson:"built_at,omitempty"    json:"builtAt,omitempty"`
-	UserId    string    `bson:"user_id"               json:"user"`
+	UserID    string    `bson:"user_id"               json:"user"`
 	Lang      string    `bson:"lang"                  json:"lang"`
 	TZ        string    `bson:"tz"                    json:"tz"`
 
@@ -96,8 +96,8 @@ type Site struct {
 	Theme        string `bson:"theme"         json:"theme"`
 	Domain       string `bson:"domain"        json:"domain"`
 	CustomDomain string `bson:"custom_domain" json:"customDomain"`
-	CustomUrl    string `bson:"custom_url"    json:"customUrl"`
-	UglyUrl      bool   `bson:"ugly_url"      json:"uglyUrl"`
+	CustomURL    string `bson:"custom_url"    json:"customUrl"`
+	UglyURL      bool   `bson:"ugly_url"      json:"uglyUrl"`
 
 	// theme settings
 	NameInNavBar bool `bson:"name_in_navbar" json:"nameInNavBar"`
@@ -229,25 +229,25 @@ func (site *Site) MarshalJSON() ([]byte, error) {
 	// inject 'links' needed by Ember Data
 	// @todo Remove that ?
 	links := map[string]interface{}{
-		"posts":      fmt.Sprintf("/api/sites/%s/posts", site.Id),
-		"events":     fmt.Sprintf("/api/sites/%s/events", site.Id),
-		"pages":      fmt.Sprintf("/api/sites/%s/pages", site.Id),
-		"activities": fmt.Sprintf("/api/sites/%s/activities", site.Id),
-		"members":    fmt.Sprintf("/api/sites/%s/members", site.Id),
-		"images":     fmt.Sprintf("/api/sites/%s/images", site.Id),
-		"files":      fmt.Sprintf("/api/sites/%s/files", site.Id),
+		"posts":      fmt.Sprintf("/api/sites/%s/posts", site.ID),
+		"events":     fmt.Sprintf("/api/sites/%s/events", site.ID),
+		"pages":      fmt.Sprintf("/api/sites/%s/pages", site.ID),
+		"activities": fmt.Sprintf("/api/sites/%s/activities", site.ID),
+		"members":    fmt.Sprintf("/api/sites/%s/members", site.ID),
+		"images":     fmt.Sprintf("/api/sites/%s/images", site.ID),
+		"files":      fmt.Sprintf("/api/sites/%s/files", site.ID),
 	}
 
 	// convert hash of embedded docs into an array of doc ids, as needed by Ember Data
 	pageSettingsIds := []string{}
 	for _, settings := range site.PageSettings {
-		pageSettingsIds = append(pageSettingsIds, settings.Id.Hex())
+		pageSettingsIds = append(pageSettingsIds, settings.ID.Hex())
 	}
 
 	// convert hash of embedded docs into an array of doc ids, as needed by Ember Data
 	themeSettingsIds := []string{}
 	for _, settings := range site.ThemeSettings {
-		themeSettingsIds = append(themeSettingsIds, settings.Id.Hex())
+		themeSettingsIds = append(themeSettingsIds, settings.ID.Hex())
 	}
 
 	siteJSON := SiteJSON{
@@ -262,8 +262,8 @@ func (site *Site) MarshalJSON() ([]byte, error) {
 
 // BaseUrl returns base URL for that site.
 func (site *Site) BaseUrl() string {
-	if site.CustomUrl != "" {
-		return site.CustomUrl
+	if site.CustomURL != "" {
+		return site.CustomURL
 	}
 
 	if site.CustomDomain != "" {
@@ -271,20 +271,20 @@ func (site *Site) BaseUrl() string {
 	}
 
 	if site.Domain != "" {
-		return core.BaseUrlForDomain(site.Id, site.Domain)
+		return core.BaseUrlForDomain(site.ID, site.Domain)
 	}
 
-	return core.BaseUrl(site.Id)
+	return core.BaseUrl(site.ID)
 }
 
 // BuildDir returns build directory for that site.
 func (site *Site) BuildDir() string {
-	if site.CustomUrl != "" {
-		u, err := url.Parse(site.CustomUrl)
+	if site.CustomURL != "" {
+		u, err := url.Parse(site.CustomURL)
 		if err == nil {
 			if helpers.HasOnePrefix(u.Host, []string{"127.0.0.1", "localhost"}) || u.Host == "" {
 				// eg: 3ailes
-				return site.Id
+				return site.ID
 			}
 
 			// eg: 3ailes.org
@@ -299,11 +299,11 @@ func (site *Site) BuildDir() string {
 
 	if site.Domain != "" {
 		// eg: 3ailes.asso.ninja
-		return site.Id + "." + site.Domain
+		return site.ID + "." + site.Domain
 	}
 
 	// eg: 3ailes
-	return site.Id
+	return site.ID
 }
 
 // TZLocation returns timezone Location
@@ -326,7 +326,7 @@ func (site *Site) TZLocation() *time.Location {
 //
 
 func (site *Site) postsBaseQuery(onlyPub bool) *mgo.Query {
-	selector := bson.M{"site_id": site.Id}
+	selector := bson.M{"site_id": site.ID}
 
 	if onlyPub {
 		selector["published"] = true
@@ -386,7 +386,7 @@ func (site *Site) FindPublishedPosts() *PostsList {
 //
 
 func (site *Site) eventsBaseQuery() *mgo.Query {
-	return site.dbSession.EventsCol().Find(bson.M{"site_id": site.Id})
+	return site.dbSession.EventsCol().Find(bson.M{"site_id": site.ID})
 }
 
 // EventsNb returns the total number of events
@@ -435,7 +435,7 @@ func (site *Site) FindAllEvents() *EventsList {
 //
 
 func (site *Site) pagesBaseQuery() *mgo.Query {
-	return site.dbSession.PagesCol().Find(bson.M{"site_id": site.Id})
+	return site.dbSession.PagesCol().Find(bson.M{"site_id": site.ID})
 }
 
 // PagesNb returns the total number of pages
@@ -484,7 +484,7 @@ func (site *Site) FindAllPages() *PagesList {
 //
 
 func (site *Site) activitiesBaseQuery() *mgo.Query {
-	return site.dbSession.ActivitiesCol().Find(bson.M{"site_id": site.Id})
+	return site.dbSession.ActivitiesCol().Find(bson.M{"site_id": site.ID})
 }
 
 // ActivitiesNb returns the total number of activities
@@ -533,7 +533,7 @@ func (site *Site) FindAllActivities() *ActivitiesList {
 //
 
 func (site *Site) membersBaseQuery() *mgo.Query {
-	return site.dbSession.MembersCol().Find(bson.M{"site_id": site.Id})
+	return site.dbSession.MembersCol().Find(bson.M{"site_id": site.ID})
 }
 
 // MembersNb returns the total number of members
@@ -580,7 +580,7 @@ func (site *Site) FindAllMembers() *MembersList {
 // UpdateMemberOrder updates a member order in database
 func (site *Site) UpdateMemberOrder(id bson.ObjectId, order int) {
 	// specify site_id in selector to prevent unprivileged users access
-	selector := bson.M{"site_id": site.Id, "_id": id}
+	selector := bson.M{"site_id": site.ID, "_id": id}
 	modifier := bson.M{"$set": bson.M{"order": order}}
 
 	site.dbSession.MembersCol().Update(selector, modifier)
@@ -591,7 +591,7 @@ func (site *Site) UpdateMemberOrder(id bson.ObjectId, order int) {
 //
 
 func (site *Site) imagesBaseQuery() *mgo.Query {
-	return site.dbSession.ImagesCol().Find(bson.M{"site_id": site.Id})
+	return site.dbSession.ImagesCol().Find(bson.M{"site_id": site.ID})
 }
 
 // ImagesNb returns the total number of images
@@ -637,7 +637,7 @@ func (site *Site) FindAllImages() *ImagesList {
 //
 
 func (site *Site) filesBaseQuery() *mgo.Query {
-	return site.dbSession.FilesCol().Find(bson.M{"site_id": site.Id})
+	return site.dbSession.FilesCol().Find(bson.M{"site_id": site.ID})
 }
 
 // FilesNb returns the total number of files
@@ -773,15 +773,15 @@ func (site *Site) RemoveImageReferences(image *Image) error {
 	// remove image reference from site settings
 	fieldsToDelete := []string{}
 
-	if site.Logo == image.Id {
+	if site.Logo == image.ID {
 		fieldsToDelete = append(fieldsToDelete, "logo")
 	}
 
-	if site.Cover == image.Id {
+	if site.Cover == image.ID {
 		fieldsToDelete = append(fieldsToDelete, "cover")
 	}
 
-	if site.Favicon == image.Id {
+	if site.Favicon == image.ID {
 		fieldsToDelete = append(fieldsToDelete, "favicon")
 	}
 
@@ -827,7 +827,7 @@ func (site *Site) RemoveFileReferences(file *File) error {
 	// remove image reference from site settings
 	fieldsToDelete := []string{}
 
-	if site.Membership == file.Id {
+	if site.Membership == file.ID {
 		fieldsToDelete = append(fieldsToDelete, "membership")
 	}
 
@@ -1042,13 +1042,13 @@ func (site *Site) Update(newSite *Site) (bool, error) {
 		}
 	}
 
-	if site.UglyUrl != newSite.UglyUrl {
-		site.UglyUrl = newSite.UglyUrl
+	if site.UglyURL != newSite.UglyURL {
+		site.UglyURL = newSite.UglyURL
 
-		if site.UglyUrl == false {
+		if site.UglyURL == false {
 			unset = append(unset, bson.DocElem{"ugly_url", 1})
 		} else {
-			set = append(set, bson.DocElem{"ugly_url", site.UglyUrl})
+			set = append(set, bson.DocElem{"ugly_url", site.UglyURL})
 		}
 	}
 
@@ -1076,7 +1076,7 @@ func (site *Site) Update(newSite *Site) (bool, error) {
 	}
 
 	if len(modifier) > 0 {
-		return true, site.dbSession.SitesCol().UpdateId(site.Id, modifier)
+		return true, site.dbSession.SitesCol().UpdateId(site.ID, modifier)
 	}
 
 	return false, nil
@@ -1085,7 +1085,7 @@ func (site *Site) Update(newSite *Site) (bool, error) {
 // SetValues sets given site fields in database
 func (site *Site) SetValues(values bson.M) error {
 	// @todo Set UpdatedAt field
-	return site.dbSession.SitesCol().UpdateId(site.Id, bson.D{{"$set", values}})
+	return site.dbSession.SitesCol().UpdateId(site.ID, bson.D{{"$set", values}})
 }
 
 // SetChangedAt sets the ChangedAt value
@@ -1126,24 +1126,24 @@ func (site *Site) DeleteFields(fields []string) error {
 		unset = append(unset, bson.DocElem{field, 1})
 	}
 
-	return site.dbSession.SitesCol().UpdateId(site.Id, bson.M{"$unset": unset})
+	return site.dbSession.SitesCol().UpdateId(site.ID, bson.M{"$unset": unset})
 }
 
 // Delete site from database
 func (site *Site) Delete() error {
 	// delete site
-	if err := site.dbSession.SitesCol().RemoveId(site.Id); err != nil {
+	if err := site.dbSession.SitesCol().RemoveId(site.ID); err != nil {
 		return err
 	}
 
 	// delete site content
 	// @todo Catch and report errors
-	site.dbSession.ActivitiesCol().RemoveAll(bson.M{"site_id": site.Id})
-	site.dbSession.EventsCol().RemoveAll(bson.M{"site_id": site.Id})
-	site.dbSession.ImagesCol().RemoveAll(bson.M{"site_id": site.Id})
-	site.dbSession.MembersCol().RemoveAll(bson.M{"site_id": site.Id})
-	site.dbSession.PagesCol().RemoveAll(bson.M{"site_id": site.Id})
-	site.dbSession.PostsCol().RemoveAll(bson.M{"site_id": site.Id})
+	site.dbSession.ActivitiesCol().RemoveAll(bson.M{"site_id": site.ID})
+	site.dbSession.EventsCol().RemoveAll(bson.M{"site_id": site.ID})
+	site.dbSession.ImagesCol().RemoveAll(bson.M{"site_id": site.ID})
+	site.dbSession.MembersCol().RemoveAll(bson.M{"site_id": site.ID})
+	site.dbSession.PagesCol().RemoveAll(bson.M{"site_id": site.ID})
+	site.dbSession.PostsCol().RemoveAll(bson.M{"site_id": site.ID})
 
 	// delete site images
 	// @todo Catch and report error
@@ -1154,7 +1154,7 @@ func (site *Site) Delete() error {
 
 // Delete all images files
 func (site *Site) deleteImagesFiles() error {
-	dirPath := core.UploadSiteDir(site.Id)
+	dirPath := core.UploadSiteDir(site.ID)
 	if _, err := os.Stat(dirPath); !os.IsNotExist(err) {
 		if errRem := os.RemoveAll(dirPath); errRem != nil {
 			return errRem
@@ -1171,12 +1171,12 @@ func (site *Site) SetPageSettings(settings *SitePageSettings) error {
 		return errors.New("Unsupported page settings kind: " + settings.Kind)
 	}
 
-	if settings.Id == "" {
-		settings.Id = bson.NewObjectId()
+	if settings.ID == "" {
+		settings.ID = bson.NewObjectId()
 	}
 
 	settings.Title = strings.TrimSpace(settings.Title)
 	settings.Tagline = strings.TrimSpace(settings.Tagline)
 
-	return site.dbSession.SitesCol().UpdateId(site.Id, bson.M{"$set": bson.D{bson.DocElem{fmt.Sprintf("page_settings.%s", settings.Kind), settings}}})
+	return site.dbSession.SitesCol().UpdateId(site.ID, bson.M{"$set": bson.D{bson.DocElem{fmt.Sprintf("page_settings.%s", settings.Kind), settings}}})
 }

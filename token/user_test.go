@@ -35,7 +35,7 @@ func (suite *TokenUserTestSuite) TestAccountActivationURL() {
 	t := suite.T()
 
 	user := &models.User{
-		Id:        "trucmush",
+		ID:        "trucmush",
 		Email:     "trucmush@wanadoo.fr",
 		FirstName: "Jean-Claude",
 		LastName:  "Trucmush",
@@ -56,5 +56,5 @@ func (suite *TokenUserTestSuite) TestAccountActivationURL() {
 
 	assert.NotNil(t, decoded.ExpirationTime())
 	assert.Equal(t, tokenAccountValidation, decoded.Kind)
-	assert.Equal(t, user.Id, decoded.Value)
+	assert.Equal(t, user.ID, decoded.Value)
 }

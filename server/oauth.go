@@ -29,7 +29,7 @@ func (app *Application) handleOauthToken(rw http.ResponseWriter, req *http.Reque
 			if (user != nil) && (user.Status == models.UserStatusActive) {
 				err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(ar.Password))
 				if err == nil {
-					ar.UserData = user.Id
+					ar.UserData = user.ID
 					ar.Authorized = true
 				}
 			}

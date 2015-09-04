@@ -32,14 +32,14 @@ func fixImages(cmd *cobra.Command, args []string) {
 	}
 
 	for _, image := range *site.FindAllImages() {
-		prefix := "/upload/" + site.Id + "/"
+		prefix := "/upload/" + site.ID + "/"
 
 		if strings.HasPrefix(image.Path, prefix) {
 			fixedPath := strings.TrimPrefix(image.Path, prefix)
 
 			log.Printf("Fixing path: %s => %s", image.Path, fixedPath)
 
-			dbSession.ImagesCol().UpdateId(image.Id, bson.M{"$set": bson.M{"path": fixedPath}})
+			dbSession.ImagesCol().UpdateId(image.ID, bson.M{"$set": bson.M{"path": fixedPath}})
 		}
 	}
 }

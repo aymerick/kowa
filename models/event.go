@@ -15,10 +15,10 @@ const (
 type Event struct {
 	dbSession *DBSession `bson:"-"`
 
-	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
+	ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
-	SiteId    string        `bson:"site_id"       json:"site"`
+	SiteID    string        `bson:"site_id"       json:"site"`
 
 	StartDate time.Time     `bson:"start_date"      json:"startDate,omitempty"`
 	EndDate   time.Time     `bson:"end_date"        json:"endDate,omitempty"`
@@ -70,7 +70,7 @@ func (session *DBSession) FindEvent(eventID bson.ObjectId) *Event {
 // CreateEvent creates a new event in database
 // Side effect: 'Id', 'CreatedAt' and 'UpdatedAt' fields are set on event record
 func (session *DBSession) CreateEvent(event *Event) error {
-	event.Id = bson.NewObjectId()
+	event.ID = bson.NewObjectId()
 
 	now := time.Now()
 	event.CreatedAt = now
@@ -97,7 +97,7 @@ func (session *DBSession) RemoveImageReferencesFromEvents(image *Image) error {
 
 // FindSite fetch site that event belongs to
 func (event *Event) FindSite() *Site {
-	return event.dbSession.FindSite(event.SiteId)
+	return event.dbSession.FindSite(event.SiteID)
 }
 
 // FindCover fetches cover from database
@@ -122,7 +122,7 @@ func (event *Event) Delete() error {
 	var err error
 
 	// delete from database
-	if err = event.dbSession.EventsCol().RemoveId(event.Id); err != nil {
+	if err = event.dbSession.EventsCol().RemoveId(event.ID); err != nil {
 		return err
 	}
 
@@ -223,7 +223,7 @@ func (event *Event) Update(newEvent *Event) (bool, error) {
 		event.UpdatedAt = time.Now()
 		set = append(set, bson.DocElem{"updated_at", event.UpdatedAt})
 
-		return true, event.dbSession.EventsCol().UpdateId(event.Id, modifier)
+		return true, event.dbSession.EventsCol().UpdateId(event.ID, modifier)
 	}
 
 	return false, nil

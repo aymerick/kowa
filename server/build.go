@@ -214,11 +214,11 @@ func (master *BuildMaster) enqueueJob(job *buildJob) {
 }
 
 func (master *BuildMaster) launchSiteBuild(site *models.Site) {
-	master.enqueueJob(master.newBuildJob(jobKindBuild, site.Id, ""))
+	master.enqueueJob(master.newBuildJob(jobKindBuild, site.ID, ""))
 }
 
 func (master *BuildMaster) launchSiteDeletion(site *models.Site, buildDir string) {
-	master.enqueueJob(master.newBuildJob(jobKindDelete, site.Id, buildDir))
+	master.enqueueJob(master.newBuildJob(jobKindDelete, site.ID, buildDir))
 }
 
 //

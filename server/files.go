@@ -100,8 +100,8 @@ func (app *Application) handleUploadFile(rw http.ResponseWriter, req *http.Reque
 
 	// create file model
 	f := &models.File{
-		Id:     bson.NewObjectId(),
-		SiteId: site.Id,
+		ID:     bson.NewObjectId(),
+		SiteID: site.ID,
 		Kind:   kind,
 		Path:   upload.info.Name(),
 		Name:   upload.name,
@@ -117,7 +117,7 @@ func (app *Application) handleUploadFile(rw http.ResponseWriter, req *http.Reque
 
 	switch kind {
 	case models.FileMembership:
-		site.SetMembership(f.Id)
+		site.SetMembership(f.ID)
 	}
 
 	// site content has changed

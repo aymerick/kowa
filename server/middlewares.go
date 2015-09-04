@@ -144,7 +144,7 @@ func (app *Application) ensureUserAccessMiddleware(next http.Handler) http.Handl
 		userID := vars["user_id"]
 
 		// check that current user only access his stuff
-		if userID != currentUser.Id {
+		if userID != currentUser.ID {
 			unauthorized(rw)
 			return
 		}
@@ -255,7 +255,7 @@ func (app *Application) ensureSiteOwnerAccessMiddleware(next http.Handler) http.
 			panic("Should have site")
 		}
 
-		if currentSite.UserId != currentUser.Id {
+		if currentSite.UserID != currentUser.ID {
 			unauthorized(rw)
 			return
 		}

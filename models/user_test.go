@@ -57,14 +57,14 @@ func (suite *UserTestSuite) TestUsers() {
 	// Insert users
 	err = suite.db.UsersCol().Insert(
 		&User{
-			Id:        "trucmush",
+			ID:        "trucmush",
 			Email:     "trucmush@wanadoo.fr",
 			FirstName: "Jean-Claude",
 			LastName:  "Trucmush",
 			CreatedAt: time.Now(),
 		},
 		&User{
-			Id:        "makoush",
+			ID:        "makoush",
 			Email:     "makoush@gmail.com",
 			FirstName: "Marie",
 			LastName:  "Koushtoala",
@@ -87,7 +87,7 @@ func (suite *UserTestSuite) TestUsers() {
 
 	assert.Equal(t, userJC.FirstName, "Jean-Claude")
 	assert.Equal(t, userJC.LastName, "Trucmush")
-	assert.NotNil(t, userJC.Id)
+	assert.NotNil(t, userJC.ID)
 	assert.NotNil(t, userJC.CreatedAt)
 
 	// Fetch several users

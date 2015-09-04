@@ -107,7 +107,7 @@ func (app *Application) handleSignupUser(rw http.ResponseWriter, req *http.Reque
 
 	// insert user
 	user := &models.User{
-		Id:       username,
+		ID:       username,
 		Email:    emailAddr.Address,
 		Status:   models.UserStatusPending,
 		Lang:     userLang,
@@ -211,7 +211,7 @@ func (app *Application) handleGetMe(rw http.ResponseWriter, req *http.Request) {
 	currentDBSession := app.getCurrentDBSession(req)
 
 	currentUser := app.getCurrentUser(req)
-	userID := currentUser.Id
+	userID := currentUser.ID
 
 	if user := currentDBSession.FindUser(userID); user != nil {
 		app.render.JSON(rw, http.StatusOK, renderMap{"user": user})
@@ -274,7 +274,7 @@ func (app *Application) handleGetUserSites(rw http.ResponseWriter, req *http.Req
 		return
 	}
 
-	if currentUser.Id != userID {
+	if currentUser.ID != userID {
 		unauthorized(rw)
 		return
 	}

@@ -15,10 +15,10 @@ const (
 type Member struct {
 	dbSession *DBSession `bson:"-"`
 
-	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
+	ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
-	SiteId    string        `bson:"site_id"       json:"site"`
+	SiteID    string        `bson:"site_id"       json:"site"`
 
 	Fullname    string        `bson:"fullname"        json:"fullname"`
 	Role        string        `bson:"role"            json:"role"`
@@ -68,7 +68,7 @@ func (session *DBSession) FindMember(memberID bson.ObjectId) *Member {
 // CreateMember creates a new member in database
 // Side effect: 'Id', 'CreatedAt' and 'UpdatedAt' fields are set on member record
 func (session *DBSession) CreateMember(member *Member) error {
-	member.Id = bson.NewObjectId()
+	member.ID = bson.NewObjectId()
 
 	now := time.Now()
 	member.CreatedAt = now
@@ -95,7 +95,7 @@ func (session *DBSession) RemoveImageReferencesFromMembers(image *Image) error {
 
 // FindSite fetches site that member belongs to
 func (member *Member) FindSite() *Site {
-	return member.dbSession.FindSite(member.SiteId)
+	return member.dbSession.FindSite(member.SiteID)
 }
 
 // FindPhoto fetches Photo from database
@@ -120,7 +120,7 @@ func (member *Member) Delete() error {
 	var err error
 
 	// delete from database
-	if err = member.dbSession.MembersCol().RemoveId(member.Id); err != nil {
+	if err = member.dbSession.MembersCol().RemoveId(member.ID); err != nil {
 		return err
 	}
 
@@ -194,7 +194,7 @@ func (member *Member) Update(newMember *Member) (bool, error) {
 		member.UpdatedAt = time.Now()
 		set = append(set, bson.DocElem{"updated_at", member.UpdatedAt})
 
-		return true, member.dbSession.MembersCol().UpdateId(member.Id, modifier)
+		return true, member.dbSession.MembersCol().UpdateId(member.ID, modifier)
 	}
 
 	return false, nil

@@ -30,9 +30,9 @@ func addSite(cmd *cobra.Command, args []string) {
 	}
 
 	site := &models.Site{
-		Id:           args[0],
+		ID:           args[0],
 		Name:         args[1],
-		UserId:       args[2],
+		UserID:       args[2],
 		Lang:         core.DefaultLang,
 		Theme:        core.DefaultTheme,
 		NameInNavBar: true,
@@ -41,14 +41,14 @@ func addSite(cmd *cobra.Command, args []string) {
 	if domain := core.DefaultDomain(); domain != "" {
 		site.Domain = domain
 	} else {
-		site.CustomUrl = core.BaseUrl(args[0])
+		site.CustomURL = core.BaseUrl(args[0])
 	}
 
 	if err := dbSession.CreateSite(site); err != nil {
 		log.Fatalln(fmt.Sprintf("Failed to create site: %v", err))
 	}
 
-	core.EnsureSiteUploadDir(site.Id)
+	core.EnsureSiteUploadDir(site.ID)
 
 	// build site
 	buildSite(site)

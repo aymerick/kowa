@@ -15,10 +15,10 @@ const (
 type Post struct {
 	dbSession *DBSession `bson:"-"`
 
-	Id        bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
+	ID        bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
-	SiteId    string        `bson:"site_id"       json:"site"`
+	SiteID    string        `bson:"site_id"       json:"site"`
 
 	Published   bool          `bson:"published"       json:"published"`
 	PublishedAt time.Time     `bson:"published_at"    json:"publishedAt,omitempty"`
@@ -69,7 +69,7 @@ func (session *DBSession) FindPost(postID bson.ObjectId) *Post {
 // CreatePost creates a new post in database
 // Side effect: 'Id', 'CreatedAt' and 'UpdatedAt' fields are set on post record
 func (session *DBSession) CreatePost(post *Post) error {
-	post.Id = bson.NewObjectId()
+	post.ID = bson.NewObjectId()
 
 	now := time.Now()
 	post.CreatedAt = now
@@ -96,7 +96,7 @@ func (session *DBSession) RemoveImageReferencesFromPosts(image *Image) error {
 
 // FindSite fetches site that post belongs to
 func (post *Post) FindSite() *Site {
-	return post.dbSession.FindSite(post.SiteId)
+	return post.dbSession.FindSite(post.SiteID)
 }
 
 // FindCover fetches cover from database
@@ -119,7 +119,7 @@ func (post *Post) FindCover() *Image {
 // Delete deletes post from database
 func (post *Post) Delete() error {
 	// delete from database
-	if err := post.dbSession.PostsCol().RemoveId(post.Id); err != nil {
+	if err := post.dbSession.PostsCol().RemoveId(post.ID); err != nil {
 		return err
 	}
 
@@ -206,7 +206,7 @@ func (post *Post) Update(newPost *Post) (bool, error) {
 		post.UpdatedAt = time.Now()
 		set = append(set, bson.DocElem{"updated_at", post.UpdatedAt})
 
-		return true, post.dbSession.PostsCol().UpdateId(post.Id, modifier)
+		return true, post.dbSession.PostsCol().UpdateId(post.ID, modifier)
 	}
 
 	return false, nil

@@ -15,10 +15,10 @@ const (
 type Page struct {
 	dbSession *DBSession `bson:"-"`
 
-	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
+	ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
-	SiteId    string        `bson:"site_id"       json:"site"`
+	SiteID    string        `bson:"site_id"       json:"site"`
 
 	Title   string        `bson:"title"           json:"title"`
 	Tagline string        `bson:"tagline"         json:"tagline"`
@@ -70,7 +70,7 @@ func (session *DBSession) FindPage(pageID bson.ObjectId) *Page {
 // CreatePage creates a new page in database
 // Side effect: 'Id', 'CreatedAt' and 'UpdatedAt' fields are set on page record
 func (session *DBSession) CreatePage(page *Page) error {
-	page.Id = bson.NewObjectId()
+	page.ID = bson.NewObjectId()
 
 	now := time.Now()
 	page.CreatedAt = now
@@ -97,7 +97,7 @@ func (session *DBSession) RemoveImageReferencesFromPages(image *Image) error {
 
 // FindSite fetches site that page belongs to
 func (page *Page) FindSite() *Site {
-	return page.dbSession.FindSite(page.SiteId)
+	return page.dbSession.FindSite(page.SiteID)
 }
 
 // FindCover fetches cover from database
@@ -122,7 +122,7 @@ func (page *Page) Delete() error {
 	var err error
 
 	// delete from database
-	if err = page.dbSession.PagesCol().RemoveId(page.Id); err != nil {
+	if err = page.dbSession.PagesCol().RemoveId(page.ID); err != nil {
 		return err
 	}
 
@@ -212,7 +212,7 @@ func (page *Page) Update(newPage *Page) (bool, error) {
 		page.UpdatedAt = time.Now()
 		set = append(set, bson.DocElem{"updated_at", page.UpdatedAt})
 
-		return true, page.dbSession.PagesCol().UpdateId(page.Id, modifier)
+		return true, page.dbSession.PagesCol().UpdateId(page.ID, modifier)
 	}
 
 	return false, nil

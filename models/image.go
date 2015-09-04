@@ -67,10 +67,10 @@ const (
 type Image struct {
 	dbSession *DBSession `bson:"-"`
 
-	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
+	ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
-	SiteId    string        `bson:"site_id"       json:"site"`
+	SiteID    string        `bson:"site_id"       json:"site"`
 	Path      string        `bson:"path"          json:"-"`    // this is the effective image path
 	Name      string        `bson:"name"          json:"name"` // this is the uploaded file name (may be different from Path)
 	Size      int64         `bson:"size"          json:"size"`
@@ -251,7 +251,7 @@ func (img *Image) MarshalJSON() ([]byte, error) {
 // Delete deletes image from database
 func (img *Image) Delete() error {
 	// delete from database
-	if err := img.dbSession.ImagesCol().RemoveId(img.Id); err != nil {
+	if err := img.dbSession.ImagesCol().RemoveId(img.ID); err != nil {
 		return err
 	}
 
@@ -274,7 +274,7 @@ func (img *Image) Delete() error {
 
 // FindSite fetches site that image belongs to
 func (img *Image) FindSite() *Site {
-	return img.dbSession.FindSite(img.SiteId)
+	return img.dbSession.FindSite(img.SiteID)
 }
 
 // Original returns memoized image original image
@@ -296,12 +296,12 @@ func (img *Image) Original() *image.Image {
 
 // OriginalFilePath returns file path to original image
 func (img *Image) OriginalFilePath() string {
-	return core.UploadSiteFilePath(img.SiteId, img.Path)
+	return core.UploadSiteFilePath(img.SiteID, img.Path)
 }
 
 // URL returns image URL
 func (img *Image) URL() string {
-	return core.UploadSiteUrlPath(img.SiteId, img.Path)
+	return core.UploadSiteUrlPath(img.SiteID, img.Path)
 }
 
 //
@@ -375,12 +375,12 @@ func (img *Image) DerivativePath(derivative *Derivative) string {
 
 // DerivativeURL returns given derivative URL
 func (img *Image) DerivativeURL(derivative *Derivative) string {
-	return core.UploadSiteUrlPath(img.SiteId, img.DerivativePath(derivative))
+	return core.UploadSiteUrlPath(img.SiteID, img.DerivativePath(derivative))
 }
 
 // DerivativeFilePath returns given derivative file path
 func (img *Image) DerivativeFilePath(derivative *Derivative) string {
-	return core.UploadSiteFilePath(img.SiteId, img.DerivativePath(derivative))
+	return core.UploadSiteFilePath(img.SiteID, img.DerivativePath(derivative))
 }
 
 func (img *Image) generateDerivative(derivative *Derivative, force bool) error {

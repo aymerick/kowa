@@ -25,10 +25,10 @@ var FileKinds = []string{FileMembership}
 type File struct {
 	dbSession *DBSession `bson:"-"`
 
-	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
+	ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time     `bson:"created_at"    json:"createdAt"`
 	UpdatedAt time.Time     `bson:"updated_at"    json:"updatedAt"`
-	SiteId    string        `bson:"site_id"       json:"site"`
+	SiteID    string        `bson:"site_id"       json:"site"`
 
 	Kind string `bson:"kind" json:"kind"`
 	Path string `bson:"path" json:"-"`    // this is the effective file path
@@ -125,7 +125,7 @@ func (f *File) MarshalJSON() ([]byte, error) {
 // Delete deletes file from database
 func (f *File) Delete() error {
 	// delete from database
-	if err := f.dbSession.FilesCol().RemoveId(f.Id); err != nil {
+	if err := f.dbSession.FilesCol().RemoveId(f.ID); err != nil {
 		return err
 	}
 
@@ -139,15 +139,15 @@ func (f *File) Delete() error {
 
 // FindSite fetches site that file belongs to
 func (f *File) FindSite() *Site {
-	return f.dbSession.FindSite(f.SiteId)
+	return f.dbSession.FindSite(f.SiteID)
 }
 
 // FilePath returns file path
 func (f *File) FilePath() string {
-	return core.UploadSiteFilePath(f.SiteId, f.Path)
+	return core.UploadSiteFilePath(f.SiteID, f.Path)
 }
 
 // URL returns file URL
 func (f *File) URL() string {
-	return core.UploadSiteUrlPath(f.SiteId, f.Path)
+	return core.UploadSiteUrlPath(f.SiteID, f.Path)
 }

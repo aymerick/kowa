@@ -60,19 +60,19 @@ func (app *Application) handlePostMembers(rw http.ResponseWriter, req *http.Requ
 	// @todo [security] Check all fields !
 	member := &reqJSON.Member
 
-	if member.SiteId == "" {
+	if member.SiteID == "" {
 		http.Error(rw, "Missing site field in member record", http.StatusBadRequest)
 		return
 	}
 
-	site := currentDBSession.FindSite(member.SiteId)
+	site := currentDBSession.FindSite(member.SiteID)
 	if site == nil {
 		http.Error(rw, "Site not found", http.StatusBadRequest)
 		return
 	}
 
 	currentUser := app.getCurrentUser(req)
-	if site.UserId != currentUser.Id {
+	if site.UserID != currentUser.ID {
 		unauthorized(rw)
 		return
 	}
