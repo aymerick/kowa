@@ -5,11 +5,13 @@ import (
 	"log"
 )
 
+// ErrorCollector holds a list of errors
 type ErrorCollector struct {
 	Errors   map[string][]error
 	ErrorsNb int
 }
 
+// NewErrorCollector instanciates a new ErrorCollector
 func NewErrorCollector() *ErrorCollector {
 	return &ErrorCollector{
 		Errors:   make(map[string][]error),
@@ -21,7 +23,7 @@ func NewErrorCollector() *ErrorCollector {
 func (collector *ErrorCollector) addError(step string, err error) {
 	collector.Errors[step] = append(collector.Errors[step], err)
 
-	collector.ErrorsNb += 1
+	collector.ErrorsNb++
 }
 
 // Dump all errors
@@ -36,7 +38,7 @@ func (collector *ErrorCollector) dump() {
 
 			for _, err := range errors {
 				log.Printf(fmt.Sprintf("[ERR]   %d. %v", errNb, err.Error()))
-				errNb += 1
+				errNb++
 			}
 		}
 	}

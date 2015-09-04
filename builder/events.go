@@ -12,7 +12,7 @@ import (
 	"github.com/aymerick/raymond"
 )
 
-// Event nodes builder
+// EventsBuilder builds events pages
 type EventsBuilder struct {
 	*NodeBuilderBase
 
@@ -20,7 +20,7 @@ type EventsBuilder struct {
 	pastEvents []*EventContent
 }
 
-// Event node content
+// EventContent represents an event node content
 type EventContent struct {
 	Model *models.Event
 
@@ -55,10 +55,10 @@ type EventContent struct {
 	EndTime         string
 }
 
-// Sortable event node contents
+// EventContentsByStartDate represents sortable event node contents
 type EventContentsByStartDate []*EventContent
 
-// Events node content
+// EventsContent represents events node content
 type EventsContent struct {
 	Events     []*EventContent
 	PastEvents []*EventContent
@@ -68,20 +68,20 @@ type EventsContent struct {
 }
 
 func init() {
-	RegisterNodeBuilder(KIND_EVENTS, NewEventsBuilder)
+	RegisterNodeBuilder(kindEvents, NewEventsBuilder)
 }
 
-// Instanciate a new builder
+// NewEventsBuilder instanciate a new NodeBuilder
 func NewEventsBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 	return &EventsBuilder{
 		NodeBuilderBase: &NodeBuilderBase{
-			nodeKind:    KIND_EVENT,
+			nodeKind:    kindEvent,
 			siteBuilder: siteBuilder,
 		},
 	}
 }
 
-// NodeBuilder
+// Load is part of NodeBuilder interface
 func (builder *EventsBuilder) Load() {
 	builder.loadEvents()
 	builder.loadEventsLists()
@@ -99,8 +99,8 @@ func eventSlug(event *models.Event) string {
 	year, month, day := event.StartDate.Date()
 
 	title := event.Title
-	if len(title) > MAX_SLUG {
-		title = title[:MAX_SLUG]
+	if len(title) > maxSlug {
+		title = title[:maxSlug]
 	}
 
 	return fmt.Sprintf("%d/%02d/%02d/%s", year, month, day, title)
@@ -123,7 +123,7 @@ func (builder *EventsBuilder) loadEvent(event *models.Event) {
 
 	// build node
 	node := builder.newNode()
-	node.fillUrl(path.Join(slug, eventSlug(event)))
+	node.fillURL(path.Join(slug, eventSlug(event)))
 
 	node.Title = title
 	node.Tagline = tagline
@@ -157,7 +157,7 @@ func (builder *EventsBuilder) siteTime(t time.Time) time.Time {
 	return t.In(builder.siteTZLocation())
 }
 
-// Instanciate a new event content
+// NewEventContent instanciates a new EventContent
 func (builder *EventsBuilder) NewEventContent(event *models.Event, node *Node) *EventContent {
 	T := i18n.MustTfunc(builder.siteLang())
 
@@ -264,8 +264,8 @@ func (builder *EventsBuilder) loadEventsLists() {
 	}
 
 	// build node
-	node := builder.newNodeForKind(KIND_EVENTS)
-	node.fillUrl(slug)
+	node := builder.newNodeForKind(kindEvents)
+	node.fillURL(slug)
 
 	node.Title = title
 	node.Tagline = tagline
@@ -281,8 +281,8 @@ func (builder *EventsBuilder) loadEventsLists() {
 
 	pastEvents := builder.pastEvents
 	sort.Sort(sort.Reverse(EventContentsByStartDate(pastEvents)))
-	if len(pastEvents) > MAX_PAST_EVENTS {
-		pastEvents = pastEvents[:MAX_PAST_EVENTS]
+	if len(pastEvents) > maxPastEvents {
+		pastEvents = pastEvents[:maxPastEvents]
 	}
 
 	node.Content = &EventsContent{

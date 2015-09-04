@@ -24,14 +24,14 @@ func (site *SiteBuilder) UrlFor(dest string) string {
 	var result string
 
 	switch dest {
-	case KIND_ACTIVITIES, KIND_MEMBERS, KIND_CONTACT, KIND_HOMEPAGE:
+	case kindActivities, kindMembers, kindContact, kindHomepage:
 		// find uniq node
 		nodes := site.nodeBuilder(dest).Nodes()
 		if len(nodes) == 1 {
 			result = nodes[0].Url
 		}
 
-	case KIND_POSTS, KIND_EVENTS:
+	case kindPosts, kindEvents:
 		// find correct node
 		nodes := site.nodeBuilder(dest).Nodes()
 
@@ -43,7 +43,7 @@ func (site *SiteBuilder) UrlFor(dest string) string {
 		}
 
 	default:
-		// KIND_PAGE, KIND_POST
+		// kindPage, kindPost
 		panic("Internal link kind not supported yet")
 	}
 
@@ -62,6 +62,7 @@ func StartsWith(check string, prefix string) bool {
 	return strings.HasPrefix(check, prefix)
 }
 
+// Mod returns modulo of given int values
 // @todo Replace interface{}
 func Mod(a, b interface{}) int64 {
 	av := reflect.ValueOf(a)
@@ -89,6 +90,7 @@ func Mod(a, b interface{}) int64 {
 	return ai % bi
 }
 
+// ModBool returns true if the modulo of given integers is zero
 func ModBool(a, b interface{}) bool {
 	return Mod(a, b) == int64(0)
 }

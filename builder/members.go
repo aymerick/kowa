@@ -8,7 +8,7 @@ import (
 	"github.com/aymerick/kowa/models"
 )
 
-// Members node builder
+// MembersBuilder builds members pages
 type MembersBuilder struct {
 	*NodeBuilderBase
 
@@ -16,12 +16,12 @@ type MembersBuilder struct {
 	membersVars []*MemberVars
 }
 
-// Members node content
+// MembersContent represents members node content
 type MembersContent struct {
 	Members []*MemberVars
 }
 
-// Member vars
+// MemberVars reprsents member vars
 type MemberVars struct {
 	Date        time.Time
 	Photo       *ImageVars
@@ -31,19 +31,20 @@ type MemberVars struct {
 }
 
 func init() {
-	RegisterNodeBuilder(KIND_MEMBERS, NewMembersBuilder)
+	RegisterNodeBuilder(kindMembers, NewMembersBuilder)
 }
 
+// NewMembersBuilder instanciates a new NodeBuilder
 func NewMembersBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 	return &MembersBuilder{
 		NodeBuilderBase: &NodeBuilderBase{
-			nodeKind:    KIND_MEMBERS,
+			nodeKind:    kindMembers,
 			siteBuilder: siteBuilder,
 		},
 	}
 }
 
-// NodeBuilder
+// Load is part of NodeBuilder interface
 func (builder *MembersBuilder) Load() {
 	// fetch members
 	membersVars := builder.members()
@@ -66,7 +67,7 @@ func (builder *MembersBuilder) Load() {
 
 	// build node
 	node := builder.newNode()
-	node.fillUrl(slug)
+	node.fillURL(slug)
 
 	node.Title = title
 	node.Tagline = tagline
@@ -84,7 +85,7 @@ func (builder *MembersBuilder) Load() {
 	builder.addNode(node)
 }
 
-// NodeBuilder
+// Data is part of NodeBuilder interface
 func (builder *MembersBuilder) Data(name string) interface{} {
 	switch name {
 	case "members":
@@ -108,6 +109,7 @@ func (builder *MembersBuilder) members() []*MemberVars {
 	return builder.membersVars
 }
 
+// NewMemberVars instanciates a new MemberVars
 func (builder *MembersBuilder) NewMemberVars(member *models.Member) *MemberVars {
 	result := &MemberVars{
 		Date:     member.CreatedAt,

@@ -7,12 +7,12 @@ import (
 	"github.com/aymerick/raymond"
 )
 
-// Homepage node builder
+// HomepageBuilder builds homepage
 type HomepageBuilder struct {
 	*NodeBuilderBase
 }
 
-// Homepage node content
+// HomepageContent represents homepage node content
 type HomepageContent struct {
 	Description raymond.SafeString // Site description
 	MoreDesc    raymond.SafeString // Site additional description
@@ -24,24 +24,25 @@ type HomepageContent struct {
 }
 
 func init() {
-	RegisterNodeBuilder(KIND_HOMEPAGE, NewHomepageBuilder)
+	RegisterNodeBuilder(kindHomepage, NewHomepageBuilder)
 }
 
+// NewHomepageBuilder instanciates a new NodeBuilder
 func NewHomepageBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 	return &HomepageBuilder{
 		&NodeBuilderBase{
-			nodeKind:    KIND_HOMEPAGE,
+			nodeKind:    kindHomepage,
 			siteBuilder: siteBuilder,
 		},
 	}
 }
 
-// NodeBuilder
+// Load is part of NodeBuilder interface
 func (builder *HomepageBuilder) Load() {
 	T := i18n.MustTfunc(builder.siteLang())
 
 	node := builder.newNode()
-	node.fillUrl("")
+	node.fillURL("")
 
 	site := builder.site()
 
@@ -67,7 +68,7 @@ func (builder *HomepageBuilder) Load() {
 	builder.addNode(node)
 }
 
-// Instanciate a new homepage content
+// NewHomepageContent instanciates a new homepage content
 func (builder *HomepageBuilder) NewHomepageContent(node *Node) *HomepageContent {
 	site := builder.site()
 

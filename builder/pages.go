@@ -7,12 +7,12 @@ import (
 	"github.com/aymerick/raymond"
 )
 
-// Page nodes builder
+// PagesBuilder builds custom pages
 type PagesBuilder struct {
 	*NodeBuilderBase
 }
 
-// Page node content
+// PageContent represents a page node content
 type PageContent struct {
 	Model *models.Page
 
@@ -23,19 +23,20 @@ type PageContent struct {
 }
 
 func init() {
-	RegisterNodeBuilder(KIND_PAGE, NewPagesBuilder)
+	RegisterNodeBuilder(kindPage, NewPagesBuilder)
 }
 
+// NewPagesBuilder instanciates a new NodeBuilder
 func NewPagesBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 	return &PagesBuilder{
 		&NodeBuilderBase{
-			nodeKind:    KIND_PAGE,
+			nodeKind:    kindPage,
 			siteBuilder: siteBuilder,
 		},
 	}
 }
 
-// NodeBuilder
+// Load is part of NodeBuilder interface
 func (builder *PagesBuilder) Load() {
 	for _, page := range *builder.site().FindAllPages() {
 		builder.loadPage(page)
@@ -45,7 +46,7 @@ func (builder *PagesBuilder) Load() {
 // Build page
 func (builder *PagesBuilder) loadPage(page *models.Page) {
 	node := builder.newNode()
-	node.fillUrl(page.Title)
+	node.fillURL(page.Title)
 
 	pageContent := builder.NewPageContent(page, node)
 	if pageContent.Body != "" {
@@ -62,7 +63,7 @@ func (builder *PagesBuilder) loadPage(page *models.Page) {
 	}
 }
 
-// Instanciate a new page content
+// NewPageContent instanciates a new PageContent
 func (builder *PagesBuilder) NewPageContent(page *models.Page, node *Node) *PageContent {
 	result := &PageContent{
 		Model: page,

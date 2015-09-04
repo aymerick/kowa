@@ -24,24 +24,24 @@ import (
 
 const (
 	// static site
-	ASSETS_DIR       = "assets"
-	IMAGES_DIR       = "img"
-	FILES_DIR        = "files"
-	FAVICON_FILENAME = "favicon.png"
+	assetsDir       = "assets"
+	imagesDir       = "img"
+	filesDir        = "files"
+	faviconFilename = "favicon.png"
 
 	// themes
-	TEMPLATES_DIR = "templates"
-	PARTIALS_DIR  = "partials"
+	templatesDir = "templates"
+	partialsDir  = "partials"
 
-	MAX_SLUG        = 50
-	MAX_PAST_EVENTS = 5
+	maxSlug       = 50
+	maxPastEvents = 5
 )
 
-var generatedPaths = []string{ASSETS_DIR, IMAGES_DIR, FILES_DIR, FAVICON_FILENAME}
+var generatedPaths = []string{assetsDir, imagesDir, filesDir, faviconFilename}
 
 var registeredNodeBuilders = make(map[string]func(*SiteBuilder) NodeBuilder)
 
-// Registers a node builder
+// RegisterNodeBuilder registers a NodeBuilder
 func RegisterNodeBuilder(name string, initializer func(*SiteBuilder) NodeBuilder) {
 	if _, exists := registeredNodeBuilders[name]; exists {
 		panic(fmt.Sprintf("Builder initializer already registered: %s", name))
@@ -50,6 +50,7 @@ func RegisterNodeBuilder(name string, initializer func(*SiteBuilder) NodeBuilder
 	registeredNodeBuilders[name] = initializer
 }
 
+// SiteBuilder builds an entire site
 type SiteBuilder struct {
 	site   *models.Site
 	config *SiteBuilderConfig
@@ -71,11 +72,13 @@ type SiteBuilder struct {
 	tplDir   string
 }
 
+// SiteBuilderConfig holds site building configuration
 type SiteBuilderConfig struct {
 	ThemesDir string
 	OutputDir string
 }
 
+// NewSiteBuilder instanciates a new SiteBuilder
 func NewSiteBuilder(site *models.Site, config *SiteBuilderConfig) *SiteBuilder {
 	result := &SiteBuilder{
 		site:   site,
@@ -94,11 +97,12 @@ func NewSiteBuilder(site *models.Site, config *SiteBuilderConfig) *SiteBuilder {
 	return result
 }
 
+// Config returns site builder configuration
 func (builder *SiteBuilder) Config() *SiteBuilderConfig {
 	return builder.config
 }
 
-// Build site
+// Build executes site building
 func (builder *SiteBuilder) Build() {
 	// load nodes
 	if builder.loadNodes(); builder.HaveError() {
@@ -138,7 +142,7 @@ func (builder *SiteBuilder) initBuilders() {
 
 // Set templates dir
 func (builder *SiteBuilder) setTemplatesDir() {
-	dirPath := path.Join(builder.themeDir(), TEMPLATES_DIR)
+	dirPath := path.Join(builder.themeDir(), templatesDir)
 	if _, err := os.Stat(dirPath); os.IsNotExist(err) {
 		// no /templates subdir found
 		builder.tplDir = builder.themeDir()
@@ -190,7 +194,7 @@ func (builder *SiteBuilder) navBarNodes() []*Node {
 
 // Returns all activities vars (to display in template)
 func (builder *SiteBuilder) activitiesVars() []*ActivityVars {
-	nodeBuilder := builder.nodeBuilder(KIND_ACTIVITIES)
+	nodeBuilder := builder.nodeBuilder(kindActivities)
 
 	activities, ok := nodeBuilder.Data("activities").([]*ActivityVars)
 	if !ok {
@@ -230,7 +234,7 @@ func (builder *SiteBuilder) syncNodes() {
 	for _, nodeBuilder := range builder.nodeBuilders {
 		filePaths := nodeBuilder.Generate()
 
-		for filePath, _ := range filePaths {
+		for filePath := range filePaths {
 			log.Printf("Generated node: %+q", filePath)
 			allFiles[filePath] = true
 
@@ -271,7 +275,7 @@ func (builder *SiteBuilder) syncNodes() {
 	}
 
 	destFs := new(afero.OsFs)
-	for filePath, _ := range filesToDelete {
+	for filePath := range filesToDelete {
 		log.Printf("Deleting: %+q", filePath)
 
 		if err := destFs.RemoveAll(filePath); err != nil {
@@ -525,7 +529,7 @@ func (builder *SiteBuilder) compileSassFile(sassFilePath string, sassVars string
 
 	// compile to CSS
 	if err := ctx.Compile(sassFile, out); err != nil {
-		log.Printf("Failed to compile sass file: '%s'", sassFile)
+		log.Printf("Failed to compile sass file: '%s'", sassFilePath)
 		return err
 	}
 
@@ -549,7 +553,7 @@ func (builder *SiteBuilder) syncAssets() {
 func (builder *SiteBuilder) syncFavicon() {
 	errStep := "Sync favicon"
 
-	faviconPath := path.Join(builder.config.OutputDir, FAVICON_FILENAME)
+	faviconPath := path.Join(builder.config.OutputDir, faviconFilename)
 
 	if img := builder.site.FindFavicon(); img != nil {
 		log.Printf("Generating favicon")
@@ -584,10 +588,10 @@ func (builder *SiteBuilder) addImage(img *models.Image) *ImageVars {
 func (builder *SiteBuilder) addFile(file *models.File) string {
 	builder.files = append(builder.files, file)
 
-	return builder.site.BaseUrl() + path.Join("/", FILES_DIR, file.Path)
+	return builder.site.BaseUrl() + path.Join("/", filesDir, file.Path)
 }
 
-// Check if builder have error
+// HaveError returns true if builder have error
 func (builder *SiteBuilder) HaveError() bool {
 	return builder.errorCollector.ErrorsNb > 0
 }
@@ -603,7 +607,7 @@ func (builder *SiteBuilder) addNodeBuilderError(nodeKind string, err error) {
 	builder.addError(step, err)
 }
 
-// Dump errors
+// DumpErrors displays collected errors
 func (builder *SiteBuilder) DumpErrors() {
 	builder.errorCollector.dump()
 }
@@ -631,22 +635,22 @@ func (builder *SiteBuilder) themeAssetExist(relativePath string) bool {
 
 // Computes theme assets directory
 func (builder *SiteBuilder) themeAssetsDir() string {
-	return path.Join(builder.themeDir(), ASSETS_DIR)
+	return path.Join(builder.themeDir(), assetsDir)
 }
 
 // Computes directory where images are copied
 func (builder *SiteBuilder) genImagesDir() string {
-	return path.Join(builder.config.OutputDir, IMAGES_DIR)
+	return path.Join(builder.config.OutputDir, imagesDir)
 }
 
 // Computes directory where files are copied
 func (builder *SiteBuilder) genFilesDir() string {
-	return path.Join(builder.config.OutputDir, FILES_DIR)
+	return path.Join(builder.config.OutputDir, filesDir)
 }
 
 // Computes directory where assets are copied
 func (builder *SiteBuilder) genAssetsDir() string {
-	return path.Join(builder.config.OutputDir, ASSETS_DIR)
+	return path.Join(builder.config.OutputDir, assetsDir)
 }
 
 // Compute template path for given template name
@@ -656,7 +660,7 @@ func (builder *SiteBuilder) templatePath(tplName string) string {
 
 // Returns partials directory path
 func (builder *SiteBuilder) partialsPath() string {
-	return path.Join(builder.themeTemplatesDir(), PARTIALS_DIR)
+	return path.Join(builder.themeTemplatesDir(), partialsDir)
 }
 
 func (builder *SiteBuilder) partialPaths() ([]string, error) {

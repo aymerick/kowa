@@ -9,7 +9,7 @@ import (
 	"github.com/aymerick/kowa/models"
 )
 
-// Interface for node builder
+// NodeBuilder is the interface for node builders
 type NodeBuilder interface {
 	// Returns site builder
 	SiteBuilder() *SiteBuilder
@@ -30,7 +30,7 @@ type NodeBuilder interface {
 	Data(string) interface{}
 }
 
-// Node builder base
+// NodeBuilderBase is the node builder base
 type NodeBuilderBase struct {
 	// All loaded nodes
 	nodes []*Node
@@ -45,17 +45,17 @@ type NodeBuilderBase struct {
 	siteBuilder *SiteBuilder
 }
 
-// NodeBuilder
+// SiteBuilder is part of NodeBuilder interface
 func (builder *NodeBuilderBase) SiteBuilder() *SiteBuilder {
 	return builder.siteBuilder
 }
 
-// NodeBuilder
+// Load is part of NodeBuilder interface
 func (builder *NodeBuilderBase) Load() {
 	panic("Must be implemented by includer")
 }
 
-// NodeBuilder
+// Generate is part of NodeBuilder interface
 func (builder *NodeBuilderBase) Generate() map[string]bool {
 	result := make(map[string]bool)
 
@@ -71,17 +71,17 @@ func (builder *NodeBuilderBase) Generate() map[string]bool {
 	return result
 }
 
-// NodeBuilder
+// Nodes is part of NodeBuilder interface
 func (builder *NodeBuilderBase) Nodes() []*Node {
 	return builder.nodes
 }
 
-// NodeBuilder
+// NavBarNodes is part of NodeBuilder interface
 func (builder *NodeBuilderBase) NavBarNodes() []*Node {
 	return builder.navBarNodes
 }
 
-// NodeBuilder
+// Data is part of NodeBuilder interface
 func (builder *NodeBuilderBase) Data(name string) interface{} {
 	// Should be implemented by includer
 	return nil

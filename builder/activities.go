@@ -9,7 +9,7 @@ import (
 	"github.com/aymerick/raymond"
 )
 
-// Activities node builder
+// ActivitiesBuilder builds activities page
 type ActivitiesBuilder struct {
 	*NodeBuilderBase
 
@@ -17,12 +17,12 @@ type ActivitiesBuilder struct {
 	activitiesVars []*ActivityVars
 }
 
-// Activities node content
+// ActivitiesContent represents activities node content
 type ActivitiesContent struct {
 	Activities []*ActivityVars
 }
 
-// Activity vars
+// ActivityVars represents activity vars
 type ActivityVars struct {
 	Date    time.Time
 	Cover   *ImageVars
@@ -32,19 +32,20 @@ type ActivityVars struct {
 }
 
 func init() {
-	RegisterNodeBuilder(KIND_ACTIVITIES, NewActivitiesBuilder)
+	RegisterNodeBuilder(kindActivities, NewActivitiesBuilder)
 }
 
+// NewActivitiesBuilder instanciates a new NodeBuilder
 func NewActivitiesBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 	return &ActivitiesBuilder{
 		NodeBuilderBase: &NodeBuilderBase{
-			nodeKind:    KIND_ACTIVITIES,
+			nodeKind:    kindActivities,
 			siteBuilder: siteBuilder,
 		},
 	}
 }
 
-// NodeBuilder
+// Load is part of NodeBuilder interface
 func (builder *ActivitiesBuilder) Load() {
 	// fetch activities
 	activitiesVars := builder.activities()
@@ -67,7 +68,7 @@ func (builder *ActivitiesBuilder) Load() {
 
 	// build node
 	node := builder.newNode()
-	node.fillUrl(slug)
+	node.fillURL(slug)
 
 	node.Title = title
 	node.Tagline = tagline
@@ -85,7 +86,7 @@ func (builder *ActivitiesBuilder) Load() {
 	builder.addNode(node)
 }
 
-// NodeBuilder
+// Data is part of NodeBuilder interface
 func (builder *ActivitiesBuilder) Data(name string) interface{} {
 	switch name {
 	case "activities":
@@ -109,6 +110,7 @@ func (builder *ActivitiesBuilder) activities() []*ActivityVars {
 	return builder.activitiesVars
 }
 
+// NewActivityVars instanciates a new ActivityVars
 func (builder *ActivitiesBuilder) NewActivityVars(activity *models.Activity) *ActivityVars {
 	result := &ActivityVars{
 		Date:  activity.CreatedAt,

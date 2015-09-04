@@ -10,7 +10,7 @@ import (
 	"github.com/aymerick/raymond"
 )
 
-// Node vars
+// Node represents a node theme variables
 type Node struct {
 	// template vars
 	Kind string
@@ -35,7 +35,7 @@ type Node struct {
 	builder NodeBuilder
 }
 
-// Node metadata
+// NodeMeta represents node metadata
 type NodeMeta struct {
 	Title       string
 	Description string
@@ -49,18 +49,18 @@ type NodeMeta struct {
 
 // All node kinds
 const (
-	KIND_ACTIVITIES = "activities"
-	KIND_MEMBERS    = "members"
-	KIND_CONTACT    = "contact"
-	KIND_HOMEPAGE   = "homepage"
-	KIND_PAGE       = "page"
-	KIND_POST       = "post"
-	KIND_POSTS      = "posts"
-	KIND_EVENT      = "event"
-	KIND_EVENTS     = "events"
+	kindActivities = "activities"
+	kindMembers    = "members"
+	kindContact    = "contact"
+	kindHomepage   = "homepage"
+	kindPage       = "page"
+	kindPost       = "post"
+	kindPosts      = "posts"
+	kindEvent      = "event"
+	kindEvents     = "events"
 )
 
-// Create a new node
+// NewNode instnciantes a new Node
 func NewNode(builder NodeBuilder, kind string) *Node {
 	return &Node{
 		Kind:        kind,
@@ -72,7 +72,7 @@ func NewNode(builder NodeBuilder, kind string) *Node {
 }
 
 // Fill node Url
-func (node *Node) fillUrl(slug string) {
+func (node *Node) fillURL(slug string) {
 	siteBuilder := node.builder.SiteBuilder()
 
 	// Slug

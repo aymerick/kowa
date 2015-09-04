@@ -10,14 +10,14 @@ import (
 	"github.com/aymerick/raymond"
 )
 
-// Post nodes builder
+// PostsBuilder builds posts
 type PostsBuilder struct {
 	*NodeBuilderBase
 
 	posts []*PostContent
 }
 
-// Post node content
+// PostContent represents a post node content
 type PostContent struct {
 	Model *models.Post
 
@@ -28,7 +28,7 @@ type PostContent struct {
 	Url   string
 }
 
-// Posts node content
+// PostsContent represents the posts page content
 type PostsContent struct {
 	Posts []*PostContent
 	// PrevPage string
@@ -36,20 +36,20 @@ type PostsContent struct {
 }
 
 func init() {
-	RegisterNodeBuilder(KIND_POSTS, NewPostsBuilder)
+	RegisterNodeBuilder(kindPosts, NewPostsBuilder)
 }
 
-// Instanciate a new builder
+// NewPostsBuilder instanciate a new NodeBuilder
 func NewPostsBuilder(siteBuilder *SiteBuilder) NodeBuilder {
 	return &PostsBuilder{
 		NodeBuilderBase: &NodeBuilderBase{
-			nodeKind:    KIND_POST,
+			nodeKind:    kindPost,
 			siteBuilder: siteBuilder,
 		},
 	}
 }
 
-// NodeBuilder
+// Load is part of NodeBuilder interface
 func (builder *PostsBuilder) Load() {
 	builder.loadPosts()
 	builder.loadPostsLists()
@@ -67,8 +67,8 @@ func postSlug(post *models.Post) string {
 	year, month, day := post.PublishedAt.Date()
 
 	title := post.Title
-	if len(title) > MAX_SLUG {
-		title = title[:MAX_SLUG]
+	if len(title) > maxSlug {
+		title = title[:maxSlug]
 	}
 
 	return fmt.Sprintf("%d/%02d/%02d/%s", year, month, day, title)
@@ -91,7 +91,7 @@ func (builder *PostsBuilder) loadPost(post *models.Post) {
 
 	// build node
 	node := builder.newNode()
-	node.fillUrl(path.Join(slug, postSlug(post)))
+	node.fillURL(path.Join(slug, postSlug(post)))
 
 	node.Title = title
 	node.Tagline = tagline
@@ -116,7 +116,7 @@ func (builder *PostsBuilder) loadPost(post *models.Post) {
 	builder.posts = append(builder.posts, postContent)
 }
 
-// Instanciate a new post content
+// NewPostContent instanciate a new PostContent
 func (builder *PostsBuilder) NewPostContent(post *models.Post, node *Node) *PostContent {
 	T := i18n.MustTfunc(builder.siteLang())
 
@@ -165,8 +165,8 @@ func (builder *PostsBuilder) loadPostsLists() {
 	}
 
 	// build node
-	node := builder.newNodeForKind(KIND_POSTS)
-	node.fillUrl(slug)
+	node := builder.newNodeForKind(kindPosts)
+	node.fillURL(slug)
 
 	node.Title = title
 	node.Tagline = tagline

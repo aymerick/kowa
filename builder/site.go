@@ -6,7 +6,7 @@ import (
 	"github.com/nicksnyder/go-i18n/i18n"
 )
 
-// Site vars
+// SiteVars holds site theme variables
 type SiteVars struct {
 	Name         string
 	Logo         *ImageVars
@@ -30,14 +30,17 @@ type SiteVars struct {
 	builder *SiteBuilder
 }
 
+// SiteNavBarItem represents an item in navigation bar
 type SiteNavBarItem struct {
 	Url   string // Item URL
 	Title string // Item title
 	Order int    // Item order
 }
 
+// NavBarItemsByOrder holds an ordered list of navigation bar items
 type NavBarItemsByOrder []*SiteNavBarItem
 
+// NewSiteVars instanciates a new SiteVars
 func NewSiteVars(siteBuilder *SiteBuilder) *SiteVars {
 	return &SiteVars{
 		builder: siteBuilder,
@@ -96,6 +99,7 @@ func computeNavBarItems(builder *SiteBuilder) []*SiteNavBarItem {
 	return result
 }
 
+// NewSiteNavBarItem instanciates a new SiteNavBarItem
 func NewSiteNavBarItem(url string, title string, order int) *SiteNavBarItem {
 	return &SiteNavBarItem{
 		Url:   url,
