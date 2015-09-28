@@ -394,10 +394,13 @@ func (builder *SiteBuilder) computeSassVars() (string, error) {
 func (builder *SiteBuilder) siteSassVariables() map[string]string {
 	result := map[string]string{}
 
-	// @todo FIXME !
 	if settings := builder.site.ThemeSettings[builder.site.Theme]; settings != nil {
-		for _, sassVar := range settings.Sass {
-			result[sassVar.Name] = sassVar.Value
+		if p := builder.theme.Palette(settings.Palette); p != nil {
+			for name, value := range p.Vars {
+				result[name] = value
+			}
+		} else {
+			// @todo Custom vars
 		}
 	}
 

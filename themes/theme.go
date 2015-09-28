@@ -9,6 +9,7 @@ import (
 	"path"
 	"strings"
 
+	"github.com/BurntSushi/toml"
 	"github.com/aymerick/kowa/helpers"
 )
 
@@ -24,6 +25,12 @@ const (
 
 	// theme sass subdirectory
 	sassDir = "sass"
+
+	// default palette name
+	defaultPalette = "Default"
+
+	// configuration file name
+	confFile = "theme.toml"
 )
 
 // Theme represents a theme
@@ -35,10 +42,12 @@ type Theme struct {
 	TemplatesDir string
 	PartialsDir  string
 	SassDir      string
+	Conf         *Conf
 
 	partials  []string
 	sassFiles []os.FileInfo
 	sassVars  map[string]string
+	palettes  []*Palette
 }
 
 // New instanciates a new Theme
@@ -55,6 +64,7 @@ func New(name string) *Theme {
 	t.setTemplateDir()
 	t.setPartialsDir()
 	t.setSassDir()
+	t.setConf()
 
 	return t
 }
@@ -189,6 +199,52 @@ func (t *Theme) SassBuild(sassVars string, output string) error {
 	return nil
 }
 
+// Palettes returns all theme palettes
+func (t *Theme) Palettes() []*Palette {
+	// @todo Recomputes on files change
+	if len(t.palettes) == 0 {
+		// default palette
+		t.palettes = append(t.palettes, t.defaultPalette())
+
+		// all palettes defined in theme conf file
+		t.palettes = append(t.palettes, t.confPalettes()...)
+	}
+
+	return t.palettes
+}
+
+// Palette returns the Palette with given name
+func (t *Theme) Palette(name string) *Palette {
+	for _, p := range t.Palettes() {
+		if p.Name == name {
+			return p
+		}
+	}
+
+	return nil
+}
+
+// defaultPalette returns default theme palette
+func (t *Theme) defaultPalette() *Palette {
+	vars, err := t.SassVars()
+	if err != nil {
+		return nil
+	}
+
+	result := NewPalette(defaultPalette)
+
+	for name, val := range vars {
+		result.Vars[name] = val
+	}
+
+	return result
+}
+
+// confPalettes returns all palettes defined in theme conf file
+func (t *Theme) confPalettes() []*Palette {
+	return t.Conf.Palettes
+}
+
 func (t *Theme) setTemplateDir() {
 	if t.TemplatesDir == "" {
 		dirPath := path.Join(t.Dir, templatesDir)
@@ -211,7 +267,7 @@ func (t *Theme) setSassDir() {
 	_, err := ioutil.ReadDir(dir)
 	if err != nil && !os.IsNotExist(err) {
 		// @todo Handle error
-		return
+		panic(err)
 	}
 
 	if os.IsNotExist(err) {
@@ -220,4 +276,16 @@ func (t *Theme) setSassDir() {
 	}
 
 	t.SassDir = dir
+}
+
+func (t *Theme) setConf() {
+	var result Conf
+
+	confPath := path.Join(t.Dir, confFile)
+	if _, err := toml.DecodeFile(confPath, &result); err != nil {
+		// @todo Handle error
+		panic(err)
+	}
+
+	t.Conf = &result
 }

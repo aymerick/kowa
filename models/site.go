@@ -41,8 +41,9 @@ type SiteThemeSassVar struct {
 
 // SiteThemeSettings represents settings for given theme
 type SiteThemeSettings struct {
-	ID   bson.ObjectId      `bson:"_id,omitempty" json:"id"`
-	Sass []SiteThemeSassVar `bson:"sass" json:"-"` // SASS variables
+	ID      bson.ObjectId      `bson:"_id,omitempty" json:"id"`
+	Palette string             `bson:"palette,omitempty" json:"palette"`
+	Sass    []SiteThemeSassVar `bson:"sass,omitempty" json:"-"` // SASS variables
 }
 
 // SiteThemeSettingsJSON is the JSON representation of SiteThemeSettings
@@ -214,7 +215,11 @@ func (settings *SiteThemeSettings) MarshalJSON() ([]byte, error) {
 
 	settingsJSON := SiteThemeSettingsJSON{
 		SiteThemeSettings: *settings,
-		Sass:              string(sassField),
+	}
+
+	sassValue := string(sassField)
+	if sassValue != "null" {
+		settingsJSON.Sass = sassValue
 	}
 
 	return json.Marshal(settingsJSON)
