@@ -119,7 +119,7 @@ func (node *Node) template(layout *raymond.Template) (*raymond.Template, error) 
 
 	result := layout.Clone()
 
-	filePath := node.builder.SiteBuilder().templatePath(node.Kind)
+	filePath := node.builder.SiteBuilder().theme.Template(node.Kind)
 
 	if err := result.RegisterPartialFile(filePath, "body"); err != nil {
 		return nil, err

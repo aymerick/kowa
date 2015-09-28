@@ -49,15 +49,9 @@ func buildSiteCmd(cmd *cobra.Command, args []string) {
 }
 
 func buildSite(site *models.Site) *builder.SiteBuilder {
-	// builder config
-	config := &builder.SiteBuilderConfig{
-		ThemesDir: viper.GetString("themes_dir"),
-		OutputDir: path.Join(viper.GetString("output_dir"), site.BuildDir()),
-	}
+	siteBuilder := builder.NewSiteBuilder(site)
 
-	siteBuilder := builder.NewSiteBuilder(site, config)
-
-	log.Printf("Building site '%s' with theme '%s' into %s", site.ID, site.Theme, config.OutputDir)
+	log.Printf("Building site '%s' with theme '%s' into %s", site.ID, site.Theme, siteBuilder.OutputDir())
 
 	startTime := time.Now()
 
@@ -75,7 +69,7 @@ func buildSite(site *models.Site) *builder.SiteBuilder {
 }
 
 func serve(siteBuilder *builder.SiteBuilder, port int) {
-	servePath, _ := path.Split(siteBuilder.Config().OutputDir)
+	servePath, _ := path.Split(siteBuilder.OutputDir())
 
 	log.Printf("Serving built site from: " + servePath)
 

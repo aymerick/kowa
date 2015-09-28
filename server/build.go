@@ -297,13 +297,7 @@ func (worker *buildWorker) buildSite(job *buildJob) {
 		return
 	}
 
-	// builder config
-	config := &builder.SiteBuilderConfig{
-		ThemesDir: viper.GetString("themes_dir"),
-		OutputDir: path.Join(viper.GetString("output_dir"), site.BuildDir()),
-	}
-
-	builder := builder.NewSiteBuilder(site, config)
+	builder := builder.NewSiteBuilder(site)
 
 	if builder.Build(); builder.HaveError() {
 		// job failed

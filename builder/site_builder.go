@@ -1,10 +1,8 @@
 package builder
 
 import (
-	"bufio"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/url"
 	"os"
@@ -15,10 +13,11 @@ import (
 	"github.com/disintegration/imaging"
 	"github.com/spf13/afero"
 	"github.com/spf13/fsync"
-	libsass "github.com/wellington/go-libsass"
+	"github.com/spf13/viper"
 
 	"github.com/aymerick/kowa/helpers"
 	"github.com/aymerick/kowa/models"
+	"github.com/aymerick/kowa/themes"
 	"github.com/aymerick/raymond"
 )
 
@@ -52,8 +51,8 @@ func RegisterNodeBuilder(name string, initializer func(*SiteBuilder) NodeBuilder
 
 // SiteBuilder builds an entire site
 type SiteBuilder struct {
-	site   *models.Site
-	config *SiteBuilderConfig
+	site  *models.Site
+	theme *themes.Theme
 
 	images         []*models.Image
 	files          []*models.File
@@ -69,37 +68,22 @@ type SiteBuilder struct {
 	nodeBuilders map[string]NodeBuilder
 
 	siteVars *SiteVars
-	tplDir   string
-}
-
-// SiteBuilderConfig holds site building configuration
-type SiteBuilderConfig struct {
-	ThemesDir string
-	OutputDir string
 }
 
 // NewSiteBuilder instanciates a new SiteBuilder
-func NewSiteBuilder(site *models.Site, config *SiteBuilderConfig) *SiteBuilder {
+func NewSiteBuilder(site *models.Site) *SiteBuilder {
 	result := &SiteBuilder{
-		site:   site,
-		config: config,
+		site:  site,
+		theme: themes.New(site.Theme),
 
-		nodeSlugs: make(map[string]bool),
-
+		nodeSlugs:      make(map[string]bool),
 		errorCollector: NewErrorCollector(),
-
-		nodeBuilders: make(map[string]NodeBuilder),
+		nodeBuilders:   make(map[string]NodeBuilder),
 	}
 
 	result.initBuilders()
-	result.setTemplatesDir()
 
 	return result
-}
-
-// Config returns site builder configuration
-func (builder *SiteBuilder) Config() *SiteBuilderConfig {
-	return builder.config
 }
 
 // Build executes site building
@@ -133,21 +117,15 @@ func (builder *SiteBuilder) Build() {
 	builder.syncFavicon()
 }
 
+// OutputDir returns path to output directory
+func (builder *SiteBuilder) OutputDir() string {
+	return path.Join(viper.GetString("output_dir"), builder.site.BuildDir())
+}
+
 // Initialize builders
 func (builder *SiteBuilder) initBuilders() {
 	for name, initializer := range registeredNodeBuilders {
 		builder.nodeBuilders[name] = initializer(builder)
-	}
-}
-
-// Set templates dir
-func (builder *SiteBuilder) setTemplatesDir() {
-	dirPath := path.Join(builder.themeDir(), templatesDir)
-	if _, err := os.Stat(dirPath); os.IsNotExist(err) {
-		// no /templates subdir found
-		builder.tplDir = builder.themeDir()
-	} else {
-		builder.tplDir = dirPath
 	}
 }
 
@@ -238,9 +216,9 @@ func (builder *SiteBuilder) syncNodes() {
 			log.Printf("Generated node: %+q", filePath)
 			allFiles[filePath] = true
 
-			relativePath := path.Dir(strings.TrimPrefix(filePath, builder.config.OutputDir))
+			relativePath := path.Dir(strings.TrimPrefix(filePath, builder.OutputDir()))
 
-			destDir := builder.config.OutputDir
+			destDir := builder.OutputDir()
 			for _, pathPart := range strings.Split(relativePath, "/") {
 				if pathPart != "" {
 					destDir = path.Join(destDir, pathPart)
@@ -257,11 +235,11 @@ func (builder *SiteBuilder) syncNodes() {
 	var ignoreDirs []string
 
 	for _, genPath := range generatedPaths {
-		ignoreDirs = append(ignoreDirs, path.Join(builder.config.OutputDir, genPath))
+		ignoreDirs = append(ignoreDirs, path.Join(builder.OutputDir(), genPath))
 	}
 
-	err := filepath.Walk(builder.config.OutputDir, func(path string, f os.FileInfo, err error) error {
-		if (path != builder.config.OutputDir) && !helpers.HasOnePrefix(path, ignoreDirs) {
+	err := filepath.Walk(builder.OutputDir(), func(path string, f os.FileInfo, err error) error {
+		if (path != builder.OutputDir()) && !helpers.HasOnePrefix(path, ignoreDirs) {
 			if (f.IsDir() && !allDirs[path]) || (!f.IsDir() && !allFiles[path]) {
 				filesToDelete[path] = true
 			}
@@ -362,59 +340,34 @@ func (builder *SiteBuilder) syncFiles(destDir string, grabber func() ([]string, 
 
 // Compile theme SASS files into CSS
 func (builder *SiteBuilder) buildSass() {
-	errStep := "Build SASS"
-
-	// check if theme have a sass dir
-	sassDir := path.Join(builder.themeDir(), "sass")
-
-	files, err := ioutil.ReadDir(sassDir)
-	if err != nil && !os.IsNotExist(err) {
-		builder.addError(errStep, err)
-		return
-	}
-
-	if os.IsNotExist(err) {
+	if !builder.theme.HaveSass() {
 		// no sass dir
 		return
 	}
 
+	errStep := "Build SASS"
+
 	log.Printf("Compiling SASS file(s)")
 
 	// computes sass vars
-	sassVars, err := builder.computeSassVars(sassDir)
+	sassVars, err := builder.computeSassVars()
 	if err != nil {
 		builder.addError(errStep, err)
 		return
 	}
 
-	for _, file := range files {
-		sassPath := path.Join(sassDir, file.Name())
-		baseName := helpers.FileBase(sassPath)
-
-		cssRelativePath := path.Join("css", helpers.FileBase(sassPath)+".css")
-
-		// if CSS file exists in theme, do NOT overwrite it
-		if builder.themeAssetExist(cssRelativePath) {
-			log.Printf("Skipping SASS file '%s' because that CSS file is present in theme: %s", sassPath, cssRelativePath)
-		} else {
-			outPath := path.Join(builder.genAssetsDir(), cssRelativePath)
-
-			// skip directories and partials
-			if strings.HasSuffix(sassPath, ".scss") && !file.IsDir() && !strings.HasPrefix(baseName, "_") {
-				if err := builder.compileSassFile(sassPath, sassVars, outPath); err != nil {
-					builder.addError(errStep, err)
-				}
-			}
-		}
+	// compile sass files
+	if err := builder.theme.SassBuild(sassVars, builder.genAssetsDir()); err != nil {
+		builder.addError(errStep, err)
 	}
 }
 
 // computes SASS variables for current site and theme
-func (builder *SiteBuilder) computeSassVars(sassDir string) (string, error) {
+func (builder *SiteBuilder) computeSassVars() (string, error) {
 	result := ""
 
 	// get theme variables
-	themeVars, err := builder.themeVariables(sassDir)
+	themeVars, err := builder.theme.SassVars()
 	if err != nil {
 		return "", err
 	}
@@ -437,50 +390,11 @@ func (builder *SiteBuilder) computeSassVars(sassDir string) (string, error) {
 	return result, nil
 }
 
-func (builder *SiteBuilder) themeVariables(sassDir string) (map[string]string, error) {
-	result := map[string]string{}
-
-	// @todo Memoize result, and recompute on file change
-
-	// parse variables file from theme
-	file, err := os.Open(path.Join(sassDir, "_variables.scss"))
-	if err != nil {
-		if os.IsNotExist(err) {
-			// that's ok, theme have no variables file, so we have nothing to overwrite
-			return result, nil
-		}
-		return result, err
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := scanner.Text()
-
-		if strings.HasPrefix(line, "$") {
-			if pair := strings.SplitN(line, ":", 2); len(pair) == 2 {
-				name := strings.TrimSpace(pair[0][1:len(pair[0])])
-				value := strings.TrimSpace(pair[1])
-
-				if value[len(value)-1] == ';' {
-					value = strings.TrimSpace(value[0 : len(value)-1])
-					result[name] = value
-				}
-			}
-		}
-	}
-
-	if err := scanner.Err(); err != nil {
-		return result, err
-	}
-
-	return result, nil
-}
-
 // Fetches SASS variables from database
 func (builder *SiteBuilder) siteSassVariables() map[string]string {
 	result := map[string]string{}
 
+	// @todo FIXME !
 	if settings := builder.site.ThemeSettings[builder.site.Theme]; settings != nil {
 		for _, sassVar := range settings.Sass {
 			result[sassVar.Name] = sassVar.Value
@@ -488,52 +402,6 @@ func (builder *SiteBuilder) siteSassVariables() map[string]string {
 	}
 
 	return result
-}
-
-// Compile given sass file
-func (builder *SiteBuilder) compileSassFile(sassFilePath string, sassVars string, outPath string) error {
-	ctx := libsass.Context{
-		BuildDir:     filepath.Dir(outPath),
-		MainFile:     sassFilePath,
-		IncludePaths: []string{filepath.Dir(sassFilePath)},
-	}
-
-	ctx.Imports.Init()
-
-	if sassVars != "" {
-		// overwrite _variables.scss partial with given sass code
-		ctx.Imports.Add("", "variables", []byte(sassVars))
-	}
-
-	// create directory
-	dirPath, _ := path.Split(outPath)
-	if err := os.MkdirAll(dirPath, 0755); (err != nil) && !os.IsExist(err) {
-		log.Printf("Failed to create dir: '%s'", dirPath)
-		return err
-	}
-
-	// create output file
-	out, err := os.Create(outPath)
-	if err != nil {
-		log.Printf("Failed to create file: '%s'", outPath)
-		return err
-	}
-	defer out.Close()
-
-	// open sass file
-	sassFile, err := os.Open(sassFilePath)
-	if err != nil {
-		return err
-	}
-	defer sassFile.Close()
-
-	// compile to CSS
-	if err := ctx.Compile(sassFile, out); err != nil {
-		log.Printf("Failed to compile sass file: '%s'", sassFilePath)
-		return err
-	}
-
-	return nil
 }
 
 // Copy theme assets
@@ -544,7 +412,7 @@ func (builder *SiteBuilder) syncAssets() {
 	syncer.Delete = true
 	syncer.NoTimes = true
 
-	if err := syncer.Sync(builder.genAssetsDir(), builder.themeAssetsDir()); err != nil {
+	if err := syncer.Sync(builder.genAssetsDir(), builder.theme.AssetsDir); err != nil {
 		builder.addError(errStep, err)
 	}
 }
@@ -553,7 +421,7 @@ func (builder *SiteBuilder) syncAssets() {
 func (builder *SiteBuilder) syncFavicon() {
 	errStep := "Sync favicon"
 
-	faviconPath := path.Join(builder.config.OutputDir, faviconFilename)
+	faviconPath := path.Join(builder.OutputDir(), faviconFilename)
 
 	if img := builder.site.FindFavicon(); img != nil {
 		log.Printf("Generating favicon")
@@ -612,76 +480,19 @@ func (builder *SiteBuilder) DumpErrors() {
 	builder.errorCollector.dump()
 }
 
-// Computes theme directory
-func (builder *SiteBuilder) themeDir() string {
-	return path.Join(builder.config.ThemesDir, builder.site.Theme)
-}
-
-// Computes theme templates directory
-func (builder *SiteBuilder) themeTemplatesDir() string {
-	if builder.tplDir == "" {
-		panic("Templates directory not set")
-	}
-
-	return builder.tplDir
-}
-
-// Returns true if theme asset file exists
-func (builder *SiteBuilder) themeAssetExist(relativePath string) bool {
-	_, err := os.Stat(path.Join(builder.themeAssetsDir(), relativePath))
-
-	return !os.IsNotExist(err)
-}
-
-// Computes theme assets directory
-func (builder *SiteBuilder) themeAssetsDir() string {
-	return path.Join(builder.themeDir(), assetsDir)
-}
-
 // Computes directory where images are copied
 func (builder *SiteBuilder) genImagesDir() string {
-	return path.Join(builder.config.OutputDir, imagesDir)
+	return path.Join(builder.OutputDir(), imagesDir)
 }
 
 // Computes directory where files are copied
 func (builder *SiteBuilder) genFilesDir() string {
-	return path.Join(builder.config.OutputDir, filesDir)
+	return path.Join(builder.OutputDir(), filesDir)
 }
 
 // Computes directory where assets are copied
 func (builder *SiteBuilder) genAssetsDir() string {
-	return path.Join(builder.config.OutputDir, assetsDir)
-}
-
-// Compute template path for given template name
-func (builder *SiteBuilder) templatePath(tplName string) string {
-	return path.Join(builder.themeTemplatesDir(), fmt.Sprintf("%s.hbs", tplName))
-}
-
-// Returns partials directory path
-func (builder *SiteBuilder) partialsPath() string {
-	return path.Join(builder.themeTemplatesDir(), partialsDir)
-}
-
-func (builder *SiteBuilder) partialPaths() ([]string, error) {
-	result := []string{}
-
-	partialDir := builder.partialsPath()
-
-	files, err := ioutil.ReadDir(partialDir)
-	if err != nil && err != os.ErrExist {
-		return result, err
-	}
-
-	for _, file := range files {
-		fileName := file.Name()
-
-		if !file.IsDir() && strings.HasSuffix(fileName, ".hbs") {
-			result = append(result, path.Join(partialDir, fileName))
-		}
-	}
-
-	return result, nil
+	return path.Join(builder.OutputDir(), assetsDir)
 }
 
 // @todo In production: load all layout files only once on startup, then for each builder instance:
@@ -690,7 +501,7 @@ func (builder *SiteBuilder) setupLayout() *raymond.Template {
 	errStep := "Layout setup"
 
 	// parse layout
-	result, err := raymond.ParseFile(builder.templatePath("layout"))
+	result, err := raymond.ParseFile(builder.theme.Template("layout"))
 	if err != nil {
 		builder.addError(errStep, err)
 		return nil
@@ -700,7 +511,7 @@ func (builder *SiteBuilder) setupLayout() *raymond.Template {
 	result.RegisterHelpers(builder.helpers())
 
 	// register partials
-	filePaths, err := builder.partialPaths()
+	filePaths, err := builder.theme.Partials()
 	if err != nil {
 		builder.addError(errStep, err)
 		return nil
@@ -739,7 +550,7 @@ func (builder *SiteBuilder) ensureFileDir(osPath string) error {
 
 // Computes local file path for given relative path
 func (builder *SiteBuilder) filePath(relativePath string) string {
-	return path.Join(builder.config.OutputDir, relativePath)
+	return path.Join(builder.OutputDir(), relativePath)
 }
 
 // Copy file to given directory
