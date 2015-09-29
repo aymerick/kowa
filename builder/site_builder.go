@@ -396,11 +396,15 @@ func (builder *SiteBuilder) siteSassVariables() map[string]string {
 
 	if settings := builder.site.ThemeSettings[builder.site.Theme]; settings != nil {
 		if p := builder.theme.Palette(settings.Palette); p != nil {
+			// palette
 			for name, value := range p.Vars {
 				result[name] = value
 			}
-		} else {
-			// @todo Custom vars
+		} else if len(settings.Custom) != 0 {
+			// custom vars
+			for name, value := range settings.Custom {
+				result[name] = value
+			}
 		}
 	}
 

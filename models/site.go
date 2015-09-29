@@ -32,26 +32,19 @@ type SitePageSettings struct {
 	Disabled bool          `bson:"disabled"        json:"disabled"`
 }
 
-// SiteThemeSassVar represents a SASS variable
-type SiteThemeSassVar struct {
-	Name  string `bson:"name" json:"name"`
-	Value string `bson:"value" json:"value"`
-	Desc  string `bson:"desc" json:"desc"`
-}
-
 // SiteThemeSettings represents settings for given theme
 type SiteThemeSettings struct {
-	ID      bson.ObjectId      `bson:"_id,omitempty" json:"id"`
-	Palette string             `bson:"palette,omitempty" json:"palette"`
-	Sass    []SiteThemeSassVar `bson:"sass,omitempty" json:"-"` // SASS variables
+	ID      bson.ObjectId     `bson:"_id,omitempty" json:"id"`
+	Palette string            `bson:"palette,omitempty" json:"palette"`
+	Custom  map[string]string `bson:"custom,omitempty" json:"-"`
 }
 
 // SiteThemeSettingsJSON is the JSON representation of SiteThemeSettings
 type SiteThemeSettingsJSON struct {
 	SiteThemeSettings
 
-	// overrides the Sass field to provide a JSON string instead of an array of embedded documents
-	Sass string `json:"sass,omitempty"`
+	// overrides the Custom field to provide a JSON string instead of an array of embedded documents
+	Custom string `json:"custom,omitempty"`
 }
 
 // Site represents a site
@@ -208,7 +201,7 @@ func (session *DBSession) RemoveImageReferencesFromSitePageSettings(image *Image
 
 // MarshalJSON implements the json.Marshaler interface
 func (settings *SiteThemeSettings) MarshalJSON() ([]byte, error) {
-	sassField, err := json.Marshal(settings.Sass)
+	customField, err := json.Marshal(settings.Custom)
 	if err != nil {
 		return []byte{}, err
 	}
@@ -217,9 +210,9 @@ func (settings *SiteThemeSettings) MarshalJSON() ([]byte, error) {
 		SiteThemeSettings: *settings,
 	}
 
-	sassValue := string(sassField)
-	if sassValue != "null" {
-		settingsJSON.Sass = sassValue
+	customValue := string(customField)
+	if customValue != "null" {
+		settingsJSON.Custom = customValue
 	}
 
 	return json.Marshal(settingsJSON)
