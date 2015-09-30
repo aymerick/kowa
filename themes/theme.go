@@ -35,7 +35,7 @@ const (
 
 // Theme represents a theme
 type Theme struct {
-	Name string
+	ID string
 
 	Dir          string
 	AssetsDir    string
@@ -51,10 +51,10 @@ type Theme struct {
 }
 
 // New instanciates a new Theme
-func New(name string) *Theme {
+func New(id string) *Theme {
 	t := &Theme{
-		Name: name,
-		Dir:  path.Join(Dir(), name),
+		ID:  id,
+		Dir: path.Join(Dir(), id),
 
 		sassVars: map[string]string{},
 	}
@@ -77,12 +77,13 @@ func (t *Theme) AssetExist(relativePath string) bool {
 }
 
 // Template returns template path
-func (t *Theme) Template(name string) string {
-	return path.Join(t.TemplatesDir, fmt.Sprintf("%s.hbs", name))
+func (t *Theme) Template(id string) string {
+	return path.Join(t.TemplatesDir, fmt.Sprintf("%s.hbs", id))
 }
 
 // Partials returns an array of partials paths
 func (t *Theme) Partials() ([]string, error) {
+	// @todo Recompute on file change
 	if len(t.partials) == 0 {
 		files, err := ioutil.ReadDir(t.PartialsDir)
 		if err != nil && err != os.ErrExist {
@@ -113,6 +114,7 @@ func (t *Theme) SassFiles() ([]os.FileInfo, error) {
 		return t.sassFiles, nil
 	}
 
+	// @todo Recompute on file change
 	if len(t.sassFiles) == 0 {
 		var err error
 		if t.sassFiles, err = ioutil.ReadDir(t.SassDir); err != nil {
@@ -286,6 +288,8 @@ func (t *Theme) setConf() {
 		// @todo Handle error
 		panic(err)
 	}
+
+	result.ID = t.ID
 
 	t.Conf = &result
 }

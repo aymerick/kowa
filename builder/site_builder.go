@@ -74,7 +74,7 @@ type SiteBuilder struct {
 func NewSiteBuilder(site *models.Site) *SiteBuilder {
 	result := &SiteBuilder{
 		site:  site,
-		theme: themes.New(site.Theme),
+		theme: themes.Get(site.Theme),
 
 		nodeSlugs:      make(map[string]bool),
 		errorCollector: NewErrorCollector(),

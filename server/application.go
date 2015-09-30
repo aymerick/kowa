@@ -13,6 +13,7 @@ import (
 	"github.com/aymerick/kowa/core"
 	"github.com/aymerick/kowa/mailers"
 	"github.com/aymerick/kowa/models"
+	"github.com/aymerick/kowa/themes"
 )
 
 // Application represents the application
@@ -203,7 +204,7 @@ func (app *Application) handleGetConfig(rw http.ResponseWriter, req *http.Reques
 			{"id": "html", "name": "Rich Text"},
 			{"id": "md", "name": "Markdown"},
 		},
-		"themes":  []string{"ailes", "willy"},
+		"themes":  themes.AllConf(),
 		"domains": viper.GetStringSlice("service_domains"),
 	}
 

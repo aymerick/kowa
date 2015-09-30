@@ -2,8 +2,8 @@ package themes
 
 // Palette represents a theme palette
 type Palette struct {
-	Name string
-	Vars map[string]string
+	Name string            `json:"name"`
+	Vars map[string]string `json:"vars"`
 }
 
 // NewPalette instanciates a new Palette
