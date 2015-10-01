@@ -22,6 +22,10 @@ type sitePageSettingsJSON struct {
 	SitePageSettings models.SitePageSettings `json:"sitePageSetting"`
 }
 
+type siteThemeSettingsJSON struct {
+	SiteThemeSettings models.SiteThemeSettings `json:"siteThemeSetting"`
+}
+
 // POST /api/sites
 func (app *Application) handlePostSite(rw http.ResponseWriter, req *http.Request) {
 	currentDBSession := app.getCurrentDBSession(req)
@@ -242,10 +246,53 @@ func (app *Application) handleSetPageSettings(rw http.ResponseWriter, req *http.
 // POST /sites/{site_id}/theme-settings
 // PUT /sites/{site_id}/theme-settings/{setting_id}
 func (app *Application) handleSetThemeSettings(rw http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+
 	site := app.getCurrentSite(req)
 	if site != nil {
-		// @todo handleSetThemeSettings (and unserialize sass field from a JSON string into an array of models.SiteThemeSassVar)
-		panic("NOT IMPLEMENTED")
+		var respJSON siteThemeSettingsJSON
+
+		if err := json.NewDecoder(req.Body).Decode(&respJSON); err != nil {
+			log.Printf("ERROR: %v", err)
+			http.Error(rw, "Failed to decode JSON data", http.StatusBadRequest)
+			return
+		}
+
+		// @todo [security] Check all fields !
+		themeSettings := &respJSON.SiteThemeSettings
+
+		if vars["setting_id"] != "" {
+			// this is an update
+			existingThemeSettings := site.ThemeSettings[themeSettings.Theme]
+			if existingThemeSettings == nil {
+				http.NotFound(rw, req)
+				return
+			}
+
+			existingIDStr := existingThemeSettings.ID.Hex()
+
+			badParamID := existingIDStr != vars["setting_id"]
+			badContentID := (themeSettings.ID != "") && (existingIDStr != themeSettings.ID.Hex())
+
+			if badParamID || badContentID {
+				http.Error(rw, "Theme settings id mismatch", http.StatusBadRequest)
+				return
+			} else if themeSettings.ID == "" {
+				themeSettings.ID = existingThemeSettings.ID
+			}
+		}
+
+		err := site.SetThemeSettings(themeSettings)
+		if err != nil {
+			log.Printf("ERROR: %v", err)
+			http.Error(rw, "Failed to add theme settings", http.StatusInternalServerError)
+			return
+		}
+
+		// site content has changed
+		app.onSiteChange(site)
+
+		app.render.JSON(rw, http.StatusOK, renderMap{"siteThemeSetting": themeSettings})
 	} else {
 		http.NotFound(rw, req)
 	}

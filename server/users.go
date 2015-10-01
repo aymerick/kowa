@@ -304,7 +304,9 @@ func (app *Application) handleGetUserSites(rw http.ResponseWriter, req *http.Req
 				}
 			}
 
-			for _, themeSettings := range site.ThemeSettings {
+			for themeID, themeSettings := range site.ThemeSettings {
+				themeSettings.Theme = themeID
+
 				themeSettingsArray = append(themeSettingsArray, themeSettings)
 			}
 		}

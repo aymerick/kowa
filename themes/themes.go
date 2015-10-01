@@ -76,6 +76,11 @@ func All() map[string]*Theme {
 	return themes
 }
 
+// Exist returns true if a theme with given id exists
+func Exist(id string) bool {
+	return All()[id] != nil
+}
+
 // AllConf returns all installed themes configurations
 func AllConf() []*Conf {
 	var result []*Conf

@@ -201,10 +201,10 @@ func (app *Application) handleGetConfig(rw http.ResponseWriter, req *http.Reques
 			{"id": "fr", "name": "Français"},
 		},
 		"formats": []map[string]string{
-			{"id": "html", "name": "Rich Text"},
-			{"id": "md", "name": "Markdown"},
+			{"id": "html", "name": "Rich Text"}, // @todo Translate
+			{"id": "md", "name": "Markdown"},    // @todo Translate
 		},
-		"themes":  themes.AllConf(),
+		"themes":  themes.AllConf(), // @todo Translate theme palettes names
 		"domains": viper.GetStringSlice("service_domains"),
 	}
 

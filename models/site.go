@@ -11,6 +11,7 @@ import (
 
 	"github.com/aymerick/kowa/core"
 	"github.com/aymerick/kowa/helpers"
+	"github.com/aymerick/kowa/themes"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -37,6 +38,7 @@ type SiteThemeSettings struct {
 	ID      bson.ObjectId     `bson:"_id,omitempty" json:"id"`
 	Palette string            `bson:"palette,omitempty" json:"palette"`
 	Custom  map[string]string `bson:"custom,omitempty" json:"-"`
+	Theme   string            `bson:"-" json:"theme"`
 }
 
 // SiteThemeSettingsJSON is the JSON representation of SiteThemeSettings
@@ -1177,4 +1179,18 @@ func (site *Site) SetPageSettings(settings *SitePageSettings) error {
 	settings.Tagline = strings.TrimSpace(settings.Tagline)
 
 	return site.dbSession.SitesCol().UpdateId(site.ID, bson.M{"$set": bson.D{bson.DocElem{fmt.Sprintf("page_settings.%s", settings.Kind), settings}}})
+}
+
+// SetThemeSettings inserts (or updates) theme settings to database
+// Side effect: 'Id' field is set on record if not already present, and string fields are trimed
+func (site *Site) SetThemeSettings(settings *SiteThemeSettings) error {
+	if !themes.Exist(settings.Theme) {
+		return errors.New("Theme does not exist: " + settings.Theme)
+	}
+
+	if settings.ID == "" {
+		settings.ID = bson.NewObjectId()
+	}
+
+	return site.dbSession.SitesCol().UpdateId(site.ID, bson.M{"$set": bson.D{bson.DocElem{fmt.Sprintf("theme_settings.%s", settings.Theme), settings}}})
 }

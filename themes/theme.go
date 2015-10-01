@@ -201,50 +201,15 @@ func (t *Theme) SassBuild(sassVars string, output string) error {
 	return nil
 }
 
-// Palettes returns all theme palettes
-func (t *Theme) Palettes() []*Palette {
-	// @todo Recomputes on files change
-	if len(t.palettes) == 0 {
-		// default palette
-		t.palettes = append(t.palettes, t.defaultPalette())
-
-		// all palettes defined in theme conf file
-		t.palettes = append(t.palettes, t.confPalettes()...)
-	}
-
-	return t.palettes
-}
-
 // Palette returns the Palette with given name
 func (t *Theme) Palette(name string) *Palette {
-	for _, p := range t.Palettes() {
+	for _, p := range t.Conf.Palettes {
 		if p.Name == name {
 			return p
 		}
 	}
 
 	return nil
-}
-
-// defaultPalette returns default theme palette
-func (t *Theme) defaultPalette() *Palette {
-	vars, err := t.SassVars()
-	if err != nil {
-		return nil
-	}
-
-	result := NewPalette(defaultPalette)
-
-	for name, val := range vars {
-		result.Vars[name] = val
-	}
-
-	return result
-}
-
-// confPalettes returns all palettes defined in theme conf file
-func (t *Theme) confPalettes() []*Palette {
-	return t.Conf.Palettes
 }
 
 func (t *Theme) setTemplateDir() {
@@ -292,4 +257,25 @@ func (t *Theme) setConf() {
 	result.ID = t.ID
 
 	t.Conf = &result
+
+	if len(t.Conf.Palettes) != 0 {
+		// Add default Palette
+		t.Conf.Palettes = append([]*Palette{t.defaultPalette()}, t.Conf.Palettes...)
+	}
+}
+
+// defaultPalette returns default theme palette
+func (t *Theme) defaultPalette() *Palette {
+	vars, err := t.SassVars()
+	if err != nil {
+		return nil
+	}
+
+	result := NewPalette(defaultPalette)
+
+	for name, val := range vars {
+		result.Vars[name] = val
+	}
+
+	return result
 }
